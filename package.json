@@ -1,0 +1,11 @@
+{
+  "name": "com.physalia.stats-module",
+  "displayName": "Stats Module",
+  "version": "0.0.1",
+  "unity": "2021.3",
+  "description": "The module to declare and use RPG stats independently",
+  "author": {
+    "name" : "daleth90",
+    "email" : "daleth90@gmail.com"
+  }
+}
