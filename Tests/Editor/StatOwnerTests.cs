@@ -1,7 +1,5 @@
-using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Physalia.Stats.Tests
 {
@@ -29,8 +27,8 @@ namespace Physalia.Stats.Tests
             StatOwner owner = repository.CreateOwner();
 
             owner.AddStat(999, 2);
-            LogAssert.Expect(LogType.Error, new Regex(".*"));
-            LogAssert.Expect(LogType.Error, new Regex(".*"));
+            StatTestHelper.LogAssert(LogType.Error);
+            StatTestHelper.LogAssert(LogType.Error);
         }
 
         [Test]
@@ -42,7 +40,7 @@ namespace Physalia.Stats.Tests
 
             owner.AddStat(11, 2);
             owner.AddStat(11, 2);
-            LogAssert.Expect(LogType.Error, new Regex(".*"));
+            StatTestHelper.LogAssert(LogType.Error);
         }
 
         [Test]
