@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
@@ -8,58 +7,21 @@ namespace Physalia.Stats.Tests
 {
     public class StatDefinitionTableTests
     {
-        private readonly List<StatDefinition> validList = new()
-        {
-            new StatDefinition
-            {
-                Id = 1,
-                Name = "Health"
-            },
-            new StatDefinition
-            {
-                Id = 2,
-                Name = "MaxHealth"
-            },
-            new StatDefinition
-            {
-                Id = 11,
-                Name = "Attack"
-            },
-        };
-
-        private readonly List<StatDefinition> idConflictList = new()
-        {
-            new StatDefinition
-            {
-                Id = 1,
-                Name = "Health"
-            },
-            new StatDefinition
-            {
-                Id = 2,
-                Name = "MaxHealth"
-            },
-            new StatDefinition
-            {
-                Id = 2,
-                Name = "Attack"
-            },
-        };
-
         [Test]
         public void CreateTable_WithValidList_ReturnsTableAsExpected()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(validList);
-            for (var i = 0; i < validList.Count; i++)
+            var list = StatTestHelper.ValidList;
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(list);
+            for (var i = 0; i < list.Count; i++)
             {
-                Assert.AreSame(validList[i], table.GetStatDefinition(validList[i].Id));
+                Assert.AreSame(list[i], table.GetStatDefinition(list[i].Id));
             }
         }
 
         [Test]
         public void CreateTable_With1IdConfliction_ReturnsNullAndLog2Error()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(idConflictList);
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.IdConflictList);
             Assert.IsNull(table);
             LogAssert.Expect(LogType.Error, new Regex(".*"));
             LogAssert.Expect(LogType.Error, new Regex(".*"));
