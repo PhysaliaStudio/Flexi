@@ -27,7 +27,7 @@ namespace Physalia.Stats
             return isValid;
         }
 
-        public void AddStat(int statId, int startValue)
+        public void AddStat(int statId, int originalValue)
         {
             StatDefinition definition = table.GetStatDefinition(statId);
             if (definition == null)
@@ -42,7 +42,7 @@ namespace Physalia.Stats
                 return;
             }
 
-            var stat = new Stat(definition) { Value = startValue };
+            var stat = new Stat(definition, originalValue);
             stats.Add(definition.Id, stat);
         }
 

@@ -6,7 +6,7 @@ namespace Physalia.Stats.Tests
     public class StatOwnerTests
     {
         [Test]
-        public void AddStat_StartValueIs2_GetStatReturnsNotNullAndValueIs2()
+        public void AddStat_OriginalValueIs2_GetStatReturnsNotNullAndCurrentValueIs2()
         {
             StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
             var repository = new StatOwnerRepository(table);
@@ -16,7 +16,7 @@ namespace Physalia.Stats.Tests
 
             var stat = owner.GetStat(11);
             Assert.IsNotNull(stat);
-            Assert.AreEqual(2, stat.Value);
+            Assert.AreEqual(2, stat.CurrentValue);
         }
 
         [Test]
