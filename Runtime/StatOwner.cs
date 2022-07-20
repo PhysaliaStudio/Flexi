@@ -5,24 +5,20 @@ namespace Physalia.Stats
 {
     public class StatOwner
     {
-        private class StatModifierSum
-        {
-            public int TotalAddend;
-            public int TotalMultiplier;
-        }
-
         private readonly int id;
         private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<StatModifier> modifiers = new();
-        private readonly Dictionary<int, StatModifierSum> modifierSumsCache = new();
 
         private bool isValid = true;
 
         public int Id => id;
         public int CountOfModifier => modifiers.Count;
+
+        internal IReadOnlyDictionary<int, Stat> Stats => stats;
+        internal IReadOnlyList<StatModifier> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {
@@ -53,13 +49,11 @@ namespace Physalia.Stats
 
             var stat = new Stat(definition, originalValue);
             stats.Add(definition.Id, stat);
-            modifierSumsCache.Add(definition.Id, new StatModifierSum());
         }
 
         public void RemoveStat(int statId)
         {
             stats.Remove(statId);
-            modifierSumsCache.Remove(statId);
         }
 
         public Stat GetStat(int statId)
@@ -85,33 +79,8 @@ namespace Physalia.Stats
         public void RefreshStats()
         {
             ResetAllStats();
-            for (var i = 0; i < modifiers.Count; i++)
-            {
-                var statId = modifiers[i].StatId;
-                if (!stats.ContainsKey(statId))
-                {
-                    continue;
-                }
-
-                var sum = modifierSumsCache[statId];
-                sum.TotalAddend += modifiers[i].Addend;
-                sum.TotalMultiplier += modifiers[i].Multiplier;
-            }
-
-            foreach (Stat stat in stats.Values)
-            {
-                var sum = modifierSumsCache[stat.Id];
-                if (sum.TotalMultiplier <= -100)
-                {
-                    stat.CurrentValue = 0;
-                }
-                else
-                {
-                    stat.CurrentValue = (int)((stat.CurrentValue + sum.TotalAddend) * (100 + sum.TotalMultiplier) / 100f);
-                }
-            }
-
-            ResetAllModifierSums();
+            new AddendModifierHandler().RefreshStats(this);
+            new MultiplierModifierHandler().RefreshStats(this);
         }
 
         private void ResetAllStats()
@@ -119,15 +88,6 @@ namespace Physalia.Stats
             foreach (Stat stat in stats.Values)
             {
                 stat.CurrentValue = stat.OriginalValue;
-            }
-        }
-
-        private void ResetAllModifierSums()
-        {
-            foreach (StatModifierSum sum in modifierSumsCache.Values)
-            {
-                sum.TotalAddend = 0;
-                sum.TotalMultiplier = 0;
             }
         }
 
