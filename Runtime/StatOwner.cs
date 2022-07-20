@@ -14,6 +14,7 @@ namespace Physalia.Stats
         private bool isValid = true;
 
         public int Id => id;
+        public int CountOfModifier => modifiers.Count;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {
@@ -59,6 +60,16 @@ namespace Physalia.Stats
             }
 
             return stat;
+        }
+
+        public void AddModifier(StatModifier modifier)
+        {
+            modifiers.Add(modifier);
+        }
+
+        public void ClearAllModifiers()
+        {
+            modifiers.Clear();
         }
 
         public void Destroy()

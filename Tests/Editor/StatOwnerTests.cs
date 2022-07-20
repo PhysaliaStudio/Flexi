@@ -65,5 +65,32 @@ namespace Physalia.Stats.Tests
 
             Assert.IsNull(owner.GetStat(11));
         }
+
+        [Test]
+        public void Add2Modifier_CountOfModifierReturns2()
+        {
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
+            var repository = new StatOwnerRepository(table);
+            StatOwner owner = repository.CreateOwner();
+
+            owner.AddModifier(new StatModifier());
+            owner.AddModifier(new StatModifier());
+
+            Assert.AreEqual(2, owner.CountOfModifier);
+        }
+
+        [Test]
+        public void ClearModifier_AfterAdd2Modifiers_CountOfModifierReturns0()
+        {
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
+            var repository = new StatOwnerRepository(table);
+            StatOwner owner = repository.CreateOwner();
+
+            owner.AddModifier(new StatModifier());
+            owner.AddModifier(new StatModifier());
+            owner.ClearAllModifiers();
+
+            Assert.AreEqual(0, owner.CountOfModifier);
+        }
     }
 }
