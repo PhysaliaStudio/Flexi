@@ -25,7 +25,7 @@ namespace Physalia.Stats
                 randomId = random.Next(0, int.MaxValue);
             }
 
-            var owner = new StatOwner(randomId, table, this);
+            var owner = new StatOwner(randomId, table, this, new DefaultModifierAlgorithm());
             idToOwners.Add(randomId, owner);
             owners.Add(owner);
             return owner;

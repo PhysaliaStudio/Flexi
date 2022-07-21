@@ -8,6 +8,7 @@ namespace Physalia.Stats
         private readonly int id;
         private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
+        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<StatModifier> modifiers = new();
@@ -20,11 +21,12 @@ namespace Physalia.Stats
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
         internal IReadOnlyList<StatModifier> Modifiers => modifiers;
 
-        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
+        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
         {
             this.id = id;
             this.table = table;
             this.repository = repository;
+            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public bool IsValid()
@@ -79,8 +81,7 @@ namespace Physalia.Stats
         public void RefreshStats()
         {
             ResetAllStats();
-            new AddendModifierHandler().RefreshStats(this);
-            new MultiplierModifierHandler().RefreshStats(this);
+            modifierAlgorithm.RefreshStats(this);
         }
 
         private void ResetAllStats()
