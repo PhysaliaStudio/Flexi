@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Stats
 {
-    public class AddendModifierHandler : IStatModifierHandler
+    public class AddendModifierHandler : IModifierHandler
     {
         private readonly Dictionary<int, int> sumsCache = new();
 
@@ -10,7 +10,7 @@ namespace Physalia.Stats
         {
             for (var i = 0; i < owner.Modifiers.Count; i++)
             {
-                StatModifier modifier = owner.Modifiers[i];
+                Modifier modifier = owner.Modifiers[i];
                 if (!sumsCache.ContainsKey(modifier.StatId))
                 {
                     sumsCache.Add(modifier.StatId, modifier.Addend);

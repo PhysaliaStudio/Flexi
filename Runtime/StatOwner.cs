@@ -11,7 +11,7 @@ namespace Physalia.Stats
         private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
-        private readonly List<StatModifier> modifiers = new();
+        private readonly List<Modifier> modifiers = new();
 
         private bool isValid = true;
 
@@ -19,7 +19,7 @@ namespace Physalia.Stats
         public int CountOfModifier => modifiers.Count;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<StatModifier> Modifiers => modifiers;
+        internal IReadOnlyList<Modifier> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
         {
@@ -68,7 +68,7 @@ namespace Physalia.Stats
             return stat;
         }
 
-        public void AddModifier(StatModifier modifier)
+        public void AddModifier(Modifier modifier)
         {
             modifiers.Add(modifier);
         }

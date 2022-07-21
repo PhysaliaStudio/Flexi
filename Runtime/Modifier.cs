@@ -1,6 +1,6 @@
 namespace Physalia.Stats
 {
-    public class StatModifier
+    public class Modifier
     {
         public int StatId;
         public int Addend;

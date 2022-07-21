@@ -13,7 +13,7 @@ namespace Physalia.Stats.Tests
             StatOwner owner = ownerRepository.CreateOwner();
 
             owner.AddStat(11, 10);
-            owner.AddModifier(new StatModifier { StatId = 11, Addend = 2, Multiplier = 50 });
+            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
             owner.RefreshStats();
 
             Assert.AreEqual(18, owner.GetStat(11).CurrentValue);
@@ -28,8 +28,8 @@ namespace Physalia.Stats.Tests
             StatOwner owner = ownerRepository.CreateOwner();
 
             owner.AddStat(2, 80);
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
             owner.RefreshStats();
 
             Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
@@ -45,9 +45,9 @@ namespace Physalia.Stats.Tests
 
             owner.AddStat(2, 80);
             owner.AddStat(11, 10);
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new StatModifier { StatId = 11, Addend = 2, Multiplier = 50 });
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
+            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
             owner.RefreshStats();
 
             Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
@@ -63,9 +63,9 @@ namespace Physalia.Stats.Tests
             StatOwner owner = ownerRepository.CreateOwner();
 
             owner.AddStat(2, 80);
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 10, Multiplier = 0 });
-            owner.AddModifier(new StatModifier { StatId = 11, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 11, Addend = 10, Multiplier = 0 });
             owner.RefreshStats();
 
             Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
@@ -99,9 +99,9 @@ namespace Physalia.Stats.Tests
             StatOwner owner = ownerRepository.CreateOwner();
 
             owner.AddStat(2, 80);
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 10, Multiplier = 0 });
-            owner.AddModifier(new StatModifier { StatId = 999, Addend = 0, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 999, Addend = 0, Multiplier = 0 });
             owner.RefreshStats();
 
             Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
@@ -118,9 +118,9 @@ namespace Physalia.Stats.Tests
 
             owner.AddStat(2, 80);
             owner.AddStat(11, 10);
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new StatModifier { StatId = 11, Addend = 2, Multiplier = 50 });
-            owner.AddModifier(new StatModifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
+            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
+            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
 
             owner.RefreshStats();
             owner.RefreshStats();

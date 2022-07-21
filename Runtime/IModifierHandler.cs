@@ -1,6 +1,6 @@
 namespace Physalia.Stats
 {
-    public interface IStatModifierHandler
+    public interface IModifierHandler
     {
         void RefreshStats(StatOwner owner);
     }

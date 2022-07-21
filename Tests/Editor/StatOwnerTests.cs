@@ -73,8 +73,8 @@ namespace Physalia.Stats.Tests
             var repository = new StatOwnerRepository(table);
             StatOwner owner = repository.CreateOwner();
 
-            owner.AddModifier(new StatModifier());
-            owner.AddModifier(new StatModifier());
+            owner.AddModifier(new Modifier());
+            owner.AddModifier(new Modifier());
 
             Assert.AreEqual(2, owner.CountOfModifier);
         }
@@ -86,8 +86,8 @@ namespace Physalia.Stats.Tests
             var repository = new StatOwnerRepository(table);
             StatOwner owner = repository.CreateOwner();
 
-            owner.AddModifier(new StatModifier());
-            owner.AddModifier(new StatModifier());
+            owner.AddModifier(new Modifier());
+            owner.AddModifier(new Modifier());
             owner.ClearAllModifiers();
 
             Assert.AreEqual(0, owner.CountOfModifier);
