@@ -5,11 +5,14 @@ namespace Physalia.Stats
         private readonly StatDefinition statDefinition;
 
         public int Id => statDefinition.Id;
-        public int Value;
+        public int OriginalValue { get; private set; }
+        public int CurrentValue { get; internal set; }
 
-        internal Stat(StatDefinition statDefinition)
+        internal Stat(StatDefinition statDefinition, int originalValue)
         {
             this.statDefinition = statDefinition;
+            OriginalValue = originalValue;
+            CurrentValue = originalValue;
         }
     }
 }

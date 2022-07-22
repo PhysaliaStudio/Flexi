@@ -8,18 +8,25 @@ namespace Physalia.Stats
         private readonly int id;
         private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
+        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
+        private readonly List<Modifier> modifiers = new();
 
         private bool isValid = true;
 
         public int Id => id;
+        public int CountOfModifier => modifiers.Count;
 
-        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
+        internal IReadOnlyDictionary<int, Stat> Stats => stats;
+        internal IReadOnlyList<Modifier> Modifiers => modifiers;
+
+        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
         {
             this.id = id;
             this.table = table;
             this.repository = repository;
+            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public bool IsValid()
@@ -27,7 +34,7 @@ namespace Physalia.Stats
             return isValid;
         }
 
-        public void AddStat(int statId, int startValue)
+        public void AddStat(int statId, int originalValue)
         {
             StatDefinition definition = table.GetStatDefinition(statId);
             if (definition == null)
@@ -42,7 +49,7 @@ namespace Physalia.Stats
                 return;
             }
 
-            var stat = new Stat(definition) { Value = startValue };
+            var stat = new Stat(definition, originalValue);
             stats.Add(definition.Id, stat);
         }
 
@@ -59,6 +66,30 @@ namespace Physalia.Stats
             }
 
             return stat;
+        }
+
+        public void AddModifier(Modifier modifier)
+        {
+            modifiers.Add(modifier);
+        }
+
+        public void ClearAllModifiers()
+        {
+            modifiers.Clear();
+        }
+
+        public void RefreshStats()
+        {
+            ResetAllStats();
+            modifierAlgorithm.RefreshStats(this);
+        }
+
+        private void ResetAllStats()
+        {
+            foreach (Stat stat in stats.Values)
+            {
+                stat.CurrentValue = stat.OriginalValue;
+            }
         }
 
         public void Destroy()
