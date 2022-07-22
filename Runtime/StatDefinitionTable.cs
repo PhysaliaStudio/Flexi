@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Physalia.Stats
 {
-    public class StatDefinitionTable
+    internal class StatDefinitionTable
     {
-        public class Factory
+        internal class Factory
         {
-            public StatDefinitionTable Create(List<StatDefinition> definitions)
+            internal StatDefinitionTable Create(List<StatDefinition> definitions)
             {
                 var table = new StatDefinitionTable();
                 for (var i = 0; i < definitions.Count; i++)
@@ -42,7 +42,7 @@ namespace Physalia.Stats
             Debug.Log($"Added stat definition {definition}");
         }
 
-        public StatDefinition GetStatDefinition(int id)
+        internal StatDefinition GetStatDefinition(int id)
         {
             if (!table.ContainsKey(id))
             {

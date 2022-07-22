@@ -8,8 +8,7 @@ namespace Physalia.Stats.Tests
         [Test]
         public void CreateOwner_TheCreatedOwnerIsManagedByRepository()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository = new StatOwnerRepository(table);
+            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreSame(owner, repository.GetOwner(owner.Id));
@@ -18,8 +17,7 @@ namespace Physalia.Stats.Tests
         [Test]
         public void CreateOwner_IsValidReturnsTrue()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository = new StatOwnerRepository(table);
+            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreEqual(true, owner.IsValid());
@@ -28,8 +26,7 @@ namespace Physalia.Stats.Tests
         [Test]
         public void DestroyOwner_IsValidReturnsFalse()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository = new StatOwnerRepository(table);
+            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner owner = repository.CreateOwner();
 
             owner.Destroy();
@@ -40,8 +37,7 @@ namespace Physalia.Stats.Tests
         [Test]
         public void RemoveOwner_TheOwnerIsNull_LogError()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository = new StatOwnerRepository(table);
+            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
 
             repository.RemoveOwner(null);
 
@@ -51,9 +47,8 @@ namespace Physalia.Stats.Tests
         [Test]
         public void RemoveOwner_TheOwnerDoesNotBelongToTargetRepository_LogError()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository1 = new StatOwnerRepository(table);
-            var repository2 = new StatOwnerRepository(table);
+            StatOwnerRepository repository1 = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatOwnerRepository repository2 = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner ownerFrom1 = repository1.CreateOwner();
 
             repository2.RemoveOwner(ownerFrom1);
@@ -64,8 +59,7 @@ namespace Physalia.Stats.Tests
         [Test]
         public void RemoveOwner_Success_GetOwnerWithTheSameIdReturnsNull()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.ValidList);
-            var repository = new StatOwnerRepository(table);
+            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner owner = repository.CreateOwner();
 
             repository.RemoveOwner(owner);

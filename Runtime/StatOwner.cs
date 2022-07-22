@@ -34,7 +34,7 @@ namespace Physalia.Stats
             return isValid;
         }
 
-        public void AddStat(int statId, int originalValue)
+        public void AddStat(int statId, int baseValue)
         {
             StatDefinition definition = table.GetStatDefinition(statId);
             if (definition == null)
@@ -49,7 +49,7 @@ namespace Physalia.Stats
                 return;
             }
 
-            var stat = new Stat(definition, originalValue);
+            var stat = new Stat(definition, baseValue);
             stats.Add(definition.Id, stat);
         }
 
@@ -66,6 +66,18 @@ namespace Physalia.Stats
             }
 
             return stat;
+        }
+
+        public void SetStat(int statId, int newBase, bool refresh = true)
+        {
+            if (stats.TryGetValue(statId, out Stat stat))
+            {
+                stat.CurrentBase = newBase;
+                if (refresh)
+                {
+                    RefreshStats();
+                }
+            }
         }
 
         public void AddModifier(Modifier modifier)
@@ -88,7 +100,7 @@ namespace Physalia.Stats
         {
             foreach (Stat stat in stats.Values)
             {
-                stat.CurrentValue = stat.OriginalValue;
+                stat.CurrentValue = stat.CurrentBase;
             }
         }
 

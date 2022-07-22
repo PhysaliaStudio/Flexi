@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "unity": "2021.3",
   "description": "The module to declare and use RPG stats independently",
+  "documentationUrl": "https://github.com/daleth90/stats-module/",
   "author": {
     "name" : "daleth90",
     "email" : "daleth90@gmail.com"
