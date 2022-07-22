@@ -12,7 +12,14 @@ namespace Physalia.Stats
         private readonly HashSet<StatOwner> owners = new();
         private readonly Random random = new();
 
-        public StatOwnerRepository(StatDefinitionTable table)
+        public static StatOwnerRepository Create(List<StatDefinition> definitions)
+        {
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(definitions);
+            var ownerRepository = new StatOwnerRepository(table);
+            return ownerRepository;
+        }
+
+        private StatOwnerRepository(StatDefinitionTable table)
         {
             this.table = table;
         }
