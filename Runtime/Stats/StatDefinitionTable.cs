@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.AbilitySystem.Stat
+namespace Physalia.AbilitySystem.StatSystem
 {
     internal class StatDefinitionTable
     {
