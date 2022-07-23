@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Physalia.Stats.Tests
+namespace Physalia.AbilitySystem.Stat.Tests
 {
     public class StatOwnerTests
     {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Physalia.Stats
+namespace Physalia.AbilitySystem.Stat
 {
-    public class AddendModifierHandler : IModifierHandler
+    public class MultiplierModifierHandler : IModifierHandler
     {
         private readonly Dictionary<int, int> sumsCache = new();
 
@@ -13,11 +13,11 @@ namespace Physalia.Stats
                 Modifier modifier = owner.Modifiers[i];
                 if (!sumsCache.ContainsKey(modifier.StatId))
                 {
-                    sumsCache.Add(modifier.StatId, modifier.Addend);
+                    sumsCache.Add(modifier.StatId, modifier.Multiplier);
                 }
                 else
                 {
-                    sumsCache[modifier.StatId] += modifier.Addend;
+                    sumsCache[modifier.StatId] += modifier.Multiplier;
                 }
             }
 
@@ -27,7 +27,7 @@ namespace Physalia.Stats
                 if (owner.Stats.TryGetValue(statId, out Stat stat))
                 {
                     int sum = pair.Value;
-                    stat.CurrentValue += sum;
+                    stat.CurrentValue = stat.CurrentValue * (100 + sum) / 100;
                 }
             }
         }

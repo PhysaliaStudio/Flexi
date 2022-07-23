@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-namespace Physalia.Stats.Tests
+namespace Physalia.AbilitySystem.Stat.Tests
 {
     internal static class StatTestHelper
     {
