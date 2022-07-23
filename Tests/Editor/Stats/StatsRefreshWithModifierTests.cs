@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Physalia.Stats.Tests
+namespace Physalia.AbilitySystem.Stat.Tests
 {
     public class IntegrationTests
     {

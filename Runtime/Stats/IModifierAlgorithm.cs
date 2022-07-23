@@ -1,4 +1,4 @@
-namespace Physalia.Stats
+namespace Physalia.AbilitySystem.Stat
 {
     public interface IModifierAlgorithm
     {

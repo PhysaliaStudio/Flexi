@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.Stats
+namespace Physalia.AbilitySystem.Stat
 {
     public class AddendModifierHandler : IModifierHandler
     {
