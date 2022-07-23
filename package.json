@@ -1,9 +1,9 @@
 {
-  "name": "com.physalia.stats-module",
-  "displayName": "Stats Module",
+  "name": "com.physalia.ability-system",
+  "displayName": "Ability System",
   "version": "0.0.1",
   "unity": "2021.3",
-  "description": "The module to declare and use RPG stats independently",
+  "description": "Customize the ability system easily",
   "documentationUrl": "https://github.com/daleth90/stats-module/",
   "author": {
     "name" : "daleth90",
