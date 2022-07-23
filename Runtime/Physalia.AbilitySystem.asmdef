@@ -1,12 +1,8 @@
 {
-    "name": "Physalia.StatsModule.Editor.Tests",
-    "rootNamespace": "Physalia.Stats.Tests",
-    "references": [
-        "Physalia.StatsModule"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "name": "Physalia.AbilitySystem",
+    "rootNamespace": "Physalia.AbilitySystem",
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
