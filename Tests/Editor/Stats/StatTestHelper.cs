@@ -6,21 +6,25 @@ namespace Physalia.AbilitySystem.Stat.Tests
 {
     internal static class StatTestHelper
     {
+        internal static readonly int HEALTH = 1;
+        internal static readonly int MAX_HEALTH = 2;
+        internal static readonly int ATTACK = 11;
+
         internal static readonly List<StatDefinition> ValidList = new()
         {
             new StatDefinition
             {
-                Id = 1,
+                Id = HEALTH,
                 Name = "Health"
             },
             new StatDefinition
             {
-                Id = 2,
+                Id = MAX_HEALTH,
                 Name = "MaxHealth"
             },
             new StatDefinition
             {
-                Id = 11,
+                Id = ATTACK,
                 Name = "Attack"
             },
         };
