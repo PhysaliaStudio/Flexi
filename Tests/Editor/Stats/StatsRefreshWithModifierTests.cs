@@ -4,115 +4,196 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
 {
     public class IntegrationTests
     {
-        [Test]
-        public void RefreshStats_WithSingleModifier()
+        private StatOwner CreateOwner()
         {
             StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
             StatOwner owner = repository.CreateOwner();
-
-            owner.AddStat(11, 10);
-            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
-            owner.RefreshStats();
-
-            Assert.AreEqual(18, owner.GetStat(11).CurrentValue);
+            owner.AddStat(StatTestHelper.HEALTH, 100);
+            owner.AddStat(StatTestHelper.MAX_HEALTH, 100);
+            owner.AddStat(StatTestHelper.ATTACK, 12);
+            return owner;
         }
 
         [Test]
-        public void RefreshStats_WithMultipleModifiers()
+        public void SingleModifier_WithStatIdOwnerNotOwned_NoError()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+            owner.RemoveStat(StatTestHelper.ATTACK);
+
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
+            Assert.IsNull(owner.GetStat(StatTestHelper.ATTACK));
+            Assert.Pass();
         }
 
         [Test]
-        public void RefreshStats_WithModifiersContainsDifferentStatIds()
+        public void SingleModifier_WithInvalidStatId_NoError()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = 999,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddStat(11, 10);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
-            Assert.AreEqual(18, owner.GetStat(11).CurrentValue);
+            Assert.Pass();
         }
 
         [Test]
-        public void RefreshStats_WithModifiersContainsNotOwnedStatId()
+        public void SingleModifier_100Minus10_CurrentBaseReturns100AndCurrentValueReturns90()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.MAX_HEALTH,
+                Op = AbilityEffect.Operator.ADD,
+                Value = -10,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
-            owner.AddModifier(new Modifier { StatId = 11, Addend = 10, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
-            Assert.IsNull(owner.GetStat(11));
+            Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
+            Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);
         }
 
         [Test]
-        public void RefreshStats_WithStatNotBeenModified()
+        public void SingleModifier_12Mul50Percent_CurrentBaseReturns12AndCurrentValueReturns18()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddStat(11, 10);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
-            Assert.AreEqual(10, owner.GetStat(11).CurrentValue);
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
+            Assert.AreEqual(18, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
         }
 
         [Test]
-        public void RefreshStats_WithModifiersContainsInvalidStatId()
+        public void MultipleModifier_Base12Add6AndMul50Percent_CurrentBaseReturns12AndCurrentValueReturns27()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.ADD,
+                Value = 6,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
-            owner.AddModifier(new Modifier { StatId = 999, Addend = 0, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
-            Assert.IsNull(owner.GetStat(11));
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
+            Assert.AreEqual(27, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void MultipleModifier_WithDifferentStatIds()
+        {
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.ADD,
+                Value = 6,
+            });
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.MAX_HEALTH,
+                Op = AbilityEffect.Operator.ADD,
+                Value = -10,
+            });
+
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+
+            owner.AppendAbilityContext(instance);
+            owner.RefreshStats();
+
+            Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
+            Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
+            Assert.AreEqual(27, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
         }
 
         [Test]
         public void RefreshTwice_ReturnsTheSameValues()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.ADD,
+                Value = 6,
+            });
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.MAX_HEALTH,
+                Op = AbilityEffect.Operator.ADD,
+                Value = -10,
+            });
 
-            owner.AddStat(2, 80);
-            owner.AddStat(11, 10);
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 0, Multiplier = 20 });
-            owner.AddModifier(new Modifier { StatId = 11, Addend = 2, Multiplier = 50 });
-            owner.AddModifier(new Modifier { StatId = 2, Addend = 10, Multiplier = 0 });
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
 
+            owner.AppendAbilityContext(instance);
             owner.RefreshStats();
             owner.RefreshStats();
 
-            Assert.AreEqual(108, owner.GetStat(2).CurrentValue);
-            Assert.AreEqual(18, owner.GetStat(11).CurrentValue);
+            Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
+            Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
+            Assert.AreEqual(27, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
         }
     }
 }

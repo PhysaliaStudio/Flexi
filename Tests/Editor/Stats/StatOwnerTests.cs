@@ -92,30 +92,5 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
 
             Assert.IsNull(owner.GetStat(11));
         }
-
-        [Test]
-        public void Add2Modifier_CountOfModifierReturns2()
-        {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddModifier(new Modifier());
-            owner.AddModifier(new Modifier());
-
-            Assert.AreEqual(2, owner.CountOfModifier);
-        }
-
-        [Test]
-        public void ClearModifier_AfterAdd2Modifiers_CountOfModifierReturns0()
-        {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddModifier(new Modifier());
-            owner.AddModifier(new Modifier());
-            owner.ClearAllModifiers();
-
-            Assert.AreEqual(0, owner.CountOfModifier);
-        }
     }
 }
