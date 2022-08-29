@@ -11,15 +11,14 @@ namespace Physalia.AbilitySystem.StatSystem
         private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
-        private readonly List<Modifier> modifiers = new();
+        private readonly List<AbilityContextInstance> contexts = new();
 
         private bool isValid = true;
 
         public int Id => id;
-        public int CountOfModifier => modifiers.Count;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<Modifier> Modifiers => modifiers;
+        internal IReadOnlyList<AbilityContextInstance> AbilityContexts => contexts;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
         {
@@ -80,14 +79,19 @@ namespace Physalia.AbilitySystem.StatSystem
             }
         }
 
-        public void AddModifier(Modifier modifier)
+        public void AppendAbilityContext(AbilityContextInstance instance)
         {
-            modifiers.Add(modifier);
+            contexts.Add(instance);
         }
 
-        public void ClearAllModifiers()
+        public void RemoveAbilityContext(AbilityContextInstance instance)
         {
-            modifiers.Clear();
+            contexts.Remove(instance);
+        }
+
+        public void ClearAllAbilityContexts()
+        {
+            contexts.Clear();
         }
 
         public void RefreshStats()

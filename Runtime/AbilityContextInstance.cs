@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Physalia.AbilitySystem.StatSystem;
 
 namespace Physalia.AbilitySystem
@@ -5,6 +6,9 @@ namespace Physalia.AbilitySystem
     public class AbilityContextInstance
     {
         private readonly AbilityContext data;
+
+        internal AbilityContext.Type ContextType => data.ContextType;
+        internal IReadOnlyList<AbilityEffect> Effects => data.Effects;
 
         public AbilityContextInstance(AbilityContext data)
         {
@@ -16,6 +20,11 @@ namespace Physalia.AbilitySystem
             for (var i = 0; i < data.Effects.Count; i++)
             {
                 AbilityEffect execution = data.Effects[i];
+                if (data.ContextType != AbilityContext.Type.ACTION)
+                {
+                    return;
+                }
+
                 Stat stat = target.GetStat(execution.StatId);
                 if (stat == null)
                 {

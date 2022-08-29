@@ -106,5 +106,24 @@ namespace Physalia.AbilitySystem.Tests
 
             Assert.AreEqual(30, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
         }
+
+        [Test]
+        public void ExecuteModifierEffect_CurrentBaseIs12_CurrentBaseReturns12AndCurrentValueReturns12()
+        {
+            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
+            effect.Effects.Add(new AbilityEffect
+            {
+                StatId = StatTestHelper.ATTACK,
+                Op = AbilityEffect.Operator.MUL,
+                Value = 50,
+            });
+
+            var instance = new AbilityContextInstance(effect);
+            var owner = CreateOwner();
+            instance.Calculate(owner);
+
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
+            Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
+        }
     }
 }

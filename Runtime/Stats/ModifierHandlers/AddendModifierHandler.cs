@@ -8,16 +8,28 @@ namespace Physalia.AbilitySystem.StatSystem
 
         public void RefreshStats(StatOwner owner)
         {
-            for (var i = 0; i < owner.Modifiers.Count; i++)
+            for (var i = 0; i < owner.AbilityContexts.Count; i++)
             {
-                Modifier modifier = owner.Modifiers[i];
-                if (!sumsCache.ContainsKey(modifier.StatId))
+                AbilityContextInstance context = owner.AbilityContexts[i];
+                if (context.ContextType != AbilityContext.Type.MODIFIER)
                 {
-                    sumsCache.Add(modifier.StatId, modifier.Addend);
+                    continue;
                 }
-                else
+
+                for (var j = 0; j < context.Effects.Count; j++)
                 {
-                    sumsCache[modifier.StatId] += modifier.Addend;
+                    AbilityEffect effect = context.Effects[j];
+                    if (effect.Op == AbilityEffect.Operator.ADD)
+                    {
+                        if (!sumsCache.ContainsKey(effect.StatId))
+                        {
+                            sumsCache.Add(effect.StatId, effect.Value);
+                        }
+                        else
+                        {
+                            sumsCache[effect.StatId] += effect.Value;
+                        }
+                    }
                 }
             }
 
