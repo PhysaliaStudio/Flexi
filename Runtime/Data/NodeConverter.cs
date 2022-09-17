@@ -64,40 +64,18 @@ namespace Physalia.AbilitySystem
                     continue;
                 }
 
-                if (fieldType.IsSubclassOf(typeof(Inport)))
+                if (fieldType.IsSubclassOf(typeof(Variable)))
                 {
-                    // If the inport is not defined, create a new instance.
-                    if (field.GetValue(node) == null)
+                    if (field.GetValue(node) is Variable variable)
                     {
-                        var inport = Activator.CreateInstance(fieldType) as Inport;
-                        field.SetValue(node, inport);
-                    }
-                }
-                else if (fieldType.IsSubclassOf(typeof(Outport)))
-                {
-                    // If the outport is not defined, create a new instance.
-                    if (field.GetValue(node) == null)
-                    {
-                        var outport = Activator.CreateInstance(fieldType) as Outport;
-                        field.SetValue(node, outport);
-                    }
-                }
-                else if (fieldType.IsSubclassOf(typeof(Variable)))
-                {
-                    // Get the variable. If the variable is not defined, create a new instance.
-                    if (field.GetValue(node) is not Variable variable)
-                    {
-                        variable = Activator.CreateInstance(fieldType) as Variable;
-                        field.SetValue(node, variable);
-                    }
+                        JToken jsonToken = jsonObject[field.Name];
+                        if (jsonToken == null)
+                        {
+                            continue;
+                        }
 
-                    JToken jsonToken = jsonObject[field.Name];
-                    if (jsonToken == null)
-                    {
-                        continue;
+                        variable.Value = jsonToken.ToObject(variable.ValueType, serializer);
                     }
-
-                    variable.Value = jsonToken.ToObject(variable.ValueType, serializer);
                 }
             }
 
@@ -121,7 +99,7 @@ namespace Physalia.AbilitySystem
                 return new UndefinedNode();
             }
 
-            return Activator.CreateInstance(type) as Node;
+            return NodeFactory.Create(type);
         }
 
         private static Type GetTypeByName(string typeName)
