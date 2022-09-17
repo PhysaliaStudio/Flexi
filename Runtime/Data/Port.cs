@@ -10,9 +10,10 @@ namespace Physalia.AbilitySystem
         public abstract Type ValueType { get; }
 
         protected abstract bool CanConnectTo(Port port);
-        protected abstract void AddConnection(Port port);
+        internal abstract void AddConnection(Port port);
+        internal abstract void RemoveConnection(Port port);
 
-        public void ConnectTo(Port port)
+        public void Connect(Port port)
         {
             if (!CanConnectTo(port))
             {
@@ -26,6 +27,12 @@ namespace Physalia.AbilitySystem
 
             AddConnection(port);
             port.AddConnection(this);
+        }
+
+        public void Disconnect(Port port)
+        {
+            RemoveConnection(port);
+            port.RemoveConnection(this);
         }
     }
 }

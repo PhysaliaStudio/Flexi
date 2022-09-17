@@ -20,12 +20,25 @@ namespace Physalia.AbilitySystem
             return port is Inport;
         }
 
-        protected override void AddConnection(Port port)
+        internal override void AddConnection(Port port)
         {
             if (port is Inport inport)
             {
                 inports.Add(inport);
             }
+        }
+
+        internal override void RemoveConnection(Port port)
+        {
+            if (port is Inport inport)
+            {
+                inports.Remove(inport);
+            }
+        }
+
+        internal IReadOnlyList<Inport> GetConnections()
+        {
+            return inports;
         }
 
         public T GetValue()
