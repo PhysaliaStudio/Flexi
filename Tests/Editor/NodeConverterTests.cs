@@ -58,6 +58,8 @@ namespace Physalia.AbilitySystem.Tests
             Assert.AreEqual(new Vector2(200f, 100f), node.position);
             Assert.AreEqual(true, (node as TestNode).input != null);
             Assert.AreEqual(true, (node as TestNode).output != null);
+            Assert.AreEqual(node, (node as TestNode).input.Node);
+            Assert.AreEqual(node, (node as TestNode).output.Node);
             Assert.AreEqual(42, (node as TestNode).value.Value);
         }
 

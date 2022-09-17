@@ -47,6 +47,7 @@ namespace Physalia.AbilitySystem
                     if (field.GetValue(node) == null)
                     {
                         var inport = Activator.CreateInstance(fieldType) as Inport;
+                        inport.node = node;
                         field.SetValue(node, inport);
                     }
                 }
@@ -56,6 +57,7 @@ namespace Physalia.AbilitySystem
                     if (field.GetValue(node) == null)
                     {
                         var outport = Activator.CreateInstance(fieldType) as Outport;
+                        outport.node = node;
                         field.SetValue(node, outport);
                     }
                 }
