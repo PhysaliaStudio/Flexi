@@ -64,7 +64,25 @@ namespace Physalia.AbilitySystem
                     continue;
                 }
 
-                if (fieldType.IsSubclassOf(typeof(Variable)))
+                if (fieldType.IsSubclassOf(typeof(Inport)))
+                {
+                    // If the inport is not defined, create a new instance.
+                    if (field.GetValue(node) == null)
+                    {
+                        var inport = Activator.CreateInstance(fieldType) as Inport;
+                        field.SetValue(node, inport);
+                    }
+                }
+                else if (fieldType.IsSubclassOf(typeof(Outport)))
+                {
+                    // If the outport is not defined, create a new instance.
+                    if (field.GetValue(node) == null)
+                    {
+                        var outport = Activator.CreateInstance(fieldType) as Outport;
+                        field.SetValue(node, outport);
+                    }
+                }
+                else if (fieldType.IsSubclassOf(typeof(Variable)))
                 {
                     // Get the variable. If the variable is not defined, create a new instance.
                     if (field.GetValue(node) is not Variable variable)

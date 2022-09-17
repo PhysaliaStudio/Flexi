@@ -12,6 +12,8 @@ namespace Physalia.AbilitySystem.Tests
         [Serializable]
         public class TestNode : Node
         {
+            public Inport<string> input;
+            public Outport<int> output;
             public Variable<int> value;
         }
 
@@ -54,6 +56,8 @@ namespace Physalia.AbilitySystem.Tests
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(1, node.id);
             Assert.AreEqual(new Vector2(200f, 100f), node.position);
+            Assert.AreEqual(true, (node as TestNode).input != null);
+            Assert.AreEqual(true, (node as TestNode).output != null);
             Assert.AreEqual(42, (node as TestNode).value.Value);
         }
 
