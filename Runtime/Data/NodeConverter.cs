@@ -150,7 +150,7 @@ namespace Physalia.AbilitySystem
             writer.WriteValue(nodeType.FullName);
 
             // Custom Fields
-            FieldInfo[] fields = nodeType.GetFields();
+            FieldInfo[] fields = nodeType.GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];

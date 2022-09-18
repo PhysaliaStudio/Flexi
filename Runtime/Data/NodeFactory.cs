@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Physalia.AbilitySystem
@@ -19,7 +20,7 @@ namespace Physalia.AbilitySystem
 
             var node = Activator.CreateInstance(type) as Node;
 
-            FieldInfo[] fields = node.GetType().GetFields();
+            FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
@@ -73,6 +74,21 @@ namespace Physalia.AbilitySystem
             }
 
             return node;
+        }
+
+        public static FieldInfo[] GetFieldsIncludeBasePrivate(this Type type)
+        {
+            var fields = new List<FieldInfo>();
+
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            fields.AddRange(type.GetFields(flags));
+
+            Type currentType = type;
+            while ((currentType = currentType.BaseType) != null)
+            {
+                fields.AddRange(currentType.GetFields(flags));
+            }
+            return fields.ToArray();
         }
     }
 }
