@@ -60,5 +60,27 @@ namespace Physalia.AbilitySystem.Tests
 
             Assert.AreEqual(5421, node1.input.GetValue());
         }
+
+        [Test]
+        public void ProcessNode_SetNext()
+        {
+            RelayNode node1 = NodeFactory.Create<RelayNode>();
+            RelayNode node2 = NodeFactory.Create<RelayNode>();
+            node1.Next = node2;
+
+            Assert.AreEqual(node2, node1.Next);
+            Assert.AreEqual(node1, node2.Previous);
+        }
+
+        [Test]
+        public void ProcessNode_SetPrevious()
+        {
+            RelayNode node1 = NodeFactory.Create<RelayNode>();
+            RelayNode node2 = NodeFactory.Create<RelayNode>();
+            node1.Previous = node2;
+
+            Assert.AreEqual(node2, node1.Previous);
+            Assert.AreEqual(node1, node2.Next);
+        }
     }
 }
