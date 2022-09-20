@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Physalia.AbilitySystem
@@ -20,7 +19,7 @@ namespace Physalia.AbilitySystem
 
             var node = Activator.CreateInstance(type) as Node;
 
-            FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
+            FieldInfo[] fields = type.GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
@@ -45,22 +44,28 @@ namespace Physalia.AbilitySystem
                 if (fieldType.IsSubclassOf(typeof(Inport)))
                 {
                     // If the inport is not defined, create a new instance.
-                    if (field.GetValue(node) == null)
+                    if (field.GetValue(node) is not Inport inport)
                     {
-                        var inport = Activator.CreateInstance(fieldType) as Inport;
-                        inport.node = node;
+                        inport = Activator.CreateInstance(fieldType) as Inport;
                         field.SetValue(node, inport);
                     }
+
+                    inport.node = node;
+                    inport.name = field.Name;
+                    node.AddInport(field.Name, inport);
                 }
                 else if (fieldType.IsSubclassOf(typeof(Outport)))
                 {
                     // If the outport is not defined, create a new instance.
-                    if (field.GetValue(node) == null)
+                    if (field.GetValue(node) is not Outport outport)
                     {
-                        var outport = Activator.CreateInstance(fieldType) as Outport;
-                        outport.node = node;
+                        outport = Activator.CreateInstance(fieldType) as Outport;
                         field.SetValue(node, outport);
                     }
+
+                    outport.node = node;
+                    outport.name = field.Name;
+                    node.AddOutport(field.Name, outport);
                 }
                 else if (fieldType.IsSubclassOf(typeof(Variable)))
                 {
@@ -74,21 +79,6 @@ namespace Physalia.AbilitySystem
             }
 
             return node;
-        }
-
-        public static FieldInfo[] GetFieldsIncludeBasePrivate(this Type type)
-        {
-            var fields = new List<FieldInfo>();
-
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            fields.AddRange(type.GetFields(flags));
-
-            Type currentType = type;
-            while ((currentType = currentType.BaseType) != null)
-            {
-                fields.AddRange(currentType.GetFields(flags));
-            }
-            return fields.ToArray();
         }
     }
 }

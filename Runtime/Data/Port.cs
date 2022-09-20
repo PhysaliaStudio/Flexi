@@ -5,8 +5,10 @@ namespace Physalia.AbilitySystem
     public abstract class Port
     {
         internal Node node;
+        internal string name;
 
         public Node Node => node;
+        public string Name => name;
         public abstract Type ValueType { get; }
 
         protected abstract bool CanConnectTo(Port port);

@@ -4,8 +4,8 @@ namespace Physalia.AbilitySystem
 {
     public abstract class ProcessNode : Node
     {
-        private Inport<ProcessNode> previous;
-        private Outport<ProcessNode> next;
+        internal Inport<ProcessNode> previous;
+        internal Outport<ProcessNode> next;
 
         public ProcessNode Previous
         {
