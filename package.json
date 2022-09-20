@@ -6,7 +6,10 @@
   "description": "Customize the ability system easily",
   "documentationUrl": "https://github.com/daleth90/stats-module/",
   "author": {
-    "name" : "daleth90",
-    "email" : "daleth90@gmail.com"
+    "name": "daleth90",
+    "email": "daleth90@gmail.com"
+  },
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.0.2"
   }
 }
