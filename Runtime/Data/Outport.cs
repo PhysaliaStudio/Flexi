@@ -5,7 +5,7 @@ namespace Physalia.AbilitySystem
 {
     public abstract class Outport : Port
     {
-
+        internal abstract IReadOnlyList<Inport> GetConnections();
     }
 
     public sealed class Outport<T> : Outport
@@ -20,7 +20,7 @@ namespace Physalia.AbilitySystem
             return port is Inport;
         }
 
-        internal override void AddConnection(Port port)
+        protected override void AddConnection(Port port)
         {
             if (port is Inport inport)
             {
@@ -28,7 +28,7 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        internal override void RemoveConnection(Port port)
+        protected override void RemoveConnection(Port port)
         {
             if (port is Inport inport)
             {
@@ -36,7 +36,7 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        internal IReadOnlyList<Inport> GetConnections()
+        internal override IReadOnlyList<Inport> GetConnections()
         {
             return inports;
         }

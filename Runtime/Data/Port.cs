@@ -12,8 +12,8 @@ namespace Physalia.AbilitySystem
         public abstract Type ValueType { get; }
 
         protected abstract bool CanConnectTo(Port port);
-        internal abstract void AddConnection(Port port);
-        internal abstract void RemoveConnection(Port port);
+        protected abstract void AddConnection(Port port);
+        protected abstract void RemoveConnection(Port port);
 
         public void Connect(Port port)
         {
