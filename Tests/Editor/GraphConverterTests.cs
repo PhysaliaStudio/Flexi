@@ -31,23 +31,18 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void Serialize_Normal()
         {
-            StartNode startNode = NodeFactory.Create<StartNode>();
-            DamageNode damageNode = NodeFactory.Create<DamageNode>();
-            OwnerFilterNode filterNode = NodeFactory.Create<OwnerFilterNode>();
-            IntNode intNode = NodeFactory.Create<IntNode>();
-            LogNode logNode = NodeFactory.Create<LogNode>();
+            Graph graph = new Graph();
+
+            StartNode startNode = graph.AddNode<StartNode>();
+            DamageNode damageNode = graph.AddNode<DamageNode>();
+            OwnerFilterNode filterNode = graph.AddNode<OwnerFilterNode>();
+            IntNode intNode = graph.AddNode<IntNode>();
+            LogNode logNode = graph.AddNode<LogNode>();
 
             startNode.next.Connect(damageNode.previous);
             damageNode.next.Connect(logNode.previous);
             damageNode.owners.Connect(filterNode.owners);
             damageNode.baseValue.Connect(intNode.output);
-
-            Graph graph = new Graph();
-            graph.nodes.Add(startNode);
-            graph.nodes.Add(damageNode);
-            graph.nodes.Add(filterNode);
-            graph.nodes.Add(intNode);
-            graph.nodes.Add(logNode);
 
             graph.ReorderNodes();
             var expected =
