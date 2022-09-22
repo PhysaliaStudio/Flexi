@@ -92,7 +92,7 @@ namespace Physalia.AbilitySystem
             }
 
             string typeName = typeToken.ToString();
-            Type type = GetTypeByName(typeName);
+            Type type = ReflectionUtilities.GetTypeByName(typeName);
             if (type == null)
             {
                 Debug.LogError($"[{nameof(NodeConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
@@ -100,25 +100,6 @@ namespace Physalia.AbilitySystem
             }
 
             return NodeFactory.Create(type);
-        }
-
-        private static Type GetTypeByName(string typeName)
-        {
-            if (assembliesCache == null)
-            {
-                assembliesCache = AppDomain.CurrentDomain.GetAssemblies();
-            }
-
-            foreach (Assembly assembly in assembliesCache)
-            {
-                Type type = assembly.GetType(typeName);
-                if (type != null)
-                {
-                    return type;
-                }
-            }
-
-            return null;
         }
 
         public override void WriteJson(JsonWriter writer, Node value, JsonSerializer serializer)
