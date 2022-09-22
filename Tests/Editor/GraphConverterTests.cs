@@ -76,18 +76,18 @@ namespace Physalia.AbilitySystem.Tests
 
             Graph graph = JsonConvert.DeserializeObject<Graph>(json);
 
-            Assert.AreEqual(5, graph.nodes.Count);
-            Assert.AreEqual(true, graph.nodes[0] is StartNode);
-            Assert.AreEqual(true, graph.nodes[1] is DamageNode);
-            Assert.AreEqual(true, graph.nodes[2] is OwnerFilterNode);
-            Assert.AreEqual(true, graph.nodes[3] is IntNode);
-            Assert.AreEqual(true, graph.nodes[4] is LogNode);
+            Assert.AreEqual(5, graph.Nodes.Count);
+            Assert.AreEqual(true, graph.Nodes[0] is StartNode);
+            Assert.AreEqual(true, graph.Nodes[1] is DamageNode);
+            Assert.AreEqual(true, graph.Nodes[2] is OwnerFilterNode);
+            Assert.AreEqual(true, graph.Nodes[3] is IntNode);
+            Assert.AreEqual(true, graph.Nodes[4] is LogNode);
 
-            var startNode = graph.nodes[0] as StartNode;
-            var damageNode = graph.nodes[1] as DamageNode;
-            var filterNode = graph.nodes[2] as OwnerFilterNode;
-            var intNode = graph.nodes[3] as IntNode;
-            var logNode = graph.nodes[4] as LogNode;
+            var startNode = graph.Nodes[0] as StartNode;
+            var damageNode = graph.Nodes[1] as DamageNode;
+            var filterNode = graph.Nodes[2] as OwnerFilterNode;
+            var intNode = graph.Nodes[3] as IntNode;
+            var logNode = graph.Nodes[4] as LogNode;
 
             Assert.AreEqual(damageNode, startNode.Next);
             Assert.AreEqual(startNode, damageNode.Previous);

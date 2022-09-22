@@ -14,7 +14,7 @@ namespace Physalia.AbilitySystem.Tests
         {
             var graph = new Graph();
             IntNode intNode = graph.AddNode<IntNode>();
-            Assert.AreEqual(intNode, graph.nodes[0]);
+            Assert.AreEqual(intNode, graph.Nodes[0]);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Physalia.AbilitySystem.Tests
             var graph = new Graph();
             IntNode intNode = graph.AddNode<IntNode>();
             graph.RemoveNode(intNode);
-            Assert.AreEqual(0, graph.nodes.Count);
+            Assert.AreEqual(0, graph.Nodes.Count);
         }
 
         [Test]

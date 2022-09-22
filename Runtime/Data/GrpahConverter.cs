@@ -19,11 +19,11 @@ namespace Physalia.AbilitySystem
             JToken nodesToken = jsonObject[NODES_KEY];
             if (nodesToken == null)
             {
-                graph.nodes = new List<Node>();
                 return graph;
             }
 
-            graph.nodes = nodesToken.ToObject<List<Node>>();
+            List<Node> nodes = nodesToken.ToObject<List<Node>>();
+            graph.AddNodesInternal(nodes);
 
             // Edges
             JToken edgesToken = jsonObject[EDGES_KEY];
@@ -61,9 +61,9 @@ namespace Physalia.AbilitySystem
             writer.WritePropertyName(NODES_KEY);
             writer.WriteStartArray();
 
-            for (var i = 0; i < value.nodes.Count; i++)
+            for (var i = 0; i < value.Nodes.Count; i++)
             {
-                serializer.Serialize(writer, value.nodes[i]);
+                serializer.Serialize(writer, value.Nodes[i]);
             }
 
             writer.WriteEndArray();
@@ -71,7 +71,7 @@ namespace Physalia.AbilitySystem
             // Calculate edges
             var edges = new List<Edge>();
             var handledNodes = new HashSet<Node>();
-            Node node = value.nodes[0];
+            Node node = value.Nodes[0];
             AddEdges(node, ref edges, ref handledNodes);
 
             // Edges
