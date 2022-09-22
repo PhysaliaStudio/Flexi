@@ -89,6 +89,9 @@ namespace Physalia.AbilitySystem.Tests
             var intNode = graph.Nodes[3] as IntNode;
             var logNode = graph.Nodes[4] as LogNode;
 
+            Assert.AreEqual(1, graph.EntryNodes.Count);
+            Assert.AreEqual(startNode, graph.EntryNodes[0]);
+
             Assert.AreEqual(damageNode, startNode.Next);
             Assert.AreEqual(startNode, damageNode.Previous);
 
