@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Physalia.AbilitySystem
 {
-    [JsonConverter(typeof(GrpahConverter))]
+    [JsonConverter(typeof(GraphConverter))]
     public class Graph
     {
         private readonly List<EntryNode> entryNodes = new();

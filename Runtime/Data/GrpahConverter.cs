@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Physalia.AbilitySystem
 {
-    internal class GrpahConverter : JsonConverter<Graph>
+    internal class GraphConverter : JsonConverter<Graph>
     {
         private const string NODES_KEY = "nodes";
         private const string EDGES_KEY = "edges";
