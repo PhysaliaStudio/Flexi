@@ -33,5 +33,29 @@ namespace Physalia.AbilitySystem.Tests
             instance.Reset(0);
             Assert.AreEqual(ability.Nodes[0], instance.Current);
         }
+
+        [Test]
+        public void MoveNext_CurrentBecomesNext()
+        {
+            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
+            AbilityInstance instance = ability.CreateInstance();
+            instance.Reset(0);
+
+            bool success = instance.MoveNext();
+            Assert.AreEqual(true, success);
+            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), instance.Current.GetType());
+        }
+
+        [Test]
+        public void GetNodeLogic_ReturnsWithCorrectType()
+        {
+            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
+            AbilityInstance instance = ability.CreateInstance();
+            instance.Reset(0);
+            _ = instance.MoveNext();
+
+            NodeLogic nodeLogic = instance.GetNodeLogic(instance.Current);
+            Assert.AreEqual(typeof(GraphConverterTests.DamageNodeLogic), nodeLogic.GetType());
+        }
     }
 }
