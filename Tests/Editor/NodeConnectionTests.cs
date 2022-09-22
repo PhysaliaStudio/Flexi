@@ -66,7 +66,7 @@ namespace Physalia.AbilitySystem.Tests
         {
             RelayNode node1 = NodeFactory.Create<RelayNode>();
             RelayNode node2 = NodeFactory.Create<RelayNode>();
-            node1.Next = node2;
+            node1.next.Connect(node2.previous);
 
             Assert.AreEqual(node2, node1.Next);
             Assert.AreEqual(node1, node2.Previous);
@@ -77,7 +77,7 @@ namespace Physalia.AbilitySystem.Tests
         {
             RelayNode node1 = NodeFactory.Create<RelayNode>();
             RelayNode node2 = NodeFactory.Create<RelayNode>();
-            node1.Previous = node2;
+            node1.previous.Connect(node2.next);
 
             Assert.AreEqual(node2, node1.Previous);
             Assert.AreEqual(node1, node2.Next);
