@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Physalia.AbilitySystem
 {
@@ -8,9 +7,10 @@ namespace Physalia.AbilitySystem
         private readonly Ability ability;
         private readonly Dictionary<Node, NodeLogic> nodeToLogic = new();
 
-        private FlowNode current;
+        private FlowNode currentNode;
+        private NodeLogic currentLogic;
 
-        public FlowNode Current => current;
+        public NodeLogic Current => currentLogic;
 
         internal AbilityInstance(Ability ability)
         {
@@ -23,17 +23,6 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        public NodeLogic GetNodeLogic(Node node)
-        {
-            if (nodeToLogic.TryGetValue(node, out NodeLogic nodeLogic))
-            {
-                return nodeLogic;
-            }
-
-            Debug.LogError($"[{nameof(AbilityInstance)}] GetNodeLogic failed! Node does not belong to this ability");
-            return null;
-        }
-
         public void Reset(int indexOfEntryNode)
         {
             if (indexOfEntryNode < 0 || indexOfEntryNode >= ability.EntryNodes.Count)
@@ -41,17 +30,26 @@ namespace Physalia.AbilitySystem
                 return;
             }
 
-            current = ability.EntryNodes[indexOfEntryNode];
+            currentNode = ability.EntryNodes[indexOfEntryNode];
+            currentLogic = nodeToLogic[currentNode];
         }
 
         public bool MoveNext()
         {
-            if (current != null)
+            if (currentNode == null)
             {
-                current = current.Next;
+                return false;
             }
 
-            return current != null;
+            currentNode = currentNode.Next;
+            if (currentNode == null)
+            {
+                currentLogic = null;
+                return false;
+            }
+
+            currentLogic = nodeToLogic[currentNode];
+            return true;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace Physalia.AbilitySystem.Tests
             Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
             AbilityInstance instance = ability.CreateInstance();
             instance.Reset(0);
-            Assert.AreEqual(ability.Nodes[0], instance.Current);
+            Assert.AreEqual(ability.Nodes[0], instance.Current.Node);
         }
 
         [Test]
@@ -43,7 +43,8 @@ namespace Physalia.AbilitySystem.Tests
 
             bool success = instance.MoveNext();
             Assert.AreEqual(true, success);
-            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), instance.Current.GetType());
+            Assert.AreEqual(typeof(GraphConverterTests.DamageNodeLogic), instance.Current.GetType());
+            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), instance.Current.Node.GetType());
         }
 
         [Test]
@@ -54,7 +55,7 @@ namespace Physalia.AbilitySystem.Tests
             instance.Reset(0);
             _ = instance.MoveNext();
 
-            NodeLogic nodeLogic = instance.GetNodeLogic(instance.Current);
+            NodeLogic nodeLogic = instance.Current;
             Assert.AreEqual(typeof(GraphConverterTests.DamageNodeLogic), nodeLogic.GetType());
         }
     }
