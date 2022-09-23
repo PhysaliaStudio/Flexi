@@ -4,7 +4,9 @@ namespace Physalia.AbilitySystem
     {
         public AbilityInstance CreateInstance()
         {
-            return new AbilityInstance(this);
+            var instance = new AbilityInstance(this);
+            instance.Initialize();
+            return instance;
         }
     }
 }

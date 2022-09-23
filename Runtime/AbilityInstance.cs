@@ -15,18 +15,26 @@ namespace Physalia.AbilitySystem
         internal AbilityInstance(Ability ability)
         {
             this.ability = ability;
+        }
+
+        internal void Initialize()
+        {
             for (var i = 0; i < ability.Nodes.Count; i++)
             {
                 Node node = ability.Nodes[i];
                 NodeLogic nodeLogic = NodeLogicFactory.Create(node);
                 nodeToLogic.Add(node, nodeLogic);
             }
+
+            Reset(0);
         }
 
         public void Reset(int indexOfEntryNode)
         {
             if (indexOfEntryNode < 0 || indexOfEntryNode >= ability.EntryNodes.Count)
             {
+                currentNode = null;
+                currentLogic = null;
                 return;
             }
 

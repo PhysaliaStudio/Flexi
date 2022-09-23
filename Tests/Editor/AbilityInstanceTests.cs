@@ -18,11 +18,11 @@ namespace Physalia.AbilitySystem.Tests
             "{\"id1\":2,\"port1\":\"baseValue\",\"id2\":4,\"port2\":\"output\"}]}";
 
         [Test]
-        public void CreateInstance_CurrentNodeIsNull()
+        public void CreateInstance_CurrentNodeIsTheIndex0OfEntryNodes()
         {
             Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
             AbilityInstance instance = ability.CreateInstance();
-            Assert.AreEqual(null, instance.Current);
+            Assert.AreEqual(ability.Nodes[0], instance.Current.Node);
         }
 
         [Test]
@@ -30,7 +30,6 @@ namespace Physalia.AbilitySystem.Tests
         {
             Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
             AbilityInstance instance = ability.CreateInstance();
-            instance.Reset(0);
             Assert.AreEqual(ability.Nodes[0], instance.Current.Node);
         }
 
@@ -39,7 +38,6 @@ namespace Physalia.AbilitySystem.Tests
         {
             Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
             AbilityInstance instance = ability.CreateInstance();
-            instance.Reset(0);
 
             bool success = instance.MoveNext();
             Assert.AreEqual(true, success);
@@ -52,7 +50,6 @@ namespace Physalia.AbilitySystem.Tests
         {
             Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
             AbilityInstance instance = ability.CreateInstance();
-            instance.Reset(0);
             _ = instance.MoveNext();
 
             NodeLogic nodeLogic = instance.Current;
