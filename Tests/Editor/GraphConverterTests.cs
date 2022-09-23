@@ -42,18 +42,24 @@ namespace Physalia.AbilitySystem.Tests
         {
             Graph graph = new Graph();
 
-            StartNode startNode = graph.AddNode<StartNode>();
-            DamageNode damageNode = graph.AddNode<DamageNode>();
-            OwnerFilterNode filterNode = graph.AddNode<OwnerFilterNode>();
-            IntNode intNode = graph.AddNode<IntNode>();
-            LogNode logNode = graph.AddNode<LogNode>();
+            StartNode startNode = graph.AddNewNode<StartNode>();
+            DamageNode damageNode = graph.AddNewNode<DamageNode>();
+            OwnerFilterNode filterNode = graph.AddNewNode<OwnerFilterNode>();
+            IntNode intNode = graph.AddNewNode<IntNode>();
+            LogNode logNode = graph.AddNewNode<LogNode>();
 
             startNode.next.Connect(damageNode.previous);
             damageNode.next.Connect(logNode.previous);
             damageNode.owners.Connect(filterNode.owners);
             damageNode.baseValue.Connect(intNode.output);
 
-            graph.ReorderNodes();
+            // Intentionally change node id for easier test
+            startNode.id = 1;
+            damageNode.id = 2;
+            filterNode.id = 3;
+            intNode.id = 4;
+            logNode.id = 5;
+
             var expected =
                 "{\"_type\":\"Physalia.AbilitySystem.Graph\"," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +

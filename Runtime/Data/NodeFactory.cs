@@ -3,14 +3,14 @@ using System.Reflection;
 
 namespace Physalia.AbilitySystem
 {
-    internal static class NodeFactory
+    public static class NodeFactory
     {
-        internal static T Create<T>() where T : Node, new()
+        public static T Create<T>() where T : Node, new()
         {
             return (T)Create(typeof(T));
         }
 
-        internal static Node Create(Type type)
+        public static Node Create(Type type)
         {
             if (!type.IsSubclassOf(typeof(Node)))
             {

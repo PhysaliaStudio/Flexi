@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -14,30 +15,24 @@ namespace Physalia.AbilitySystem
 
         public IReadOnlyList<Node> Nodes => nodes;
 
-        public void ReorderNodes()
+        public T AddNewNode<T>() where T : Node, new()
         {
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                nodes[i].id = i + 1;
-            }
+            return AddNewNode(typeof(T)) as T;
         }
 
-        public T AddNode<T>() where T : Node, new()
+        public Node AddNewNode(Type type)
         {
-            T node = NodeFactory.Create<T>();
+            Node node = NodeFactory.Create(type);
+            GenerateNodeId(node);
             AddNodeInternal(node);
             return node;
         }
 
         internal void AddNodesInternal(IReadOnlyList<Node> newNodes)
         {
-            nodes.AddRange(newNodes);
             for (var i = 0; i < newNodes.Count; i++)
             {
-                if (newNodes[i] is EntryNode entryNode)
-                {
-                    entryNodes.Add(entryNode);
-                }
+                AddNodeInternal(newNodes[i]);
             }
         }
 
@@ -52,6 +47,8 @@ namespace Physalia.AbilitySystem
 
         public void RemoveNode(Node node)
         {
+            node.DisconnectAllPorts();
+
             bool success = nodes.Remove(node);
             if (success)
             {
@@ -79,6 +76,49 @@ namespace Physalia.AbilitySystem
             }
 
             return null;
+        }
+
+        private void GenerateNodeId(Node node)
+        {
+            do
+            {
+                node.id = UnityEngine.Random.Range(1, 1000000);
+            }
+            while (!IsNodeIdValid(node));
+        }
+
+        private bool IsNodeIdValid(Node node)
+        {
+            if (node.id <= 0)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] == node)
+                {
+                    continue;
+                }
+
+                if (nodes[i].id == node.id)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        internal void HandleInvalidNodeIds()
+        {
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                if (!IsNodeIdValid(nodes[i]))
+                {
+                    GenerateNodeId(nodes[i]);
+                }
+            }
         }
     }
 }
