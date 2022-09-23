@@ -8,14 +8,19 @@ namespace Physalia.AbilitySystem
     {
         private static Assembly[] assembliesCache;
 
-        public static Type GetTypeByName(string typeName)
+        public static Assembly[] GetAssemblies()
         {
             if (assembliesCache == null)
             {
                 assembliesCache = AppDomain.CurrentDomain.GetAssemblies();
             }
 
-            foreach (Assembly assembly in assembliesCache)
+            return assembliesCache;
+        }
+
+        public static Type GetTypeByName(string typeName)
+        {
+            foreach (Assembly assembly in GetAssemblies())
             {
                 Type type = assembly.GetType(typeName);
                 if (type != null)
