@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -22,9 +23,14 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        public T AddNode<T>() where T : Node, new()
+        public T AddNewNode<T>() where T : Node, new()
         {
-            T node = NodeFactory.Create<T>();
+            return AddNewNode(typeof(T)) as T;
+        }
+
+        public Node AddNewNode(Type type)
+        {
+            Node node = NodeFactory.Create(type);
             AddNodeInternal(node);
             return node;
         }

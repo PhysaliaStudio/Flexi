@@ -42,11 +42,11 @@ namespace Physalia.AbilitySystem.Tests
         {
             Graph graph = new Graph();
 
-            StartNode startNode = graph.AddNode<StartNode>();
-            DamageNode damageNode = graph.AddNode<DamageNode>();
-            OwnerFilterNode filterNode = graph.AddNode<OwnerFilterNode>();
-            IntNode intNode = graph.AddNode<IntNode>();
-            LogNode logNode = graph.AddNode<LogNode>();
+            StartNode startNode = graph.AddNewNode<StartNode>();
+            DamageNode damageNode = graph.AddNewNode<DamageNode>();
+            OwnerFilterNode filterNode = graph.AddNewNode<OwnerFilterNode>();
+            IntNode intNode = graph.AddNewNode<IntNode>();
+            LogNode logNode = graph.AddNewNode<LogNode>();
 
             startNode.next.Connect(damageNode.previous);
             damageNode.next.Connect(logNode.previous);
