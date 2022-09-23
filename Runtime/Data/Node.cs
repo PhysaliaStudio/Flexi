@@ -19,9 +19,9 @@ namespace Physalia.AbilitySystem
         [NonSerialized]
         private readonly Dictionary<string, Outport> outports = new();
 
-        internal IEnumerable<Port> Ports => ports.Values;
-        internal IEnumerable<Inport> Inports => inports.Values;
-        internal IEnumerable<Outport> Outports => outports.Values;
+        public IEnumerable<Port> Ports => ports.Values;
+        public IEnumerable<Inport> Inports => inports.Values;
+        public IEnumerable<Outport> Outports => outports.Values;
 
         internal void AddInport(string name, Inport inport)
         {
