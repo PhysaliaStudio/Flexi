@@ -53,7 +53,13 @@ namespace Physalia.AbilitySystem.Tests
             damageNode.owners.Connect(filterNode.owners);
             damageNode.baseValue.Connect(intNode.output);
 
-            graph.ReorderNodes();
+            // Intentionally change node id for easier test
+            startNode.id = 1;
+            damageNode.id = 2;
+            filterNode.id = 3;
+            intNode.id = 4;
+            logNode.id = 5;
+
             var expected =
                 "{\"_type\":\"Physalia.AbilitySystem.Graph\"," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +

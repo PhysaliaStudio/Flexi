@@ -46,6 +46,9 @@ namespace Physalia.AbilitySystem
                 }
             }
 
+            // Handle data
+            graph.HandleInvalidNodeIds();
+
             return graph;
         }
 

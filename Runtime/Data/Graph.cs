@@ -15,14 +15,6 @@ namespace Physalia.AbilitySystem
 
         public IReadOnlyList<Node> Nodes => nodes;
 
-        public void ReorderNodes()
-        {
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                nodes[i].id = i + 1;
-            }
-        }
-
         public T AddNewNode<T>() where T : Node, new()
         {
             return AddNewNode(typeof(T)) as T;
@@ -31,6 +23,7 @@ namespace Physalia.AbilitySystem
         public Node AddNewNode(Type type)
         {
             Node node = NodeFactory.Create(type);
+            GenerateNodeId(node);
             AddNodeInternal(node);
             return node;
         }
@@ -87,6 +80,49 @@ namespace Physalia.AbilitySystem
             }
 
             return null;
+        }
+
+        private void GenerateNodeId(Node node)
+        {
+            do
+            {
+                node.id = UnityEngine.Random.Range(1, 1000000);
+            }
+            while (!IsNodeIdValid(node));
+        }
+
+        private bool IsNodeIdValid(Node node)
+        {
+            if (node.id <= 0)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                if (nodes[i] == node)
+                {
+                    continue;
+                }
+
+                if (nodes[i].id == node.id)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        internal void HandleInvalidNodeIds()
+        {
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                if (!IsNodeIdValid(nodes[i]))
+                {
+                    GenerateNodeId(nodes[i]);
+                }
+            }
         }
     }
 }
