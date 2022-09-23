@@ -64,5 +64,13 @@ namespace Physalia.AbilitySystem
 
             return null;
         }
+
+        public void DisconnectAllPorts()
+        {
+            foreach (Port port in Ports)
+            {
+                port.DisconnectAll();
+            }
+        }
     }
 }

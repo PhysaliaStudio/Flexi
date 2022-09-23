@@ -38,5 +38,14 @@ namespace Physalia.AbilitySystem
             RemoveConnection(port);
             port.RemoveConnection(this);
         }
+
+        public void DisconnectAll()
+        {
+            IReadOnlyList<Port> connections = GetConnections();
+            for (var i = connections.Count - 1; i >= 0; i--)
+            {
+                Disconnect(connections[i]);
+            }
+        }
     }
 }

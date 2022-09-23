@@ -6,6 +6,11 @@ namespace Physalia.AbilitySystem.Tests
     {
         public class IntNode : Node
         {
+            public Outport<int> output;
+        }
+
+        public class DamageNode : ProcessNode
+        {
             public Inport<int> baseValue;
         }
 
@@ -32,6 +37,18 @@ namespace Physalia.AbilitySystem.Tests
             IntNode intNode = graph.AddNewNode<IntNode>();
             graph.RemoveNode(intNode);
             Assert.AreEqual(0, graph.Nodes.Count);
+        }
+
+        [Test]
+        public void RemoveNode_AlsoDisconnectFromAllOtherNodes()
+        {
+            var graph = new Graph();
+            DamageNode damageNode = graph.AddNewNode<DamageNode>();
+            IntNode intNode = graph.AddNewNode<IntNode>();
+            damageNode.baseValue.Connect(intNode.output);
+
+            graph.RemoveNode(intNode);
+            Assert.AreEqual(0, damageNode.baseValue.GetConnections().Count);
         }
 
         [Test]

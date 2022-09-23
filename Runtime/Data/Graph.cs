@@ -58,6 +58,8 @@ namespace Physalia.AbilitySystem
 
         public void RemoveNode(Node node)
         {
+            node.DisconnectAllPorts();
+
             bool success = nodes.Remove(node);
             if (success)
             {
