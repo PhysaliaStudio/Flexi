@@ -30,13 +30,9 @@ namespace Physalia.AbilitySystem
 
         internal void AddNodesInternal(IReadOnlyList<Node> newNodes)
         {
-            nodes.AddRange(newNodes);
             for (var i = 0; i < newNodes.Count; i++)
             {
-                if (newNodes[i] is EntryNode entryNode)
-                {
-                    entryNodes.Add(entryNode);
-                }
+                AddNodeInternal(newNodes[i]);
             }
         }
 
