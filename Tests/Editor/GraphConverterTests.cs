@@ -6,6 +6,7 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class GraphConverterTests
     {
+        [NodeLogic(typeof(DamageNodeLogic))]
         public class DamageNode : ProcessNode
         {
             public Inport<StatOwner> owners;
@@ -28,6 +29,14 @@ namespace Physalia.AbilitySystem.Tests
             public Inport<string> text;
         }
 
+        public class DamageNodeLogic : NodeLogic<DamageNode>
+        {
+            public override void Do()
+            {
+
+            }
+        }
+
         [Test]
         public void Serialize_Normal()
         {
@@ -46,7 +55,8 @@ namespace Physalia.AbilitySystem.Tests
 
             graph.ReorderNodes();
             var expected =
-                "{\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_type\":\"Physalia.AbilitySystem.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+DamageNode\"}," +
                 "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+OwnerFilterNode\"}," +
                 "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+IntNode\",\"value\":0}," +
@@ -64,7 +74,8 @@ namespace Physalia.AbilitySystem.Tests
         public void Deserialize_Normal()
         {
             var json =
-                "{\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_type\":\"Physalia.AbilitySystem.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+DamageNode\"}," +
                 "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+OwnerFilterNode\"}," +
                 "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+IntNode\",\"value\":0}," +
