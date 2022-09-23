@@ -11,7 +11,7 @@ namespace Physalia.AbilitySystem
         {
             get
             {
-                IReadOnlyList<Outport> connections = previous.GetConnections();
+                IReadOnlyList<Port> connections = previous.GetConnections();
                 return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }
@@ -20,7 +20,7 @@ namespace Physalia.AbilitySystem
         {
             get
             {
-                IReadOnlyList<Inport> connections = next.GetConnections();
+                IReadOnlyList<Port> connections = next.GetConnections();
                 return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }

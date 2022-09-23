@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Physalia.AbilitySystem
 {
@@ -14,6 +15,7 @@ namespace Physalia.AbilitySystem
         protected abstract bool CanConnectTo(Port port);
         protected abstract void AddConnection(Port port);
         protected abstract void RemoveConnection(Port port);
+        public abstract IReadOnlyList<Port> GetConnections();
 
         public void Connect(Port port)
         {

@@ -121,9 +121,14 @@ namespace Physalia.AbilitySystem
 
             foreach (Outport outport in node.Outports)
             {
-                IReadOnlyList<Inport> inports = outport.GetConnections();
-                foreach (Inport inport in inports)
+                IReadOnlyList<Port> ports = outport.GetConnections();
+                foreach (Port port in ports)
                 {
+                    if (port is not Inport inport)
+                    {
+                        continue;
+                    }
+
                     if (handledNodes.Contains(inport.node))
                     {
                         continue;
@@ -143,9 +148,14 @@ namespace Physalia.AbilitySystem
 
             foreach (Inport inport in node.Inports)
             {
-                IReadOnlyList<Outport> outports = inport.GetConnections();
-                foreach (Outport outport in outports)
+                IReadOnlyList<Port> ports = inport.GetConnections();
+                foreach (Outport port in ports)
                 {
+                    if (port is not Outport outport)
+                    {
+                        continue;
+                    }
+
                     if (handledNodes.Contains(outport.node))
                     {
                         continue;
