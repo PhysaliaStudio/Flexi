@@ -1,13 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Physalia.AbilitySystem
 {
-    internal static class ReflectionUtilities
+    public static class ReflectionUtilities
     {
         private static Assembly[] assembliesCache;
 
-        internal static Type GetTypeByName(string typeName)
+        public static Type GetTypeByName(string typeName)
         {
             if (assembliesCache == null)
             {
@@ -24,6 +25,34 @@ namespace Physalia.AbilitySystem
             }
 
             return null;
+        }
+
+        public static FieldInfo[] GetFieldsIncludeBasePrivate(this Type type)
+        {
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var set = new HashSet<FieldInfo>();
+
+            Type currentType = type;
+            do
+            {
+                FieldInfo[] fields = type.GetFields(flags);
+                for (var i = 0; i < fields.Length; i++)
+                {
+                    set.Add(fields[i]);
+                }
+            }
+            while ((currentType = currentType.BaseType) != null);
+
+            {
+                var i = 0;
+                var results = new FieldInfo[set.Count];
+                foreach (FieldInfo field in set)
+                {
+                    results[i] = field;
+                    i++;
+                }
+                return results;
+            }
         }
     }
 }
