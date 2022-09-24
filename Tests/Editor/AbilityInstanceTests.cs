@@ -6,7 +6,7 @@ namespace Physalia.AbilitySystem.Tests
     public class AbilityInstanceTests
     {
         private const string TEST_JSON =
-            "{\"_type\":\"Physalia.AbilitySystem.Ability\"," +
+            "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
             "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
             "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+DamageNode\"}," +
             "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilitySystem.Tests.GraphConverterTests+OwnerFilterNode\"}," +
@@ -20,24 +20,24 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void CreateInstance_CurrentNodeIsTheIndex0OfEntryNodes()
         {
-            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
-            AbilityInstance instance = ability.CreateInstance();
-            Assert.AreEqual(ability.Nodes[0], instance.Current.Node);
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
+            AbilityInstance instance = abilityGraph.CreateInstance();
+            Assert.AreEqual(abilityGraph.Nodes[0], instance.Current.Node);
         }
 
         [Test]
         public void ResetTo0_CurrentNodeIsTheIndex0OfEntryNodes()
         {
-            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
-            AbilityInstance instance = ability.CreateInstance();
-            Assert.AreEqual(ability.Nodes[0], instance.Current.Node);
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
+            AbilityInstance instance = abilityGraph.CreateInstance();
+            Assert.AreEqual(abilityGraph.Nodes[0], instance.Current.Node);
         }
 
         [Test]
         public void MoveNext_CurrentBecomesNext()
         {
-            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
-            AbilityInstance instance = ability.CreateInstance();
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
+            AbilityInstance instance = abilityGraph.CreateInstance();
 
             bool success = instance.MoveNext();
             Assert.AreEqual(true, success);
@@ -48,8 +48,8 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void GetNodeLogic_ReturnsWithCorrectType()
         {
-            Ability ability = JsonConvert.DeserializeObject<Ability>(TEST_JSON);
-            AbilityInstance instance = ability.CreateInstance();
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
+            AbilityInstance instance = abilityGraph.CreateInstance();
             _ = instance.MoveNext();
 
             NodeLogic nodeLogic = instance.Current;

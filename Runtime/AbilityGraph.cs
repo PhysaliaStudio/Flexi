@@ -1,6 +1,6 @@
 namespace Physalia.AbilitySystem
 {
-    public class Ability : Graph
+    public class AbilityGraph : Graph
     {
         public AbilityInstance CreateInstance()
         {
