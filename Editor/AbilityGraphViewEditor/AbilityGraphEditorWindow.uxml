@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+
+    <editor:Toolbar>
+        <Label text="Select the file:" style="width: 100; -unity-text-align: middle-left"/>
+        <editor:ObjectField name="file-field" style="width: 200"/>
+        <VisualElement name="space" style="width: 100"/>
+        <editor:ToolbarButton name="new-button" text="New"/>
+        <editor:ToolbarButton name="save-button" text="Save"/>
+        <editor:ToolbarButton name="reload-button" text="Reload"/>
+    </editor:Toolbar>
+
+    <VisualElement name="graph-view-parent" style="width: 100%; height: 100%"/>
+</UXML>
