@@ -4,7 +4,7 @@ namespace Physalia.AbilitySystem
 {
     public class AbilityInstance
     {
-        private readonly Ability ability;
+        private readonly AbilityGraph abilityGraph;
         private readonly Dictionary<Node, NodeLogic> nodeToLogic = new();
 
         private FlowNode currentNode;
@@ -12,16 +12,16 @@ namespace Physalia.AbilitySystem
 
         public NodeLogic Current => currentLogic;
 
-        internal AbilityInstance(Ability ability)
+        internal AbilityInstance(AbilityGraph abilityGraph)
         {
-            this.ability = ability;
+            this.abilityGraph = abilityGraph;
         }
 
         internal void Initialize()
         {
-            for (var i = 0; i < ability.Nodes.Count; i++)
+            for (var i = 0; i < abilityGraph.Nodes.Count; i++)
             {
-                Node node = ability.Nodes[i];
+                Node node = abilityGraph.Nodes[i];
                 NodeLogic nodeLogic = NodeLogicFactory.Create(node);
                 nodeToLogic.Add(node, nodeLogic);
             }
@@ -31,14 +31,14 @@ namespace Physalia.AbilitySystem
 
         public void Reset(int indexOfEntryNode)
         {
-            if (indexOfEntryNode < 0 || indexOfEntryNode >= ability.EntryNodes.Count)
+            if (indexOfEntryNode < 0 || indexOfEntryNode >= abilityGraph.EntryNodes.Count)
             {
                 currentNode = null;
                 currentLogic = null;
                 return;
             }
 
-            currentNode = ability.EntryNodes[indexOfEntryNode];
+            currentNode = abilityGraph.EntryNodes[indexOfEntryNode];
             currentLogic = nodeToLogic[currentNode];
         }
 
