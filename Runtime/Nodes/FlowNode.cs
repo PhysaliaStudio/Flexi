@@ -4,5 +4,7 @@ namespace Physalia.AbilitySystem
     {
         public abstract FlowNode Previous { get; }
         public abstract FlowNode Next { get; }
+
+        public virtual void Do() { }
     }
 }

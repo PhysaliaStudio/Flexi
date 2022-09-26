@@ -24,7 +24,5 @@ namespace Physalia.AbilitySystem
                 return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }
-
-        public virtual void Do() { }
     }
 }
