@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
@@ -48,7 +49,19 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     portDataToViewTable.Add(portData, port);
                     portViewToDataTable.Add(port, portData);
                 }
+
+                if (field.FieldType.IsSubclassOf(typeof(Variable)))
+                {
+                    Type genericType = field.FieldType.GetGenericArguments()[0];
+                    CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(genericType);
+                    var variable = field.GetValue(node) as Variable;
+                    IVariableField variableField = creationMethod.Invoke(field.Name, variable);
+                    extensionContainer.Add(variableField.VisualElement);
+                }
             }
+
+            // Unity rule: After adding custom elements to the extensionContainer, call this method in order for them to become visible.
+            RefreshExpandedState();
         }
 
         public PortView GetPortView(Port port)
