@@ -2,11 +2,30 @@ namespace Physalia.AbilitySystem
 {
     public class AbilityGraph : Graph
     {
-        public AbilityInstance CreateInstance()
+        private FlowNode currentNode;
+
+        public FlowNode Current => currentNode;
+
+        public void Reset(int indexOfEntryNode)
         {
-            var instance = new AbilityInstance(this);
-            instance.Initialize();
-            return instance;
+            if (indexOfEntryNode < 0 || indexOfEntryNode >= EntryNodes.Count)
+            {
+                currentNode = null;
+                return;
+            }
+
+            currentNode = EntryNodes[indexOfEntryNode];
+        }
+
+        public bool MoveNext()
+        {
+            if (currentNode == null)
+            {
+                return false;
+            }
+
+            currentNode = currentNode.Next;
+            return currentNode != null;
         }
     }
 }

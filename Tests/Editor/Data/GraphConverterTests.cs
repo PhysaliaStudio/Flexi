@@ -6,7 +6,6 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class GraphConverterTests
     {
-        [NodeLogic(typeof(DamageNodeLogic))]
         public class DamageNode : ProcessNode
         {
             public Inport<StatOwner> owners;
@@ -27,14 +26,6 @@ namespace Physalia.AbilitySystem.Tests
         public class LogNode : ProcessNode
         {
             public Inport<string> text;
-        }
-
-        public class DamageNodeLogic : NodeLogic<DamageNode>
-        {
-            public override void Do()
-            {
-
-            }
         }
 
         [Test]

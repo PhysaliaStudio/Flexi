@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 namespace Physalia.AbilitySystem.Tests
 {
-    public class AbilityInstanceTests
+    public class AbilityGraphTests
     {
         private const string TEST_JSON =
             "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
@@ -18,42 +18,29 @@ namespace Physalia.AbilitySystem.Tests
             "{\"id1\":2,\"port1\":\"baseValue\",\"id2\":4,\"port2\":\"output\"}]}";
 
         [Test]
-        public void CreateInstance_CurrentNodeIsTheIndex0OfEntryNodes()
+        public void CreateInstance_CurrentNodeIsNull()
         {
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            AbilityInstance instance = abilityGraph.CreateInstance();
-            Assert.AreEqual(abilityGraph.Nodes[0], instance.Current.Node);
+            Assert.AreEqual(null, abilityGraph.Current);
         }
 
         [Test]
         public void ResetTo0_CurrentNodeIsTheIndex0OfEntryNodes()
         {
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            AbilityInstance instance = abilityGraph.CreateInstance();
-            Assert.AreEqual(abilityGraph.Nodes[0], instance.Current.Node);
+            abilityGraph.Reset(0);
+            Assert.AreEqual(abilityGraph.Nodes[0], abilityGraph.Current);
         }
 
         [Test]
-        public void MoveNext_CurrentBecomesNext()
+        public void MoveNext_AfterResetTo0_CurrentReturnsCorrectType()
         {
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            AbilityInstance instance = abilityGraph.CreateInstance();
+            abilityGraph.Reset(0);
 
-            bool success = instance.MoveNext();
+            bool success = abilityGraph.MoveNext();
             Assert.AreEqual(true, success);
-            Assert.AreEqual(typeof(GraphConverterTests.DamageNodeLogic), instance.Current.GetType());
-            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), instance.Current.Node.GetType());
-        }
-
-        [Test]
-        public void GetNodeLogic_ReturnsWithCorrectType()
-        {
-            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            AbilityInstance instance = abilityGraph.CreateInstance();
-            _ = instance.MoveNext();
-
-            NodeLogic nodeLogic = instance.Current;
-            Assert.AreEqual(typeof(GraphConverterTests.DamageNodeLogic), nodeLogic.GetType());
+            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), abilityGraph.Current.GetType());
         }
     }
 }
