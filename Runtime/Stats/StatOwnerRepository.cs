@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Physalia.AbilitySystem.StatSystem
+namespace Physalia.AbilitySystem
 {
     public class StatOwnerRepository
     {

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Physalia.AbilitySystem.StatSystem;
 
 namespace Physalia.AbilitySystem
 {

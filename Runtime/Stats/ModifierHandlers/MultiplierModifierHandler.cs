@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.AbilitySystem.StatSystem
+namespace Physalia.AbilitySystem
 {
     public class MultiplierModifierHandler : IModifierHandler
     {

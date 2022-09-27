@@ -1,6 +1,4 @@
 using NUnit.Framework;
-using Physalia.AbilitySystem.StatSystem;
-using Physalia.AbilitySystem.StatSystem.Tests;
 
 namespace Physalia.AbilitySystem.Tests
 {

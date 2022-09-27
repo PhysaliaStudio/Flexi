@@ -1,4 +1,4 @@
-namespace Physalia.AbilitySystem.StatSystem
+namespace Physalia.AbilitySystem
 {
     public class Stat
     {

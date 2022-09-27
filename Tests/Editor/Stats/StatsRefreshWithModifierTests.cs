@@ -1,8 +1,8 @@
 using NUnit.Framework;
 
-namespace Physalia.AbilitySystem.StatSystem.Tests
+namespace Physalia.AbilitySystem.Tests
 {
-    public class IntegrationTests
+    public class StatsRefreshWithModifierTests
     {
         private StatOwner CreateOwner()
         {
