@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
-using Physalia.AbilitySystem.StatSystem;
 
 namespace Physalia.AbilitySystem.Tests
 {

@@ -1,12 +1,13 @@
 using NUnit.Framework;
 
-namespace Physalia.AbilitySystem.StatSystem.Tests
+namespace Physalia.AbilitySystem.Tests
 {
-    public class IntegrationTests
+    public class StatsRefreshWithModifierTests
     {
         private StatOwner CreateOwner()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
             StatOwner owner = repository.CreateOwner();
             owner.AddStat(StatTestHelper.HEALTH, 100);
             owner.AddStat(StatTestHelper.MAX_HEALTH, 100);

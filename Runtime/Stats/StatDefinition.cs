@@ -1,5 +1,8 @@
-namespace Physalia.AbilitySystem.StatSystem
+using System;
+
+namespace Physalia.AbilitySystem
 {
+    [Serializable]
     public class StatDefinition
     {
         public int Id;

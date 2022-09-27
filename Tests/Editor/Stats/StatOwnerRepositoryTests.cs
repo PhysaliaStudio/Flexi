@@ -1,14 +1,15 @@
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Physalia.AbilitySystem.StatSystem.Tests
+namespace Physalia.AbilitySystem.Tests
 {
     public class StatOwnerRepositoryTests
     {
         [Test]
         public void CreateOwner_TheCreatedOwnerIsManagedByRepository()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreSame(owner, repository.GetOwner(owner.Id));
@@ -17,7 +18,8 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
         [Test]
         public void CreateOwner_IsValidReturnsTrue()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreEqual(true, owner.IsValid());
@@ -26,7 +28,8 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
         [Test]
         public void DestroyOwner_IsValidReturnsFalse()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
             StatOwner owner = repository.CreateOwner();
 
             owner.Destroy();
@@ -37,7 +40,8 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
         [Test]
         public void RemoveOwner_TheOwnerIsNull_LogError()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
 
             repository.RemoveOwner(null);
 
@@ -47,8 +51,9 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
         [Test]
         public void RemoveOwner_TheOwnerDoesNotBelongToTargetRepository_LogError()
         {
-            StatOwnerRepository repository1 = StatOwnerRepository.Create(StatTestHelper.ValidList);
-            StatOwnerRepository repository2 = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository1 = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository2 = StatOwnerRepository.Create(statDefinitionList);
             StatOwner ownerFrom1 = repository1.CreateOwner();
 
             repository2.RemoveOwner(ownerFrom1);
@@ -59,7 +64,8 @@ namespace Physalia.AbilitySystem.StatSystem.Tests
         [Test]
         public void RemoveOwner_Success_GetOwnerWithTheSameIdReturnsNull()
         {
-            StatOwnerRepository repository = StatOwnerRepository.Create(StatTestHelper.ValidList);
+            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
+            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
             StatOwner owner = repository.CreateOwner();
 
             repository.RemoveOwner(owner);

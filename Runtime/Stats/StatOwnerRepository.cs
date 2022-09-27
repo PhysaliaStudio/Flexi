@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = System.Random;
 
-namespace Physalia.AbilitySystem.StatSystem
+namespace Physalia.AbilitySystem
 {
     public class StatOwnerRepository
     {
@@ -12,9 +12,9 @@ namespace Physalia.AbilitySystem.StatSystem
         private readonly HashSet<StatOwner> owners = new();
         private readonly Random random = new();
 
-        public static StatOwnerRepository Create(List<StatDefinition> definitions)
+        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset)
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(definitions);
+            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(statDefinitionListAsset.stats);
             var ownerRepository = new StatOwnerRepository(table);
             return ownerRepository;
         }

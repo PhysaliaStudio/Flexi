@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.AbilitySystem.StatSystem
+namespace Physalia.AbilitySystem
 {
     public class StatOwner
     {
