@@ -6,9 +6,10 @@ namespace Physalia.AbilitySystem.Tests
     {
         public Inport<Character> character;
 
-        protected override void DoLogic()
+        protected override AbilityState DoLogic()
         {
             Debug.Log($"My name is {character.GetValue()?.name}");
+            return AbilityState.RUNNING;
         }
     }
 }

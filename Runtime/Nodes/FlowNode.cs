@@ -5,10 +5,10 @@ namespace Physalia.AbilitySystem
         public abstract FlowNode Previous { get; }
         public abstract FlowNode Next { get; }
 
-        public void Run()
+        public AbilityState Run()
         {
             EvaluateInports();
-            DoLogic();
+            return DoLogic();
         }
 
         private void EvaluateInports()
@@ -25,6 +25,19 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        protected virtual void DoLogic() { }
+        protected virtual AbilityState DoLogic()
+        {
+            return AbilityState.RUNNING;
+        }
+
+        public AbilityState Resume()
+        {
+            return ResumeLogic();
+        }
+
+        protected virtual AbilityState ResumeLogic()
+        {
+            return AbilityState.RUNNING;
+        }
     }
 }
