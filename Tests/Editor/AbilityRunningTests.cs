@@ -22,10 +22,37 @@ namespace Physalia.AbilitySystem.Tests
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.Execute();
+            instance.Execute(null);
 
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
+        }
+
+        [Test]
+        public void RunAbility_WithOwner()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":0,\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_id\":1,\"_type\":\"Physalia.AbilitySystem.Tests.CustomPayloadNode\"}," +
+                "{\"_id\":2,\"_type\":\"Physalia.AbilitySystem.Tests.LogCharacterNameNode\"}]," +
+                "\"edges\":[{\"id1\":0,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
+                "{\"id1\":2,\"port1\":\"character\",\"id2\":1,\"port2\":\"owner\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
+            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            StatOwner owner = ownerRepository.CreateOwner();
+            var character = new Character
+            {
+                name = "Mob1",
+                statOwner = owner,
+            };
+
+            var payload = new CustomPayload { owner = character, };
+            instance.Execute(payload);
+
+            LogAssert.Expect(LogType.Log, "My name is Mob1");
         }
     }
 }
