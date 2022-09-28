@@ -21,12 +21,8 @@ namespace Physalia.AbilitySystem.Tests
                 "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            abilityGraph.Reset(0);
-
-            while (abilityGraph.MoveNext())
-            {
-                abilityGraph.Current.Run();
-            }
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
