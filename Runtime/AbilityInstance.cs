@@ -17,13 +17,17 @@ namespace Physalia.AbilitySystem
 
         public void Execute(object payload)
         {
+            if (currentState != AbilityState.CLEAN && currentState != AbilityState.DONE)
+            {
+                Debug.LogError($"[{nameof(AbilityInstance)}] You can not execute any unfinished ability instance!");
+                return;
+            }
+
+            graph.Reset(0);
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
                 graph.Nodes[i].Payload = payload;
             }
-
-            graph.Reset(0);
-            currentState = AbilityState.CLEAN;
 
             IterateGraph();
         }
@@ -57,6 +61,16 @@ namespace Physalia.AbilitySystem
             }
 
             currentState = AbilityState.DONE;
+        }
+
+        public void Reset()
+        {
+            graph.Reset(0);
+            currentState = AbilityState.CLEAN;
+            for (var i = 0; i < graph.Nodes.Count; i++)
+            {
+                graph.Nodes[i].Payload = null;
+            }
         }
     }
 }

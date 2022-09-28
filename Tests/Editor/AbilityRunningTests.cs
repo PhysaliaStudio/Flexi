@@ -9,7 +9,7 @@ namespace Physalia.AbilitySystem.Tests
     public class AbilityRunningTests
     {
         [Test]
-        public void RunAbility_WithoutOwner()
+        public void RunAbility_ToFinish_DoAllTasksAndCurrentStateReturnsDone()
         {
             var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
                 "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
@@ -27,10 +27,12 @@ namespace Physalia.AbilitySystem.Tests
 
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
+
+            Assert.AreEqual(AbilityState.DONE, instance.CurrentState);
         }
 
         [Test]
-        public void RunAbility_WithOwner()
+        public void RunAbility_WithCustomPayload_DoTasksWithPayload()
         {
             var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
                 "\"nodes\":[{\"_id\":0,\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
@@ -125,6 +127,62 @@ namespace Physalia.AbilitySystem.Tests
             instance.Resume();
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
+        }
+
+        [Test]
+        public void RunAbility_ExecutePausedAbility_LogError()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_id\":2,\"_type\":\"Physalia.AbilitySystem.Tests.PauseNode\"}," +
+                "{\"_id\":3,\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"Ready to Pause!\"}," +
+                "{\"_id\":4,\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":5,\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":6,\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"Hello World!\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":4,\"port2\":\"previous\"}," +
+                "{\"id1\":4,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
+                "{\"id1\":4,\"port1\":\"text\",\"id2\":3,\"port2\":\"output\"}," +
+                "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
+                "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            instance.Execute(null);  // This will encounter pause
+            instance.Execute(null);  // Then execute again
+
+            LogAssert.Expect(LogType.Log, "Ready to Pause!");
+            LogAssert.Expect(LogType.Error, new Regex(".*"));
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
+        public void RunAbility_ResetPausedAbility_CurrentStateReturnsCleanAndCanExecuteAgain()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_id\":2,\"_type\":\"Physalia.AbilitySystem.Tests.PauseNode\"}," +
+                "{\"_id\":3,\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"Ready to Pause!\"}," +
+                "{\"_id\":4,\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":5,\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":6,\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"Hello World!\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":4,\"port2\":\"previous\"}," +
+                "{\"id1\":4,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
+                "{\"id1\":4,\"port1\":\"text\",\"id2\":3,\"port2\":\"output\"}," +
+                "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
+                "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            instance.Execute(null);  // This will encounter pause
+            instance.Reset();
+
+            Assert.AreEqual(AbilityState.CLEAN, instance.CurrentState);
+
+            instance.Execute(null);  // Then execute again
+
+            LogAssert.Expect(LogType.Log, "Ready to Pause!");
+            LogAssert.Expect(LogType.Log, "Ready to Pause!");
+            LogAssert.NoUnexpectedReceived();
         }
     }
 }
