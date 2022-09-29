@@ -232,6 +232,14 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                         AbilityGraph abilityGraph = graphView.GetAbilityGraph();
                         abilityGraph.RemoveNode(node.Node);
                     }
+                    else if (element is EdgeView edgeView)
+                    {
+                        var outputNodeView = edgeView.output.node as NodeView;
+                        var inputNodeView = edgeView.input.node as NodeView;
+                        Port outport = outputNodeView.GetPort(edgeView.output);
+                        Port inport = inputNodeView.GetPort(edgeView.input);
+                        outport.Disconnect(inport);
+                    }
                 }
             }
 
