@@ -6,9 +6,10 @@ namespace Physalia.AbilitySystem
     {
         public Inport<string> text;
 
-        protected override void DoLogic()
+        protected override AbilityState DoLogic()
         {
             Debug.Log(text.GetValue());
+            return AbilityState.RUNNING;
         }
     }
 }

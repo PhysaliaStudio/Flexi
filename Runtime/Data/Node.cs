@@ -23,6 +23,8 @@ namespace Physalia.AbilitySystem
         public IEnumerable<Inport> Inports => inports.Values;
         public IEnumerable<Outport> Outports => outports.Values;
 
+        public object Payload { get; internal set; }
+
         internal void AddInport(string name, Inport inport)
         {
             ports.Add(name, inport);
