@@ -24,19 +24,19 @@ namespace Physalia.AbilitySystem
         {
             Node node = NodeFactory.Create(type);
             GenerateNodeId(node);
-            AddNodeInternal(node);
+            AddNode(node);
             return node;
         }
 
-        internal void AddNodesInternal(IReadOnlyList<Node> newNodes)
+        public void AddNodes(IReadOnlyList<Node> newNodes)
         {
             for (var i = 0; i < newNodes.Count; i++)
             {
-                AddNodeInternal(newNodes[i]);
+                AddNode(newNodes[i]);
             }
         }
 
-        internal void AddNodeInternal(Node newNode)
+        public void AddNode(Node newNode)
         {
             nodes.Add(newNode);
             if (newNode is EntryNode entryNode)
@@ -110,7 +110,7 @@ namespace Physalia.AbilitySystem
             return true;
         }
 
-        internal void HandleInvalidNodeIds()
+        public void HandleInvalidNodeIds()
         {
             for (var i = 0; i < nodes.Count; i++)
             {
