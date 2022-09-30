@@ -26,7 +26,7 @@ namespace Physalia.AbilitySystem
             graph.Reset(0);
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
-                graph.Nodes[i].Payload = payload;
+                graph.Nodes[i].payload = payload;
             }
 
             IterateGraph();
@@ -69,7 +69,7 @@ namespace Physalia.AbilitySystem
             currentState = AbilityState.CLEAN;
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
-                graph.Nodes[i].Payload = null;
+                graph.Nodes[i].payload = null;
             }
         }
     }
