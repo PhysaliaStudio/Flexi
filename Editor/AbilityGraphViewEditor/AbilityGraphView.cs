@@ -15,6 +15,11 @@ namespace Physalia.AbilitySystem.GraphViewEditor
 
         private readonly AbilityGraph abilityGraph;
 
+        private readonly Dictionary<Node, NodeView> nodeTable = new();
+        private Vector2 lastContextPosition;
+
+        public Vector2 LastContextPosition => lastContextPosition;
+
         public AbilityGraphView() : this(new AbilityGraph())
         {
 
@@ -50,9 +55,67 @@ namespace Physalia.AbilitySystem.GraphViewEditor
         public void CreateNewNode(Type nodeType, Vector2 position)
         {
             Node node = abilityGraph.AddNewNode(nodeType);
+            node.position = position;
+            NodeView nodeView = CreateNodeElement(node);
+            nodeTable.Add(node, nodeView);
+        }
+
+        public void AddNode(Node node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            abilityGraph.AddNode(node);
+            NodeView nodeView = CreateNodeElement(node);
+            nodeTable.Add(node, nodeView);
+        }
+
+        private NodeView CreateNodeElement(Node node)
+        {
             var nodeView = new NodeView(node);
-            nodeView.SetPosition(new Rect(position, nodeView.GetPosition().size));
+            nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
             AddElement(nodeView);
+            return nodeView;
+        }
+
+        public void RemoveNode(Node node)
+        {
+            abilityGraph.RemoveNode(node);
+            if (nodeTable.TryGetValue(node, out NodeView nodeView))
+            {
+                nodeTable.Remove(node);
+                nodeView.RemoveFromHierarchy();
+            }
+        }
+
+        public void AddEdge(Edge edge)
+        {
+            Node node1 = abilityGraph.GetNode(edge.id1);
+            Node node2 = abilityGraph.GetNode(edge.id2);
+            Port port1 = node1.GetPort(edge.port1);
+            Port port2 = node2.GetPort(edge.port2);
+            port1.Connect(port2);
+
+            NodeView currentNodeView = nodeTable[node1];
+            NodeView anotherNodeView = nodeTable[node2];
+            PortView portView1 = currentNodeView.GetPortView(port1);
+            PortView portView2 = anotherNodeView.GetPortView(port2);
+            EdgeView edgeView = portView1.ConnectTo(portView2);
+            AddElement(edgeView);
+        }
+
+        public void ValidateNodeIds()
+        {
+            abilityGraph.HandleInvalidNodeIds();
+        }
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            var worldPos = ElementAt(0).LocalToWorld(evt.localMousePosition);
+            lastContextPosition = ElementAt(1).WorldToLocal(worldPos);
         }
 
         public override List<PortView> GetCompatiblePorts(PortView startAnchor, NodeAdapter nodeAdapter)
@@ -86,8 +149,6 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                 return graphView;
             }
 
-            var nodeTable = new Dictionary<Node, NodeView>();
-
             // Create nodes
             for (var i = 0; i < nodes.Count; i++)
             {
@@ -102,7 +163,7 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     nodeData.id = UnityEngine.Random.Range(1, 1000000);
                 }
 
-                nodeTable.Add(nodeData, node);
+                graphView.nodeTable.Add(nodeData, node);
             }
 
             // Create edges with DFS
@@ -113,13 +174,12 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             }
 
             Node current = nodes[0];
-            SearchAllNodes(current, nodeTable, ref graphView, ref unhandledNodes);
+            SearchAllNodes(current, ref graphView, ref unhandledNodes);
 
             return graphView;
         }
 
-        private static void SearchAllNodes(Node current, Dictionary<Node, NodeView> nodeTable,
-            ref AbilityGraphView graphView, ref HashSet<Node> unhandledNodes)
+        private static void SearchAllNodes(Node current, ref AbilityGraphView graphView, ref HashSet<Node> unhandledNodes)
         {
             if (!unhandledNodes.Contains(current))
             {
@@ -141,8 +201,8 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                         continue;
                     }
 
-                    NodeView currentNodeView = nodeTable[current];
-                    NodeView anotherNodeView = nodeTable[anotherPort.Node];
+                    NodeView currentNodeView = graphView.nodeTable[current];
+                    NodeView anotherNodeView = graphView.nodeTable[anotherPort.Node];
 
                     PortView portView1 = currentNodeView.GetPortView(currentPort);
                     PortView portView2 = anotherNodeView.GetPortView(anotherPort);
@@ -155,7 +215,7 @@ namespace Physalia.AbilitySystem.GraphViewEditor
 
                 foreach (Port anotherPort in connections)
                 {
-                    SearchAllNodes(anotherPort.Node, nodeTable, ref graphView, ref unhandledNodes);
+                    SearchAllNodes(anotherPort.Node, ref graphView, ref unhandledNodes);
                 }
             }
         }

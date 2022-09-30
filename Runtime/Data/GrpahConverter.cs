@@ -25,7 +25,7 @@ namespace Physalia.AbilitySystem
             }
 
             List<Node> nodes = nodesToken.ToObject<List<Node>>();
-            graph.AddNodesInternal(nodes);
+            graph.AddNodes(nodes);
 
             // Edges
             JToken edgesToken = jsonObject[EDGES_KEY];

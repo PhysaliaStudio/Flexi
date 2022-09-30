@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
@@ -219,6 +223,110 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             graphViewParent.Add(graphView);
 
             graphView.graphViewChanged += OnGraphViewChanged;
+            graphView.serializeGraphElements += SerializeGraphElements;
+            graphView.canPasteSerializedData += CanPasteSerializedData;
+            graphView.unserializeAndPaste += UnserializeAndPaste;
+        }
+
+        private string SerializeGraphElements(IEnumerable<GraphElement> elements)
+        {
+            var partialGraph = new PartialGraph();
+
+            // Collect nodes
+            foreach (GraphElement element in elements)
+            {
+                if (element is NodeView nodeView)
+                {
+                    Node node = nodeView.Node;
+                    partialGraph.nodes.Add(node);
+                }
+            }
+
+            // Collect edges
+            foreach (GraphElement element in elements)
+            {
+                if (element is EdgeView edgeView)
+                {
+                    var outputNodeView = edgeView.output.node as NodeView;
+                    var inputNodeView = edgeView.input.node as NodeView;
+
+                    // If there's any node not in this selection, remove this edge.
+                    if (partialGraph.nodes.Contains(outputNodeView.Node) && partialGraph.nodes.Contains(inputNodeView.Node))
+                    {
+                        Port outport = outputNodeView.GetPort(edgeView.output);
+                        Port inport = inputNodeView.GetPort(edgeView.input);
+                        Edge edge = new Edge
+                        {
+                            id1 = outputNodeView.Node.id,
+                            id2 = inputNodeView.Node.id,
+                            port1 = outport.Name,
+                            port2 = inport.Name,
+                        };
+
+                        partialGraph.edges.Add(edge);
+                    }
+                }
+            }
+
+            string json = JsonConvert.SerializeObject(partialGraph);
+            return json;
+        }
+
+        private void UnserializeAndPaste(string operationName, string data)
+        {
+            Vector2 localMousePosition = graphView.LastContextPosition;
+
+            PartialGraph partialGraph;
+            try
+            {
+                partialGraph = JsonConvert.DeserializeObject<PartialGraph>(data);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+                return;
+            }
+
+            // Calculate the most top-left point
+            var topLeft = new Vector2(float.MaxValue, float.MaxValue);
+            for (var i = 0; i < partialGraph.nodes.Count; i++)
+            {
+                Node node = partialGraph.nodes[i];
+                if (node.position.x < topLeft.x)
+                {
+                    topLeft.x = node.position.x;
+                }
+
+                if (node.position.y < topLeft.y)
+                {
+                    topLeft.y = node.position.y;
+                }
+            }
+
+            // Offset the nodes to match the menu position
+            for (var i = 0; i < partialGraph.nodes.Count; i++)
+            {
+                Node node = partialGraph.nodes[i];
+                node.id = -node.id;
+                node.position += localMousePosition - topLeft;
+                graphView.AddNode(node);
+            }
+
+            // Connect the edges
+            for (var i = 0; i < partialGraph.edges.Count; i++)
+            {
+                Edge edge = partialGraph.edges[i];
+                edge.id1 = -edge.id1;
+                edge.id2 = -edge.id2;
+                graphView.AddEdge(edge);
+            }
+
+            graphView.ValidateNodeIds();
+        }
+
+        private bool CanPasteSerializedData(string data)
+        {
+            return !string.IsNullOrEmpty(data);
         }
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
@@ -227,10 +335,17 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             {
                 foreach (GraphElement element in graphViewChange.elementsToRemove)
                 {
-                    if (element is NodeView node)
+                    if (element is NodeView nodeView)
                     {
-                        AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-                        abilityGraph.RemoveNode(node.Node);
+                        graphView.RemoveNode(nodeView.Node);
+                    }
+                    else if (element is EdgeView edgeView)
+                    {
+                        var outputNodeView = edgeView.output.node as NodeView;
+                        var inputNodeView = edgeView.input.node as NodeView;
+                        Port outport = outputNodeView.GetPort(edgeView.output);
+                        Port inport = inputNodeView.GetPort(edgeView.input);
+                        outport.Disconnect(inport);
                     }
                 }
             }

@@ -37,7 +37,7 @@ namespace Physalia.AbilitySystem
             outports.Add(name, outport);
         }
 
-        internal Port GetPort(string name)
+        public Port GetPort(string name)
         {
             if (ports.TryGetValue(name, out Port port))
             {
@@ -47,7 +47,7 @@ namespace Physalia.AbilitySystem
             return null;
         }
 
-        internal Inport GetInput(string name)
+        public Inport GetInput(string name)
         {
             if (inports.TryGetValue(name, out Inport inport))
             {
@@ -57,7 +57,7 @@ namespace Physalia.AbilitySystem
             return null;
         }
 
-        internal Outport GetOutput(string name)
+        public Outport GetOutput(string name)
         {
             if (outports.TryGetValue(name, out Outport outport))
             {
