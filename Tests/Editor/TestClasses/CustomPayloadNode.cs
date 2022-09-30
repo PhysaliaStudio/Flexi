@@ -6,7 +6,8 @@ namespace Physalia.AbilitySystem.Tests
 
         public override void Evaluate()
         {
-            owner.SetValue(((CustomPayload)Payload).owner);
+            CustomPayload payload = GetPayload<CustomPayload>();
+            owner.SetValue(payload.owner);
         }
     }
 }

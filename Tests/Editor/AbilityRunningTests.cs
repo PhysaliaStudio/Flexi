@@ -184,5 +184,132 @@ namespace Physalia.AbilitySystem.Tests
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.NoUnexpectedReceived();
         }
+
+        [Test]
+        public void ConditionalTrigger_NoCondition()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.StartNode\"}," +
+                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"World!\"}," +
+                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"Hello\"}]," +
+                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
+                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            Assert.AreEqual(true, instance.CanExecute(null));
+        }
+
+        [Test]
+        public void ConditionalTrigger_FailedWithEmptyCondition()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.Tests.CustomDamageEventNode\"}," +
+                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I'm damaged!\"}," +
+                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I will revenge!\"}]," +
+                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
+                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            Assert.AreEqual(false, instance.CanExecute(null));
+
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
+        public void ConditionalTrigger_SuccessWhenMatchCondition()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.Tests.CustomDamageEventNode\"}," +
+                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I'm damaged!\"}," +
+                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I will revenge!\"}]," +
+                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
+                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
+            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            StatOwner owner = ownerRepository.CreateOwner();
+            var character = new Character
+            {
+                name = "Mob1",
+                statOwner = owner,
+            };
+
+            var payload = new CustomPayload { owner = character, instigator = character, };
+
+            Assert.AreEqual(true, instance.CanExecute(payload));
+
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
+        public void RunAbility_WithConditionFailed_DoNotExecute()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.Tests.CustomDamageEventNode\"}," +
+                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I'm damaged!\"}," +
+                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I will revenge!\"}]," +
+                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
+                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            instance.Execute(null);
+
+            LogAssert.Expect(LogType.Error, new Regex(".*"));
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
+        public void RunAbility_WithConditionSuccess_ExecuteAsExpected()
+        {
+            var json = "{\"_type\":\"Physalia.AbilitySystem.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilitySystem.Tests.CustomDamageEventNode\"}," +
+                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilitySystem.LogNode\"}," +
+                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I'm damaged!\"}," +
+                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilitySystem.StringNode\",\"text\":\"I will revenge!\"}]," +
+                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
+                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
+                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
+            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            StatOwner owner = ownerRepository.CreateOwner();
+            var character = new Character
+            {
+                name = "Mob1",
+                statOwner = owner,
+            };
+
+            var payload = new CustomPayload { owner = character, instigator = character, };
+            instance.Execute(payload);
+
+            LogAssert.Expect(LogType.Log, "I'm damaged!");
+            LogAssert.Expect(LogType.Log, "I will revenge!");
+            LogAssert.NoUnexpectedReceived();
+        }
     }
 }

@@ -15,6 +15,23 @@ namespace Physalia.AbilitySystem
             this.graph = graph;
         }
 
+        public bool CanExecute(object payload)
+        {
+            graph.Reset(0);
+            if (graph.Current == null)
+            {
+                return false;
+            }
+
+            if (graph.Current is EntryNode entryNode)
+            {
+                graph.Current.payload = payload;
+                return entryNode.CanExecute();
+            }
+
+            return false;
+        }
+
         public void Execute(object payload)
         {
             if (currentState != AbilityState.CLEAN && currentState != AbilityState.DONE)
@@ -23,10 +40,16 @@ namespace Physalia.AbilitySystem
                 return;
             }
 
+            if (!CanExecute(payload))
+            {
+                Debug.LogError($"[{nameof(AbilityInstance)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
+                return;
+            }
+
             graph.Reset(0);
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
-                graph.Nodes[i].Payload = payload;
+                graph.Nodes[i].payload = payload;
             }
 
             IterateGraph();
@@ -69,7 +92,7 @@ namespace Physalia.AbilitySystem
             currentState = AbilityState.CLEAN;
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
-                graph.Nodes[i].Payload = null;
+                graph.Nodes[i].payload = null;
             }
         }
     }
