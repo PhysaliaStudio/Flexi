@@ -6,11 +6,22 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class IntegrationTests
     {
+        private AbilitySystem abilitySystem;
+
+        [SetUp]
+        public void SetUp()
+        {
+            AbilitySystemBuilder builder = new AbilitySystemBuilder();
+
+            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
+            builder.SetStatDefinitions(statDefinitionListAsset);
+
+            abilitySystem = builder.Build();
+        }
+
         [Test]
         public void CreateOwner_GetOwnerReturnsTheSameInstance()
         {
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            var abilitySystem = new AbilitySystem(statDefinitionListAsset);
             StatOwner owner = abilitySystem.CreateOwner();
             Assert.AreEqual(owner, abilitySystem.GetOwner(owner.Id));
         }
@@ -18,8 +29,6 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void RemoveOwner_GetOwnerReturnsNull()
         {
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            var abilitySystem = new AbilitySystem(statDefinitionListAsset);
             StatOwner owner = abilitySystem.CreateOwner();
             abilitySystem.RemoveOwner(owner);
             Assert.AreEqual(null, abilitySystem.GetOwner(owner.Id));
@@ -28,8 +37,6 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            var abilitySystem = new AbilitySystem(statDefinitionListAsset);
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
