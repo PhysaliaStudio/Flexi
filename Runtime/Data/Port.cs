@@ -47,5 +47,71 @@ namespace Physalia.AbilitySystem
                 Disconnect(connections[i]);
             }
         }
+
+        private static bool IsListType(Type type)
+        {
+            if (type.InstanceOfGenericInterface(typeof(IList<>)))
+            {
+                return true;
+            }
+
+            if (type.InstanceOfGenericInterface(typeof(IReadOnlyList<>)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool CanPortCast(Type outportType, Type inportType)
+        {
+            if (outportType == inportType)
+            {
+                return true;
+            }
+
+            bool isOutportList = IsListType(outportType);
+            bool isInportList = IsListType(inportType);
+
+            if (!isOutportList && !isInportList)
+            {
+                return inportType.IsAssignableFrom(outportType);
+            }
+
+            if (isOutportList && !isInportList)  // Cannot cast list of objects to a single object
+            {
+                return false;
+            }
+
+            if (!isOutportList && isInportList)
+            {
+                Type[] inportListTypes = inportType.GenericTypeArguments;
+                if (inportListTypes.Length != 1)
+                {
+                    return false;
+                }
+
+                return inportListTypes[0].IsAssignableFrom(outportType);
+            }
+
+            if (isOutportList && isInportList)
+            {
+                Type[] outportListTypes = outportType.GenericTypeArguments;
+                if (outportListTypes.Length != 1)
+                {
+                    return false;
+                }
+
+                Type[] inportListTypes = inportType.GenericTypeArguments;
+                if (inportListTypes.Length != 1)
+                {
+                    return false;
+                }
+
+                return inportListTypes[0].IsAssignableFrom(outportListTypes[0]);
+            }
+
+            return false;
+        }
     }
 }

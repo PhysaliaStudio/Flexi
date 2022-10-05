@@ -128,13 +128,20 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     continue;
                 }
 
-                if (startAnchor.portType != portView.portType &&
-                    !startAnchor.portType.IsAssignableFrom(portView.portType) && !portView.portType.IsAssignableFrom(startAnchor.portType))
+                bool canCast;
+                if (startAnchor.direction == Direction.Output)
                 {
-                    continue;
+                    canCast = Port.CanPortCast(startAnchor.portType, portView.portType);
+                }
+                else
+                {
+                    canCast = Port.CanPortCast(portView.portType, startAnchor.portType);
                 }
 
-                compatiblePorts.Add(portView);
+                if (canCast)
+                {
+                    compatiblePorts.Add(portView);
+                }
             }
             return compatiblePorts;
         }
