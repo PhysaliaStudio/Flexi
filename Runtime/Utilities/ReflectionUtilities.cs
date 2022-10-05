@@ -59,5 +59,29 @@ namespace Physalia.AbilitySystem
                 return results;
             }
         }
+
+        public static bool InstanceOfGenericInterface(this Type type, Type interfaceType)
+        {
+            if (type.InstanceOfGenericType(interfaceType))
+            {
+                return true;
+            }
+
+            Type[] interfaceTypes = type.GetInterfaces();
+            for (var i = 0; i < interfaceTypes.Length; i++)
+            {
+                if (interfaceTypes[i].InstanceOfGenericType(interfaceType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static bool InstanceOfGenericType(this Type type, Type genericType)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == genericType;
+        }
     }
 }

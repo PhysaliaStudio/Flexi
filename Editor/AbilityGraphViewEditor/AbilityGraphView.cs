@@ -128,13 +128,20 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     continue;
                 }
 
-                if (startAnchor.portType != portView.portType &&
-                    !startAnchor.portType.IsAssignableFrom(portView.portType) && !portView.portType.IsAssignableFrom(startAnchor.portType))
+                bool canCast;
+                if (startAnchor.direction == Direction.Output)
                 {
-                    continue;
+                    canCast = Port.CanPortCast(startAnchor.portType, portView.portType);
+                }
+                else
+                {
+                    canCast = Port.CanPortCast(portView.portType, startAnchor.portType);
                 }
 
-                compatiblePorts.Add(portView);
+                if (canCast)
+                {
+                    compatiblePorts.Add(portView);
+                }
             }
             return compatiblePorts;
         }
@@ -210,8 +217,17 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     EdgeView edgeView = portView1.ConnectTo(portView2);
                     graphView.AddElement(edgeView);
                 }
+            }
 
-                unhandledNodes.Remove(current);
+            unhandledNodes.Remove(current);
+
+            foreach (Port currentPort in current.Ports)
+            {
+                IReadOnlyList<Port> connections = currentPort.GetConnections();
+                if (connections.Count == 0)
+                {
+                    continue;
+                }
 
                 foreach (Port anotherPort in connections)
                 {

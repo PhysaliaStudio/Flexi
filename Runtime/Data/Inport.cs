@@ -52,23 +52,18 @@ namespace Physalia.AbilitySystem
             return value;
         }
 
-        public IReadOnlyList<T> GetValues()
-        {
-            for (var i = 0; i < outports.Count; i++)
-            {
-                T value = GetOutportValue(outports[i]);
-                valuesCache.Add(value);
-            }
-
-            return valuesCache;
-        }
-
         private T GetOutportValue(Outport outport)
         {
             if (outport is Outport<T> genericOutport)
             {
                 T value = genericOutport.GetValue();
                 return value;
+            }
+
+            var convertFunc = outport.GetValueConverter(typeof(T));
+            if (convertFunc != null)
+            {
+                return (T)convertFunc.Invoke();
             }
 
             return default;
