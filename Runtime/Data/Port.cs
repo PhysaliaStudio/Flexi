@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Physalia.AbilitySystem
@@ -48,7 +49,7 @@ namespace Physalia.AbilitySystem
             }
         }
 
-        private static bool IsListType(Type type)
+        protected static bool IsListType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IList<>)))
             {
@@ -112,6 +113,90 @@ namespace Physalia.AbilitySystem
             }
 
             return false;
+        }
+
+        /// <returns>A function that can convert provided first arg value from type to type</returns>
+        public static Func<object, object> GetConverter(Type outportType, Type inportType)
+        {
+            // Normal assignment
+            if (inportType.IsAssignableFrom(outportType))
+            {
+                return (value) => value;
+            }
+
+            bool isOutportList = IsListType(outportType);
+            bool isInportList = IsListType(inportType);
+
+            if (!isOutportList && !isInportList)
+            {
+                if (inportType.IsAssignableFrom(outportType))
+                {
+                    return (value) => value;
+                }
+
+                return null;
+            }
+
+            if (isOutportList && !isInportList)  // Cannot cast list of objects to a single object
+            {
+                return null;
+            }
+
+            if (!isOutportList && isInportList)
+            {
+                Type[] inportListTypes = inportType.GenericTypeArguments;
+                if (inportListTypes.Length != 1)
+                {
+                    return null;
+                }
+
+                if (!inportListTypes[0].IsAssignableFrom(outportType))
+                {
+                    return null;
+                }
+
+                return (value) =>
+                {
+                    Type genericListType = typeof(List<>).MakeGenericType(inportListTypes[0]);
+                    var list = Activator.CreateInstance(genericListType) as IList;
+                    list.Add(value);
+                    return list;
+                };
+            }
+
+            if (isOutportList && isInportList)
+            {
+                Type[] outportListTypes = outportType.GenericTypeArguments;
+                if (outportListTypes.Length != 1)
+                {
+                    return null;
+                }
+
+                Type[] inportListTypes = inportType.GenericTypeArguments;
+                if (inportListTypes.Length != 1)
+                {
+                    return null;
+                }
+
+                if (!inportListTypes[0].IsAssignableFrom(outportListTypes[0]))
+                {
+                    return null;
+                }
+
+                return (value) =>
+                {
+                    var fromList = value as IList;
+                    Type genericListType = typeof(List<>).MakeGenericType(inportListTypes[0]);
+                    var toList = Activator.CreateInstance(genericListType) as IList;
+                    for (var i = 0; i < fromList.Count; i++)
+                    {
+                        toList.Add(fromList[i]);
+                    }
+                    return toList;
+                };
+            }
+
+            return null;
         }
     }
 }

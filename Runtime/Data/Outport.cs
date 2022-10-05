@@ -5,7 +5,7 @@ namespace Physalia.AbilitySystem
 {
     public abstract class Outport : Port
     {
-
+        internal abstract Func<object> GetValueConverter(Type toType);
     }
 
     public sealed class Outport<T> : Outport
@@ -49,6 +49,22 @@ namespace Physalia.AbilitySystem
         public void SetValue(T value)
         {
             this.value = value;
+        }
+
+        internal override Func<object> GetValueConverter(Type toType)
+        {
+            if (toType.IsAssignableFrom(ValueType))
+            {
+                return () => value;
+            }
+
+            var converter = GetConverter(ValueType, toType);
+            if (converter != null)
+            {
+                return () => converter(value);
+            }
+
+            return null;
         }
     }
 }
