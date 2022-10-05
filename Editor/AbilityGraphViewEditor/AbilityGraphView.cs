@@ -210,8 +210,17 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                     EdgeView edgeView = portView1.ConnectTo(portView2);
                     graphView.AddElement(edgeView);
                 }
+            }
 
-                unhandledNodes.Remove(current);
+            unhandledNodes.Remove(current);
+
+            foreach (Port currentPort in current.Ports)
+            {
+                IReadOnlyList<Port> connections = currentPort.GetConnections();
+                if (connections.Count == 0)
+                {
+                    continue;
+                }
 
                 foreach (Port anotherPort in connections)
                 {
