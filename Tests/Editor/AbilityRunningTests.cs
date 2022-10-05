@@ -46,13 +46,9 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, };
+            var payload = new CustomPayload { owner = unit, };
             instance.Execute(payload);
 
             LogAssert.Expect(LogType.Log, "My name is Mob1");
@@ -244,13 +240,9 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, instigator = character, };
+            var payload = new CustomPayload { owner = unit, instigator = unit, };
 
             Assert.AreEqual(true, instance.CanExecute(payload));
 
@@ -298,13 +290,9 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, instigator = character, };
+            var payload = new CustomPayload { owner = unit, instigator = unit, };
             instance.Execute(payload);
 
             LogAssert.Expect(LogType.Log, "I'm damaged!");

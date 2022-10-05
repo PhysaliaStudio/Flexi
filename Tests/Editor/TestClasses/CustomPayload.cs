@@ -1,8 +1,11 @@
+using System.Collections.Generic;
+
 namespace Physalia.AbilitySystem.Tests
 {
     public class CustomPayload
     {
-        public Character owner;
-        public Character instigator;
+        public CustomUnit owner;
+        public CustomUnit instigator;
+        public List<CustomUnit> targets = new();
     }
 }
