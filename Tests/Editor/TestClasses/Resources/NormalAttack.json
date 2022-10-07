@@ -1,0 +1,103 @@
+{
+  "_type": "Physalia.AbilitySystem.AbilityGraph",
+  "nodes": [
+    {
+      "_id": 875447,
+      "_position": {
+        "x": 54.0,
+        "y": 76.0
+      },
+      "_type": "Physalia.AbilitySystem.StartNode"
+    },
+    {
+      "_id": 393698,
+      "_position": {
+        "x": 569.0,
+        "y": 76.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomDamageNode"
+    },
+    {
+      "_id": 398883,
+      "_position": {
+        "x": 761.0,
+        "y": 227.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomDamageNode"
+    },
+    {
+      "_id": 612842,
+      "_position": {
+        "x": 37.0,
+        "y": 228.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomNormalAttackPayloadNode"
+    },
+    {
+      "_id": 957515,
+      "_position": {
+        "x": 308.0,
+        "y": 164.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomUnitNode"
+    },
+    {
+      "_id": 547805,
+      "_position": {
+        "x": 308.0,
+        "y": 314.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomUnitNode"
+    }
+  ],
+  "edges": [
+    {
+      "id1": 875447,
+      "port1": "next",
+      "id2": 393698,
+      "port2": "previous"
+    },
+    {
+      "id1": 393698,
+      "port1": "next",
+      "id2": 398883,
+      "port2": "previous"
+    },
+    {
+      "id1": 393698,
+      "port1": "targets",
+      "id2": 612842,
+      "port2": "mainTargetPort"
+    },
+    {
+      "id1": 393698,
+      "port1": "baseValue",
+      "id2": 957515,
+      "port2": "attackPort"
+    },
+    {
+      "id1": 398883,
+      "port1": "targets",
+      "id2": 612842,
+      "port2": "attackerPort"
+    },
+    {
+      "id1": 398883,
+      "port1": "baseValue",
+      "id2": 547805,
+      "port2": "attackPort"
+    },
+    {
+      "id1": 612842,
+      "port1": "attackerPort",
+      "id2": 957515,
+      "port2": "customUnitPort"
+    },
+    {
+      "id1": 612842,
+      "port1": "mainTargetPort",
+      "id2": 547805,
+      "port2": "customUnitPort"
+    }
+  ]
+}
