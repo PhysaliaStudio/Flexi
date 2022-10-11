@@ -41,7 +41,8 @@ namespace Physalia.AbilitySystem.Tests
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
-            instance.Execute(null);
+            abilitySystem.AddToLast(instance, null);
+            abilitySystem.Run();
 
             // Check if the instance can do the same thing
             LogAssert.Expect(LogType.Log, "Hello");
