@@ -1,0 +1,58 @@
+{
+  "_type": "Physalia.AbilitySystem.AbilityGraph",
+  "nodes": [
+    {
+      "_id": 341180,
+      "_position": {
+        "x": 138.0,
+        "y": 131.0
+      },
+      "_type": "Physalia.AbilitySystem.StartNode"
+    },
+    {
+      "_id": 852984,
+      "_position": {
+        "x": 410.0,
+        "y": 242.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomAttackDecreaseNode"
+    },
+    {
+      "_id": 491651,
+      "_position": {
+        "x": 85.0,
+        "y": 242.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomNormalAttackPayloadNode"
+    },
+    {
+      "_id": 568148,
+      "_position": {
+        "x": 185.0,
+        "y": 383.0
+      },
+      "_type": "Physalia.AbilitySystem.IntegerNode",
+      "value": 2
+    }
+  ],
+  "edges": [
+    {
+      "id1": 341180,
+      "port1": "next",
+      "id2": 852984,
+      "port2": "previous"
+    },
+    {
+      "id1": 852984,
+      "port1": "targets",
+      "id2": 491651,
+      "port2": "mainTargetPort"
+    },
+    {
+      "id1": 852984,
+      "port1": "baseValue",
+      "id2": 568148,
+      "port2": "output"
+    }
+  ]
+}

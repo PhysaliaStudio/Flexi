@@ -71,5 +71,32 @@ namespace Physalia.AbilitySystem.Tests
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
+
+        [Test]
+        public void ExecuteAbilitiySequence()
+        {
+            abilitySystem.LoadAbilityGraph(123456, CustomAbility.NORAML_ATTACK);
+            abilitySystem.LoadAbilityGraph(234567, CustomAbility.ATTACK_DECREASE);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(234567);
+            AbilityInstance instance2 = abilitySystem.GetAbilityInstance(123456);
+            var payload = new CustomNormalAttackPayload
+            {
+                attacker = unit1,
+                mainTarget = unit2,
+            };
+
+            abilitySystem.AddToLast(instance1, payload);
+            abilitySystem.AddToLast(instance2, payload);
+            abilitySystem.Run();
+
+            Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(23, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
     }
 }

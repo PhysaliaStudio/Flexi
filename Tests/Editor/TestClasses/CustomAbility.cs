@@ -20,6 +20,14 @@ namespace Physalia.AbilitySystem.Tests
             }
         }
 
+        public static string ATTACK_DECREASE
+        {
+            get
+            {
+                return ReadAbilityFile("AttackDecrease");
+            }
+        }
+
         private static string ReadAbilityFile(string fileName)
         {
             TextAsset asset = Resources.Load<TextAsset>(fileName);
