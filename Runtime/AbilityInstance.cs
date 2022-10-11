@@ -15,6 +15,14 @@ namespace Physalia.AbilitySystem
             this.graph = graph;
         }
 
+        public void SetPayload(object payload)
+        {
+            for (var i = 0; i < graph.Nodes.Count; i++)
+            {
+                graph.Nodes[i].payload = payload;
+            }
+        }
+
         public bool CanExecute(object payload)
         {
             graph.Reset(0);
@@ -32,7 +40,7 @@ namespace Physalia.AbilitySystem
             return false;
         }
 
-        public void Execute(object payload)
+        public void Execute(object payload = null)
         {
             if (currentState != AbilityState.CLEAN && currentState != AbilityState.DONE)
             {
@@ -47,9 +55,12 @@ namespace Physalia.AbilitySystem
             }
 
             graph.Reset(0);
-            for (var i = 0; i < graph.Nodes.Count; i++)
+            if (payload != null)
             {
-                graph.Nodes[i].payload = payload;
+                for (var i = 0; i < graph.Nodes.Count; i++)
+                {
+                    graph.Nodes[i].payload = payload;
+                }
             }
 
             IterateGraph();

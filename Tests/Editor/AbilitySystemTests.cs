@@ -64,7 +64,8 @@ namespace Physalia.AbilitySystem.Tests
                 mainTarget = unit2,
             };
 
-            instance.Execute(payload);
+            abilitySystem.AddToLast(instance, payload);
+            abilitySystem.Run();
 
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);

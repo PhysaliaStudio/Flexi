@@ -7,11 +7,14 @@ namespace Physalia.AbilitySystem
     public class AbilitySystem
     {
         private readonly StatOwnerRepository ownerRepository;
+        private readonly AbilityRunner runner;
+
         private readonly Dictionary<int, string> graphTable = new();
 
-        public AbilitySystem(StatDefinitionListAsset statDefinitionListAsset)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            this.runner = runner;
         }
 
         public StatOwner CreateOwner()
@@ -50,6 +53,17 @@ namespace Physalia.AbilitySystem
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
             AbilityInstance instance = new AbilityInstance(graph);
             return instance;
+        }
+
+        public void AddToLast(AbilityInstance instance, object payload)
+        {
+            instance.SetPayload(payload);
+            runner.Add(instance);
+        }
+
+        public void Run()
+        {
+            runner.Run();
         }
     }
 }
