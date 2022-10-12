@@ -4,11 +4,11 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class LogCharacterNameNode : ProcessNode
     {
-        public Inport<Character> character;
+        public Inport<CustomUnit> character;
 
         protected override AbilityState DoLogic()
         {
-            Debug.Log($"My name is {character.GetValue()?.name}");
+            Debug.Log($"My name is {character.GetValue()?.Name}");
             return AbilityState.RUNNING;
         }
     }

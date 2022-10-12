@@ -23,7 +23,7 @@ namespace Physalia.AbilitySystem.Tests
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.Execute(null);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
@@ -46,14 +46,11 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, };
-            instance.Execute(payload);
+            var payload = new CustomPayload { owner = unit, };
+            instance.SetPayload(payload);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Log, "My name is Mob1");
         }
@@ -76,7 +73,7 @@ namespace Physalia.AbilitySystem.Tests
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            instance.Execute(null);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.NoUnexpectedReceived();
@@ -100,7 +97,7 @@ namespace Physalia.AbilitySystem.Tests
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            instance.Execute(null);
+            instance.Execute();
             instance.Resume();
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
@@ -122,7 +119,7 @@ namespace Physalia.AbilitySystem.Tests
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.Execute(null);
+            instance.Execute();
 
             instance.Resume();
 
@@ -147,8 +144,8 @@ namespace Physalia.AbilitySystem.Tests
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            instance.Execute(null);  // This will encounter pause
-            instance.Execute(null);  // Then execute again
+            instance.Execute();  // This will encounter pause
+            instance.Execute();  // Then execute again
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Error, new Regex(".*"));
@@ -173,12 +170,12 @@ namespace Physalia.AbilitySystem.Tests
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            instance.Execute(null);  // This will encounter pause
+            instance.Execute();  // This will encounter pause
             instance.Reset();
 
             Assert.AreEqual(AbilityState.CLEAN, instance.CurrentState);
 
-            instance.Execute(null);  // Then execute again
+            instance.Execute();  // Then execute again
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
@@ -244,13 +241,9 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, instigator = character, };
+            var payload = new CustomPayload { owner = unit, instigator = unit, };
 
             Assert.AreEqual(true, instance.CanExecute(payload));
 
@@ -273,7 +266,7 @@ namespace Physalia.AbilitySystem.Tests
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            instance.Execute(null);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
             LogAssert.NoUnexpectedReceived();
@@ -298,14 +291,11 @@ namespace Physalia.AbilitySystem.Tests
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             StatOwner owner = ownerRepository.CreateOwner();
-            var character = new Character
-            {
-                name = "Mob1",
-                statOwner = owner,
-            };
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
 
-            var payload = new CustomPayload { owner = character, instigator = character, };
-            instance.Execute(payload);
+            var payload = new CustomPayload { owner = unit, instigator = unit, };
+            instance.SetPayload(payload);
+            instance.Execute();
 
             LogAssert.Expect(LogType.Log, "I'm damaged!");
             LogAssert.Expect(LogType.Log, "I will revenge!");
