@@ -10,14 +10,14 @@ namespace Physalia.AbilitySystem
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
-        private readonly List<StatModifierInstance> modifiers = new();
+        private readonly HashSet<StatModifierInstance> modifiers = new();
 
         private bool isValid = true;
 
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<StatModifierInstance> Modifiers => modifiers;
+        internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {

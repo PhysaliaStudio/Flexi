@@ -8,12 +8,11 @@ namespace Physalia.AbilitySystem
 
         public void RefreshStats(StatOwner owner)
         {
-            for (var i = 0; i < owner.Modifiers.Count; i++)
+            foreach (StatModifierInstance modifierInstance in owner.Modifiers)
             {
-                StatModifierInstance modifierInstance = owner.Modifiers[i];
-                for (var j = 0; j < modifierInstance.Items.Count; j++)
+                for (var i = 0; i < modifierInstance.Items.Count; i++)
                 {
-                    StatModifierItem modifierItem = modifierInstance.Items[j];
+                    StatModifierItem modifierItem = modifierInstance.Items[i];
                     if (modifierItem.op == StatModifierItem.Operator.ADD)
                     {
                         if (sumsCache.ContainsKey(modifierItem.statId))
