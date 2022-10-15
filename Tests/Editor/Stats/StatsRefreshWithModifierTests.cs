@@ -25,19 +25,19 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void SingleModifier_WithStatIdOwnerNotOwned_NoError()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
             owner.RemoveStat(StatTestHelper.ATTACK);
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.IsNull(owner.GetStat(StatTestHelper.ATTACK));
@@ -47,18 +47,18 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void SingleModifier_WithInvalidStatId_NoError()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = 999,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = 999,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.Pass();
@@ -67,18 +67,18 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void SingleModifier_100Minus10_CurrentBaseReturns100AndCurrentValueReturns90()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.MAX_HEALTH,
-                Op = AbilityEffect.Operator.ADD,
-                Value = -10,
+                statId = StatTestHelper.MAX_HEALTH,
+                op = StatModifierItem.Operator.ADD,
+                value = -10,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -88,18 +88,18 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void SingleModifier_12Mul50Percent_CurrentBaseReturns12AndCurrentValueReturns18()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -109,24 +109,24 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void MultipleModifier_Base12Add6AndMul50Percent_CurrentBaseReturns12AndCurrentValueReturns27()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
-            effect.Effects.Add(new AbilityEffect
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.ADD,
-                Value = 6,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = 6,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -136,30 +136,30 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void MultipleModifier_WithDifferentStatIds()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
-            effect.Effects.Add(new AbilityEffect
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.ADD,
-                Value = 6,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = 6,
             });
-            effect.Effects.Add(new AbilityEffect
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.MAX_HEALTH,
-                Op = AbilityEffect.Operator.ADD,
-                Value = -10,
+                statId = StatTestHelper.MAX_HEALTH,
+                op = StatModifierItem.Operator.ADD,
+                value = -10,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -171,30 +171,30 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void RefreshTwice_ReturnsTheSameValues()
         {
-            var effect = new AbilityContext { ContextType = AbilityContext.Type.MODIFIER };
-            effect.Effects.Add(new AbilityEffect
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.MUL,
-                Value = 50,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.MUL,
+                value = 50,
             });
-            effect.Effects.Add(new AbilityEffect
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.ATTACK,
-                Op = AbilityEffect.Operator.ADD,
-                Value = 6,
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = 6,
             });
-            effect.Effects.Add(new AbilityEffect
+            modifier.items.Add(new StatModifierItem
             {
-                StatId = StatTestHelper.MAX_HEALTH,
-                Op = AbilityEffect.Operator.ADD,
-                Value = -10,
+                statId = StatTestHelper.MAX_HEALTH,
+                op = StatModifierItem.Operator.ADD,
+                value = -10,
             });
 
-            var instance = new AbilityContextInstance(effect);
+            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
 
-            owner.AppendAbilityContext(instance);
+            owner.AppendModifier(instance);
             repository.RefreshStats(owner);
             repository.RefreshStats(owner);
 
