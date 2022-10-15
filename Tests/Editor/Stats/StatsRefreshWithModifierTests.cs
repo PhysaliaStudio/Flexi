@@ -4,10 +4,17 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class StatsRefreshWithModifierTests
     {
-        private StatOwner CreateOwner()
+        private StatOwnerRepository repository;
+
+        [SetUp]
+        public void SetUp()
         {
             StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            repository = StatOwnerRepository.Create(statDefinitionList);
+        }
+
+        private StatOwner CreateOwner()
+        {
             StatOwner owner = repository.CreateOwner();
             owner.AddStat(StatTestHelper.HEALTH, 100);
             owner.AddStat(StatTestHelper.MAX_HEALTH, 100);
@@ -31,7 +38,7 @@ namespace Physalia.AbilitySystem.Tests
             owner.RemoveStat(StatTestHelper.ATTACK);
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.IsNull(owner.GetStat(StatTestHelper.ATTACK));
             Assert.Pass();
@@ -52,7 +59,7 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.Pass();
         }
@@ -72,7 +79,7 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);
@@ -93,7 +100,7 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
             Assert.AreEqual(18, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
@@ -120,7 +127,7 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
             Assert.AreEqual(27, owner.GetStat(StatTestHelper.ATTACK).CurrentValue);
@@ -153,7 +160,7 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);
@@ -188,8 +195,8 @@ namespace Physalia.AbilitySystem.Tests
             var owner = CreateOwner();
 
             owner.AppendAbilityContext(instance);
-            owner.RefreshStats();
-            owner.RefreshStats();
+            repository.RefreshStats(owner);
+            repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentValue);

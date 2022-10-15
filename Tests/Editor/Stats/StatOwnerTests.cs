@@ -28,28 +28,13 @@ namespace Physalia.AbilitySystem.Tests
         }
 
         [Test]
-        public void SetStat_OriginalBaseIs2AndNewBaseIs6_OriginalBaseIs2AndCurrentBaseAndValueAre6()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddStat(11, 2);
-            owner.SetStat(11, 6);
-
-            var stat = owner.GetStat(11);
-            Assert.AreEqual(2, stat.OriginalBase);
-            Assert.AreEqual(6, stat.CurrentBase);
-            Assert.AreEqual(6, stat.CurrentValue);
-        }
-
-        [Test]
         public void SetStatWithoutRefresh_OriginalBaseIs2AndNewBaseIs6_OriginalBaseAndValueAre2AndCurrentBaseIs6()
         {
             StatOwnerRepository repository = CreateRepository();
             StatOwner owner = repository.CreateOwner();
 
             owner.AddStat(11, 2);
-            owner.SetStat(11, 6, false);
+            owner.SetStat(11, 6);
 
             var stat = owner.GetStat(11);
             Assert.AreEqual(2, stat.OriginalBase);

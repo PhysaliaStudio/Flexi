@@ -8,7 +8,6 @@ namespace Physalia.AbilitySystem
         private readonly int id;
         private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
-        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<AbilityContextInstance> contexts = new();
@@ -20,12 +19,11 @@ namespace Physalia.AbilitySystem
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
         internal IReadOnlyList<AbilityContextInstance> AbilityContexts => contexts;
 
-        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
+        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {
             this.id = id;
             this.table = table;
             this.repository = repository;
-            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public bool IsValid()
@@ -67,15 +65,11 @@ namespace Physalia.AbilitySystem
             return stat;
         }
 
-        public void SetStat(int statId, int newBase, bool refresh = true)
+        public void SetStat(int statId, int newBase)
         {
             if (stats.TryGetValue(statId, out Stat stat))
             {
                 stat.CurrentBase = newBase;
-                if (refresh)
-                {
-                    RefreshStats();
-                }
             }
         }
 
@@ -94,13 +88,7 @@ namespace Physalia.AbilitySystem
             contexts.Clear();
         }
 
-        public void RefreshStats()
-        {
-            ResetAllStats();
-            modifierAlgorithm.RefreshStats(this);
-        }
-
-        private void ResetAllStats()
+        internal void ResetAllStats()
         {
             foreach (Stat stat in stats.Values)
             {

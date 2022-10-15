@@ -7,21 +7,28 @@ namespace Physalia.AbilitySystem
     public class StatOwnerRepository
     {
         private readonly StatDefinitionTable table;
+        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, StatOwner> idToOwners = new();
         private readonly HashSet<StatOwner> owners = new();
         private readonly Random random = new();
 
-        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset)
+        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm = null)
         {
             StatDefinitionTable table = new StatDefinitionTable.Factory().Create(statDefinitionListAsset.stats);
-            var ownerRepository = new StatOwnerRepository(table);
+            if (modifierAlgorithm == null)
+            {
+                modifierAlgorithm = new DefaultModifierAlgorithm();
+            }
+
+            var ownerRepository = new StatOwnerRepository(table, modifierAlgorithm);
             return ownerRepository;
         }
 
-        private StatOwnerRepository(StatDefinitionTable table)
+        private StatOwnerRepository(StatDefinitionTable table, IModifierAlgorithm modifierAlgorithm)
         {
             this.table = table;
+            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public StatOwner CreateOwner()
@@ -32,7 +39,7 @@ namespace Physalia.AbilitySystem
                 randomId = random.Next(0, int.MaxValue);
             }
 
-            var owner = new StatOwner(randomId, table, this, new DefaultModifierAlgorithm());
+            var owner = new StatOwner(randomId, table, this);
             idToOwners.Add(randomId, owner);
             owners.Add(owner);
             return owner;
@@ -65,6 +72,20 @@ namespace Physalia.AbilitySystem
 
             idToOwners.Remove(owner.Id);
             owners.Remove(owner);
+        }
+
+        internal void RefreshStatsForAllOwners()
+        {
+            foreach (StatOwner owner in owners)
+            {
+                RefreshStats(owner);
+            }
+        }
+
+        internal void RefreshStats(StatOwner owner)
+        {
+            owner.ResetAllStats();
+            modifierAlgorithm.RefreshStats(owner);
         }
     }
 }
