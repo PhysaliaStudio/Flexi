@@ -54,6 +54,11 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                 {
                     Type genericType = field.FieldType.GetGenericArguments()[0];
                     CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(genericType);
+                    if (creationMethod == null)
+                    {
+                        continue;
+                    }
+
                     var variable = field.GetValue(node) as Variable;
                     IVariableField variableField = creationMethod.Invoke(field.Name, variable);
                     extensionContainer.Add(variableField.VisualElement);
