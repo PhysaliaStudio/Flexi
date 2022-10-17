@@ -69,8 +69,7 @@ namespace Physalia.AbilitySystem.Tests
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
-            abilitySystem.AddToLast(instance, null);
-            abilitySystem.Run();
+            abilitySystem.ActivateInstance(instance, null);
 
             // Check if the instance can do the same thing
             LogAssert.Expect(LogType.Log, "Hello");
@@ -93,8 +92,7 @@ namespace Physalia.AbilitySystem.Tests
                 mainTarget = unit2,
             };
 
-            abilitySystem.AddToLast(instance, payload);
-            abilitySystem.Run();
+            abilitySystem.ActivateInstance(instance, payload);
 
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -103,24 +101,23 @@ namespace Physalia.AbilitySystem.Tests
         [Test]
         public void ExecuteAbilitiySequence()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.NORAML_ATTACK);
-            abilitySystem.LoadAbilityGraph(234567, CustomAbility.ATTACK_DECREASE);
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_DECREASE);
+            abilitySystem.LoadAbilityGraph(2, CustomAbility.NORAML_ATTACK);
 
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(234567);
-            AbilityInstance instance2 = abilitySystem.GetAbilityInstance(123456);
+            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance2 = abilitySystem.GetAbilityInstance(2);
             var payload = new CustomNormalAttackPayload
             {
                 attacker = unit1,
                 mainTarget = unit2,
             };
 
-            abilitySystem.AddToLast(instance1, payload);
-            abilitySystem.AddToLast(instance2, payload);
-            abilitySystem.Run();
+            abilitySystem.ActivateInstance(instance1, payload);
+            abilitySystem.ActivateInstance(instance2, payload);
 
             Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
