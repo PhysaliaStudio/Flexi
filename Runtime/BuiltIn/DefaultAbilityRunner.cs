@@ -2,7 +2,7 @@ namespace Physalia.AbilitySystem
 {
     internal sealed class DefaultAbilityRunner : AbilityRunner
     {
-        public override AbilityState Run()
+        public override AbilityState Run(AbilitySystem abilitySystem, AbilityEventQueue eventQueue)
         {
             Reset();
             while (Next())
@@ -15,6 +15,9 @@ namespace Physalia.AbilitySystem
                 {
                     return state;
                 }
+
+                abilitySystem.RefreshStatsAndModifiers();
+                abilitySystem.TriggerNextEvent();
             }
 
             Clear();

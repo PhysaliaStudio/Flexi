@@ -4,6 +4,7 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class CustomDamageNode : ProcessNode
     {
+        public Inport<CustomUnit> instigatorPort;
         public Inport<List<CustomUnit>> targets;
         public Inport<int> baseValue;
 
@@ -14,7 +15,13 @@ namespace Physalia.AbilitySystem.Tests
             for (var i = 0; i < list.Count; i++)
             {
                 Stat stat = list[i].Owner.GetStat(CustomStats.HEALTH);
-                stat.CurrentValue -= damage;
+                stat.CurrentBase -= damage;
+
+                Instance.System?.AddEventToLast(new CustomDamageEvent
+                {
+                    instigator = instigatorPort.GetValue(),
+                    target = list[i],
+                });
             }
 
             return AbilityState.RUNNING;

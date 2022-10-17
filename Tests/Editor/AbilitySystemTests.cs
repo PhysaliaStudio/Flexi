@@ -86,13 +86,20 @@ namespace Physalia.AbilitySystem.Tests
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
-            var payload = new CustomNormalAttackPayload
+            var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
                 mainTarget = unit2,
             };
 
-            abilitySystem.ActivateInstance(instance, payload);
+            var payload2 = new CustomNormalAttackPayload
+            {
+                attacker = unit2,
+                mainTarget = unit1,
+            };
+
+            abilitySystem.ActivateInstance(instance, payload1);
+            abilitySystem.ActivateInstance(instance, payload2);
 
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -110,14 +117,21 @@ namespace Physalia.AbilitySystem.Tests
 
             AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
             AbilityInstance instance2 = abilitySystem.GetAbilityInstance(2);
-            var payload = new CustomNormalAttackPayload
+            var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
                 mainTarget = unit2,
             };
 
-            abilitySystem.ActivateInstance(instance1, payload);
-            abilitySystem.ActivateInstance(instance2, payload);
+            var payload2 = new CustomNormalAttackPayload
+            {
+                attacker = unit2,
+                mainTarget = unit1,
+            };
+
+            abilitySystem.ActivateInstance(instance1, payload1);
+            abilitySystem.ActivateInstance(instance2, payload1);
+            abilitySystem.ActivateInstance(instance2, payload2);
 
             Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -182,6 +196,71 @@ namespace Physalia.AbilitySystem.Tests
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void ConditionalModifier_ReachConditionWhileRunningSystem_ModifierNotAppendedAndStatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
+            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            abilitySystem.AppendAbility(unit2, 2);
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            var payload1 = new CustomNormalAttackPayload
+            {
+                attacker = unit1,
+                mainTarget = unit2,
+            };
+
+            var payload2 = new CustomNormalAttackPayload
+            {
+                attacker = unit2,
+                mainTarget = unit1,
+            };
+
+            abilitySystem.ActivateInstance(instance, payload1);
+            abilitySystem.ActivateInstance(instance, payload2);
+
+            Assert.AreEqual(1, unit2.Owner.Modifiers.Count);
+            Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(19, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
+
+        [Test]
+        public void ExecuteAbilitiy_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
+            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            abilitySystem.AppendAbility(unit2, 2);
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            var payload1 = new CustomNormalAttackPayload
+            {
+                attacker = unit1,
+                mainTarget = unit2,
+            };
+
+            var payload2 = new CustomNormalAttackPayload
+            {
+                attacker = unit2,
+                mainTarget = unit1,
+            };
+
+            abilitySystem.ActivateInstance(instance, payload1);
+            abilitySystem.ActivateInstance(instance, payload2);
+
+            Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(17, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
     }
 }

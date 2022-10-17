@@ -19,7 +19,7 @@ namespace Physalia.AbilitySystem
 
         public virtual bool CanExecute()
         {
-            return true;
+            return false;
         }
     }
 }
