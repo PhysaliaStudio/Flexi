@@ -12,7 +12,7 @@ namespace Physalia.AbilitySystem.Tests
             if (asset == null)
             {
                 asset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-                Debug.LogWarning($"[{nameof(AbilitySystemBuilder)}] The stat definition asset is null. Internally created an empty one.");
+                Logger.Warn($"[{nameof(AbilitySystemBuilder)}] The stat definition asset is null. Internally created an empty one.");
             }
 
             if (runner == null)
@@ -20,7 +20,7 @@ namespace Physalia.AbilitySystem.Tests
                 runner = new DefaultAbilityRunner();
             }
 
-            Debug.Log($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");
+            Logger.Info($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");
 
             return new AbilitySystem(asset, runner);
         }

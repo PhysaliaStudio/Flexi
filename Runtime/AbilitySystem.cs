@@ -38,7 +38,7 @@ namespace Physalia.AbilitySystem
             bool success = graphTable.TryAdd(id, graphJson);
             if (!success)
             {
-                Debug.LogError($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
+                Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
             }
         }
 
@@ -47,7 +47,7 @@ namespace Physalia.AbilitySystem
             bool success = graphTable.TryGetValue(id, out string graphJson);
             if (!success)
             {
-                Debug.LogError($"[{nameof(AbilitySystem)}] Get instance failed! Not exists graph with Id:{id}");
+                Logger.Error($"[{nameof(AbilitySystem)}] Get instance failed! Not exists graph with Id:{id}");
                 return null;
             }
 

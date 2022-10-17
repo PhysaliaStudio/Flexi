@@ -67,13 +67,13 @@ namespace Physalia.AbilitySystem
         {
             if (currentState != AbilityState.CLEAN && currentState != AbilityState.DONE)
             {
-                Debug.LogError($"[{nameof(AbilityInstance)}] You can not execute any unfinished ability instance!");
+                Logger.Error($"[{nameof(AbilityInstance)}] You can not execute any unfinished ability instance!");
                 return;
             }
 
             if (!CanExecute(payload))
             {
-                Debug.LogError($"[{nameof(AbilityInstance)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
+                Logger.Error($"[{nameof(AbilityInstance)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
                 return;
             }
 
@@ -86,7 +86,7 @@ namespace Physalia.AbilitySystem
         {
             if (currentState != AbilityState.PAUSE)
             {
-                Debug.LogError($"[{nameof(AbilityInstance)}] You can not resume any unpaused ability instance!");
+                Logger.Error($"[{nameof(AbilityInstance)}] You can not resume any unpaused ability instance!");
                 return;
             }
 

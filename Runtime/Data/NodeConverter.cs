@@ -87,7 +87,7 @@ namespace Physalia.AbilitySystem
             JToken typeToken = jsonObject[TYPE_KEY];
             if (typeToken == null)
             {
-                Debug.LogError($"[{nameof(NodeConverter)}] Deserialize failed: Missing the type field");
+                Logger.Error($"[{nameof(NodeConverter)}] Deserialize failed: Missing the type field");
                 return new UndefinedNode();
             }
 
@@ -95,7 +95,7 @@ namespace Physalia.AbilitySystem
             Type type = ReflectionUtilities.GetTypeByName(typeName);
             if (type == null)
             {
-                Debug.LogError($"[{nameof(NodeConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
+                Logger.Error($"[{nameof(NodeConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
                 return new UndefinedNode();
             }
 

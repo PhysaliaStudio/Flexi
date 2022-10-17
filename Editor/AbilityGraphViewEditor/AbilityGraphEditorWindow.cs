@@ -44,7 +44,7 @@ namespace Physalia.AbilitySystem.GraphViewEditor
         {
             if (uiAsset == null)
             {
-                Debug.LogError($"[{nameof(AbilityGraphEditorWindow)}] Missing UIAsset, set the corrent reference in {nameof(AbilityGraphEditorWindow)} ScriptAsset might fix this");
+                Logger.Error($"[{nameof(AbilityGraphEditorWindow)}] Missing UIAsset, set the corrent reference in {nameof(AbilityGraphEditorWindow)} ScriptAsset might fix this");
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             switch (option)
             {
                 default:
-                    Debug.LogError("Unrecognized option");
+                    Logger.Error("Unrecognized option");
                     return false;
                 // Save
                 case 0:
@@ -283,7 +283,7 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
+                Logger.Fatal(e);
                 return;
             }
 

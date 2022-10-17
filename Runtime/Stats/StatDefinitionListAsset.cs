@@ -29,7 +29,7 @@ namespace Physalia.AbilitySystem
                 }
                 else
                 {
-                    Debug.LogError($"Parse line {i} failed!");
+                    Logger.Error($"Parse line {i} failed!");
                 }
             }
 

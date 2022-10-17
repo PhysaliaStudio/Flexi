@@ -57,7 +57,7 @@ namespace Physalia.AbilitySystem
             JToken typeToken = jsonObject[TYPE_KEY];
             if (typeToken == null)
             {
-                Debug.LogWarning($"[{nameof(GraphConverter)}] Missing the type field! Will create Graph instead.");
+                Logger.Warn($"[{nameof(GraphConverter)}] Missing the type field! Will create Graph instead.");
                 return new Graph();
             }
 
@@ -65,7 +65,7 @@ namespace Physalia.AbilitySystem
             Type type = ReflectionUtilities.GetTypeByName(typeName);
             if (type == null)
             {
-                Debug.LogError($"[{nameof(GraphConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
+                Logger.Error($"[{nameof(GraphConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
                 return new Graph();
             }
 
