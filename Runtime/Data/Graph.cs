@@ -59,7 +59,7 @@ namespace Physalia.AbilitySystem
             }
             else
             {
-                Debug.LogWarning($"[{nameof(Graph)}] Try to delete node, but the node doesn't belong to this graph");
+                Logger.Warn($"[{nameof(Graph)}] Try to delete node, but the node doesn't belong to this graph");
             }
 
             return;

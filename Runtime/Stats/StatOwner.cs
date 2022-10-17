@@ -38,13 +38,13 @@ namespace Physalia.AbilitySystem
             StatDefinition definition = table.GetStatDefinition(statId);
             if (definition == null)
             {
-                Debug.LogError($"Create stat failed! See upon messages for details");
+                Logger.Error($"Create stat failed! See upon messages for details");
                 return;
             }
 
             if (stats.ContainsKey(statId))
             {
-                Debug.LogError($"Create stat failed! Owner {id} already has stat {definition}");
+                Logger.Error($"Create stat failed! Owner {id} already has stat {definition}");
                 return;
             }
 

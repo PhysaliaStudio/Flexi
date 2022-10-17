@@ -54,7 +54,7 @@ namespace Physalia.AbilitySystem
                 return owner;
             }
 
-            Debug.LogWarning($"Cannot find StatOwner with <Id:{id}>");
+            Logger.Warn($"Cannot find StatOwner with <Id:{id}>");
             return null;
         }
 
@@ -62,13 +62,13 @@ namespace Physalia.AbilitySystem
         {
             if (owner == null)
             {
-                Debug.LogError($"Remove owner failed! The owner is null");
+                Logger.Error($"Remove owner failed! The owner is null");
                 return;
             }
 
             if (!owners.Contains(owner))
             {
-                Debug.LogError($"Remove owner failed! The owner with Id:{owner.Id} does not belong to this repository");
+                Logger.Error($"Remove owner failed! The owner with Id:{owner.Id} does not belong to this repository");
                 return;
             }
 

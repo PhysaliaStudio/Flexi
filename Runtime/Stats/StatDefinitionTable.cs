@@ -18,7 +18,7 @@ namespace Physalia.AbilitySystem
                 // If the counts are different, it means there are id conflictions and skipped
                 if (table.Count != definitions.Count)
                 {
-                    Debug.LogError($"Create table failed! Detected id conflictions, see upon messages for details");
+                    Logger.Error($"Create table failed! Detected id conflictions, see upon messages for details");
                     return null;
                 }
 
@@ -34,19 +34,19 @@ namespace Physalia.AbilitySystem
         {
             if (table.ContainsKey(definition.Id))
             {
-                Debug.LogError($"Add stat definition failed! Already contains the same <Id:{definition.Id}>");
+                Logger.Error($"Add stat definition failed! Already contains the same <Id:{definition.Id}>");
                 return;
             }
 
             table.Add(definition.Id, definition);
-            Debug.Log($"Added stat definition {definition}");
+            Logger.Info($"Added stat definition {definition}");
         }
 
         internal StatDefinition GetStatDefinition(int id)
         {
             if (!table.ContainsKey(id))
             {
-                Debug.LogError($"Get stat definition failed! The stat with <Id:{id}> does not exist");
+                Logger.Error($"Get stat definition failed! The stat with <Id:{id}> does not exist");
                 return null;
             }
 

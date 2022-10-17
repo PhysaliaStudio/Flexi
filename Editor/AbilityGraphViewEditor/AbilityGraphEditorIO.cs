@@ -25,8 +25,8 @@ namespace Physalia.AbilitySystem.GraphViewEditor
             }
             catch (Exception e)
             {
-                Debug.LogException(e);
-                Debug.LogError("Failed to parse JSON to AbilitySource");
+                Logger.Fatal(e);
+                Logger.Error("Failed to parse JSON to AbilitySource");
                 abilityGraph = null;
             }
             return abilityGraph;
