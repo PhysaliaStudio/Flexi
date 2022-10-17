@@ -107,8 +107,11 @@ namespace Physalia.AbilitySystem
             {
                 foreach (AbilityInstance ability in owner.Abilities)
                 {
-                    ability.SetPayload(payload);
-                    ability.Execute();
+                    if (ability.CanExecute(payload))
+                    {
+                        ability.SetPayload(payload);
+                        ability.Execute();
+                    }
                 }
             }
 
