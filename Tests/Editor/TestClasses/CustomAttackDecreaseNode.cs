@@ -14,7 +14,7 @@ namespace Physalia.AbilitySystem.Tests
             for (var i = 0; i < list.Count; i++)
             {
                 Stat stat = list[i].Owner.GetStat(CustomStats.ATTACK);
-                stat.CurrentValue -= damage;
+                stat.CurrentBase -= damage;
             }
 
             return AbilityState.RUNNING;
