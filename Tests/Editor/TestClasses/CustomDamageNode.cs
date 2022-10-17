@@ -4,6 +4,7 @@ namespace Physalia.AbilitySystem.Tests
 {
     public class CustomDamageNode : ProcessNode
     {
+        public Inport<CustomUnit> instigatorPort;
         public Inport<List<CustomUnit>> targets;
         public Inport<int> baseValue;
 
