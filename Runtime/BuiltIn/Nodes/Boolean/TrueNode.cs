@@ -4,7 +4,7 @@ namespace Physalia.AbilitySystem
     {
         public Outport<bool> value;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             value.SetValue(true);
         }

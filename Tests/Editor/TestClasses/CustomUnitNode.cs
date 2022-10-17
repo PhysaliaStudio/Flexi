@@ -8,7 +8,7 @@ namespace Physalia.AbilitySystem.Tests
         public Outport<int> maxHealthPort;
         public Outport<int> attackPort;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             CustomUnit customUnit = customUnitPort.GetValue();
             if (customUnit == null)
