@@ -99,5 +99,20 @@ namespace Physalia.AbilitySystem
         {
             runner.Run();
         }
+
+        public void RefreshModifiers()
+        {
+            var payload = new StatRefreshEvent();
+            foreach (StatOwner owner in ownerRepository.Owners)
+            {
+                foreach (AbilityInstance ability in owner.Abilities)
+                {
+                    ability.SetPayload(payload);
+                    ability.Execute();
+                }
+            }
+
+            ownerRepository.RefreshStatsForAllOwners();
+        }
     }
 }

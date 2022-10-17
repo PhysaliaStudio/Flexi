@@ -123,5 +123,65 @@ namespace Physalia.AbilitySystem.Tests
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(23, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
+
+        [Test]
+        public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            unit.Owner.SetStat(CustomStats.HEALTH, 3);
+            unit.Owner.RefreshStats();
+
+            abilitySystem.AppendAbility(unit, 1);
+            abilitySystem.RefreshModifiers();
+
+            Assert.AreEqual(1, unit.Owner.Modifiers.Count);
+            Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void ConditionalModifier_NotReachCondition_ModifierNotAppendedAndStatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            abilitySystem.AppendAbility(unit, 1);
+            abilitySystem.RefreshModifiers();
+
+            Assert.AreEqual(0, unit.Owner.Modifiers.Count);
+            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void ConditionalModifier_ReachConditionThenMakeNotReach_ModifierRemovedAndStatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            unit.Owner.SetStat(CustomStats.HEALTH, 3);
+            unit.Owner.RefreshStats();
+
+            abilitySystem.AppendAbility(unit, 1);
+            abilitySystem.RefreshModifiers();
+
+            Assert.AreEqual(1, unit.Owner.Modifiers.Count);
+            Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+
+            unit.Owner.SetStat(CustomStats.HEALTH, 6);
+            unit.Owner.RefreshStats();
+            abilitySystem.RefreshModifiers();
+
+            Assert.AreEqual(0, unit.Owner.Modifiers.Count);
+            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
     }
 }

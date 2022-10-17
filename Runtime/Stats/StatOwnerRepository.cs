@@ -13,6 +13,8 @@ namespace Physalia.AbilitySystem
         private readonly HashSet<StatOwner> owners = new();
         private readonly Random random = new();
 
+        public IReadOnlyCollection<StatOwner> Owners => owners;
+
         public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm = null)
         {
             StatDefinitionTable table = new StatDefinitionTable.Factory().Create(statDefinitionListAsset.stats);
