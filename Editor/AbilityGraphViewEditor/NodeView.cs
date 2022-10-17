@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 using PortView = UnityEditor.Experimental.GraphView.Port;
 
@@ -9,6 +10,10 @@ namespace Physalia.AbilitySystem.GraphViewEditor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
+        private static readonly Color ENTRY_COLOR = new(140f / 255f, 31f / 255f, 36f / 255f, 205f / 255f);
+        private static readonly Color PROCESS_COLOR = new(73f / 255f, 114f / 255f, 140f / 255f, 205f / 255f);
+        private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
+
         private readonly Node node;
         private readonly Dictionary<Port, PortView> portDataToViewTable = new();
         private readonly Dictionary<PortView, Port> portViewToDataTable = new();
@@ -25,14 +30,25 @@ namespace Physalia.AbilitySystem.GraphViewEditor
         private void HandleNodeStyles(Node node)
         {
             Type nodeType = node.GetType();
+            if (node is EntryNode)
+            {
+                titleContainer.style.backgroundColor = ENTRY_COLOR;
+            }
+            else if (node is ProcessNode)
+            {
+                titleContainer.style.backgroundColor = PROCESS_COLOR;
+            }
+
             if (nodeType == typeof(TrueNode))
             {
                 title = "TRUE";
+                titleContainer.style.backgroundColor = CONSTANT_COLOR;
                 HandleConstantNodeStyle();
             }
             else if (nodeType == typeof(FalseNode))
             {
                 title = "FALSE";
+                titleContainer.style.backgroundColor = CONSTANT_COLOR;
                 HandleConstantNodeStyle();
             }
             else if (nodeType == typeof(EqualNode))
