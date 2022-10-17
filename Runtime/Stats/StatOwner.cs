@@ -8,24 +8,24 @@ namespace Physalia.AbilitySystem
         private readonly int id;
         private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
-        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, Stat> stats = new();
-        private readonly List<AbilityContextInstance> contexts = new();
+        private readonly List<AbilityInstance> abilities = new();
+        private readonly HashSet<StatModifierInstance> modifiers = new();
 
         private bool isValid = true;
 
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<AbilityContextInstance> AbilityContexts => contexts;
+        internal IReadOnlyCollection<AbilityInstance> Abilities => abilities;
+        internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
 
-        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository, IModifierAlgorithm modifierAlgorithm)
+        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {
             this.id = id;
             this.table = table;
             this.repository = repository;
-            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public bool IsValid()
@@ -67,40 +67,62 @@ namespace Physalia.AbilitySystem
             return stat;
         }
 
-        public void SetStat(int statId, int newBase, bool refresh = true)
+        public void SetStat(int statId, int newBase)
         {
             if (stats.TryGetValue(statId, out Stat stat))
             {
                 stat.CurrentBase = newBase;
-                if (refresh)
+            }
+        }
+
+        public void AppendAbility(AbilityInstance ability)
+        {
+            abilities.Add(ability);
+        }
+
+        public void RemoveAbility(AbilityInstance ability)
+        {
+            abilities.Remove(ability);
+        }
+
+        public void RemoveAbility(int abilityId)
+        {
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                if (abilities[i].AbilityId == abilityId)
                 {
-                    RefreshStats();
+                    abilities.RemoveAt(i);
+                    return;
                 }
             }
         }
 
-        public void AppendAbilityContext(AbilityContextInstance instance)
+        public void ClearAllAbilities()
         {
-            contexts.Add(instance);
+            abilities.Clear();
         }
 
-        public void RemoveAbilityContext(AbilityContextInstance instance)
+        public void AppendModifier(StatModifierInstance modifier)
         {
-            contexts.Remove(instance);
+            modifiers.Add(modifier);
         }
 
-        public void ClearAllAbilityContexts()
+        public void RemoveModifier(StatModifierInstance modifier)
         {
-            contexts.Clear();
+            modifiers.Remove(modifier);
         }
 
-        public void RefreshStats()
+        public void ClearAllModifiers()
         {
-            ResetAllStats();
-            modifierAlgorithm.RefreshStats(this);
+            modifiers.Clear();
         }
 
-        private void ResetAllStats()
+        internal void RefreshStats()
+        {
+            repository.RefreshStats(this);
+        }
+
+        internal void ResetAllStats()
         {
             foreach (Stat stat in stats.Values)
             {

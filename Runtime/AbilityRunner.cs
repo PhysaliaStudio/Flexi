@@ -41,6 +41,11 @@ namespace Physalia.AbilitySystem
             instances.Add(instance);
         }
 
+        public void Clear()
+        {
+            instances.Clear();
+        }
+
         public abstract AbilityState Run();
     }
 }

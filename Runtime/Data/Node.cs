@@ -19,11 +19,12 @@ namespace Physalia.AbilitySystem
         [NonSerialized]
         private readonly Dictionary<string, Outport> outports = new();
 
-        internal object payload;
+        internal AbilityInstance instance;
 
         public IEnumerable<Port> Ports => ports.Values;
         public IEnumerable<Inport> Inports => inports.Values;
         public IEnumerable<Outport> Outports => outports.Values;
+        public AbilityInstance Instance => instance;
 
         internal void AddInport(string name, Inport inport)
         {
@@ -77,7 +78,12 @@ namespace Physalia.AbilitySystem
 
         public T GetPayload<T>() where T : class
         {
-            return payload as T;
+            if (instance == null)
+            {
+                return null;
+            }
+
+            return instance.Payload as T;
         }
     }
 }

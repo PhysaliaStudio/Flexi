@@ -28,6 +28,22 @@ namespace Physalia.AbilitySystem.Tests
             }
         }
 
+        public static string ATTACK_DOUBLE
+        {
+            get
+            {
+                return ReadAbilityFile("AttackDouble");
+            }
+        }
+
+        public static string ATTACK_UP_WHEN_LOW_HEALTH
+        {
+            get
+            {
+                return ReadAbilityFile("AttackUpWhenLowHealth");
+            }
+        }
+
         private static string ReadAbilityFile(string fileName)
         {
             TextAsset asset = Resources.Load<TextAsset>(fileName);

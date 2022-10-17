@@ -28,28 +28,13 @@ namespace Physalia.AbilitySystem.Tests
         }
 
         [Test]
-        public void SetStat_OriginalBaseIs2AndNewBaseIs6_OriginalBaseIs2AndCurrentBaseAndValueAre6()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddStat(11, 2);
-            owner.SetStat(11, 6);
-
-            var stat = owner.GetStat(11);
-            Assert.AreEqual(2, stat.OriginalBase);
-            Assert.AreEqual(6, stat.CurrentBase);
-            Assert.AreEqual(6, stat.CurrentValue);
-        }
-
-        [Test]
         public void SetStatWithoutRefresh_OriginalBaseIs2AndNewBaseIs6_OriginalBaseAndValueAre2AndCurrentBaseIs6()
         {
             StatOwnerRepository repository = CreateRepository();
             StatOwner owner = repository.CreateOwner();
 
             owner.AddStat(11, 2);
-            owner.SetStat(11, 6, false);
+            owner.SetStat(11, 6);
 
             var stat = owner.GetStat(11);
             Assert.AreEqual(2, stat.OriginalBase);
@@ -98,6 +83,75 @@ namespace Physalia.AbilitySystem.Tests
             StatOwner owner = repository.CreateOwner();
 
             Assert.IsNull(owner.GetStat(11));
+        }
+
+        [Test]
+        public void AppendModifier_CurrentIs10_Becomes8()
+        {
+            StatOwnerRepository repository = CreateRepository();
+            StatOwner owner = repository.CreateOwner();
+            owner.AddStat(CustomStats.ATTACK, 10);
+
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
+            {
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = -2,
+            });
+
+            var modifierInstance = new StatModifierInstance(modifier);
+            owner.AppendModifier(modifierInstance);
+            repository.RefreshStats(owner);
+
+            Assert.AreEqual(8, owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void AppendModifier_CurrentIs10AndApplySameInstancesTwice_IsStill8()
+        {
+            StatOwnerRepository repository = CreateRepository();
+            StatOwner owner = repository.CreateOwner();
+            owner.AddStat(CustomStats.ATTACK, 10);
+
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
+            {
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = -2,
+            });
+
+            var modifierInstance = new StatModifierInstance(modifier);
+            owner.AppendModifier(modifierInstance);
+            owner.AppendModifier(modifierInstance);
+            repository.RefreshStats(owner);
+
+            Assert.AreEqual(8, owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
+        public void AppendModifier_CurrentIs10AndApplyDifferentInstnacesTwice_Becomes6()
+        {
+            StatOwnerRepository repository = CreateRepository();
+            StatOwner owner = repository.CreateOwner();
+            owner.AddStat(CustomStats.ATTACK, 10);
+
+            var modifier = new StatModifier();
+            modifier.items.Add(new StatModifierItem
+            {
+                statId = StatTestHelper.ATTACK,
+                op = StatModifierItem.Operator.ADD,
+                value = -2,
+            });
+
+            var modifierInstance1 = new StatModifierInstance(modifier);
+            var modifierInstance2 = new StatModifierInstance(modifier);
+            owner.AppendModifier(modifierInstance1);
+            owner.AppendModifier(modifierInstance2);
+            repository.RefreshStats(owner);
+
+            Assert.AreEqual(6, owner.GetStat(CustomStats.ATTACK).CurrentValue);
         }
     }
 }
