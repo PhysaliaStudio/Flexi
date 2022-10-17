@@ -10,6 +10,7 @@ namespace Physalia.AbilitySystem
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
+        private readonly List<AbilityInstance> abilities = new();
         private readonly HashSet<StatModifierInstance> modifiers = new();
 
         private bool isValid = true;
@@ -17,6 +18,7 @@ namespace Physalia.AbilitySystem
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
+        internal IReadOnlyCollection<AbilityInstance> Abilities => abilities;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
@@ -73,6 +75,33 @@ namespace Physalia.AbilitySystem
             }
         }
 
+        public void AppendAbility(AbilityInstance ability)
+        {
+            abilities.Add(ability);
+        }
+
+        public void RemoveAbility(AbilityInstance ability)
+        {
+            abilities.Remove(ability);
+        }
+
+        public void RemoveAbility(int abilityId)
+        {
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                if (abilities[i].AbilityId == abilityId)
+                {
+                    abilities.RemoveAt(i);
+                    return;
+                }
+            }
+        }
+
+        public void ClearAllAbilities()
+        {
+            abilities.Clear();
+        }
+
         public void AppendModifier(StatModifierInstance modifier)
         {
             modifiers.Add(modifier);
@@ -86,6 +115,11 @@ namespace Physalia.AbilitySystem
         public void ClearAllModifiers()
         {
             modifiers.Clear();
+        }
+
+        internal void RefreshStats()
+        {
+            repository.RefreshStats(this);
         }
 
         internal void ResetAllStats()

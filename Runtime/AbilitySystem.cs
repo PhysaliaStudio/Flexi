@@ -55,6 +55,40 @@ namespace Physalia.AbilitySystem
             return instance;
         }
 
+        public AbilityInstance AppendAbility(IHasStatOwner hasStatOwner, int abilityId)
+        {
+            return AppendAbility(hasStatOwner.Owner, abilityId);
+        }
+
+        public AbilityInstance AppendAbility(StatOwner owner, int abilityId)
+        {
+            AbilityInstance abilityInstance = GetAbilityInstance(abilityId);
+            if (abilityInstance == null)
+            {
+                return null;
+            }
+
+            abilityInstance.SetOwner(owner);
+            owner.AppendAbility(abilityInstance);
+            return abilityInstance;
+        }
+
+        public void RemoveAbility(StatOwner owner, int abilityId)
+        {
+            owner.RemoveAbility(abilityId);
+        }
+
+        public void ClearAllAbilities(StatOwner owner)
+        {
+            owner.ClearAllAbilities();
+        }
+
+        public void ActivateInstance(AbilityInstance instance, object payload)
+        {
+            AddToLast(instance, payload);
+            Run();
+        }
+
         public void AddToLast(AbilityInstance instance, object payload)
         {
             instance.SetPayload(payload);

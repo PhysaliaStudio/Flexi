@@ -17,6 +17,7 @@ namespace Physalia.AbilitySystem
                 }
             }
 
+            Clear();
             return AbilityState.DONE;
         }
     }

@@ -36,6 +36,34 @@ namespace Physalia.AbilitySystem.Tests
         }
 
         [Test]
+        public void AppendAbilityToOwner_OwnerOfInstanceReturnsAsExpected()
+        {
+            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+
+            Assert.AreEqual(unit.Owner, instance.Owner);
+        }
+
+        [Test]
+        public void ActivateInstance()
+        {
+            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+
+            abilitySystem.ActivateInstance(instance, null);
+            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+
+            abilitySystem.ActivateInstance(instance, null);
+            Assert.AreEqual(8, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD);
