@@ -4,15 +4,23 @@ namespace Physalia.AbilitySystem
 {
     public sealed class AbilityInstance
     {
+        private readonly int abilityId;
         private readonly AbilityGraph graph;
 
         private object payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
+        public int AbilityId => abilityId;
         public AbilityState CurrentState => currentState;
 
-        internal AbilityInstance(AbilityGraph graph)
+        internal AbilityInstance(AbilityGraph graph) : this(0, graph)
         {
+
+        }
+
+        internal AbilityInstance(int abilityId, AbilityGraph graph)
+        {
+            this.abilityId = abilityId;
             this.graph = graph;
         }
 
