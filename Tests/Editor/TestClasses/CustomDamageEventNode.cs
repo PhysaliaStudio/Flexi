@@ -4,13 +4,13 @@ namespace Physalia.AbilitySystem.Tests
     {
         public override bool CanExecute()
         {
-            CustomPayload payload = GetPayload<CustomPayload>();
+            var payload = GetPayload<CustomDamageEvent>();
             if (payload == null)
             {
                 return false;
             }
 
-            if (payload.instigator == payload.owner)
+            if (payload.target.Owner == Instance.Owner)
             {
                 return true;
             }
