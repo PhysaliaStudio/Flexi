@@ -7,10 +7,13 @@ namespace Physalia.AbilitySystem
         private readonly int abilityId;
         private readonly AbilityGraph graph;
 
+        private StatOwner owner;
         private object payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
         public int AbilityId => abilityId;
+        public StatOwner Owner => owner;
+        internal object Payload => payload;
         public AbilityState CurrentState => currentState;
 
         internal AbilityInstance(AbilityGraph graph) : this(0, graph)
@@ -22,19 +25,27 @@ namespace Physalia.AbilitySystem
         {
             this.abilityId = abilityId;
             this.graph = graph;
+
+            for (var i = 0; i < graph.Nodes.Count; i++)
+            {
+                graph.Nodes[i].instance = this;
+            }
+        }
+
+        internal void SetOwner(StatOwner owner)
+        {
+            this.owner = owner;
         }
 
         public void SetPayload(object payload)
         {
             this.payload = payload;
-            for (var i = 0; i < graph.Nodes.Count; i++)
-            {
-                graph.Nodes[i].payload = payload;
-            }
         }
 
         public bool CanExecute(object payload)
         {
+            this.payload = payload;
+
             graph.Reset(0);
             if (graph.Current == null)
             {
@@ -43,7 +54,6 @@ namespace Physalia.AbilitySystem
 
             if (graph.Current is EntryNode entryNode)
             {
-                graph.Current.payload = payload;
                 return entryNode.CanExecute();
             }
 
