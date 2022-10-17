@@ -46,6 +46,6 @@ namespace Physalia.AbilitySystem
             instances.Clear();
         }
 
-        public abstract AbilityState Run();
+        public abstract AbilityState Run(AbilitySystem abilitySystem, AbilityEventQueue eventQueue);
     }
 }

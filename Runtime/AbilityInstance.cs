@@ -5,6 +5,7 @@ namespace Physalia.AbilitySystem
     public sealed class AbilityInstance
     {
         private readonly int abilityId;
+        private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
 
         private StatOwner owner;
@@ -12,18 +13,20 @@ namespace Physalia.AbilitySystem
         private AbilityState currentState = AbilityState.CLEAN;
 
         public int AbilityId => abilityId;
+        public AbilitySystem System => system;
         public StatOwner Owner => owner;
         internal object Payload => payload;
         public AbilityState CurrentState => currentState;
 
-        internal AbilityInstance(AbilityGraph graph) : this(0, graph)
+        internal AbilityInstance(AbilityGraph graph) : this(0, null, graph)
         {
 
         }
 
-        internal AbilityInstance(int abilityId, AbilityGraph graph)
+        internal AbilityInstance(int abilityId, AbilitySystem system, AbilityGraph graph)
         {
             this.abilityId = abilityId;
+            this.system = system;
             this.graph = graph;
 
             for (var i = 0; i < graph.Nodes.Count; i++)

@@ -1,0 +1,43 @@
+{
+  "_type": "Physalia.AbilitySystem.AbilityGraph",
+  "nodes": [
+    {
+      "_id": 829185,
+      "_position": {
+        "x": 101.0,
+        "y": 122.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomDamageEventNode"
+    },
+    {
+      "_id": 514075,
+      "_position": {
+        "x": 385.0,
+        "y": 166.0
+      },
+      "_type": "Physalia.AbilitySystem.Tests.CustomAttackDoubleNode"
+    },
+    {
+      "_id": 619583,
+      "_position": {
+        "x": 187.0,
+        "y": 267.0
+      },
+      "_type": "Physalia.AbilitySystem.OwnerNode"
+    }
+  ],
+  "edges": [
+    {
+      "id1": 829185,
+      "port1": "next",
+      "id2": 514075,
+      "port2": "previous"
+    },
+    {
+      "id1": 514075,
+      "port1": "targetsPort",
+      "id2": 619583,
+      "port2": "owner"
+    }
+  ]
+}

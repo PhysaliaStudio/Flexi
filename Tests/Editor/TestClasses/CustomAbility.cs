@@ -44,6 +44,14 @@ namespace Physalia.AbilitySystem.Tests
             }
         }
 
+        public static string ATTACK_DOUBLE_WHEN_DAMAGED
+        {
+            get
+            {
+                return ReadAbilityFile("AttackDoubleWhenDamaged");
+            }
+        }
+
         private static string ReadAbilityFile(string fileName)
         {
             TextAsset asset = Resources.Load<TextAsset>(fileName);

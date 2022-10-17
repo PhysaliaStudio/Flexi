@@ -8,6 +8,7 @@ namespace Physalia.AbilitySystem
     {
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
+        private readonly AbilityEventQueue eventQueue = new();
 
         private readonly Dictionary<int, string> graphTable = new();
 
@@ -51,7 +52,7 @@ namespace Physalia.AbilitySystem
             }
 
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
-            AbilityInstance instance = new AbilityInstance(graph);
+            AbilityInstance instance = new AbilityInstance(id, this, graph);
             return instance;
         }
 
@@ -89,6 +90,31 @@ namespace Physalia.AbilitySystem
             Run();
         }
 
+        public void AddEventToLast(object payload)
+        {
+            eventQueue.Enqueue(payload);
+        }
+
+        public void TriggerNextEvent()
+        {
+            if (eventQueue.Count == 0)
+            {
+                return;
+            }
+
+            object payload = eventQueue.Dequeue();
+            foreach (StatOwner owner in ownerRepository.Owners)
+            {
+                foreach (AbilityInstance ability in owner.Abilities)
+                {
+                    if (ability.CanExecute(payload))
+                    {
+                        AddToLast(ability, payload);
+                    }
+                }
+            }
+        }
+
         public void AddToLast(AbilityInstance instance, object payload)
         {
             instance.SetPayload(payload);
@@ -97,7 +123,13 @@ namespace Physalia.AbilitySystem
 
         public void Run()
         {
-            runner.Run();
+            runner.Run(this, eventQueue);
+        }
+
+        public void RefreshStatsAndModifiers()
+        {
+            ownerRepository.RefreshStatsForAllOwners();
+            RefreshModifiers();
         }
 
         public void RefreshModifiers()
