@@ -4,7 +4,7 @@ namespace Physalia.AbilitySystem.Tests
     {
         public Outport<CustomUnit> owner;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             CustomPayload payload = GetPayload<CustomPayload>();
             owner.SetValue(payload.owner);

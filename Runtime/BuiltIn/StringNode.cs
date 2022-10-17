@@ -5,7 +5,7 @@ namespace Physalia.AbilitySystem
         public Outport<string> output;
         public Variable<string> text;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             output.SetValue(text.Value);
         }

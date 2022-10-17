@@ -5,7 +5,7 @@ namespace Physalia.AbilitySystem.Tests
         public Outport<CustomUnit> attackerPort;
         public Outport<CustomUnit> mainTargetPort;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             var payload = GetPayload<CustomNormalAttackPayload>();
             attackerPort.SetValue(payload.attacker);

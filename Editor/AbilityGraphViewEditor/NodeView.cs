@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine.UIElements;
 using PortView = UnityEditor.Experimental.GraphView.Port;
 
 namespace Physalia.AbilitySystem.GraphViewEditor
@@ -17,8 +18,91 @@ namespace Physalia.AbilitySystem.GraphViewEditor
         public NodeView(Node node) : base()
         {
             this.node = node;
-            title = node.GetType().Name;
+            HandleNodeStyles(node);
             CreatePorts();
+        }
+
+        private void HandleNodeStyles(Node node)
+        {
+            Type nodeType = node.GetType();
+            if (nodeType == typeof(TrueNode))
+            {
+                title = "TRUE";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(FalseNode))
+            {
+                title = "FALSE";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(EqualNode))
+            {
+                title = "==";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(NotEqualNode))
+            {
+                title = "!=";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(LessNode))
+            {
+                title = "<";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(GreaterNode))
+            {
+                title = ">";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(LessOrEqualNode))
+            {
+                title = "<=";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(GreaterOrEqualNode))
+            {
+                title = ">=";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(AndNode))
+            {
+                title = "AND";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(OrNode))
+            {
+                title = "OR";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(XorNode))
+            {
+                title = "XOR";
+                HandleConstantNodeStyle();
+            }
+            else if (nodeType == typeof(NotNode))
+            {
+                title = "NOT";
+                HandleConstantNodeStyle();
+            }
+            else
+            {
+                title = nodeType.Name;
+            }
+        }
+
+        private void HandleConstantNodeStyle()
+        {
+            titleButtonContainer.style.display = DisplayStyle.None;
+            Label label = titleContainer.Query<Label>("title-label").First();
+            if (label != null)
+            {
+                label.style.fontSize = 24f;
+
+                // Because we hide the titleButtonContainer
+                // Bug? No effect?
+                label.style.marginRight = label.style.marginLeft;
+            }
         }
 
         private void CreatePorts()
@@ -54,6 +138,11 @@ namespace Physalia.AbilitySystem.GraphViewEditor
                 {
                     Type genericType = field.FieldType.GetGenericArguments()[0];
                     CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(genericType);
+                    if (creationMethod == null)
+                    {
+                        continue;
+                    }
+
                     var variable = field.GetValue(node) as Variable;
                     IVariableField variableField = creationMethod.Invoke(field.Name, variable);
                     extensionContainer.Add(variableField.VisualElement);

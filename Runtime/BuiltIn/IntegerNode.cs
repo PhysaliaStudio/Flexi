@@ -5,7 +5,7 @@ namespace Physalia.AbilitySystem
         public Outport<int> output;
         public Variable<int> value;
 
-        public override void Evaluate()
+        protected override void EvaluateSelf()
         {
             output.SetValue(value.Value);
         }
