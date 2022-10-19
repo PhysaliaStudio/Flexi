@@ -2,7 +2,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Physalia.AbilitySystem.Tests
+namespace Physalia.AbilityFramework.Tests
 {
     public class IntegrationTests
     {

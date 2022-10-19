@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public static class NodeFactory
     {

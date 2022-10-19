@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilitySystem.Tests
+namespace Physalia.AbilityFramework
 {
     public class AbilitySystemBuilder
     {

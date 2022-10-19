@@ -1,4 +1,4 @@
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public class TrueNode : ValueNode
     {

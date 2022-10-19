@@ -1,6 +1,6 @@
 {
-    "name": "Physalia.AbilitySystem.Editor",
-    "rootNamespace": "Physalia.AbilitySystem",
+    "name": "Physalia.AbilityFramework.Editor",
+    "rootNamespace": "Physalia.AbilityFramework",
     "references": [
         "GUID:b4a7a0a0f6e8c8c4c99f40861c52733f"
     ],

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public abstract class Port
     {

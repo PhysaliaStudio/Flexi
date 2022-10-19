@@ -1,4 +1,4 @@
-namespace Physalia.AbilitySystem.Tests
+namespace Physalia.AbilityFramework.Tests
 {
     public class CustomUnit : IHasStatOwner
     {
