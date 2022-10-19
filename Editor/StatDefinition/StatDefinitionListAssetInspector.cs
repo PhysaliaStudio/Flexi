@@ -70,6 +70,13 @@ namespace Physalia.AbilitySystem
         private void BindItem(VisualElement element, int i)
         {
             SerializedProperty listProperty = serializedObject.FindProperty(nameof(StatDefinitionListAsset.stats));
+
+            // Note: For preventing ListView refresh bug when deleting
+            if (i < 0 || i >= listProperty.arraySize)
+            {
+                return;
+            }
+
             var idField = element.Q<IntegerField>("id-field");
             var nameField = element.Q<TextField>("name-field");
 
