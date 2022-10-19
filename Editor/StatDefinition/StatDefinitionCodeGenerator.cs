@@ -12,9 +12,16 @@ namespace Physalia.AbilitySystem
 // #### AUTO GENERATED CODE, DO NOT MODIFIE!! ####
 // ###############################################
 ";
+        private const string DEFAULT_CLASS_NAME = "StatId";
 
         public static void Generate(StatDefinitionListAsset statDefinitionListAsset)
         {
+            string assetPath = ShowSaveDialog(statDefinitionListAsset);
+            if (string.IsNullOrEmpty(assetPath))
+            {
+                return;
+            }
+
             var sb = new StringBuilder();
 
             bool hasNamespace = !string.IsNullOrEmpty(statDefinitionListAsset.namespaceName);
@@ -40,6 +47,7 @@ namespace Physalia.AbilitySystem
                 }
             }
 
+            string className = PathToFileName(assetPath);
             string scriptText;
             if (hasNamespace)
             {
@@ -47,7 +55,7 @@ namespace Physalia.AbilitySystem
 $@"{WARNING_COMMENT}
 namespace {statDefinitionListAsset.namespaceName}
 {{
-{tab}public static class {statDefinitionListAsset.className}
+{tab}public static class {className}
 {tab}{{
 {sb}
 {tab}}}
@@ -58,18 +66,11 @@ namespace {statDefinitionListAsset.namespaceName}
             {
                 scriptText =
 $@"{WARNING_COMMENT}
-public static class {statDefinitionListAsset.className}
+public static class {className}
 {{
 {sb}
 }}
 ";
-            }
-
-            var assetPath = EditorUtility.SaveFilePanelInProject("Save StatId cs file", statDefinitionListAsset.className, "cs",
-                "Please enter a file name to save the script to", statDefinitionListAsset.scriptAssetPath);
-            if (string.IsNullOrEmpty(assetPath))
-            {
-                return;
             }
 
             statDefinitionListAsset.scriptAssetPath = assetPath;
@@ -77,6 +78,32 @@ public static class {statDefinitionListAsset.className}
             AssetDatabase.SaveAssetIfDirty(statDefinitionListAsset);
 
             CreateScriptAsset(scriptText, assetPath);
+        }
+
+        private static string ShowSaveDialog(StatDefinitionListAsset statDefinitionListAsset)
+        {
+            string className;
+            if (string.IsNullOrEmpty(statDefinitionListAsset.scriptAssetPath))
+            {
+                className = DEFAULT_CLASS_NAME;
+            }
+            else
+            {
+                className = PathToFileName(statDefinitionListAsset.scriptAssetPath);
+            }
+
+            var assetPath = EditorUtility.SaveFilePanelInProject("Save StatId cs file", className, "cs",
+                "Please enter a file name to save the script to", statDefinitionListAsset.scriptAssetPath);
+            return assetPath;
+        }
+
+        private static string PathToFileName(string path)
+        {
+            var fileInfo = new FileInfo(path);
+            string fileNameWithExt = fileInfo.Name;
+            string ext = fileInfo.Extension;
+            string className = fileNameWithExt.Remove(fileNameWithExt.Length - ext.Length, ext.Length);
+            return className;
         }
 
         private static string ToConstantName(string name)
