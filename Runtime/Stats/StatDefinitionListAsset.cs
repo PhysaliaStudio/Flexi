@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     [CreateAssetMenu(fileName = "NewStatDefinitionListAsset", menuName = "Physalia/Ability System/Stat List Asset", order = 0)]
     public class StatDefinitionListAsset : ScriptableObject

@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
-namespace Physalia.AbilitySystem.GraphViewEditor
+namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class AbilityGraphEditorWindow : EditorWindow
     {

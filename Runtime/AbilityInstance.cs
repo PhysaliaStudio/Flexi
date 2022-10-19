@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public sealed class AbilityInstance
     {

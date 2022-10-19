@@ -1,8 +1,8 @@
 {
-    "name": "Physalia.AbilitySystem.Editor.Tests",
-    "rootNamespace": "Physalia.AbilitySystem.Tests",
+    "name": "Physalia.AbilityFramework.GraphViewEditor",
+    "rootNamespace": "Physalia.AbilityFramework.GraphViewEditor",
     "references": [
-        "Physalia.AbilitySystem"
+        "GUID:b4a7a0a0f6e8c8c4c99f40861c52733f"
     ],
     "includePlatforms": [
         "Editor"

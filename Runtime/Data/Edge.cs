@@ -1,4 +1,4 @@
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     /// <remarks>
     /// This class is only for data saving, temporary created when (de)serialization.

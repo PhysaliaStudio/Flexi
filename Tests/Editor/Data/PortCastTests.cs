@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Physalia.AbilitySystem.Tests
+namespace Physalia.AbilityFramework.Tests
 {
     public class PortCastTests
     {

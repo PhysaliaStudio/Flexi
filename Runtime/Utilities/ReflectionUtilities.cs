@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public static class ReflectionUtilities
     {

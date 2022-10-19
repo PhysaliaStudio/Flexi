@@ -1,2 +1,2 @@
 using System.Runtime.CompilerServices;
-[assembly: InternalsVisibleTo("Physalia.AbilitySystem.Editor.Tests")]
+[assembly: InternalsVisibleTo("Physalia.AbilityFramework.Editor.Tests")]

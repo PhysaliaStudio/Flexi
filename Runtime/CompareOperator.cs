@@ -1,6 +1,6 @@
 using System;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public enum CompareOperator
     {

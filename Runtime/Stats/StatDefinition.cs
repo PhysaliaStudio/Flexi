@@ -1,6 +1,6 @@
 using System;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     [Serializable]
     public class StatDefinition

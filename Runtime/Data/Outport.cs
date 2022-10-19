@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Physalia.AbilitySystem
+namespace Physalia.AbilityFramework
 {
     public abstract class Outport : Port
     {

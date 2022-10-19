@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Physalia.AbilitySystem.Tests
+namespace Physalia.AbilityFramework.Tests
 {
     public class AbilityGraphTests
     {

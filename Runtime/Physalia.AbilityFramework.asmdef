@@ -1,6 +1,6 @@
 {
-    "name": "Physalia.AbilitySystem",
-    "rootNamespace": "Physalia.AbilitySystem",
+    "name": "Physalia.AbilityFramework",
+    "rootNamespace": "Physalia.AbilityFramework",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

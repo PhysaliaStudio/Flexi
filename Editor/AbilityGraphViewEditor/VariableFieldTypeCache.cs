@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Physalia.AbilitySystem.GraphViewEditor
+namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public delegate IVariableField CreateVariableField(string label, Variable variable);
 
