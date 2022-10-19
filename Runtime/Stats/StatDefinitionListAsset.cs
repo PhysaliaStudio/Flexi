@@ -6,6 +6,8 @@ namespace Physalia.AbilitySystem
     [CreateAssetMenu(fileName = "NewStatDefinitionListAsset", menuName = "Physalia/Ability System/Stat List Asset", order = 0)]
     public class StatDefinitionListAsset : ScriptableObject
     {
+        public string namespaceName = "";
+        public string scriptAssetPath = "";
         public List<StatDefinition> stats = new();
 
         /// <remarks>
