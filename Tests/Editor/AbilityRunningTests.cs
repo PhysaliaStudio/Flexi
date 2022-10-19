@@ -9,6 +9,74 @@ namespace Physalia.AbilityFramework.Tests
     public class AbilityRunningTests
     {
         [Test]
+        public void GetBlackboardVariable_DataIs5_Returns5()
+        {
+            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
+                "\"nodes\":[],\"edges\":[]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            Assert.AreEqual(5, instance.GetBlackboardVariable("damage"));
+        }
+
+        [Test]
+        public void GetBlackboardVariable_NoData_Returns0()
+        {
+            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
+                "\"nodes\":[],\"edges\":[]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+
+            Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
+            StatTestHelper.LogAssert(LogType.Warning);
+        }
+
+        [Test]
+        public void OverrideBlackboardVariable_NoData_LogWarningAndGetReturns0()
+        {
+            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
+                "\"nodes\":[],\"edges\":[]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            instance.OverrideBlackboardVariable("not-exist", 10);
+
+            StatTestHelper.LogAssert(LogType.Warning);
+
+            Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
+            StatTestHelper.LogAssert(LogType.Warning);
+        }
+
+        [Test]
+        public void OverrideBlackboardVariable_DataIs5AndOverrideTo10_GetReturns10()
+        {
+            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
+                "\"nodes\":[],\"edges\":[]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            instance.OverrideBlackboardVariable("damage", 10);
+
+            Assert.AreEqual(10, instance.GetBlackboardVariable("damage"));
+        }
+
+        [Test]
+        public void OverrideBlackboardVariable_DataIs5AndOverrideTo10ThenReset_GetReturns5()
+        {
+            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
+                "\"nodes\":[],\"edges\":[]}";
+            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
+            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            instance.OverrideBlackboardVariable("damage", 10);
+            instance.Reset();
+
+            Assert.AreEqual(5, instance.GetBlackboardVariable("damage"));
+        }
+
+        [Test]
         public void RunAbility_ToFinish_DoAllTasksAndCurrentStateReturnsDone()
         {
             var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +

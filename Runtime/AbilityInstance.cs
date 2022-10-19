@@ -1,4 +1,4 @@
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
@@ -7,6 +7,8 @@ namespace Physalia.AbilityFramework
         private readonly int abilityId;
         private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
+
+        private readonly Dictionary<string, int> blackboard = new();
 
         private StatOwner owner;
         private object payload;
@@ -33,6 +35,12 @@ namespace Physalia.AbilityFramework
             {
                 graph.Nodes[i].instance = this;
             }
+
+            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
+            {
+                BlackboardVariable variable = graph.BlackboardVariables[i];
+                blackboard.Add(variable.key, variable.value);
+            }
         }
 
         internal void SetOwner(StatOwner owner)
@@ -43,6 +51,28 @@ namespace Physalia.AbilityFramework
         public void SetPayload(object payload)
         {
             this.payload = payload;
+        }
+
+        public void OverrideBlackboardVariable(string key, int value)
+        {
+            if (!blackboard.ContainsKey(key))
+            {
+                Logger.Warn($"[{nameof(AbilityInstance)}] Blackboard does not have key: {key}. Cancel the override");
+                return;
+            }
+
+            blackboard[key] = value;
+        }
+
+        public int GetBlackboardVariable(string key)
+        {
+            if (blackboard.TryGetValue(key, out int value))
+            {
+                return value;
+            }
+
+            Logger.Warn($"[{nameof(AbilityInstance)}] Blackboard does not have key: {key}. Returns 0");
+            return 0;
         }
 
         public bool CanExecute(object payload)
@@ -118,6 +148,13 @@ namespace Physalia.AbilityFramework
             graph.Reset(0);
             currentState = AbilityState.CLEAN;
             SetPayload(null);
+
+            blackboard.Clear();
+            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
+            {
+                BlackboardVariable variable = graph.BlackboardVariables[i];
+                blackboard.Add(variable.key, variable.value);
+            }
         }
     }
 }
