@@ -52,6 +52,7 @@ namespace Physalia.AbilityFramework.Tests
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+DamageNode\"}," +
                 "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+OwnerFilterNode\"}," +
