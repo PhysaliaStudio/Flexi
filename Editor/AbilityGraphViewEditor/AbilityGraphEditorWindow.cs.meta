@@ -6,6 +6,7 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - uiAsset: {fileID: 9197481963319205126, guid: 408a354e556814a40811504305218584, type: 3}
+  - blackboardItemAsset: {fileID: 9197481963319205126, guid: 2210c4a898c5f8a4cbf1c5d5fd0cbba8, type: 3}
   - currentFile: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}

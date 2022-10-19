@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -13,6 +12,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class AbilityGraphEditorWindow : EditorWindow
     {
+        // Note: For handling missing clear callback method
+        // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
+        private class ElementCallbackToken<T> : IDisposable
+        {
+            public INotifyValueChanged<T> element;
+            public EventCallback<ChangeEvent<T>> callback;
+
+            public void Dispose() => element.UnregisterValueChangedCallback(callback);
+        }
+
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
         // Since we need to use names to find the correct VisualTreeAsset to replace,
@@ -26,12 +35,17 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         [SerializeField]
         private VisualTreeAsset uiAsset = null;
+        [SerializeField]
+        private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
         [SerializeField]
         private TextAsset currentFile = null;
 
         private ObjectField objectField;
         private AbilityGraphView graphView;
+        private Blackboard blackboard;
+
+        private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
         [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
         private static void Open()
@@ -211,21 +225,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void SetUpGraphView(AbilityGraphView graphView)
         {
-            if (this.graphView != null)
-            {
-                this.graphView.RemoveFromHierarchy();
-            }
+            VisualElement graphViewParent = rootVisualElement.Query<VisualElement>(GRAPH_VIEW_PARENT_NAME).First();
+            graphViewParent.Clear();
+            callbackTable.Clear();
 
             this.graphView = graphView;
             graphView.name = GRAPH_VIEW_NAME;
-
-            VisualElement graphViewParent = rootVisualElement.Query<VisualElement>(GRAPH_VIEW_PARENT_NAME).First();
-            graphViewParent.Add(graphView);
-
             graphView.graphViewChanged += OnGraphViewChanged;
             graphView.serializeGraphElements += SerializeGraphElements;
             graphView.canPasteSerializedData += CanPasteSerializedData;
             graphView.unserializeAndPaste += UnserializeAndPaste;
+            graphViewParent.Add(graphView);
+
+            Blackboard blackboard = CreateBlackboard(graphView);
+            graphViewParent.Add(blackboard);
         }
 
         private string SerializeGraphElements(IEnumerable<GraphElement> elements)
@@ -374,6 +387,86 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             return graphViewChange;
+        }
+
+        private Blackboard CreateBlackboard(AbilityGraphView graphView)
+        {
+            blackboard = new Blackboard(graphView)
+            {
+                scrollable = true,
+                windowed = true,
+            };
+            blackboard.style.width = 200f;
+            blackboard.style.height = Length.Percent(80f);
+            blackboard.style.position = Position.Absolute;
+            blackboard.style.alignSelf = Align.FlexEnd;
+
+            var listView = new ListView(graphView.GetAbilityGraph().BlackboardVariables)
+            {
+                reorderable = true,
+                showAddRemoveFooter = true,
+            };
+            listView.itemsAdded += AddBlackboardVariable;
+            listView.makeItem += blackboardItemAsset.CloneTree;
+            listView.bindItem += BindVariableItem;
+            listView.unbindItem += UnbindVariableItem;
+            blackboard.contentContainer.Add(listView);
+
+            return blackboard;
+        }
+
+        private void AddBlackboardVariable(IEnumerable<int> indexes)
+        {
+            foreach (int i in indexes)
+            {
+                graphView.GetAbilityGraph().BlackboardVariables[i] = new BlackboardVariable();
+            }
+        }
+
+        private void BindVariableItem(VisualElement element, int i)
+        {
+            BlackboardVariable variable = graphView.GetAbilityGraph().BlackboardVariables[i];
+
+            {
+                var keyField = element.Q<TextField>("key");
+                keyField.SetValueWithoutNotify(variable.key);
+                var token = new ElementCallbackToken<string>
+                {
+                    element = keyField,
+                    callback = evt =>
+                    {
+                        variable.key = evt.newValue;
+                    },
+                };
+                callbackTable.Add(keyField, token);
+                keyField.RegisterValueChangedCallback(token.callback);
+            }
+
+            {
+                var valueField = element.Q<IntegerField>("value");
+                valueField.SetValueWithoutNotify(variable.value);
+                var token = new ElementCallbackToken<int>
+                {
+                    element = valueField,
+                    callback = evt =>
+                    {
+                        variable.value = evt.newValue;
+                    },
+                };
+                callbackTable.Add(valueField, token);
+                valueField.RegisterValueChangedCallback(token.callback);
+            }
+        }
+
+        private void UnbindVariableItem(VisualElement element, int i)
+        {
+            var keyField = element.Q<TextField>("key");
+            callbackTable[keyField].Dispose();
+            callbackTable.Remove(keyField);
+
+            var valueField = element.Q<IntegerField>("value");
+            callbackTable[valueField].Dispose();
+            callbackTable.Remove(valueField);
         }
     }
 }
