@@ -1,5 +1,11 @@
 {
   "_type": "Physalia.AbilityFramework.AbilityGraph",
+  "variables": [
+    {
+      "key": "value",
+      "value": 2
+    }
+  ],
   "nodes": [
     {
       "_id": 341180,
@@ -26,13 +32,13 @@
       "_type": "Physalia.AbilityFramework.Tests.CustomNormalAttackPayloadNode"
     },
     {
-      "_id": 568148,
+      "_id": 530024,
       "_position": {
-        "x": 185.0,
-        "y": 383.0
+        "x": 188.0,
+        "y": 385.0
       },
-      "_type": "Physalia.AbilityFramework.IntegerNode",
-      "value": 2
+      "_type": "Physalia.AbilityFramework.BlackboardNode",
+      "key": "value"
     }
   ],
   "edges": [
@@ -51,8 +57,8 @@
     {
       "id1": 852984,
       "port1": "baseValue",
-      "id2": 568148,
-      "port2": "output"
+      "id2": 530024,
+      "port2": "value"
     }
   ]
 }
