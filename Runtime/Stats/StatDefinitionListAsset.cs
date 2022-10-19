@@ -7,7 +7,6 @@ namespace Physalia.AbilitySystem
     public class StatDefinitionListAsset : ScriptableObject
     {
         public string namespaceName = "";
-        public string className = "StatId";
         public string scriptAssetPath = "";
         public List<StatDefinition> stats = new();
 

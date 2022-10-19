@@ -30,25 +30,41 @@ namespace Physalia.AbilitySystem
 
             editorAsset.CloneTree(rootVisualElement);
 
-            // Generate Button
-            var generateButton = rootVisualElement.Q<Button>("generate-button");
-            generateButton.clicked += GenerateCode;
-
-            // List View
-            var listView = rootVisualElement.Q<ListView>();
-            SerializedProperty listProperty = serializedObject.FindProperty(nameof(StatDefinitionListAsset.stats));
-            listView.BindProperty(listProperty);
-            listView.makeItem = itemAsset.CloneTree;
-            listView.bindItem = BindItem;
-            listView.unbindItem = UnbindItem;
+            BindGenerator(rootVisualElement);
+            BindListView(rootVisualElement);
 
             return rootVisualElement;
+        }
+
+        private void BindGenerator(VisualElement rootVisualElement)
+        {
+            var namespaceField = rootVisualElement.Q<TextField>("namespace-field");
+            namespaceField.BindProperty(serializedObject.FindProperty(nameof(StatDefinitionListAsset.namespaceName)));
+
+            string assetPath = serializedObject.FindProperty(nameof(StatDefinitionListAsset.scriptAssetPath)).stringValue;
+            var scriptAsset = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
+            var scriptField = rootVisualElement.Q<ObjectField>("script-field");
+            scriptField.value = scriptAsset;
+            scriptField.SetEnabled(false);
+
+            var generateButton = rootVisualElement.Q<Button>("generate-button");
+            generateButton.clicked += GenerateCode;
         }
 
         private void GenerateCode()
         {
             StatDefinitionListAsset asset = serializedObject.targetObject as StatDefinitionListAsset;
             StatDefinitionCodeGenerator.Generate(asset);
+        }
+
+        private void BindListView(VisualElement rootVisualElement)
+        {
+            var listView = rootVisualElement.Q<ListView>();
+            SerializedProperty listProperty = serializedObject.FindProperty(nameof(StatDefinitionListAsset.stats));
+            listView.BindProperty(listProperty);
+            listView.makeItem = itemAsset.CloneTree;
+            listView.bindItem = BindItem;
+            listView.unbindItem = UnbindItem;
         }
 
         private void BindItem(VisualElement element, int i)
