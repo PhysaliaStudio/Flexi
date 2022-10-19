@@ -64,7 +64,6 @@ namespace Physalia.AbilitySystem
             listView.BindProperty(listProperty);
             listView.makeItem = itemAsset.CloneTree;
             listView.bindItem = BindItem;
-            listView.unbindItem = UnbindItem;
         }
 
         private void BindItem(VisualElement element, int i)
@@ -83,15 +82,6 @@ namespace Physalia.AbilitySystem
             SerializedProperty property = listProperty.GetArrayElementAtIndex(i);
             idField.BindProperty(property.FindPropertyRelative(nameof(StatDefinition.Id)));
             nameField.BindProperty(property.FindPropertyRelative(nameof(StatDefinition.Name)));
-        }
-
-        private void UnbindItem(VisualElement element, int i)
-        {
-            var idField = element.Q<IntegerField>(name: "id-field");
-            var nameField = element.Q<TextField>(name: "name-field");
-
-            idField.Unbind();
-            nameField.Unbind();
         }
     }
 }
