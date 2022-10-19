@@ -1,5 +1,5 @@
 {
-  "_type": "Physalia.AbilitySystem.AbilityGraph",
+  "_type": "Physalia.AbilityFramework.AbilityGraph",
   "nodes": [
     {
       "_id": 875447,
@@ -7,7 +7,7 @@
         "x": 54.0,
         "y": 76.0
       },
-      "_type": "Physalia.AbilitySystem.StartNode"
+      "_type": "Physalia.AbilityFramework.StartNode"
     },
     {
       "_id": 393698,
@@ -15,7 +15,7 @@
         "x": 641.0,
         "y": 91.0
       },
-      "_type": "Physalia.AbilitySystem.Tests.CustomDamageNode"
+      "_type": "Physalia.AbilityFramework.Tests.CustomDamageNode"
     },
     {
       "_id": 612842,
@@ -23,7 +23,7 @@
         "x": 37.0,
         "y": 228.0
       },
-      "_type": "Physalia.AbilitySystem.Tests.CustomNormalAttackPayloadNode"
+      "_type": "Physalia.AbilityFramework.Tests.CustomNormalAttackPayloadNode"
     },
     {
       "_id": 957515,
@@ -31,7 +31,7 @@
         "x": 336.0,
         "y": 286.0
       },
-      "_type": "Physalia.AbilitySystem.Tests.CustomUnitNode"
+      "_type": "Physalia.AbilityFramework.Tests.CustomUnitNode"
     }
   ],
   "edges": [
