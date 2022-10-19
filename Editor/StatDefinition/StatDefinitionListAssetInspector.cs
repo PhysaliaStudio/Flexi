@@ -30,6 +30,11 @@ namespace Physalia.AbilitySystem
 
             editorAsset.CloneTree(rootVisualElement);
 
+            // Generate Button
+            var generateButton = rootVisualElement.Q<Button>("generate-button");
+            generateButton.clicked += GenerateCode;
+
+            // List View
             var listView = rootVisualElement.Q<ListView>();
             SerializedProperty listProperty = serializedObject.FindProperty(nameof(StatDefinitionListAsset.stats));
             listView.BindProperty(listProperty);
@@ -38,6 +43,12 @@ namespace Physalia.AbilitySystem
             listView.unbindItem = UnbindItem;
 
             return rootVisualElement;
+        }
+
+        private void GenerateCode()
+        {
+            StatDefinitionListAsset asset = serializedObject.targetObject as StatDefinitionListAsset;
+            StatDefinitionCodeGenerator.Generate(asset);
         }
 
         private void BindItem(VisualElement element, int i)

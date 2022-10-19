@@ -1,4 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement style="height: 50px;">
+        <ui:Button text="Generate Code" display-tooltip-when-elided="true" name="generate-button" style="width: 150px; height: 30px;" />
+    </ui:VisualElement>
     <ui:VisualElement style="flex-direction: row; gap: 10px; height: 20px;">
         <ui:Label text="ID" style="width: 120px; font-size: 14px; -unity-text-align: middle-center; background-color: rgb(63, 92, 118); margin-right: 1px; margin-left: 1px;" />
         <ui:Label text="Name" style="width: 180px; font-size: 14px; -unity-text-align: middle-center; background-color: rgb(63, 93, 118); margin-right: 1px; margin-left: 2px;" />

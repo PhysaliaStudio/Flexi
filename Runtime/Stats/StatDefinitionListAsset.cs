@@ -47,13 +47,5 @@ namespace Physalia.AbilitySystem
             instance.stats = stats;
             return instance;
         }
-
-#if UNITY_EDITOR
-        [ContextMenu("GenerateCode")]
-        private void GenerateCode()
-        {
-            StatDefinitionCodeGenerator.Generate(this);
-        }
-#endif
     }
 }

@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.IO;
 using System.Text;
 using UnityEditor;
@@ -109,4 +108,3 @@ public static class {statDefinitionListAsset.className}
         }
     }
 }
-#endif
