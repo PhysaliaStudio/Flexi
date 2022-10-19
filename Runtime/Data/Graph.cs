@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
@@ -10,10 +9,11 @@ namespace Physalia.AbilityFramework
     {
         private readonly List<EntryNode> entryNodes = new();
         private readonly List<Node> nodes = new();
+        private readonly List<BlackboardVariable> variables = new();
 
         public IReadOnlyList<EntryNode> EntryNodes => entryNodes;
-
         public IReadOnlyList<Node> Nodes => nodes;
+        public List<BlackboardVariable> BlackboardVariables => variables;
 
         public T AddNewNode<T>() where T : Node, new()
         {
@@ -119,6 +119,24 @@ namespace Physalia.AbilityFramework
                     GenerateNodeId(nodes[i]);
                 }
             }
+        }
+
+        public void AddVariables(IReadOnlyList<BlackboardVariable> newVariables)
+        {
+            for (var i = 0; i < newVariables.Count; i++)
+            {
+                AddVariable(newVariables[i]);
+            }
+        }
+
+        public void AddVariable(BlackboardVariable variable)
+        {
+            variables.Add(variable);
+        }
+
+        public void RemoveVariable(BlackboardVariable variable)
+        {
+            variables.Remove(variable);
         }
     }
 }

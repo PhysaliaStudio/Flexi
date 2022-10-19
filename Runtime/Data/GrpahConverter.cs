@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
     internal class GraphConverter : JsonConverter<Graph>
     {
         private const string TYPE_KEY = "_type";
+        private const string VARIABLE_KEY = "variables";
         private const string NODES_KEY = "nodes";
         private const string EDGES_KEY = "edges";
 
@@ -16,6 +16,14 @@ namespace Physalia.AbilityFramework
         {
             JObject jsonObject = JObject.Load(reader);
             Graph graph = CreateGraphInstance(jsonObject);
+
+            // Variables
+            JToken variablesToken = jsonObject[VARIABLE_KEY];
+            if (variablesToken != null)
+            {
+                List<BlackboardVariable> variables = variablesToken.ToObject<List<BlackboardVariable>>();
+                graph.AddVariables(variables);
+            }
 
             // Nodes
             JToken nodesToken = jsonObject[NODES_KEY];
@@ -86,6 +94,15 @@ namespace Physalia.AbilityFramework
             writer.WritePropertyName(TYPE_KEY);
             Type graphType = value.GetType();
             writer.WriteValue(graphType.FullName);
+
+            // Variable
+            writer.WritePropertyName(VARIABLE_KEY);
+            writer.WriteStartArray();
+            for (var i = 0; i < value.BlackboardVariables.Count; i++)
+            {
+                serializer.Serialize(writer, value.BlackboardVariables[i]);
+            }
+            writer.WriteEndArray();
 
             // Nodes
             writer.WritePropertyName(NODES_KEY);
