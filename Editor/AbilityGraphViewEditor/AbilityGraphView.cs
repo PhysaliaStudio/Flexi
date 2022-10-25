@@ -52,6 +52,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return abilityGraph;
         }
 
+        public void AddVariable(BlackboardVariable variable)
+        {
+            abilityGraph.AddVariable(variable);
+        }
+
         public void CreateNewNode(Type nodeType, Vector2 position)
         {
             Node node = abilityGraph.AddNewNode(nodeType);
