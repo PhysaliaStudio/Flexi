@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
@@ -72,6 +71,7 @@ namespace Physalia.AbilityFramework
             if (stats.TryGetValue(statId, out Stat stat))
             {
                 stat.CurrentBase = newBase;
+                RefreshStats();
             }
         }
 
