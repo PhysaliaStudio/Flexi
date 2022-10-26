@@ -146,7 +146,6 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.Owner.SetStat(CustomStats.HEALTH, 3);
-            unit.Owner.RefreshStats();
 
             abilitySystem.AppendAbility(unit, 1);
             abilitySystem.RefreshModifiers();
@@ -180,7 +179,6 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.Owner.SetStat(CustomStats.HEALTH, 3);
-            unit.Owner.RefreshStats();
 
             abilitySystem.AppendAbility(unit, 1);
             abilitySystem.RefreshModifiers();
@@ -190,7 +188,6 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
 
             unit.Owner.SetStat(CustomStats.HEALTH, 6);
-            unit.Owner.RefreshStats();
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
