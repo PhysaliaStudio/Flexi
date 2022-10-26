@@ -131,7 +131,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (field.FieldType.IsSubclassOf(typeof(Inport)))
                 {
                     PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = field.Name;
+                    port.portName = GetPortName(field.Name);
                     inputContainer.Add(port);
 
                     var portData = field.GetValue(node) as Port;
@@ -142,7 +142,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (field.FieldType.IsSubclassOf(typeof(Outport)))
                 {
                     PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = field.Name;
+                    port.portName = GetPortName(field.Name);
                     outputContainer.Add(port);
 
                     var portData = field.GetValue(node) as Port;
@@ -167,6 +167,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             // Unity rule: After adding custom elements to the extensionContainer, call this method in order for them to become visible.
             RefreshExpandedState();
+        }
+
+        private string GetPortName(string fieldName)
+        {
+            if (fieldName.EndsWith("Port"))
+            {
+                return fieldName.Substring(0, fieldName.Length - 4);
+            }
+
+            return fieldName;
         }
 
         public PortView GetPortView(Port port)
