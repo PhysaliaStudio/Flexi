@@ -75,6 +75,15 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        public void ModifyStat(int statId, int value)
+        {
+            if (stats.TryGetValue(statId, out Stat stat))
+            {
+                stat.CurrentBase += value;
+                RefreshStats();
+            }
+        }
+
         public void AppendAbility(AbilityInstance ability)
         {
             abilities.Add(ability);

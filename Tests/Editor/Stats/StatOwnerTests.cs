@@ -87,6 +87,21 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void ModifyStat_OriginalBaseIs2AndAdd4_OriginalBaseIs2AndCurrentBaseAndCurrentValueAre6()
+        {
+            StatOwnerRepository repository = CreateRepository();
+            StatOwner owner = repository.CreateOwner();
+
+            owner.AddStat(11, 2);
+            owner.ModifyStat(11, 4);
+
+            var stat = owner.GetStat(11);
+            Assert.AreEqual(2, stat.OriginalBase);
+            Assert.AreEqual(6, stat.CurrentBase);
+            Assert.AreEqual(6, stat.CurrentValue);
+        }
+
+        [Test]
         public void AppendModifier_CurrentIs10_Becomes8()
         {
             StatOwnerRepository repository = CreateRepository();
