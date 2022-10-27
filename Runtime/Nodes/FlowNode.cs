@@ -30,12 +30,12 @@ namespace Physalia.AbilityFramework
             return AbilityState.RUNNING;
         }
 
-        public AbilityState Resume()
+        public AbilityState Resume(NodeContext nodeContext)
         {
-            return ResumeLogic();
+            return ResumeLogic(nodeContext);
         }
 
-        protected virtual AbilityState ResumeLogic()
+        protected virtual AbilityState ResumeLogic(NodeContext nodeContext)
         {
             return AbilityState.RUNNING;
         }

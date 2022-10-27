@@ -85,5 +85,10 @@ namespace Physalia.AbilityFramework
 
             return instance.Payload as T;
         }
+
+        public virtual bool CheckNodeContext(NodeContext nodeContext)
+        {
+            return false;
+        }
     }
 }

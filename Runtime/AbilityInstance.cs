@@ -112,7 +112,7 @@ namespace Physalia.AbilityFramework
             IterateGraph();
         }
 
-        public void Resume()
+        public void Resume(NodeContext nodeContext)
         {
             if (currentState != AbilityState.PAUSE)
             {
@@ -120,7 +120,14 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            currentState = graph.Current.Resume();
+            bool success = graph.Current.CheckNodeContext(nodeContext);
+            if (!success)
+            {
+                Logger.Error($"[{nameof(AbilityInstance)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
+                return;
+            }
+
+            currentState = graph.Current.Resume(nodeContext);
             if (currentState == AbilityState.PAUSE)
             {
                 return;
