@@ -1,11 +1,13 @@
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
+        public event Action<ChoiceContext> ChoiceOccurred;
+
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
@@ -148,6 +150,16 @@ namespace Physalia.AbilityFramework
             }
 
             ownerRepository.RefreshStatsForAllOwners();
+        }
+
+        public void TriggerChoice(ChoiceContext context)
+        {
+            ChoiceOccurred?.Invoke(context);
+        }
+
+        public void ResumeWithContext(NodeContext context)
+        {
+            runner.ResumeWithContext(this, context);
         }
     }
 }

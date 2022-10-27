@@ -6,5 +6,15 @@ namespace Physalia.AbilityFramework.Tests
         {
             return AbilityState.PAUSE;
         }
+
+        public override bool CheckNodeContext(NodeContext nodeContext)
+        {
+            return true;
+        }
+
+        protected override AbilityState ResumeLogic(NodeContext nodeContext)
+        {
+            return AbilityState.RUNNING;
+        }
     }
 }

@@ -166,7 +166,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
             instance.Execute();
-            instance.Resume();
+            instance.Resume(null);
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -189,7 +189,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance = new AbilityInstance(abilityGraph);
             instance.Execute();
 
-            instance.Resume();
+            instance.Resume(null);
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
         }

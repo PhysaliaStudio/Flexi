@@ -139,6 +139,78 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void TargetSelectionAbilitiy_ReceivesChoice()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            var payload = new CustomActivationPayload { activator = unit1 };
+
+            ChoiceContext choiceContext = null;
+            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+
+            abilitySystem.ActivateInstance(instance1, payload);
+
+            Assert.IsNotNull(choiceContext);
+            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
+        }
+
+        [Test]
+        public void TargetSelectionAbilitiy_GiveValidAnswer_EffectOccurred()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            var payload = new CustomActivationPayload { activator = unit1 };
+
+            ChoiceContext choiceContext = null;
+            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+
+            abilitySystem.ActivateInstance(instance1, payload);
+
+            Assert.IsNotNull(choiceContext);
+
+            var answerContext = new CustomSingleTargetAnswerContext { target = unit2 };
+            abilitySystem.ResumeWithContext(answerContext);
+
+            Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
+
+        [Test]
+        public void TargetSelectionAbilitiy_GiveInvalidAnswer_LogErrorAndEffectNotOccurred()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            var payload = new CustomActivationPayload { activator = unit1 };
+
+            ChoiceContext choiceContext = null;
+            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+
+            abilitySystem.ActivateInstance(instance1, payload);
+
+            Assert.IsNotNull(choiceContext);
+
+            var answerContext = new CustomSingleTargetAnswerContext { target = null };
+            abilitySystem.ResumeWithContext(answerContext);
+
+            StatTestHelper.LogAssert(LogType.Error);
+            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
+        }
+
+        [Test]
         public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);

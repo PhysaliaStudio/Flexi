@@ -20,6 +20,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static string NORAML_ATTACK_SELECTION
+        {
+            get
+            {
+                return ReadAbilityFile("NormalAttackSelection");
+            }
+        }
+
         public static string ATTACK_DECREASE
         {
             get
