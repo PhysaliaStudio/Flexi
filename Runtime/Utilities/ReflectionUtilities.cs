@@ -34,30 +34,18 @@ namespace Physalia.AbilityFramework
 
         public static FieldInfo[] GetFieldsIncludeBasePrivate(this Type type)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            var set = new HashSet<FieldInfo>();
+            BindingFlags flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            var list = new List<FieldInfo>();
 
-            Type currentType = type;
-            do
+            if (type.BaseType != null)
             {
-                FieldInfo[] fields = type.GetFields(flags);
-                for (var i = 0; i < fields.Length; i++)
-                {
-                    set.Add(fields[i]);
-                }
+                FieldInfo[] baseFields = type.BaseType.GetFieldsIncludeBasePrivate();
+                list.AddRange(baseFields);
             }
-            while ((currentType = currentType.BaseType) != null);
 
-            {
-                var i = 0;
-                var results = new FieldInfo[set.Count];
-                foreach (FieldInfo field in set)
-                {
-                    results[i] = field;
-                    i++;
-                }
-                return results;
-            }
+            FieldInfo[] fields = type.GetFields(flags);
+            list.AddRange(fields);
+            return list.ToArray();
         }
 
         public static bool InstanceOfGenericInterface(this Type type, Type interfaceType)

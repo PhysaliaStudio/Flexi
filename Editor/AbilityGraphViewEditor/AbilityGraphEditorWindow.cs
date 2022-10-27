@@ -339,7 +339,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool CanPasteSerializedData(string data)
         {
-            return !string.IsNullOrEmpty(data);
+            if (string.IsNullOrEmpty(data))
+            {
+                return false;
+            }
+
+            var canParse = true;
+            try
+            {
+                _ = JsonConvert.DeserializeObject<PartialGraph>(data);
+            }
+            catch
+            {
+                canParse = false;
+            }
+
+            return canParse;
         }
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
