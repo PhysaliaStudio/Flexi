@@ -47,5 +47,12 @@ namespace Physalia.AbilityFramework
         }
 
         public abstract AbilityState Run(AbilitySystem abilitySystem, AbilityEventQueue eventQueue);
+
+        public void ResumeWithContext(AbilitySystem abilitySystem, NodeContext context)
+        {
+            Current.Resume(context);
+            abilitySystem.RefreshStatsAndModifiers();
+            abilitySystem.TriggerNextEvent();
+        }
     }
 }
