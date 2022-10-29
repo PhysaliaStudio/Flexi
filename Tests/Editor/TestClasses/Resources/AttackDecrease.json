@@ -8,51 +8,43 @@
   ],
   "nodes": [
     {
-      "_id": 341180,
-      "_position": {
-        "x": 138.0,
-        "y": 131.0
-      },
-      "_type": "Physalia.AbilityFramework.StartNode"
-    },
-    {
       "_id": 852984,
       "_position": {
-        "x": 410.0,
-        "y": 242.0
+        "x": 414.0,
+        "y": 154.0
       },
       "_type": "Physalia.AbilityFramework.Tests.CustomAttackDecreaseNode"
     },
     {
-      "_id": 491651,
-      "_position": {
-        "x": 85.0,
-        "y": 242.0
-      },
-      "_type": "Physalia.AbilityFramework.Tests.CustomNormalAttackPayloadNode"
-    },
-    {
       "_id": 530024,
       "_position": {
-        "x": 188.0,
-        "y": 385.0
+        "x": 161.0,
+        "y": 302.0
       },
       "_type": "Physalia.AbilityFramework.BlackboardNode",
       "key": "value"
+    },
+    {
+      "_id": 479755,
+      "_position": {
+        "x": 74.0,
+        "y": 81.0
+      },
+      "_type": "Physalia.AbilityFramework.Tests.CustomNormalAttackEntryNode"
     }
   ],
   "edges": [
     {
-      "id1": 341180,
-      "port1": "next",
-      "id2": 852984,
-      "port2": "previous"
+      "id1": 852984,
+      "port1": "previous",
+      "id2": 479755,
+      "port2": "next"
     },
     {
       "id1": 852984,
       "port1": "targets",
-      "id2": 491651,
-      "port2": "mainTargetPort"
+      "id2": 479755,
+      "port2": "targetPort"
     },
     {
       "id1": 852984,
