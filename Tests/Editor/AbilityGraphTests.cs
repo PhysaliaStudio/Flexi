@@ -25,22 +25,23 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void ResetTo0_CurrentNodeIsTheIndex0OfEntryNodes()
+        public void MoveNext_AfterResetTo0_CurrentReturnsTheEntryNode()
         {
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            abilityGraph.Reset(0);
-            Assert.AreEqual(abilityGraph.Nodes[0], abilityGraph.Current);
+            bool success = abilityGraph.MoveNext();
+            Assert.AreEqual(true, success);
+            Assert.AreEqual(typeof(StartNode), abilityGraph.Current.GetType());
         }
 
         [Test]
-        public void MoveNext_AfterResetTo0_CurrentReturnsCorrectType()
+        public void ResetTo0_AfterMoveNext_CurrentNodeIsNull()
         {
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(TEST_JSON);
-            abilityGraph.Reset(0);
-
             bool success = abilityGraph.MoveNext();
             Assert.AreEqual(true, success);
-            Assert.AreEqual(typeof(GraphConverterTests.DamageNode), abilityGraph.Current.GetType());
+
+            abilityGraph.Reset(0);
+            Assert.AreEqual(null, abilityGraph.Current);
         }
     }
 }
