@@ -80,7 +80,7 @@ namespace Physalia.AbilityFramework
             this.payload = payload;
 
             graph.Reset(0);
-            if (graph.Current == null)
+            if (!graph.MoveNext())
             {
                 return false;
             }

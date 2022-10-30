@@ -3,25 +3,35 @@ namespace Physalia.AbilityFramework
     public class AbilityGraph : Graph
     {
         private FlowNode currentNode;
+        private int indexOfEntryNode;
+        private bool isRunning;
 
         public FlowNode Current => currentNode;
 
         public void Reset(int indexOfEntryNode)
         {
-            if (indexOfEntryNode < 0 || indexOfEntryNode >= EntryNodes.Count)
-            {
-                currentNode = null;
-                return;
-            }
-
-            currentNode = EntryNodes[indexOfEntryNode];
+            currentNode = null;
+            this.indexOfEntryNode = indexOfEntryNode;
+            isRunning = false;
         }
 
         public bool MoveNext()
         {
             if (currentNode == null)
             {
-                return false;
+                if (isRunning)
+                {
+                    return false;
+                }
+
+                if (indexOfEntryNode < 0 || indexOfEntryNode >= EntryNodes.Count)
+                {
+                    return false;
+                }
+
+                isRunning = true;
+                currentNode = EntryNodes[indexOfEntryNode];
+                return true;
             }
 
             currentNode = currentNode.Next;
