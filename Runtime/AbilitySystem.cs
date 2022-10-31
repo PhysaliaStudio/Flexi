@@ -6,6 +6,7 @@ namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
+        public event Action<object> EventReceived;
         public event Action<ChoiceContext> ChoiceOccurred;
 
         private readonly StatOwnerRepository ownerRepository;
@@ -95,6 +96,7 @@ namespace Physalia.AbilityFramework
         public void AddEventToLast(object payload)
         {
             eventQueue.Enqueue(payload);
+            EventReceived?.Invoke(payload);
         }
 
         public void TriggerNextEvent()
