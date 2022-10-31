@@ -17,7 +17,7 @@ namespace Physalia.AbilityFramework
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyCollection<AbilityInstance> Abilities => abilities;
+        public IReadOnlyList<AbilityInstance> Abilities => abilities;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
@@ -84,17 +84,17 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public void AppendAbility(AbilityInstance ability)
+        internal void AppendAbility(AbilityInstance ability)
         {
             abilities.Add(ability);
         }
 
-        public void RemoveAbility(AbilityInstance ability)
+        internal void RemoveAbility(AbilityInstance ability)
         {
             abilities.Remove(ability);
         }
 
-        public void RemoveAbility(int abilityId)
+        internal void RemoveAbility(int abilityId)
         {
             for (var i = 0; i < abilities.Count; i++)
             {
@@ -106,7 +106,7 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public void ClearAllAbilities()
+        internal void ClearAllAbilities()
         {
             abilities.Clear();
         }
