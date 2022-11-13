@@ -22,6 +22,11 @@ namespace Physalia.AbilityFramework.Tests
 
         public override bool CheckNodeContext(NodeContext nodeContext)
         {
+            if (nodeContext is CancellationContext)
+            {
+                return true;
+            }
+
             if (nodeContext is CustomSingleTargetAnswerContext answerContext)
             {
                 if (answerContext.target != null)
@@ -35,6 +40,11 @@ namespace Physalia.AbilityFramework.Tests
 
         protected override AbilityState ResumeLogic(NodeContext nodeContext)
         {
+            if (nodeContext is CancellationContext)
+            {
+                return AbilityState.ABORT;
+            }
+
             var answerContext = nodeContext as CustomSingleTargetAnswerContext;
             targetPort.SetValue(answerContext.target);
             return AbilityState.RUNNING;

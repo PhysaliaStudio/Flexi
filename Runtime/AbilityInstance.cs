@@ -95,7 +95,7 @@ namespace Physalia.AbilityFramework
 
         public void Execute()
         {
-            if (currentState != AbilityState.CLEAN && currentState != AbilityState.DONE)
+            if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
             {
                 Logger.Error($"[{nameof(AbilityInstance)}] You can not execute any unfinished ability instance!");
                 return;
@@ -128,7 +128,7 @@ namespace Physalia.AbilityFramework
             }
 
             currentState = graph.Current.Resume(nodeContext);
-            if (currentState == AbilityState.PAUSE)
+            if (currentState != AbilityState.RUNNING)
             {
                 return;
             }
@@ -141,13 +141,18 @@ namespace Physalia.AbilityFramework
             while (graph.MoveNext())
             {
                 currentState = graph.Current.Run();
-                if (currentState == AbilityState.PAUSE)
+                if (currentState != AbilityState.RUNNING)
                 {
                     return;
                 }
             }
 
             currentState = AbilityState.DONE;
+        }
+
+        internal void Push(FlowNode flowNode)
+        {
+            graph.Push(flowNode);
         }
 
         public void Reset()

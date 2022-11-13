@@ -5,6 +5,7 @@ namespace Physalia.AbilityFramework
         CLEAN,
         RUNNING,
         PAUSE,
+        ABORT,
         DONE,
     }
 }

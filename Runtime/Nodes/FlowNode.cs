@@ -39,5 +39,10 @@ namespace Physalia.AbilityFramework
         {
             return AbilityState.RUNNING;
         }
+
+        protected void PushSelf()
+        {
+            Instance?.Push(this);
+        }
     }
 }
