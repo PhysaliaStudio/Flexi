@@ -28,6 +28,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static string NORMAL_ATTACK_5_TIMES
+        {
+            get
+            {
+                return ReadAbilityFile("NormalAttack5Times");
+            }
+        }
+
         public static string ATTACK_DECREASE
         {
             get

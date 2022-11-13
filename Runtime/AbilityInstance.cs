@@ -150,6 +150,11 @@ namespace Physalia.AbilityFramework
             currentState = AbilityState.DONE;
         }
 
+        internal void Push(FlowNode flowNode)
+        {
+            graph.Push(flowNode);
+        }
+
         public void Reset()
         {
             graph.Reset(0);

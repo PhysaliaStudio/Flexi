@@ -331,5 +331,25 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(17, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
+
+        [Test]
+        public void ExecuteAbilitiy_ForLoop_StatsAreCorrect()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            var payload = new CustomNormalAttackPayload
+            {
+                attacker = unit2,
+                mainTarget = unit1,
+            };
+
+            abilitySystem.ActivateInstance(instance, payload);
+            Assert.AreEqual(5, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
     }
 }
