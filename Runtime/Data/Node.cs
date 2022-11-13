@@ -90,5 +90,10 @@ namespace Physalia.AbilityFramework
         {
             return false;
         }
+
+        protected internal virtual void Reset()
+        {
+
+        }
     }
 }

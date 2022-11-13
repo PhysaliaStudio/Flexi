@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Physalia.AbilityFramework
 {
     public class AbilityGraph : Graph
@@ -13,6 +15,12 @@ namespace Physalia.AbilityFramework
             currentNode = null;
             this.indexOfEntryNode = indexOfEntryNode;
             isRunning = false;
+
+            IReadOnlyList<Node> nodes = Nodes;
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                nodes[i].Reset();
+            }
         }
 
         public bool MoveNext()
