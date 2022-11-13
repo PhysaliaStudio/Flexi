@@ -46,13 +46,33 @@ namespace Physalia.AbilityFramework
             instances.Clear();
         }
 
-        public abstract AbilityState Run(AbilitySystem abilitySystem, AbilityEventQueue eventQueue);
-
-        public void ResumeWithContext(AbilitySystem abilitySystem, NodeContext context)
+        public AbilityState Run(AbilitySystem abilitySystem)
         {
+            Reset();
+            return IterateAbilities(abilitySystem);
+        }
+
+        protected abstract AbilityState IterateAbilities(AbilitySystem abilitySystem);
+
+        public AbilityState ResumeWithContext(AbilitySystem abilitySystem, NodeContext context)
+        {
+            AbilityInstance instance = Current;
             Current.Resume(context);
+
+            AbilityState state = instance.CurrentState;
+            if (state != AbilityState.DONE)
+            {
+                if (state == AbilityState.ABORT)
+                {
+                    Clear();
+                }
+                return state;
+            }
+
             abilitySystem.RefreshStatsAndModifiers();
             abilitySystem.TriggerNextEvent();
+
+            return IterateAbilities(abilitySystem);
         }
     }
 }

@@ -2,9 +2,8 @@ namespace Physalia.AbilityFramework
 {
     internal sealed class DefaultAbilityRunner : AbilityRunner
     {
-        public override AbilityState Run(AbilitySystem abilitySystem, AbilityEventQueue eventQueue)
+        protected override AbilityState IterateAbilities(AbilitySystem abilitySystem)
         {
-            Reset();
             while (Next())
             {
                 AbilityInstance instance = Current;
@@ -13,6 +12,10 @@ namespace Physalia.AbilityFramework
                 AbilityState state = instance.CurrentState;
                 if (state != AbilityState.DONE)
                 {
+                    if (state == AbilityState.ABORT)
+                    {
+                        Clear();
+                    }
                     return state;
                 }
 

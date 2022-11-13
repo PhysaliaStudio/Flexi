@@ -127,7 +127,12 @@ namespace Physalia.AbilityFramework
 
         public void Run()
         {
-            runner.Run(this, eventQueue);
+            _ = runner.Run(this);
+        }
+
+        public void ResumeWithContext(NodeContext context)
+        {
+            _ = runner.ResumeWithContext(this, context);
         }
 
         public void RefreshStatsAndModifiers()
@@ -157,11 +162,6 @@ namespace Physalia.AbilityFramework
         public void TriggerChoice(ChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
-        }
-
-        public void ResumeWithContext(NodeContext context)
-        {
-            runner.ResumeWithContext(this, context);
         }
     }
 }
