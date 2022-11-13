@@ -67,6 +67,16 @@ namespace Physalia.AbilityFramework
                 index--;
             }
 
+            // If we will enter the loop body, record this node
+            if (isIncrement && index < endIndexPort.GetValue())
+            {
+                PushSelf();
+            }
+            else if (!isIncrement && index >= endIndexPort.GetValue())
+            {
+                PushSelf();
+            }
+
             indexPort.SetValue(index);
             return AbilityState.RUNNING;
         }
