@@ -121,18 +121,19 @@ namespace Physalia.AbilityFramework
 
         public void AddToLast(AbilityInstance instance, object payload)
         {
+            instance.Reset();
             instance.SetPayload(payload);
             runner.Add(instance);
         }
 
         public void Run()
         {
-            _ = runner.Run(this);
+            runner.Run(this);
         }
 
         public void ResumeWithContext(NodeContext context)
         {
-            _ = runner.ResumeWithContext(this, context);
+            runner.Resume(this, context);
         }
 
         public void RefreshStatsAndModifiers()

@@ -234,8 +234,6 @@ namespace Physalia.AbilityFramework.Tests
             // Nothing happened
             Assert.AreEqual(25, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-
-            Assert.AreEqual(AbilityState.ABORT, instance1.CurrentState);
         }
 
         [Test]

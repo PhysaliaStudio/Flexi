@@ -2,9 +2,9 @@ namespace Physalia.AbilityFramework
 {
     public class StatRefreshEventNode : EntryNode
     {
-        public override bool CanExecute()
+        public override bool CanExecute(object payloadObj)
         {
-            return GetPayload<StatRefreshEvent>() != null;
+            return payloadObj is StatRefreshEvent;
         }
     }
 }

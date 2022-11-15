@@ -4,75 +4,99 @@ namespace Physalia.AbilityFramework
 {
     public abstract class AbilityRunner
     {
-        private readonly List<AbilityInstance> instances = new();
-        private int currentIndex = -1;
+        private readonly Stack<AbilityInstance> abilityStack = new();
 
-        public AbilityInstance Current
-        {
-            get
-            {
-                if (currentIndex < 0 || currentIndex >= instances.Count)
-                {
-                    return null;
-                }
-
-                return instances[currentIndex];
-            }
-        }
-
-        public bool Next()
-        {
-            currentIndex++;
-            if (currentIndex < 0 || currentIndex >= instances.Count)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public void Reset()
-        {
-            currentIndex = -1;
-        }
+        private AbilityState currentState = AbilityState.CLEAN;
 
         public void Add(AbilityInstance instance)
         {
-            instances.Add(instance);
+            abilityStack.Push(instance);
         }
 
         public void Clear()
         {
-            instances.Clear();
+            abilityStack.Clear();
+            currentState = AbilityState.CLEAN;
         }
 
-        public AbilityState Run(AbilitySystem abilitySystem)
+        public void Run(AbilitySystem abilitySystem)
         {
-            Reset();
-            return IterateAbilities(abilitySystem);
-        }
-
-        protected abstract AbilityState IterateAbilities(AbilitySystem abilitySystem);
-
-        public AbilityState ResumeWithContext(AbilitySystem abilitySystem, NodeContext context)
-        {
-            AbilityInstance instance = Current;
-            Current.Resume(context);
-
-            AbilityState state = instance.CurrentState;
-            if (state != AbilityState.DONE)
+            if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
             {
-                if (state == AbilityState.ABORT)
-                {
-                    Clear();
-                }
-                return state;
+                Logger.Error($"[{nameof(AbilityRunner)}] You can not execute any unfinished ability instance!");
+                return;
+            }
+
+            Iterate(abilitySystem);
+        }
+
+        public void Resume(AbilitySystem abilitySystem, NodeContext context)
+        {
+            AbilityInstance instance = abilityStack.Peek();
+            AbilityGraph graph = instance.Graph;
+
+            if (currentState != AbilityState.PAUSE)
+            {
+                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! You can not resume any unpaused ability instance!");
+                return;
+            }
+
+            bool success = graph.Current.CheckNodeContext(context);
+            if (!success)
+            {
+                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {graph.Current.GetType()}");
+                return;
+            }
+
+            currentState = graph.Current.Resume(context);
+            if (currentState == AbilityState.ABORT)
+            {
+                abilityStack.Pop();
+                return;
+            }
+
+            if (currentState != AbilityState.RUNNING)
+            {
+                return;
             }
 
             abilitySystem.RefreshStatsAndModifiers();
             abilitySystem.TriggerNextEvent();
 
-            return IterateAbilities(abilitySystem);
+            Iterate(abilitySystem);
+        }
+
+        private void Iterate(AbilitySystem abilitySystem)
+        {
+            while (abilityStack.Count > 0)
+            {
+                AbilityInstance instance = abilityStack.Peek();
+                AbilityGraph graph = instance.Graph;
+
+                if (graph.MoveNext())
+                {
+                    currentState = graph.Current.Run();
+                    if (currentState == AbilityState.ABORT)
+                    {
+                        abilityStack.Pop();
+                        return;
+                    }
+
+                    if (currentState != AbilityState.RUNNING)
+                    {
+                        return;
+                    }
+
+                    abilitySystem.RefreshStatsAndModifiers();
+                    abilitySystem.TriggerNextEvent();  // Events may make more abilities pushed into the stack
+                }
+                else
+                {
+                    abilityStack.Pop();
+                }
+            }
+
+            currentState = AbilityState.DONE;
         }
     }
 }
