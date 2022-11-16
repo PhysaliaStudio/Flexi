@@ -68,6 +68,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static string COUNTER_ATTACK
+        {
+            get
+            {
+                return ReadAbilityFile("CounterAttack");
+            }
+        }
+
         private static string ReadAbilityFile(string fileName)
         {
             TextAsset asset = Resources.Load<TextAsset>(fileName);

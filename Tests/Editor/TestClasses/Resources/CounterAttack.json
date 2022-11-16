@@ -1,0 +1,62 @@
+{
+  "_type": "Physalia.AbilityFramework.AbilityGraph",
+  "variables": [],
+  "nodes": [
+    {
+      "_id": 829185,
+      "_position": {
+        "x": 59.0,
+        "y": 107.0
+      },
+      "_type": "Physalia.AbilityFramework.Tests.CustomDamageEventNode"
+    },
+    {
+      "_id": 540835,
+      "_position": {
+        "x": 512.0,
+        "y": 107.0
+      },
+      "_type": "Physalia.AbilityFramework.Tests.CustomDamageNode"
+    },
+    {
+      "_id": 631924,
+      "_position": {
+        "x": 286.0,
+        "y": 262.0
+      },
+      "_type": "Physalia.AbilityFramework.Tests.CustomUnitNode"
+    }
+  ],
+  "edges": [
+    {
+      "id1": 829185,
+      "port1": "next",
+      "id2": 540835,
+      "port2": "previous"
+    },
+    {
+      "id1": 829185,
+      "port1": "instigatorPort",
+      "id2": 540835,
+      "port2": "targets"
+    },
+    {
+      "id1": 829185,
+      "port1": "targetPort",
+      "id2": 540835,
+      "port2": "instigatorPort"
+    },
+    {
+      "id1": 829185,
+      "port1": "targetPort",
+      "id2": 631924,
+      "port2": "customUnitPort"
+    },
+    {
+      "id1": 540835,
+      "port1": "baseValue",
+      "id2": 631924,
+      "port2": "attackPort"
+    }
+  ]
+}
