@@ -2,9 +2,9 @@ namespace Physalia.AbilityFramework
 {
     public sealed class StartNode : EntryNode
     {
-        public override bool CanExecute()
+        public override bool CanExecute(object payloadObj)
         {
-            return Instance.Payload is not StatRefreshEvent;
+            return payloadObj is not StatRefreshEvent;
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Physalia.AbilityFramework
 
         public int AbilityId => abilityId;
         public AbilitySystem System => system;
+        internal AbilityGraph Graph => graph;
         public StatOwner Owner => owner;
         internal object Payload => payload;
         public AbilityState CurrentState => currentState;
@@ -77,20 +78,13 @@ namespace Physalia.AbilityFramework
 
         public bool CanExecute(object payload)
         {
-            this.payload = payload;
-
-            graph.Reset(0);
-            if (!graph.MoveNext())
+            if (graph.EntryNodes.Count == 0)
             {
                 return false;
             }
 
-            if (graph.Current is EntryNode entryNode)
-            {
-                return entryNode.CanExecute();
-            }
-
-            return false;
+            bool result = graph.EntryNodes[0].CanExecute(payload);
+            return result;
         }
 
         public void Execute()

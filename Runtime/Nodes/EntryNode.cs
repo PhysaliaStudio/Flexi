@@ -17,7 +17,7 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public virtual bool CanExecute()
+        public virtual bool CanExecute(object payload)
         {
             return false;
         }

@@ -99,21 +99,31 @@ namespace Physalia.AbilityFramework
             EventReceived?.Invoke(payload);
         }
 
-        public void TriggerNextEvent()
+        internal void TriggerCachedEvents()
         {
             if (eventQueue.Count == 0)
             {
                 return;
             }
 
-            object payload = eventQueue.Dequeue();
-            foreach (StatOwner owner in ownerRepository.Owners)
+            var triggeredNewLayer = false;
+            while (eventQueue.Count > 0)
             {
-                foreach (AbilityInstance ability in owner.Abilities)
+                object payload = eventQueue.Dequeue();
+                foreach (StatOwner owner in ownerRepository.Owners)
                 {
-                    if (ability.CanExecute(payload))
+                    foreach (AbilityInstance ability in owner.Abilities)
                     {
-                        AddToLast(ability, payload);
+                        if (ability.CanExecute(payload))
+                        {
+                            if (!triggeredNewLayer)
+                            {
+                                triggeredNewLayer = true;
+                                runner.PushNewLayer();
+                            }
+
+                            AddToLast(ability, payload);
+                        }
                     }
                 }
             }
@@ -121,13 +131,19 @@ namespace Physalia.AbilityFramework
 
         public void AddToLast(AbilityInstance instance, object payload)
         {
+            instance.Reset();
             instance.SetPayload(payload);
             runner.Add(instance);
         }
 
         public void Run()
         {
-            runner.Run(this, eventQueue);
+            runner.Run(this);
+        }
+
+        public void ResumeWithContext(NodeContext context)
+        {
+            runner.Resume(this, context);
         }
 
         public void RefreshStatsAndModifiers()
@@ -157,11 +173,6 @@ namespace Physalia.AbilityFramework
         public void TriggerChoice(ChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
-        }
-
-        public void ResumeWithContext(NodeContext context)
-        {
-            runner.ResumeWithContext(this, context);
         }
     }
 }

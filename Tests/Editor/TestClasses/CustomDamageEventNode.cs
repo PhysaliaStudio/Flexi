@@ -2,9 +2,12 @@ namespace Physalia.AbilityFramework.Tests
 {
     public class CustomDamageEventNode : EntryNode
     {
-        public override bool CanExecute()
+        public Outport<CustomUnit> instigatorPort;
+        public Outport<CustomUnit> targetPort;
+
+        public override bool CanExecute(object payloadObj)
         {
-            var payload = GetPayload<CustomDamageEvent>();
+            var payload = payloadObj as CustomDamageEvent;
             if (payload == null)
             {
                 return false;
@@ -16,6 +19,14 @@ namespace Physalia.AbilityFramework.Tests
             }
 
             return false;
+        }
+
+        protected override AbilityState DoLogic()
+        {
+            var payload = GetPayload<CustomDamageEvent>();
+            instigatorPort.SetValue(payload.instigator);
+            targetPort.SetValue(payload.target);
+            return AbilityState.RUNNING;
         }
     }
 }
