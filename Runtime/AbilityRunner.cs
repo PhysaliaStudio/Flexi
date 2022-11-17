@@ -72,7 +72,7 @@ namespace Physalia.AbilityFramework
             }
 
             abilitySystem.RefreshStatsAndModifiers();
-            abilitySystem.TriggerNextEvent();
+            abilitySystem.TriggerCachedEvents();
 
             Iterate(abilitySystem);
         }
@@ -99,7 +99,7 @@ namespace Physalia.AbilityFramework
                     }
 
                     abilitySystem.RefreshStatsAndModifiers();
-                    abilitySystem.TriggerNextEvent();  // Events may make more abilities pushed into the stack
+                    abilitySystem.TriggerCachedEvents();  // Events may make more abilities pushed into the stack
                 }
                 else
                 {

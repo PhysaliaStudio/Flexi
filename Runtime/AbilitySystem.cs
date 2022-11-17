@@ -99,7 +99,7 @@ namespace Physalia.AbilityFramework
             EventReceived?.Invoke(payload);
         }
 
-        public void TriggerNextEvent()
+        internal void TriggerCachedEvents()
         {
             if (eventQueue.Count == 0)
             {
@@ -107,20 +107,23 @@ namespace Physalia.AbilityFramework
             }
 
             var triggeredNewLayer = false;
-            object payload = eventQueue.Dequeue();
-            foreach (StatOwner owner in ownerRepository.Owners)
+            while (eventQueue.Count > 0)
             {
-                foreach (AbilityInstance ability in owner.Abilities)
+                object payload = eventQueue.Dequeue();
+                foreach (StatOwner owner in ownerRepository.Owners)
                 {
-                    if (ability.CanExecute(payload))
+                    foreach (AbilityInstance ability in owner.Abilities)
                     {
-                        if (!triggeredNewLayer)
+                        if (ability.CanExecute(payload))
                         {
-                            triggeredNewLayer = true;
-                            runner.PushNewLayer();
-                        }
+                            if (!triggeredNewLayer)
+                            {
+                                triggeredNewLayer = true;
+                                runner.PushNewLayer();
+                            }
 
-                        AddToLast(ability, payload);
+                            AddToLast(ability, payload);
+                        }
                     }
                 }
             }
