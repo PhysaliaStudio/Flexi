@@ -4,18 +4,29 @@ namespace Physalia.AbilityFramework
 {
     public abstract class AbilityRunner
     {
-        private readonly Stack<AbilityInstance> abilityStack = new();
+        private readonly Stack<Queue<AbilityInstance>> queueStack = new();
 
         private AbilityState currentState = AbilityState.CLEAN;
 
         public void Add(AbilityInstance instance)
         {
-            abilityStack.Push(instance);
+            if (queueStack.Count == 0)
+            {
+                PushNewLayer();
+            }
+
+            Queue<AbilityInstance> queue = queueStack.Peek();
+            queue.Enqueue(instance);
+        }
+
+        public void PushNewLayer()
+        {
+            queueStack.Push(new Queue<AbilityInstance>());
         }
 
         public void Clear()
         {
-            abilityStack.Clear();
+            queueStack.Clear();
             currentState = AbilityState.CLEAN;
         }
 
@@ -32,7 +43,7 @@ namespace Physalia.AbilityFramework
 
         public void Resume(AbilitySystem abilitySystem, NodeContext context)
         {
-            AbilityInstance instance = abilityStack.Peek();
+            AbilityInstance instance = Peek();
             AbilityGraph graph = instance.Graph;
 
             if (currentState != AbilityState.PAUSE)
@@ -51,7 +62,7 @@ namespace Physalia.AbilityFramework
             currentState = graph.Current.Resume(context);
             if (currentState == AbilityState.ABORT)
             {
-                abilityStack.Pop();
+                Dequeue();
                 return;
             }
 
@@ -68,9 +79,9 @@ namespace Physalia.AbilityFramework
 
         private void Iterate(AbilitySystem abilitySystem)
         {
-            while (abilityStack.Count > 0)
+            while (queueStack.Count > 0)
             {
-                AbilityInstance instance = abilityStack.Peek();
+                AbilityInstance instance = Peek();
                 AbilityGraph graph = instance.Graph;
 
                 if (graph.MoveNext())
@@ -78,7 +89,7 @@ namespace Physalia.AbilityFramework
                     currentState = graph.Current.Run();
                     if (currentState == AbilityState.ABORT)
                     {
-                        abilityStack.Pop();
+                        Dequeue();
                         return;
                     }
 
@@ -92,11 +103,41 @@ namespace Physalia.AbilityFramework
                 }
                 else
                 {
-                    abilityStack.Pop();
+                    Dequeue();
                 }
             }
 
             currentState = AbilityState.DONE;
+        }
+
+        private AbilityInstance Peek()
+        {
+            if (queueStack.Count == 0)
+            {
+                return null;
+            }
+
+            Queue<AbilityInstance> queue = queueStack.Peek();
+            AbilityInstance instance = queue.Peek();
+            return instance;
+        }
+
+        private void Dequeue()
+        {
+            if (queueStack.Count == 0)
+            {
+                return;
+            }
+
+            Queue<AbilityInstance> queue = queueStack.Peek();
+            if (queue.Count > 0)
+            {
+                queue.Dequeue();
+                if (queue.Count == 0)
+                {
+                    queueStack.Pop();
+                }
+            }
         }
     }
 }

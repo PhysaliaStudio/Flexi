@@ -106,6 +106,7 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
+            var triggeredNewLayer = false;
             object payload = eventQueue.Dequeue();
             foreach (StatOwner owner in ownerRepository.Owners)
             {
@@ -113,6 +114,12 @@ namespace Physalia.AbilityFramework
                 {
                     if (ability.CanExecute(payload))
                     {
+                        if (!triggeredNewLayer)
+                        {
+                            triggeredNewLayer = true;
+                            runner.PushNewLayer();
+                        }
+
                         AddToLast(ability, payload);
                     }
                 }

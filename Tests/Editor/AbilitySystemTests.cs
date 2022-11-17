@@ -327,7 +327,7 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void ExecuteAbilitiy_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
+        public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
             abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
@@ -356,6 +356,33 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(17, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
+
+        [Test]
+        public void ChainEffect_MultipleAbilities_TriggeredByCorrectOrder()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);
+            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+            abilitySystem.LoadAbilityGraph(3, CustomAbility.COUNTER_ATTACK);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
+            abilitySystem.AppendAbility(unit2, 2);
+            abilitySystem.AppendAbility(unit2, 3);
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            var payload = new CustomNormalAttackPayload
+            {
+                attacker = unit1,
+                mainTarget = unit2,
+            };
+
+            abilitySystem.ActivateInstance(instance, payload);
+
+            Assert.AreEqual(2, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(5, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(32, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
