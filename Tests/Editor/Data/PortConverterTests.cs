@@ -40,6 +40,14 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void SingleToList_MatchGenericTypeButInputIsNull_ListCountReturns0()
+        {
+            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestA1>));
+            var result = converter.Invoke(null) as IList<TestA1>;
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
         public void SingleToList_NotMatchGenericType_ReturnsNull()
         {
             Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestB>));

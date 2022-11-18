@@ -158,7 +158,10 @@ namespace Physalia.AbilityFramework
                 {
                     Type genericListType = typeof(List<>).MakeGenericType(inportListTypes[0]);
                     var list = Activator.CreateInstance(genericListType) as IList;
-                    list.Add(value);
+                    if (value != null)
+                    {
+                        list.Add(value);
+                    }
                     return list;
                 };
             }
