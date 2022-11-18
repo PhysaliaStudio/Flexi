@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework.Tests
 {
+    [NodeCategory("Built-in/[Test Custom]")]
     public class CustomNormalAttackEntryNode : EntryNode
     {
         public Outport<CustomUnit> attackerPort;

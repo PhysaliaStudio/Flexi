@@ -5,23 +5,27 @@ namespace Physalia.AbilityFramework.Tests
 {
     public class GraphConverterTests
     {
+        [NodeCategory("Built-in/[Test Custom]")]
         public class DamageNode : ProcessNode
         {
             public Inport<StatOwner> owners;
             public Inport<int> baseValue;
         }
 
+        [NodeCategory("Built-in/[Test Custom]")]
         public class OwnerFilterNode : Node
         {
             public Outport<StatOwner> owners;
         }
 
+        [NodeCategory("Built-in/[Test Custom]")]
         public class IntNode : Node
         {
             public Outport<StatOwner> output;
             public Variable<int> value;
         }
 
+        [NodeCategory("Built-in/[Test Custom]")]
         public class LogNode : ProcessNode
         {
             public Inport<string> text;

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Physalia.AbilityFramework.Tests
 {
+    [NodeCategory("Built-in/[Test Custom]")]
     public class LogCharacterNameNode : ProcessNode
     {
         public Inport<CustomUnit> character;

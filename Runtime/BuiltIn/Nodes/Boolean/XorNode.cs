@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Logical")]
     public class XorNode : ValueNode
     {
         public Inport<bool> a;

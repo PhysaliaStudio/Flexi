@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Comparison")]
     public class GreaterNode : ValueNode
     {
         public Inport<int> a;

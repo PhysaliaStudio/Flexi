@@ -10,6 +10,7 @@ namespace Physalia.AbilityFramework.Tests
         public CustomUnit target;
     }
 
+    [NodeCategory("Built-in/[Test Custom]")]
     public class CustomSingleTargetSelection : ProcessNode
     {
         public Outport<CustomUnit> targetPort;

@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Logical")]
     public class FalseNode : ValueNode
     {
         public Outport<bool> value;

@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Common")]
     public class BlackboardNode : ValueNode
     {
         public Outport<int> value;

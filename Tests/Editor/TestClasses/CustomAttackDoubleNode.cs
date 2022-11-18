@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework.Tests
 {
+    [NodeCategory("Built-in/[Test Custom]")]
     public class CustomAttackDoubleNode : ProcessNode
     {
         public Inport<List<StatOwner>> targetsPort;

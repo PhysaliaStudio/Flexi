@@ -2,6 +2,7 @@ using System.Collections;
 
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Value")]
     public class CountNode : ValueNode
     {
         public Inport<ICollection> collectionPort;
