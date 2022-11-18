@@ -10,6 +10,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
     {
+        private static readonly Type MISSING_NODE_TYPE = typeof(UndefinedNode);
+
         private AbilityGraphView graphView;
         private List<SearchTreeEntry> searchTreeEntries;
 
@@ -51,6 +53,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 {
                     if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Node)))
                     {
+                        // Hide the internal node types
+                        if (type == MISSING_NODE_TYPE)
+                        {
+                            continue;
+                        }
+
                         nodeTypes.Add(type);
                     }
                 }
