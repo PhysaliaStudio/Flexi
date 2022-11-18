@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Stats")]
     public class ConditionalModifierNode : ProcessNode
     {
         public Inport<IReadOnlyList<StatOwner>> ownersPort;

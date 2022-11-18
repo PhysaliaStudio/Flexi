@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Stats")]
     public class StatCompareNode : ValueNode
     {
         public Inport<StatOwner> ownerPort;

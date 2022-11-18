@@ -1,5 +1,10 @@
 namespace Physalia.AbilityFramework
 {
+    internal sealed class StatRefreshEvent
+    {
+        // Empty Content
+    }
+
     [NodeCategory("Built-in/Entry")]
     public class StatRefreshEventNode : EntryNode
     {
