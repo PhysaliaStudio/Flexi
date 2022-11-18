@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
 {
@@ -45,6 +46,28 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         return children[i];
                     }
                     else if (compare < 0)
+                    {
+                        // The new child should be created before this child
+                        var child = new Node(this, text, type);
+                        children.Insert(i, child);
+                        return child;
+                    }
+                }
+
+                {
+                    // The new child should be created at the last
+                    var child = new Node(this, text, type);
+                    children.Add(child);
+                    return child;
+                }
+            }
+
+            public Node ForceInsert(string text, Type type)
+            {
+                for (var i = 0; i < children.Count; i++)
+                {
+                    int compare = text.CompareTo(children[i].Text);
+                    if (compare < 0)
                     {
                         // The new child should be created before this child
                         var child = new Node(this, text, type);
@@ -131,7 +154,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 }
                 else
                 {
-                    current = current.InsertOrGetChild(texts[i], type);
+                    Node leaf = current.InsertOrGetChild(texts[i], type);
+                    if (leaf.Type != type)  // Leaves conflict
+                    {
+                        Debug.LogWarning($"[{nameof(NodeSearchWindowProvider)}] Path conflict! \"{leaf.Type.FullName}\" and \"{type.FullName}\" use the same path: \"{path}\"");
+                        current.ForceInsert(texts[i], type);
+                    }
                 }
             }
         }
