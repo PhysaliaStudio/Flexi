@@ -100,6 +100,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 this.root = root;
                 current = root;
+                index = -1;
             }
 
             public bool MoveNext()
