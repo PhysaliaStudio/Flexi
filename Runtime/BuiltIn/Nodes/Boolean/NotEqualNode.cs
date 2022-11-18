@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Comparison")]
     public class NotEqualNode : ValueNode
     {
         public Inport<int> a;

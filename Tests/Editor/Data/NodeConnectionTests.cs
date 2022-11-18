@@ -4,11 +4,13 @@ namespace Physalia.AbilityFramework.Tests
 {
     public class NodeConnectionTests
     {
+        [NodeCategory("Built-in/[Test Custom]")]
         public class TestNode1 : Node
         {
             public Inport<int> input;
         }
 
+        [NodeCategory("Built-in/[Test Custom]")]
         public class TestNode2 : Node
         {
             public Outport<int> output;

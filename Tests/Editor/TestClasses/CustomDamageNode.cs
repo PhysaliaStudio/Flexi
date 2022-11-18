@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework.Tests
 {
+    [NodeCategory("Built-in/[Test Custom]")]
     public class CustomDamageNode : ProcessNode
     {
         public Inport<CustomUnit> instigatorPort;

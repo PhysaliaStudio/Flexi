@@ -10,40 +10,87 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
     {
+        private static readonly Type MISSING_NODE_TYPE = typeof(UndefinedNode);
+
         private AbilityGraphView graphView;
+        private List<SearchTreeEntry> searchTreeEntries;
 
         public void Initialize(AbilityGraphView graphView)
         {
             this.graphView = graphView;
+            searchTreeEntries = CreateSearchTreeEntries();
         }
 
-        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+        private static List<SearchTreeEntry> CreateSearchTreeEntries()
         {
-            var entries = new List<SearchTreeEntry>
-            {
-                new SearchTreeGroupEntry(new GUIContent("Node")),
-            };
+            IReadOnlyList<Type> nodeTypes = GetAllNodeTypes();
+            NodeTypeSearchTree searchTree = CreateNodeTypeSearchTree(nodeTypes);
 
+            var entries = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Node")) };
+            IEnumerator<NodeTypeSearchTree.Node> enumerator = searchTree.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                NodeTypeSearchTree.Node node = enumerator.Current;
+                if (node.IsLeaf)
+                {
+                    entries.Add(new SearchTreeEntry(new GUIContent(node.Text)) { level = node.Level, userData = node.Type });
+                }
+                else
+                {
+                    entries.Add(new SearchTreeGroupEntry(new GUIContent(node.Text)) { level = node.Level });
+                }
+            }
+
+            return entries;
+        }
+
+        private static IReadOnlyList<Type> GetAllNodeTypes()
+        {
+            var nodeTypes = new List<Type>();
             foreach (Assembly assembly in ReflectionUtilities.GetAssemblies())
             {
                 foreach (Type type in assembly.GetTypes())
                 {
                     if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Node)))
                     {
-                        string typeNamespace = type.Namespace;
-                        int index = entries.FindIndex(x => x.content.text == typeNamespace);
-                        if (index == -1)
+                        // Hide the internal node types
+                        if (type == MISSING_NODE_TYPE)
                         {
-                            entries.Add(new SearchTreeGroupEntry(new GUIContent(typeNamespace)) { level = 1, userData = type });
-                            index = entries.Count - 1;
+                            continue;
                         }
 
-                        entries.Insert(index + 1, new SearchTreeEntry(new GUIContent(type.Name)) { level = 2, userData = type });
+                        nodeTypes.Add(type);
                     }
                 }
             }
 
-            return entries;
+            return nodeTypes;
+        }
+
+        private static NodeTypeSearchTree CreateNodeTypeSearchTree(IReadOnlyList<Type> nodeTypes)
+        {
+            var searchTree = new NodeTypeSearchTree();
+            for (var i = 0; i < nodeTypes.Count; i++)
+            {
+                Type type = nodeTypes[i];
+                NodeCategory nodeCategory = type.GetCustomAttribute<NodeCategory>();
+                if (nodeCategory != null)
+                {
+                    var path = $"{nodeCategory.Name}/{type.Name}";
+                    searchTree.Insert(path, type);
+                }
+                else
+                {
+                    searchTree.Insert(type.Name, type);
+                }
+            }
+
+            return searchTree;
+        }
+
+        public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
+        {
+            return searchTreeEntries;
         }
 
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)

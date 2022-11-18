@@ -9,7 +9,7 @@ namespace Physalia.AbilityFramework.Tests
 {
     public class NodeConverterTests
     {
-        [Serializable]
+        [NodeCategory("Built-in/[Test Custom]")]
         public class TestNode : Node
         {
             public Inport<string> input;

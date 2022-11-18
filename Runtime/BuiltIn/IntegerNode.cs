@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Value")]
     public class IntegerNode : ValueNode
     {
         public Outport<int> output;

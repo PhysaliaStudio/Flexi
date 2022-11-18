@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Comparison")]
     public class LessNode : ValueNode
     {
         public Inport<int> a;

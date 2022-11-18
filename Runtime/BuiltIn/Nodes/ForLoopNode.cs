@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
+    [NodeCategory("Built-in/Flow Control")]
     public class ForLoopNode : FlowNode
     {
         internal Inport<FlowNode> previousPort;
