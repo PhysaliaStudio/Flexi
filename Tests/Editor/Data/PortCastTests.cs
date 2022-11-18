@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -80,6 +81,13 @@ namespace Physalia.AbilityFramework.Tests
         public void ListToList_ListOfSubClassToIReadOnlyListOfClass_ReturnsTrue()
         {
             bool result = Port.CanPortCast(typeof(List<BoxCollider>), typeof(IReadOnlyList<Collider>));
+            Assert.AreEqual(true, result);
+        }
+
+        [Test]
+        public void ListToCollection_ReturnsTrue()
+        {
+            bool result = Port.CanPortCast(typeof(List<BoxCollider>), typeof(ICollection));
             Assert.AreEqual(true, result);
         }
     }

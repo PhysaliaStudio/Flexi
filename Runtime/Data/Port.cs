@@ -74,27 +74,6 @@ namespace Physalia.AbilityFramework
             bool isOutportList = IsListType(outportType);
             bool isInportList = IsListType(inportType);
 
-            if (!isOutportList && !isInportList)
-            {
-                return inportType.IsAssignableFrom(outportType);
-            }
-
-            if (isOutportList && !isInportList)  // Cannot cast list of objects to a single object
-            {
-                return false;
-            }
-
-            if (!isOutportList && isInportList)
-            {
-                Type[] inportListTypes = inportType.GenericTypeArguments;
-                if (inportListTypes.Length != 1)
-                {
-                    return false;
-                }
-
-                return inportListTypes[0].IsAssignableFrom(outportType);
-            }
-
             if (isOutportList && isInportList)
             {
                 Type[] outportListTypes = outportType.GenericTypeArguments;
@@ -111,8 +90,28 @@ namespace Physalia.AbilityFramework
 
                 return inportListTypes[0].IsAssignableFrom(outportListTypes[0]);
             }
+            else
+            {
+                bool canInportAssignableFromOutport = inportType.IsAssignableFrom(outportType);
+                if (canInportAssignableFromOutport)
+                {
+                    return true;
+                }
+                else if (!isOutportList && isInportList)
+                {
+                    Type[] inportListTypes = inportType.GenericTypeArguments;
+                    if (inportListTypes.Length != 1)
+                    {
+                        return false;
+                    }
 
-            return false;
+                    return inportListTypes[0].IsAssignableFrom(outportType);
+                }
+                else
+                {
+                    return false;
+                }
+            }
         }
 
         /// <returns>A function that can convert provided first arg value from type to type</returns>
