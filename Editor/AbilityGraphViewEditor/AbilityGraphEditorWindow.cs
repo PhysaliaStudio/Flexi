@@ -22,6 +22,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             public void Dispose() => element.UnregisterValueChangedCallback(callback);
         }
 
+        private static readonly string WINDOW_TITLE = "Ability Graph Editor";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
         // Since we need to use names to find the correct VisualTreeAsset to replace,
@@ -44,13 +45,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private ObjectField objectField;
         private AbilityGraphView graphView;
         private Blackboard blackboard;
+        private bool isDirty;
 
         private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
         [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
         private static void Open()
         {
-            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>("Ability Graph Editor");
+            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
             window.Show();
         }
 
@@ -79,7 +81,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return;
                 }
 
-                bool ok = AskForSave();
+                bool ok = AskForSaveIfDirty();
                 if (ok)
                 {
                     var asset = evt.newValue as AbilityGraphAsset;
@@ -129,6 +131,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph);
             SetUpGraphView(graphView);
+            SetDirty(false);
             return true;
         }
 
@@ -140,7 +143,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return;
             }
 
-            bool ok = AskForSave();
+            bool ok = AskForSaveIfDirty();
             if (ok)
             {
                 LoadFile(asset);
@@ -166,6 +169,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 currentAsset = asset;
             }
 
+            SetDirty(false);
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
             asset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
             EditorUtility.SetDirty(asset);
@@ -175,15 +179,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void OnNewButtonClicked()
         {
-            bool ok = AskForSave();
+            bool ok = AskForSaveIfDirty();
             if (ok)
             {
                 NewGraphView();
             }
         }
 
-        private bool AskForSave()
+        private bool AskForSaveIfDirty()
         {
+            if (!isDirty)
+            {
+                return true;
+            }
+
             int option = EditorUtility.DisplayDialogComplex("Unsaved Changes",
                 "Do you want to save the changes you made before quitting?",
                 "Save",
@@ -211,6 +220,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewGraphView()
         {
             SetUpGraphView(new AbilityGraphView());
+            SetDirty(false);
             objectField.SetValueWithoutNotify(null);
             currentAsset = null;
         }
@@ -292,6 +302,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return;
             }
 
+            SetDirty(true);
+
             // Calculate the most top-left point
             var topLeft = new Vector2(float.MaxValue, float.MaxValue);
             for (var i = 0; i < partialGraph.nodes.Count; i++)
@@ -353,6 +365,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             if (graphViewChange.elementsToRemove != null)
             {
+                SetDirty(true);
                 foreach (GraphElement element in graphViewChange.elementsToRemove)
                 {
                     if (element is NodeView nodeView)
@@ -372,6 +385,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             if (graphViewChange.edgesToCreate != null)
             {
+                SetDirty(true);
                 foreach (EdgeView edgeView in graphViewChange.edgesToCreate)
                 {
                     var outputNodeView = edgeView.output.node as NodeView;
@@ -384,6 +398,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             if (graphViewChange.movedElements != null)
             {
+                SetDirty(true);
                 foreach (GraphElement element in graphViewChange.movedElements)
                 {
                     if (element is NodeView nodeView)
@@ -424,6 +439,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void AddBlackboardVariable(IEnumerable<int> indexes)
         {
+            SetDirty(true);
             foreach (int i in indexes)
             {
                 graphView.GetAbilityGraph().BlackboardVariables[i] = new BlackboardVariable();
@@ -442,6 +458,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = keyField,
                     callback = evt =>
                     {
+                        SetDirty(true);
                         variable.key = evt.newValue;
                     },
                 };
@@ -457,6 +474,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = valueField,
                     callback = evt =>
                     {
+                        SetDirty(true);
                         variable.value = evt.newValue;
                     },
                 };
@@ -474,6 +492,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             var valueField = element.Q<IntegerField>("value");
             callbackTable[valueField].Dispose();
             callbackTable.Remove(valueField);
+        }
+
+        public void SetDirty(bool value)
+        {
+            if (isDirty != value)
+            {
+                isDirty = value;
+                if (isDirty)
+                {
+                    titleContent = new GUIContent("*" + WINDOW_TITLE);
+                }
+                else
+                {
+                    titleContent = new GUIContent(WINDOW_TITLE);
+                }
+            }
         }
     }
 }

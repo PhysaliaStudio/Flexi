@@ -101,6 +101,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             var type = searchTreeEntry.userData as Type;
             graphView.CreateNewNode(type, localMousePosition);
+            window.SetDirty(true);
             return true;
         }
     }
