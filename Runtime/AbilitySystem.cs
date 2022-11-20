@@ -87,13 +87,7 @@ namespace Physalia.AbilityFramework
             owner.ClearAllAbilities();
         }
 
-        public void ActivateInstance(AbilityInstance instance, IEventContext eventContext)
-        {
-            AddToLast(instance, eventContext);
-            Run();
-        }
-
-        internal void AddEventToLast(IEventContext eventContext)
+        internal void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
             EventReceived?.Invoke(eventContext);
@@ -122,14 +116,20 @@ namespace Physalia.AbilityFramework
                                 runner.PushNewLayer();
                             }
 
-                            AddToLast(ability, eventContext);
+                            EnqueueAbility(ability, eventContext);
                         }
                     }
                 }
             }
         }
 
-        public void AddToLast(AbilityInstance instance, IEventContext eventContext)
+        public void EnqueueAbilityAndRun(AbilityInstance instance, IEventContext eventContext)
+        {
+            EnqueueAbility(instance, eventContext);
+            Run();
+        }
+
+        public void EnqueueAbility(AbilityInstance instance, IEventContext eventContext)
         {
             instance.Reset();
             instance.SetPayload(eventContext);
@@ -141,7 +141,7 @@ namespace Physalia.AbilityFramework
             runner.Run(this);
         }
 
-        public void ResumeWithContext(IResumeContext resumeContext)
+        public void Resume(IResumeContext resumeContext)
         {
             runner.Resume(this, resumeContext);
         }

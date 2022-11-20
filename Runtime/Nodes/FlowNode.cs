@@ -53,7 +53,7 @@ namespace Physalia.AbilityFramework
 
         protected void EnqueueEvent(IEventContext eventContext)
         {
-            Instance.System?.AddEventToLast(eventContext);
+            Instance.System?.EnqueueEvent(eventContext);
         }
     }
 }
