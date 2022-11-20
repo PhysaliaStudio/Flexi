@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework.Tests
     {
         public Outport<CustomUnit> activatorPort;
 
-        public override bool CanExecute(object payloadObj)
+        public override bool CanExecute(IEventContext payloadObj)
         {
             var payload = payloadObj as CustomActivationPayload;
             if (payload != null && payload.activator != null)

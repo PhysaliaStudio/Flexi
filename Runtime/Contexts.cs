@@ -1,5 +1,10 @@
 namespace Physalia.AbilityFramework
 {
+    public interface IEventContext
+    {
+
+    }
+
     public abstract class NodeContext
     {
 

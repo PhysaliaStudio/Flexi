@@ -1,6 +1,6 @@
 namespace Physalia.AbilityFramework.Tests
 {
-    public class CustomDamageEvent
+    public class CustomDamageEvent : IEventContext
     {
         public CustomUnit instigator;
         public CustomUnit target;

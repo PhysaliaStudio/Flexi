@@ -1,6 +1,6 @@
 namespace Physalia.AbilityFramework
 {
-    internal sealed class StatRefreshEvent
+    internal sealed class StatRefreshEvent : IEventContext
     {
         // Empty Content
     }
@@ -8,7 +8,7 @@ namespace Physalia.AbilityFramework
     [NodeCategory("Built-in/Entry")]
     public class StatRefreshEventNode : EntryNode
     {
-        public override bool CanExecute(object payloadObj)
+        public override bool CanExecute(IEventContext payloadObj)
         {
             return payloadObj is StatRefreshEvent;
         }
