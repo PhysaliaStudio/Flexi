@@ -1,17 +1,14 @@
 namespace Physalia.AbilityFramework.Tests
 {
-    public class CustomUnit : IHasStatOwner
+    public class CustomUnit : Actor
     {
         private readonly CustomUnitData data;
-        private readonly StatOwner statOwner;
 
         public string Name => data.name;
-        public StatOwner Owner => statOwner;
 
-        public CustomUnit(CustomUnitData data, StatOwner statOwner)
+        public CustomUnit(CustomUnitData data, StatOwner statOwner) : base(statOwner)
         {
             this.data = data;
-            this.statOwner = statOwner;
         }
     }
 }
