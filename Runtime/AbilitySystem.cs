@@ -45,6 +45,15 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        public void LoadAbilityGraph(int id, AbilityGraphAsset graphAsset)
+        {
+            bool success = graphTable.TryAdd(id, graphAsset.Text);
+            if (!success)
+            {
+                Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
+            }
+        }
+
         public AbilityInstance GetAbilityInstance(int id)
         {
             bool success = graphTable.TryGetValue(id, out string graphJson);
