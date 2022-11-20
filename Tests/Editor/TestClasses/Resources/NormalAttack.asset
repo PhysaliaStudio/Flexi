@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: NormalAttack
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
+    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 393698,\r\n      \"_position\":
+    {\r\n        \"x\": 570.0,\r\n        \"y\": 67.0\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.Tests.CustomDamageNode\"\r\n    },\r\n    {\r\n     
+    \"_id\": 957515,\r\n      \"_position\": {\r\n        \"x\": 321.0,\r\n       
+    \"y\": 216.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomUnitNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 512761,\r\n      \"_position\": {\r\n        \"x\":
+    50.0,\r\n        \"y\": 67.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomNormalAttackEntryNode\"\r\n   
+    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 393698,\r\n      \"port1\":
+    \"previous\",\r\n      \"id2\": 512761,\r\n      \"port2\": \"next\"\r\n    },\r\n   
+    {\r\n      \"id1\": 393698,\r\n      \"port1\": \"instigatorPort\",\r\n     
+    \"id2\": 512761,\r\n      \"port2\": \"attackerPort\"\r\n    },\r\n    {\r\n     
+    \"id1\": 393698,\r\n      \"port1\": \"targets\",\r\n      \"id2\": 512761,\r\n     
+    \"port2\": \"targetPort\"\r\n    },\r\n    {\r\n      \"id1\": 393698,\r\n     
+    \"port1\": \"baseValue\",\r\n      \"id2\": 957515,\r\n      \"port2\": \"attackPort\"\r\n   
+    },\r\n    {\r\n      \"id1\": 512761,\r\n      \"port1\": \"attackerPort\",\r\n     
+    \"id2\": 957515,\r\n      \"port2\": \"customUnitPort\"\r\n    }\r\n  ]\r\n}"

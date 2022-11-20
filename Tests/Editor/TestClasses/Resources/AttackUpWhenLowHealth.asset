@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: AttackUpWhenLowHealth
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"nodes\":
+    [\r\n    {\r\n      \"_id\": 284761,\r\n      \"_position\": {\r\n        \"x\":
+    56.0,\r\n        \"y\": 186.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StatRefreshEventNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 534912,\r\n      \"_position\": {\r\n        \"x\":
+    497.0,\r\n        \"y\": 201.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.ConditionalModifierNode\",\r\n     
+    \"modifierVariable\": {\r\n        items: [\r\n          {\r\n            \"statId\":
+    11,\r\n            \"op\": 1,\r\n            \"value\": 2\r\n          }\r\n       
+    ]\r\n      }\r\n    },\r\n    {\r\n      \"_id\": 995143,\r\n      \"_position\":
+    {\r\n        \"x\": 252.0,\r\n        \"y\": 346.0\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.StatCompareNode\",\r\n      \"statId\": 1,\r\n     
+    \"op\": 3,\r\n      \"value\": 3\r\n    },\r\n    {\r\n      \"_id\": 325630,\r\n     
+    \"_position\": {\r\n        \"x\": 65.0,\r\n        \"y\": 284.0\r\n      },\r\n     
+    \"_type\": \"Physalia.AbilityFramework.OwnerNode\"\r\n    }\r\n  ],\r\n  \"edges\":
+    [\r\n    {\r\n      \"id1\": 284761,\r\n      \"port1\": \"next\",\r\n      \"id2\":
+    534912,\r\n      \"port2\": \"previous\"\r\n    },\r\n    {\r\n      \"id1\":
+    534912,\r\n      \"port1\": \"ownersPort\",\r\n      \"id2\": 325630,\r\n     
+    \"port2\": \"owner\"\r\n    },\r\n    {\r\n      \"id1\": 534912,\r\n      \"port1\":
+    \"enabledPort\",\r\n      \"id2\": 995143,\r\n      \"port2\": \"resultPort\"\r\n   
+    },\r\n    {\r\n      \"id1\": 325630,\r\n      \"port1\": \"owner\",\r\n     
+    \"id2\": 995143,\r\n      \"port2\": \"ownerPort\"\r\n    }\r\n  ]\r\n}"

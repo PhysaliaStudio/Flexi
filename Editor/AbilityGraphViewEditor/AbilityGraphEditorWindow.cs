@@ -39,7 +39,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
         [SerializeField]
-        private TextAsset currentFile = null;
+        private AbilityGraphAsset currentAsset = null;
 
         private ObjectField objectField;
         private AbilityGraphView graphView;
@@ -65,7 +65,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             uiAsset.CloneTree(rootVisualElement);
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
-            objectField.objectType = typeof(TextAsset);
+            objectField.objectType = typeof(AbilityGraphAsset);
             objectField.RegisterValueChangedCallback(evt =>
             {
                 if (evt.previousValue == evt.newValue)
@@ -82,15 +82,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 bool ok = AskForSave();
                 if (ok)
                 {
-                    var textAsset = evt.newValue as TextAsset;
-                    bool success = LoadFile(textAsset);
+                    var asset = evt.newValue as AbilityGraphAsset;
+                    bool success = LoadFile(asset);
                     if (!success)
                     {
                         objectField.SetValueWithoutNotify(evt.previousValue);
                     }
                     else
                     {
-                        currentFile = textAsset;
+                        currentAsset = asset;
                     }
                 }
                 else
@@ -108,21 +108,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             Button reloadButton = rootVisualElement.Query<Button>(RELOAD_BUTTON_NAME).First();
             reloadButton.clicked += ReloadFile;
 
-            if (currentFile == null)
+            if (currentAsset == null)
             {
                 NewGraphView();
             }
             else
             {
-                objectField.SetValueWithoutNotify(currentFile);
-                LoadFile(currentFile);
+                objectField.SetValueWithoutNotify(currentAsset);
+                LoadFile(currentAsset);
             }
         }
 
-        private bool LoadFile(TextAsset textAsset)
+        private bool LoadFile(AbilityGraphAsset asset)
         {
-            string filePath = AssetDatabase.GetAssetPath(textAsset);
-            AbilityGraph abilityGraph = AbilityGraphEditorIO.Read(filePath);
+            AbilityGraph abilityGraph = AbilityGraphEditorIO.Deserialize(asset.Text);
             if (abilityGraph == null)
             {
                 return false;
@@ -135,8 +134,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void ReloadFile()
         {
-            var textAsset = objectField.value as TextAsset;
-            if (textAsset == null)
+            var asset = objectField.value as AbilityGraphAsset;
+            if (asset == null)
             {
                 return;
             }
@@ -144,41 +143,33 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             bool ok = AskForSave();
             if (ok)
             {
-                LoadFile(textAsset);
+                LoadFile(asset);
             }
         }
 
         private void SaveFile()
         {
-            string filePath;
-            var textAsset = objectField.value as TextAsset;
-            if (textAsset == null)
+            var asset = objectField.value as AbilityGraphAsset;
+            if (asset == null)
             {
-                string path = EditorUtility.SaveFilePanelInProject("Save ability", "NewAbility", "json",
+                string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
                     "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
-                if (path.Length == 0)
+                if (assetPath.Length == 0)
                 {
                     return;
                 }
 
-                filePath = path;
-            }
-            else
-            {
-                filePath = AssetDatabase.GetAssetPath(textAsset);
+                AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
+                AssetDatabase.CreateAsset(newAsset, assetPath);
+                asset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
+                objectField.SetValueWithoutNotify(asset);
+                currentAsset = asset;
             }
 
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            AbilityGraphEditorIO.Write(filePath, abilityGraph);
+            asset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-
-            if (textAsset == null)
-            {
-                textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(filePath);
-                objectField.SetValueWithoutNotify(textAsset);
-                currentFile = textAsset;
-            }
         }
 
         private void OnNewButtonClicked()
@@ -220,7 +211,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             SetUpGraphView(new AbilityGraphView());
             objectField.SetValueWithoutNotify(null);
-            currentFile = null;
+            currentAsset = null;
         }
 
         private void SetUpGraphView(AbilityGraphView graphView)

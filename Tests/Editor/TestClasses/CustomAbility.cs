@@ -78,13 +78,13 @@ namespace Physalia.AbilityFramework.Tests
 
         private static string ReadAbilityFile(string fileName)
         {
-            TextAsset asset = Resources.Load<TextAsset>(fileName);
+            var asset = Resources.Load<AbilityGraphAsset>(fileName);
             if (asset == null)
             {
                 return "";
             }
 
-            return asset.text;
+            return asset.Text;
         }
     }
 }

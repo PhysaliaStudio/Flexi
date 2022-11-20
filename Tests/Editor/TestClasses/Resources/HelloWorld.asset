@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: HelloWorld
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"nodes\":
+    [\r\n    {\r\n      \"_id\": 507088,\r\n      \"_position\": {\r\n        \"x\":
+    54,\r\n        \"y\": 98\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StartNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 747695,\r\n      \"_position\": {\r\n        \"x\":
+    240,\r\n        \"y\": 161\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 524447,\r\n      \"_position\": {\r\n        \"x\":
+    468,\r\n        \"y\": 175\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 675591,\r\n      \"_position\": {\r\n        \"x\":
+    270,\r\n        \"y\": 316\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StringNode\",\r\n     
+    \"text\": \"World!\"\r\n    },\r\n    {\r\n      \"_id\": 135698,\r\n      \"_position\":
+    {\r\n        \"x\": 72,\r\n        \"y\": 292\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.StringNode\",\r\n      \"text\": \"Hello\"\r\n   
+    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 507088,\r\n      \"port1\":
+    \"next\",\r\n      \"id2\": 747695,\r\n      \"port2\": \"previous\"\r\n    },\r\n   
+    {\r\n      \"id1\": 747695,\r\n      \"port1\": \"next\",\r\n      \"id2\": 524447,\r\n     
+    \"port2\": \"previous\"\r\n    },\r\n    {\r\n      \"id1\": 747695,\r\n     
+    \"port1\": \"text\",\r\n      \"id2\": 135698,\r\n      \"port2\": \"output\"\r\n   
+    },\r\n    {\r\n      \"id1\": 524447,\r\n      \"port1\": \"text\",\r\n     
+    \"id2\": 675591,\r\n      \"port2\": \"output\"\r\n    }\r\n  ]\r\n}"

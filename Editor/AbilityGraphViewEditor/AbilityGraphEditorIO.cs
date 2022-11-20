@@ -17,7 +17,21 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             using var reader = new StreamReader(fs);
             string json = reader.ReadToEnd();
 
-            AbilityGraph abilityGraph = null;
+            AbilityGraph abilityGraph = Deserialize(json);
+            return abilityGraph;
+        }
+
+        public static void Write(string filePath, AbilityGraph abilityGraph)
+        {
+            string json = Serialize(abilityGraph);
+            using var fs = new FileStream(filePath, FileMode.Create);
+            using var writer = new StreamWriter(fs);
+            writer.Write(json);
+        }
+
+        public static AbilityGraph Deserialize(string json)
+        {
+            AbilityGraph abilityGraph;
             try
             {
                 abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json, SERIALIZER_SETTINGS);
@@ -31,12 +45,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return abilityGraph;
         }
 
-        public static void Write(string filePath, AbilityGraph abilityGraph)
+        public static string Serialize(AbilityGraph abilityGraph)
         {
             string json = JsonConvert.SerializeObject(abilityGraph, SERIALIZER_SETTINGS);
-            using var fs = new FileStream(filePath, FileMode.Create);
-            using var writer = new StreamWriter(fs);
-            writer.Write(json);
+            return json;
         }
     }
 }

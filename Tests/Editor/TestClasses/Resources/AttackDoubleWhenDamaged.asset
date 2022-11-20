@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: AttackDoubleWhenDamaged
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"nodes\":
+    [\r\n    {\r\n      \"_id\": 829185,\r\n      \"_position\": {\r\n        \"x\":
+    101.0,\r\n        \"y\": 122.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomDamageEventNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 514075,\r\n      \"_position\": {\r\n        \"x\":
+    385.0,\r\n        \"y\": 166.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomAttackDoubleNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 619583,\r\n      \"_position\": {\r\n        \"x\":
+    187.0,\r\n        \"y\": 267.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.OwnerNode\"\r\n   
+    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 829185,\r\n      \"port1\":
+    \"next\",\r\n      \"id2\": 514075,\r\n      \"port2\": \"previous\"\r\n    },\r\n   
+    {\r\n      \"id1\": 514075,\r\n      \"port1\": \"targetsPort\",\r\n      \"id2\":
+    619583,\r\n      \"port2\": \"owner\"\r\n    }\r\n  ]\r\n}"
