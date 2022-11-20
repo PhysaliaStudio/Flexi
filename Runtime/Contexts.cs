@@ -5,12 +5,12 @@ namespace Physalia.AbilityFramework
 
     }
 
-    public abstract class NodeContext
+    public interface INodeContext
     {
 
     }
 
-    public abstract class ChoiceContext
+    public interface IChoiceContext
     {
 
     }

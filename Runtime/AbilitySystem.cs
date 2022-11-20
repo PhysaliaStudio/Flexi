@@ -7,7 +7,7 @@ namespace Physalia.AbilityFramework
     public class AbilitySystem
     {
         public event Action<IEventContext> EventReceived;
-        public event Action<ChoiceContext> ChoiceOccurred;
+        public event Action<IChoiceContext> ChoiceOccurred;
 
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
@@ -141,7 +141,7 @@ namespace Physalia.AbilityFramework
             runner.Run(this);
         }
 
-        public void ResumeWithContext(NodeContext context)
+        public void ResumeWithContext(INodeContext context)
         {
             runner.Resume(this, context);
         }
@@ -170,7 +170,7 @@ namespace Physalia.AbilityFramework
             ownerRepository.RefreshStatsForAllOwners();
         }
 
-        internal void TriggerChoice(ChoiceContext context)
+        internal void TriggerChoice(IChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
         }

@@ -150,7 +150,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
             var payload = new CustomActivationPayload { activator = unit1 };
 
-            ChoiceContext choiceContext = null;
+            IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
             abilitySystem.ActivateInstance(instance1, payload);
@@ -171,7 +171,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
             var payload = new CustomActivationPayload { activator = unit1 };
 
-            ChoiceContext choiceContext = null;
+            IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
             abilitySystem.ActivateInstance(instance1, payload);
@@ -196,7 +196,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
             var payload = new CustomActivationPayload { activator = unit1 };
 
-            ChoiceContext choiceContext = null;
+            IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
             abilitySystem.ActivateInstance(instance1, payload);
@@ -222,7 +222,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
             var payload = new CustomActivationPayload { activator = unit1 };
 
-            ChoiceContext choiceContext = null;
+            IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
             abilitySystem.ActivateInstance(instance1, payload);

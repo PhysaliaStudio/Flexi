@@ -1,11 +1,11 @@
 namespace Physalia.AbilityFramework.Tests
 {
-    public class CustomSingleTargetChoiseContext : ChoiceContext
+    public class CustomSingleTargetChoiseContext : IChoiceContext
     {
         public CustomUnit target;
     }
 
-    public class CustomSingleTargetAnswerContext : NodeContext
+    public class CustomSingleTargetAnswerContext : INodeContext
     {
         public CustomUnit target;
     }
@@ -20,7 +20,7 @@ namespace Physalia.AbilityFramework.Tests
             return WaitAndChoice(new CustomSingleTargetChoiseContext());
         }
 
-        public override bool CheckNodeContext(NodeContext nodeContext)
+        public override bool CheckNodeContext(INodeContext nodeContext)
         {
             if (nodeContext is CancellationContext)
             {
@@ -38,7 +38,7 @@ namespace Physalia.AbilityFramework.Tests
             return false;
         }
 
-        protected override AbilityState ResumeLogic(NodeContext nodeContext)
+        protected override AbilityState ResumeLogic(INodeContext nodeContext)
         {
             if (nodeContext is CancellationContext)
             {

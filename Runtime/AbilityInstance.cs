@@ -106,7 +106,7 @@ namespace Physalia.AbilityFramework
             IterateGraph();
         }
 
-        public void Resume(NodeContext nodeContext)
+        public void Resume(INodeContext nodeContext)
         {
             if (currentState != AbilityState.PAUSE)
             {

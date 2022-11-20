@@ -41,7 +41,7 @@ namespace Physalia.AbilityFramework
             Iterate(abilitySystem);
         }
 
-        public void Resume(AbilitySystem abilitySystem, NodeContext context)
+        public void Resume(AbilitySystem abilitySystem, INodeContext context)
         {
             AbilityInstance instance = Peek();
             AbilityGraph graph = instance.Graph;
