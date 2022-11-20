@@ -59,9 +59,9 @@ namespace Physalia.AbilityFramework
             return instance;
         }
 
-        public AbilityInstance AppendAbility(IHasStatOwner hasStatOwner, int abilityId)
+        public AbilityInstance AppendAbility(Actor actor, int abilityId)
         {
-            return AppendAbility(hasStatOwner.Owner, abilityId);
+            return AppendAbility(actor.Owner, abilityId);
         }
 
         public AbilityInstance AppendAbility(StatOwner owner, int abilityId)
