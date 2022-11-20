@@ -117,9 +117,12 @@ namespace Physalia.AbilityFramework
 
             // Calculate edges
             var edges = new List<Edge>();
-            var handledNodes = new HashSet<Node>();
-            Node node = value.Nodes[0];
-            AddEdges(node, ref edges, ref handledNodes);
+            if (value.Nodes.Count > 0)
+            {
+                var handledNodes = new HashSet<Node>();
+                Node node = value.Nodes[0];
+                AddEdges(node, ref edges, ref handledNodes);
+            }
 
             // Edges
             writer.WritePropertyName(EDGES_KEY);
