@@ -47,6 +47,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private Blackboard blackboard;
         private bool isDirty;
 
+        private readonly HashSet<VisualElement> usingVariableItems = new();
         private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
         [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
@@ -428,7 +429,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 reorderable = true,
                 showAddRemoveFooter = true,
             };
-            listView.itemsAdded += AddBlackboardVariable;
+            listView.itemsAdded += OnBlackboardItemAdded;
+            listView.itemsRemoved += OnBlackboardItemRemoved;
+            listView.itemIndexChanged += OnBlackboardItemIndexChanged;
             listView.makeItem += blackboardItemAsset.CloneTree;
             listView.bindItem += BindVariableItem;
             listView.unbindItem += UnbindVariableItem;
@@ -437,7 +440,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return blackboard;
         }
 
-        private void AddBlackboardVariable(IEnumerable<int> indexes)
+        private void OnBlackboardItemAdded(IEnumerable<int> indexes)
         {
             SetDirty(true);
             foreach (int i in indexes)
@@ -446,9 +449,28 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
         }
 
+        private void OnBlackboardItemRemoved(IEnumerable<int> indexes)
+        {
+            SetDirty(true);
+        }
+
+        private void OnBlackboardItemIndexChanged(int index1, int index2)
+        {
+            SetDirty(true);
+        }
+
+        // Unity use pool to manage variable items, and all items respawn when the list changes.
+        // So there are many unseen bind and unbind method calls when the list changes.
         private void BindVariableItem(VisualElement element, int i)
         {
             BlackboardVariable variable = graphView.GetAbilityGraph().BlackboardVariables[i];
+
+            if (usingVariableItems.Contains(element))
+            {
+                UnbindVariableItem(element, -1);
+            }
+
+            usingVariableItems.Add(element);
 
             {
                 var keyField = element.Q<TextField>("key");
@@ -485,11 +507,17 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void UnbindVariableItem(VisualElement element, int i)
         {
+            usingVariableItems.Remove(element);
+
             var keyField = element.Q<TextField>("key");
+            var keyToken = callbackTable[keyField] as ElementCallbackToken<string>;
+            keyField.UnregisterValueChangedCallback(keyToken.callback);
             callbackTable[keyField].Dispose();
             callbackTable.Remove(keyField);
 
             var valueField = element.Q<IntegerField>("value");
+            var valueToken = callbackTable[valueField] as ElementCallbackToken<int>;
+            valueField.UnregisterValueChangedCallback(valueToken.callback);
             callbackTable[valueField].Dispose();
             callbackTable.Remove(valueField);
         }
