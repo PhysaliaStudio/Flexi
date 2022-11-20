@@ -27,6 +27,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             CreatePorts();
         }
 
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Edit Script", action =>
+            {
+                Utility.OpenScriptOfType(node.GetType());
+            });
+            evt.menu.AppendSeparator();
+            base.BuildContextualMenu(evt);
+        }
+
         private void HandleNodeStyles(Node node)
         {
             Type nodeType = node.GetType();
