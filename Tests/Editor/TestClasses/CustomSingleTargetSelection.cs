@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework.Tests
         public CustomUnit target;
     }
 
-    public class CustomSingleTargetAnswerContext : INodeContext
+    public class CustomSingleTargetAnswerContext : IResumeContext
     {
         public CustomUnit target;
     }
@@ -20,14 +20,14 @@ namespace Physalia.AbilityFramework.Tests
             return WaitAndChoice(new CustomSingleTargetChoiseContext());
         }
 
-        public override bool CheckNodeContext(INodeContext nodeContext)
+        public override bool CheckNodeContext(IResumeContext resumeContext)
         {
-            if (nodeContext is CancellationContext)
+            if (resumeContext is CancellationContext)
             {
                 return true;
             }
 
-            if (nodeContext is CustomSingleTargetAnswerContext answerContext)
+            if (resumeContext is CustomSingleTargetAnswerContext answerContext)
             {
                 if (answerContext.target != null)
                 {
@@ -38,14 +38,14 @@ namespace Physalia.AbilityFramework.Tests
             return false;
         }
 
-        protected override AbilityState ResumeLogic(INodeContext nodeContext)
+        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
         {
-            if (nodeContext is CancellationContext)
+            if (resumeContext is CancellationContext)
             {
                 return AbilityState.ABORT;
             }
 
-            var answerContext = nodeContext as CustomSingleTargetAnswerContext;
+            var answerContext = resumeContext as CustomSingleTargetAnswerContext;
             targetPort.SetValue(answerContext.target);
             return AbilityState.RUNNING;
         }

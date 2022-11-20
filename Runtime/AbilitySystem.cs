@@ -141,9 +141,9 @@ namespace Physalia.AbilityFramework
             runner.Run(this);
         }
 
-        public void ResumeWithContext(INodeContext context)
+        public void ResumeWithContext(IResumeContext resumeContext)
         {
-            runner.Resume(this, context);
+            runner.Resume(this, resumeContext);
         }
 
         public void RefreshStatsAndModifiers()

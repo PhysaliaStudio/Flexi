@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework
 
     }
 
-    public interface INodeContext
+    public interface IResumeContext
     {
 
     }
