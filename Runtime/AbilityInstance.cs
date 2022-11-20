@@ -11,14 +11,14 @@ namespace Physalia.AbilityFramework
         private readonly Dictionary<string, int> blackboard = new();
 
         private StatOwner owner;
-        private object payload;
+        private IEventContext payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
         public int AbilityId => abilityId;
         public AbilitySystem System => system;
         internal AbilityGraph Graph => graph;
         public StatOwner Owner => owner;
-        internal object Payload => payload;
+        internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
         internal AbilityInstance(AbilityGraph graph) : this(0, null, graph)
@@ -49,7 +49,7 @@ namespace Physalia.AbilityFramework
             this.owner = owner;
         }
 
-        public void SetPayload(object payload)
+        public void SetPayload(IEventContext payload)
         {
             this.payload = payload;
         }
@@ -76,7 +76,7 @@ namespace Physalia.AbilityFramework
             return 0;
         }
 
-        public bool CanExecute(object payload)
+        public bool CanExecute(IEventContext payload)
         {
             if (graph.EntryNodes.Count == 0)
             {
@@ -106,7 +106,7 @@ namespace Physalia.AbilityFramework
             IterateGraph();
         }
 
-        public void Resume(NodeContext nodeContext)
+        public void Resume(IResumeContext resumeContext)
         {
             if (currentState != AbilityState.PAUSE)
             {
@@ -114,14 +114,14 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            bool success = graph.Current.CheckNodeContext(nodeContext);
+            bool success = graph.Current.CheckNodeContext(resumeContext);
             if (!success)
             {
                 Logger.Error($"[{nameof(AbilityInstance)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
                 return;
             }
 
-            currentState = graph.Current.Resume(nodeContext);
+            currentState = graph.Current.Resume(resumeContext);
             if (currentState != AbilityState.RUNNING)
             {
                 return;

@@ -41,7 +41,7 @@ namespace Physalia.AbilityFramework
             Iterate(abilitySystem);
         }
 
-        public void Resume(AbilitySystem abilitySystem, NodeContext context)
+        public void Resume(AbilitySystem abilitySystem, IResumeContext resumeContext)
         {
             AbilityInstance instance = Peek();
             AbilityGraph graph = instance.Graph;
@@ -52,14 +52,14 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            bool success = graph.Current.CheckNodeContext(context);
+            bool success = graph.Current.CheckNodeContext(resumeContext);
             if (!success)
             {
                 Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {graph.Current.GetType()}");
                 return;
             }
 
-            currentState = graph.Current.Resume(context);
+            currentState = graph.Current.Resume(resumeContext);
             if (currentState == AbilityState.ABORT)
             {
                 Dequeue();

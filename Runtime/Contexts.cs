@@ -1,11 +1,16 @@
 namespace Physalia.AbilityFramework
 {
-    public abstract class NodeContext
+    public interface IEventContext
     {
 
     }
 
-    public abstract class ChoiceContext
+    public interface IResumeContext
+    {
+
+    }
+
+    public interface IChoiceContext
     {
 
     }

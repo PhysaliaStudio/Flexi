@@ -1,6 +1,6 @@
 namespace Physalia.AbilityFramework.Tests
 {
-    public class CustomActivationPayload
+    public class CustomActivationPayload : IEventContext
     {
         public CustomUnit activator;
     }

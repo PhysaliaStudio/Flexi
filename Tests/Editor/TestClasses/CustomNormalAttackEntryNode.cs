@@ -6,7 +6,7 @@ namespace Physalia.AbilityFramework.Tests
         public Outport<CustomUnit> attackerPort;
         public Outport<CustomUnit> targetPort;
 
-        public override bool CanExecute(object payloadObj)
+        public override bool CanExecute(IEventContext payloadObj)
         {
             var payload = payloadObj as CustomNormalAttackPayload;
             if (payload != null && payload.attacker != null && payload.mainTarget != null)

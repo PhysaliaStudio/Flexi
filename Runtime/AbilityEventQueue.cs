@@ -4,12 +4,12 @@ namespace Physalia.AbilityFramework
 {
     public class AbilityEventQueue
     {
-        private readonly List<object> eventList = new();
+        private readonly List<IEventContext> eventList = new();
         private int currentIndex = -1;
 
         public int Count => eventList.Count;
 
-        public object Current
+        public IEventContext Current
         {
             get
             {
@@ -38,26 +38,26 @@ namespace Physalia.AbilityFramework
             currentIndex = -1;
         }
 
-        public void Enqueue(object payload)
+        public void Enqueue(IEventContext eventContext)
         {
-            if (payload == null)
+            if (eventContext == null)
             {
                 return;
             }
 
-            eventList.Add(payload);
+            eventList.Add(eventContext);
         }
 
-        public object Dequeue()
+        public IEventContext Dequeue()
         {
             if (eventList.Count == 0)
             {
                 return null;
             }
 
-            object payload = eventList[0];
+            IEventContext eventContext = eventList[0];
             eventList.RemoveAt(0);
-            return payload;
+            return eventContext;
         }
     }
 }

@@ -30,12 +30,12 @@ namespace Physalia.AbilityFramework
             return AbilityState.RUNNING;
         }
 
-        public AbilityState Resume(NodeContext nodeContext)
+        public AbilityState Resume(IResumeContext resumeContext)
         {
-            return ResumeLogic(nodeContext);
+            return ResumeLogic(resumeContext);
         }
 
-        protected virtual AbilityState ResumeLogic(NodeContext nodeContext)
+        protected virtual AbilityState ResumeLogic(IResumeContext resumeContext)
         {
             return AbilityState.RUNNING;
         }
@@ -43,6 +43,17 @@ namespace Physalia.AbilityFramework
         protected void PushSelf()
         {
             Instance?.Push(this);
+        }
+
+        protected AbilityState WaitAndChoice(IChoiceContext context)
+        {
+            Instance.System?.TriggerChoice(context);
+            return AbilityState.PAUSE;
+        }
+
+        protected void EnqueueEvent(IEventContext eventContext)
+        {
+            Instance.System?.EnqueueEvent(eventContext);
         }
     }
 }

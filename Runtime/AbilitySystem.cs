@@ -6,8 +6,8 @@ namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
-        public event Action<object> EventReceived;
-        public event Action<ChoiceContext> ChoiceOccurred;
+        public event Action<IEventContext> EventReceived;
+        public event Action<IChoiceContext> ChoiceOccurred;
 
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
@@ -87,16 +87,10 @@ namespace Physalia.AbilityFramework
             owner.ClearAllAbilities();
         }
 
-        public void ActivateInstance(AbilityInstance instance, object payload)
+        internal void EnqueueEvent(IEventContext eventContext)
         {
-            AddToLast(instance, payload);
-            Run();
-        }
-
-        public void AddEventToLast(object payload)
-        {
-            eventQueue.Enqueue(payload);
-            EventReceived?.Invoke(payload);
+            eventQueue.Enqueue(eventContext);
+            EventReceived?.Invoke(eventContext);
         }
 
         internal void TriggerCachedEvents()
@@ -109,12 +103,12 @@ namespace Physalia.AbilityFramework
             var triggeredNewLayer = false;
             while (eventQueue.Count > 0)
             {
-                object payload = eventQueue.Dequeue();
+                IEventContext eventContext = eventQueue.Dequeue();
                 foreach (StatOwner owner in ownerRepository.Owners)
                 {
                     foreach (AbilityInstance ability in owner.Abilities)
                     {
-                        if (ability.CanExecute(payload))
+                        if (ability.CanExecute(eventContext))
                         {
                             if (!triggeredNewLayer)
                             {
@@ -122,17 +116,23 @@ namespace Physalia.AbilityFramework
                                 runner.PushNewLayer();
                             }
 
-                            AddToLast(ability, payload);
+                            EnqueueAbility(ability, eventContext);
                         }
                     }
                 }
             }
         }
 
-        public void AddToLast(AbilityInstance instance, object payload)
+        public void EnqueueAbilityAndRun(AbilityInstance instance, IEventContext eventContext)
+        {
+            EnqueueAbility(instance, eventContext);
+            Run();
+        }
+
+        public void EnqueueAbility(AbilityInstance instance, IEventContext eventContext)
         {
             instance.Reset();
-            instance.SetPayload(payload);
+            instance.SetPayload(eventContext);
             runner.Add(instance);
         }
 
@@ -141,9 +141,9 @@ namespace Physalia.AbilityFramework
             runner.Run(this);
         }
 
-        public void ResumeWithContext(NodeContext context)
+        public void Resume(IResumeContext resumeContext)
         {
-            runner.Resume(this, context);
+            runner.Resume(this, resumeContext);
         }
 
         public void RefreshStatsAndModifiers()
@@ -170,7 +170,7 @@ namespace Physalia.AbilityFramework
             ownerRepository.RefreshStatsForAllOwners();
         }
 
-        public void TriggerChoice(ChoiceContext context)
+        internal void TriggerChoice(IChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
         }
