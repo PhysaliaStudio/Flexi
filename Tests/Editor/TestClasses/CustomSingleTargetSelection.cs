@@ -17,8 +17,7 @@ namespace Physalia.AbilityFramework.Tests
 
         protected override AbilityState DoLogic()
         {
-            Instance.System.TriggerChoice(new CustomSingleTargetChoiseContext());
-            return AbilityState.PAUSE;
+            return WaitAndChoice(new CustomSingleTargetChoiseContext());
         }
 
         public override bool CheckNodeContext(NodeContext nodeContext)

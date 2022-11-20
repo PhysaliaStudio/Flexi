@@ -170,7 +170,7 @@ namespace Physalia.AbilityFramework
             ownerRepository.RefreshStatsForAllOwners();
         }
 
-        public void TriggerChoice(ChoiceContext context)
+        internal void TriggerChoice(ChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
         }

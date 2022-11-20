@@ -44,5 +44,11 @@ namespace Physalia.AbilityFramework
         {
             Instance?.Push(this);
         }
+
+        protected AbilityState WaitAndChoice(ChoiceContext context)
+        {
+            Instance.System?.TriggerChoice(context);
+            return AbilityState.PAUSE;
+        }
     }
 }
