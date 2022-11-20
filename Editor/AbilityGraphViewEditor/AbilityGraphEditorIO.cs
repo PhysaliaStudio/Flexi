@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
 {
