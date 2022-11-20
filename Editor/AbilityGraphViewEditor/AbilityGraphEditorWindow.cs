@@ -168,6 +168,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
             asset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            EditorUtility.SetDirty(asset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
