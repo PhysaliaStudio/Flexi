@@ -18,7 +18,7 @@ namespace Physalia.AbilityFramework.Tests
                 Stat stat = list[i].Owner.GetStat(CustomStats.HEALTH);
                 stat.CurrentBase -= damage;
 
-                Instance.System?.AddEventToLast(new CustomDamageEvent
+                EnqueueEvent(new CustomDamageEvent
                 {
                     instigator = instigatorPort.GetValue(),
                     target = list[i],

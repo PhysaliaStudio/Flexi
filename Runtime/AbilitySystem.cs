@@ -93,7 +93,7 @@ namespace Physalia.AbilityFramework
             Run();
         }
 
-        public void AddEventToLast(IEventContext eventContext)
+        internal void AddEventToLast(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
             EventReceived?.Invoke(eventContext);

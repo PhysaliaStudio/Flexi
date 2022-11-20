@@ -50,5 +50,10 @@ namespace Physalia.AbilityFramework
             Instance.System?.TriggerChoice(context);
             return AbilityState.PAUSE;
         }
+
+        protected void EnqueueEvent(IEventContext eventContext)
+        {
+            Instance.System?.AddEventToLast(eventContext);
+        }
     }
 }
