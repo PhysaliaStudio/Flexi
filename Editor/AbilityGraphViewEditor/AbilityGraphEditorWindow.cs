@@ -106,7 +106,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             newButton.clicked += OnNewButtonClicked;
 
             Button saveButton = rootVisualElement.Query<Button>(SAVE_BUTTON_NAME).First();
-            saveButton.clicked += SaveFile;
+            saveButton.clicked += OnSaveButtonClicked;
 
             Button reloadButton = rootVisualElement.Query<Button>(RELOAD_BUTTON_NAME).First();
             reloadButton.clicked += ReloadFile;
@@ -138,8 +138,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void ReloadFile()
         {
-            var asset = objectField.value as AbilityGraphAsset;
-            if (asset == null)
+            if (currentAsset == null)
             {
                 return;
             }
@@ -147,35 +146,34 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                LoadFile(asset);
+                LoadFile(currentAsset);
             }
         }
 
-        private void SaveFile()
+        private bool SaveFile()
         {
-            var asset = objectField.value as AbilityGraphAsset;
-            if (asset == null)
+            if (currentAsset == null)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
                     "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
                 if (assetPath.Length == 0)
                 {
-                    return;
+                    return false;
                 }
 
                 AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
                 AssetDatabase.CreateAsset(newAsset, assetPath);
-                asset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
-                objectField.SetValueWithoutNotify(asset);
-                currentAsset = asset;
+                currentAsset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
+                objectField.SetValueWithoutNotify(currentAsset);
             }
 
             SetDirty(false);
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            asset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
-            EditorUtility.SetDirty(asset);
+            currentAsset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            return true;
         }
 
         private void OnNewButtonClicked()
@@ -185,6 +183,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 NewGraphView();
             }
+        }
+
+        private void OnSaveButtonClicked()
+        {
+            SaveFile();
         }
 
         private bool AskForSaveIfDirty()
@@ -207,8 +210,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return false;
                 // Save
                 case 0:
-                    SaveFile();
-                    return true;
+                    return SaveFile();
                 // Cancel
                 case 1:
                     return false;
