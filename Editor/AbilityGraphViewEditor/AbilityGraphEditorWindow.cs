@@ -22,6 +22,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             public void Dispose() => element.UnregisterValueChangedCallback(callback);
         }
 
+        private static readonly string WINDOW_TITLE = "Ability Graph Editor";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
         // Since we need to use names to find the correct VisualTreeAsset to replace,
@@ -44,13 +45,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private ObjectField objectField;
         private AbilityGraphView graphView;
         private Blackboard blackboard;
+        private bool isDirty;
 
+        private readonly HashSet<VisualElement> usingVariableItems = new();
         private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
         [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
         private static void Open()
         {
-            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>("Ability Graph Editor");
+            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
             window.Show();
         }
 
@@ -79,7 +82,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return;
                 }
 
-                bool ok = AskForSave();
+                bool ok = AskForSaveIfDirty();
                 if (ok)
                 {
                     var asset = evt.newValue as AbilityGraphAsset;
@@ -103,7 +106,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             newButton.clicked += OnNewButtonClicked;
 
             Button saveButton = rootVisualElement.Query<Button>(SAVE_BUTTON_NAME).First();
-            saveButton.clicked += SaveFile;
+            saveButton.clicked += OnSaveButtonClicked;
 
             Button reloadButton = rootVisualElement.Query<Button>(RELOAD_BUTTON_NAME).First();
             reloadButton.clicked += ReloadFile;
@@ -127,62 +130,73 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return false;
             }
 
-            AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph);
+            AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
+            SetDirty(false);
             return true;
         }
 
         private void ReloadFile()
         {
-            var asset = objectField.value as AbilityGraphAsset;
-            if (asset == null)
+            if (currentAsset == null)
             {
                 return;
             }
 
-            bool ok = AskForSave();
+            bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                LoadFile(asset);
+                LoadFile(currentAsset);
             }
         }
 
-        private void SaveFile()
+        private bool SaveFile()
         {
-            var asset = objectField.value as AbilityGraphAsset;
-            if (asset == null)
+            if (currentAsset == null)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
                     "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
                 if (assetPath.Length == 0)
                 {
-                    return;
+                    return false;
                 }
 
                 AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
                 AssetDatabase.CreateAsset(newAsset, assetPath);
-                asset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
-                objectField.SetValueWithoutNotify(asset);
-                currentAsset = asset;
+                currentAsset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
+                objectField.SetValueWithoutNotify(currentAsset);
             }
 
+            SetDirty(false);
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            asset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            currentAsset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            return true;
         }
 
         private void OnNewButtonClicked()
         {
-            bool ok = AskForSave();
+            bool ok = AskForSaveIfDirty();
             if (ok)
             {
                 NewGraphView();
             }
         }
 
-        private bool AskForSave()
+        private void OnSaveButtonClicked()
         {
+            SaveFile();
+        }
+
+        private bool AskForSaveIfDirty()
+        {
+            if (!isDirty)
+            {
+                return true;
+            }
+
             int option = EditorUtility.DisplayDialogComplex("Unsaved Changes",
                 "Do you want to save the changes you made before quitting?",
                 "Save",
@@ -196,8 +210,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return false;
                 // Save
                 case 0:
-                    SaveFile();
-                    return true;
+                    return SaveFile();
                 // Cancel
                 case 1:
                     return false;
@@ -209,7 +222,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewGraphView()
         {
-            SetUpGraphView(new AbilityGraphView());
+            SetUpGraphView(new AbilityGraphView(this));
+            SetDirty(false);
             objectField.SetValueWithoutNotify(null);
             currentAsset = null;
         }
@@ -291,6 +305,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return;
             }
 
+            SetDirty(true);
+
             // Calculate the most top-left point
             var topLeft = new Vector2(float.MaxValue, float.MaxValue);
             for (var i = 0; i < partialGraph.nodes.Count; i++)
@@ -352,6 +368,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             if (graphViewChange.elementsToRemove != null)
             {
+                SetDirty(true);
                 foreach (GraphElement element in graphViewChange.elementsToRemove)
                 {
                     if (element is NodeView nodeView)
@@ -371,6 +388,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             if (graphViewChange.edgesToCreate != null)
             {
+                SetDirty(true);
                 foreach (EdgeView edgeView in graphViewChange.edgesToCreate)
                 {
                     var outputNodeView = edgeView.output.node as NodeView;
@@ -383,6 +401,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             if (graphViewChange.movedElements != null)
             {
+                SetDirty(true);
                 foreach (GraphElement element in graphViewChange.movedElements)
                 {
                     if (element is NodeView nodeView)
@@ -412,7 +431,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 reorderable = true,
                 showAddRemoveFooter = true,
             };
-            listView.itemsAdded += AddBlackboardVariable;
+            listView.itemsAdded += OnBlackboardItemAdded;
+            listView.itemsRemoved += OnBlackboardItemRemoved;
+            listView.itemIndexChanged += OnBlackboardItemIndexChanged;
             listView.makeItem += blackboardItemAsset.CloneTree;
             listView.bindItem += BindVariableItem;
             listView.unbindItem += UnbindVariableItem;
@@ -421,17 +442,37 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return blackboard;
         }
 
-        private void AddBlackboardVariable(IEnumerable<int> indexes)
+        private void OnBlackboardItemAdded(IEnumerable<int> indexes)
         {
+            SetDirty(true);
             foreach (int i in indexes)
             {
                 graphView.GetAbilityGraph().BlackboardVariables[i] = new BlackboardVariable();
             }
         }
 
+        private void OnBlackboardItemRemoved(IEnumerable<int> indexes)
+        {
+            SetDirty(true);
+        }
+
+        private void OnBlackboardItemIndexChanged(int index1, int index2)
+        {
+            SetDirty(true);
+        }
+
+        // Unity use pool to manage variable items, and all items respawn when the list changes.
+        // So there are many unseen bind and unbind method calls when the list changes.
         private void BindVariableItem(VisualElement element, int i)
         {
             BlackboardVariable variable = graphView.GetAbilityGraph().BlackboardVariables[i];
+
+            if (usingVariableItems.Contains(element))
+            {
+                UnbindVariableItem(element, -1);
+            }
+
+            usingVariableItems.Add(element);
 
             {
                 var keyField = element.Q<TextField>("key");
@@ -441,6 +482,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = keyField,
                     callback = evt =>
                     {
+                        SetDirty(true);
                         variable.key = evt.newValue;
                     },
                 };
@@ -456,6 +498,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = valueField,
                     callback = evt =>
                     {
+                        SetDirty(true);
                         variable.value = evt.newValue;
                     },
                 };
@@ -466,13 +509,35 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void UnbindVariableItem(VisualElement element, int i)
         {
+            usingVariableItems.Remove(element);
+
             var keyField = element.Q<TextField>("key");
+            var keyToken = callbackTable[keyField] as ElementCallbackToken<string>;
+            keyField.UnregisterValueChangedCallback(keyToken.callback);
             callbackTable[keyField].Dispose();
             callbackTable.Remove(keyField);
 
             var valueField = element.Q<IntegerField>("value");
+            var valueToken = callbackTable[valueField] as ElementCallbackToken<int>;
+            valueField.UnregisterValueChangedCallback(valueToken.callback);
             callbackTable[valueField].Dispose();
             callbackTable.Remove(valueField);
+        }
+
+        public void SetDirty(bool value)
+        {
+            if (isDirty != value)
+            {
+                isDirty = value;
+                if (isDirty)
+                {
+                    titleContent = new GUIContent("*" + WINDOW_TITLE);
+                }
+                else
+                {
+                    titleContent = new GUIContent(WINDOW_TITLE);
+                }
+            }
         }
     }
 }

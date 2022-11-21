@@ -14,20 +14,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private class TempGridBackground : GridBackground { }
 
         private readonly AbilityGraph abilityGraph;
+        private readonly AbilityGraphEditorWindow window;
 
         private readonly Dictionary<Node, NodeView> nodeTable = new();
         private Vector2 lastContextPosition;
 
         public Vector2 LastContextPosition => lastContextPosition;
 
-        public AbilityGraphView() : this(new AbilityGraph())
+        public AbilityGraphView(AbilityGraphEditorWindow window) : this(new AbilityGraph(), window)
         {
 
         }
 
-        public AbilityGraphView(AbilityGraph abilityGraph) : base()
+        public AbilityGraphView(AbilityGraph abilityGraph, AbilityGraphEditorWindow window) : base()
         {
             this.abilityGraph = abilityGraph;
+            this.window = window;
 
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             Insert(0, new TempGridBackground());
@@ -52,11 +54,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return abilityGraph;
         }
 
-        public void AddVariable(BlackboardVariable variable)
-        {
-            abilityGraph.AddVariable(variable);
-        }
-
         public void CreateNewNode(Type nodeType, Vector2 position)
         {
             Node node = abilityGraph.AddNewNode(nodeType);
@@ -79,7 +76,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private NodeView CreateNodeElement(Node node)
         {
-            var nodeView = new NodeView(node);
+            var nodeView = new NodeView(node, window);
             nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
             AddElement(nodeView);
             return nodeView;
@@ -151,9 +148,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return compatiblePorts;
         }
 
-        public static AbilityGraphView Create(AbilityGraph abilityGraph)
+        public static AbilityGraphView Create(AbilityGraph abilityGraph, AbilityGraphEditorWindow window)
         {
-            var graphView = new AbilityGraphView(abilityGraph);
+            var graphView = new AbilityGraphView(abilityGraph, window);
 
             IReadOnlyList<Node> nodes = abilityGraph.Nodes;
             if (nodes.Count == 0)
@@ -166,7 +163,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node nodeData = nodes[i];
 
-                var node = new NodeView(nodeData);
+                var node = new NodeView(nodeData, window);
                 node.SetPosition(new Rect(nodeData.position, node.GetPosition().size));
                 graphView.AddElement(node);
 

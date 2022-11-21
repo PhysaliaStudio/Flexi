@@ -42,7 +42,14 @@ namespace Physalia.AbilityFramework
 
         public Variable()
         {
-            value = default;
+            if (typeof(T) != typeof(string))
+            {
+                value = default;
+            }
+            else
+            {
+                value = (T)(object)"";
+            }
         }
 
         public Variable(T value)

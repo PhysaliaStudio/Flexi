@@ -15,14 +15,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
 
         private readonly Node node;
+        private readonly AbilityGraphEditorWindow window;
         private readonly Dictionary<Port, PortView> portDataToViewTable = new();
         private readonly Dictionary<PortView, Port> portViewToDataTable = new();
 
         public Node Node => node;
 
-        public NodeView(Node node) : base()
+        public NodeView(Node node, AbilityGraphEditorWindow window) : base()
         {
             this.node = node;
+            this.window = window;
             HandleNodeStyles(node);
             CreatePorts();
         }
@@ -170,7 +172,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     }
 
                     var variable = field.GetValue(node) as Variable;
-                    IVariableField variableField = creationMethod.Invoke(field.Name, variable);
+                    IVariableField variableField = creationMethod.Invoke(field.Name, variable, window);
                     extensionContainer.Add(variableField.VisualElement);
                 }
             }
