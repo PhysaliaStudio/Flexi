@@ -10,6 +10,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
     {
+        private static readonly string TEST_ASSEMBLY_NAME = "Physalia.AbilityFramework.Editor.Tests";
         private static readonly Type MISSING_NODE_TYPE = typeof(UndefinedNode);
 
         private AbilityGraphView graphView;
@@ -49,6 +50,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             var nodeTypes = new List<Type>();
             foreach (Assembly assembly in ReflectionUtilities.GetAssemblies())
             {
+#if !SHOW_TEST_NODES
+                // Hide the test node types
+                if (assembly.GetName().Name == TEST_ASSEMBLY_NAME)
+                {
+                    continue;
+                }
+#endif
+
                 foreach (Type type in assembly.GetTypes())
                 {
                     if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Node)))
