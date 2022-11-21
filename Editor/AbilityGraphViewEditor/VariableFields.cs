@@ -13,11 +13,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
     {
         public VisualElement VisualElement => this;
 
-        public IntVariableField(string label, Variable<int> variable) : base(label)
+        public IntVariableField(string label, Variable<int> variable, AbilityGraphEditorWindow window) : base(label)
         {
             labelElement.style.minWidth = 50f;
             this.RegisterValueChangedCallback(evt =>
             {
+                window.SetDirty(true);
                 variable.Value = evt.newValue;
             });
 
@@ -29,11 +30,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
     {
         public VisualElement VisualElement => this;
 
-        public StringVariableField(string label, Variable<string> variable) : base(label)
+        public StringVariableField(string label, Variable<string> variable, AbilityGraphEditorWindow window) : base(label)
         {
             labelElement.style.minWidth = 50f;
             this.RegisterValueChangedCallback(evt =>
             {
+                window.SetDirty(true);
                 variable.Value = evt.newValue;
             });
 
@@ -43,11 +45,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
     public class EnumVariableField<T> : EnumVariableField where T : Enum
     {
-        public EnumVariableField(string label, Variable<T> variable) : base(label, variable.Value)
+        public EnumVariableField(string label, Variable<T> variable, AbilityGraphEditorWindow window) : base(label, variable.Value)
         {
             labelElement.style.minWidth = 50f;
             this.RegisterValueChangedCallback(evt =>
             {
+                window.SetDirty(true);
                 variable.Value = (T)evt.newValue;
             });
 

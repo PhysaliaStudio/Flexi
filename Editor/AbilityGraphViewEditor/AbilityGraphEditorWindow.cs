@@ -130,7 +130,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return false;
             }
 
-            AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph);
+            AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
             SetDirty(false);
             return true;
@@ -222,7 +222,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewGraphView()
         {
-            SetUpGraphView(new AbilityGraphView());
+            SetUpGraphView(new AbilityGraphView(this));
             SetDirty(false);
             objectField.SetValueWithoutNotify(null);
             currentAsset = null;
