@@ -12,16 +12,24 @@ namespace Physalia.AbilityFramework
         {
             if (queueStack.Count == 0)
             {
-                PushNewLayer();
+                PushNewAbilityQueue();
             }
 
             Queue<AbilityInstance> queue = queueStack.Peek();
             queue.Enqueue(instance);
         }
 
-        public void PushNewLayer()
+        public void PushNewAbilityQueue()
         {
             queueStack.Push(new Queue<AbilityInstance>());
+        }
+
+        public void PopEmptyQueues()
+        {
+            while (queueStack.Count > 0 && queueStack.Peek().Count == 0)
+            {
+                queueStack.Pop();
+            }
         }
 
         public void Clear()
