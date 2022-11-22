@@ -187,20 +187,41 @@ namespace Physalia.AbilityFramework
 
         public void RefreshModifiers()
         {
-            var payload = new StatRefreshEvent();
-            foreach (StatOwner owner in ownerRepository.Owners)
+            var refreshEvent = new StatRefreshEvent();
+            IterateModifierCheckFromStatOwners(refreshEvent);
+            ownerRepository.RefreshStatsForAllOwners();
+        }
+
+        private void IterateModifierCheckFromStatOwners(StatRefreshEvent refreshEvent)
+        {
+            if (overridedIteratorGetter != null)
             {
-                foreach (AbilityInstance ability in owner.Abilities)
+                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
+                while (enumerator.MoveNext())
                 {
-                    if (ability.CanExecute(payload))
-                    {
-                        ability.SetPayload(payload);
-                        ability.Execute();
-                    }
+                    Actor actor = enumerator.Current;
+                    CheckModifiers(actor.Owner, refreshEvent);
                 }
             }
+            else
+            {
+                foreach (StatOwner owner in ownerRepository.Owners)
+                {
+                    CheckModifiers(owner, refreshEvent);
+                }
+            }
+        }
 
-            ownerRepository.RefreshStatsForAllOwners();
+        private void CheckModifiers(StatOwner owner, StatRefreshEvent refreshEvent)
+        {
+            foreach (AbilityInstance ability in owner.Abilities)
+            {
+                if (ability.CanExecute(refreshEvent))
+                {
+                    ability.SetPayload(refreshEvent);
+                    ability.Execute();
+                }
+            }
         }
 
         internal void TriggerChoice(IChoiceContext context)
