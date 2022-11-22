@@ -15,6 +15,8 @@ namespace Physalia.AbilityFramework
 
         private readonly Dictionary<int, string> graphTable = new();
 
+        private IEnumerable<Actor> overridedIteratorGetter;
+
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
@@ -96,6 +98,11 @@ namespace Physalia.AbilityFramework
             owner.ClearAllAbilities();
         }
 
+        public void OverrideIterator(IEnumerable<Actor> iterator)
+        {
+            overridedIteratorGetter = iterator;
+        }
+
         internal void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
@@ -109,25 +116,42 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            var triggeredNewLayer = false;
+            runner.PushNewAbilityQueue();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
+                IterateAbilitiesFromStatOwners(eventContext);
+            }
+            runner.PopEmptyQueues();
+        }
+
+        private void IterateAbilitiesFromStatOwners(IEventContext eventContext)
+        {
+            if (overridedIteratorGetter != null)
+            {
+                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    Actor actor = enumerator.Current;
+                    EnqueueAbilityIfAble(actor.Owner, eventContext);
+                }
+            }
+            else
+            {
                 foreach (StatOwner owner in ownerRepository.Owners)
                 {
-                    foreach (AbilityInstance ability in owner.Abilities)
-                    {
-                        if (ability.CanExecute(eventContext))
-                        {
-                            if (!triggeredNewLayer)
-                            {
-                                triggeredNewLayer = true;
-                                runner.PushNewLayer();
-                            }
+                    EnqueueAbilityIfAble(owner, eventContext);
+                }
+            }
+        }
 
-                            EnqueueAbility(ability, eventContext);
-                        }
-                    }
+        private void EnqueueAbilityIfAble(StatOwner owner, IEventContext eventContext)
+        {
+            foreach (AbilityInstance ability in owner.Abilities)
+            {
+                if (ability.CanExecute(eventContext))
+                {
+                    EnqueueAbility(ability, eventContext);
                 }
             }
         }
