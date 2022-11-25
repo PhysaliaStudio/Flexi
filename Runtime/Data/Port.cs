@@ -34,6 +34,12 @@ namespace Physalia.AbilityFramework
             port.AddConnection(this);
         }
 
+        internal void ConnectForce(Port port)
+        {
+            AddConnection(port);
+            port.AddConnection(this);
+        }
+
         public void Disconnect(Port port)
         {
             RemoveConnection(port);

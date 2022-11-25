@@ -113,5 +113,38 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(filterNode.owners, damageNode.owners.GetConnections()[0]);
             Assert.AreEqual(intNode.output, damageNode.baseValue.GetConnections()[0]);
         }
+
+        [Test]
+        public void Deserialize_WithMissingPort()
+        {
+            var json =
+                "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
+                "{\"_id\":2,\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
+                "{\"_id\":3,\"_type\":\"Physalia.AbilityFramework.StringNode\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
+                "{\"id1\":3,\"port1\":\"value\",\"id2\":2,\"port2\":\"text\"}]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+
+            Assert.AreEqual(3, graph.Nodes.Count);
+            Assert.AreEqual(true, graph.Nodes[0] is StartNode);
+            Assert.AreEqual(true, graph.Nodes[1] is AbilityFramework.LogNode);
+            Assert.AreEqual(true, graph.Nodes[2] is StringNode);
+
+            var startNode = graph.Nodes[0] as StartNode;
+            var logNode = graph.Nodes[1] as AbilityFramework.LogNode;
+            var stringNode = graph.Nodes[2] as StringNode;
+
+            Assert.AreEqual(1, graph.EntryNodes.Count);
+            Assert.AreEqual(startNode, graph.EntryNodes[0]);
+
+            Assert.AreEqual(logNode, startNode.Next);
+            Assert.AreEqual(startNode, logNode.Previous);
+
+            var missingPort = stringNode.GetOutput("value") as MissingOutport;
+            Assert.NotNull(missingPort);
+            Assert.AreEqual(logNode.text, missingPort.GetConnections()[0]);
+        }
     }
 }

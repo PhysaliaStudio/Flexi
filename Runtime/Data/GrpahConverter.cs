@@ -47,11 +47,23 @@ namespace Physalia.AbilityFramework
 
                     Node node1 = graph.GetNode(edge.id1);
                     Port port1 = node1.GetPort(edge.port1);
+                    if (port1 == null)
+                    {
+                        var missingOutport = new MissingOutport(node1, edge.port1);
+                        node1.AddOutport(edge.port1, missingOutport);
+                        port1 = missingOutport;
+                    }
 
                     Node node2 = graph.GetNode(edge.id2);
                     Port port2 = node2.GetPort(edge.port2);
+                    if (port2 == null)
+                    {
+                        var missingInport = new MissingInport(node2, edge.port2);
+                        node2.AddInport(edge.port2, missingInport);
+                        port2 = missingInport;
+                    }
 
-                    port1.Connect(port2);
+                    port1.ConnectForce(port2);
                 }
             }
 
