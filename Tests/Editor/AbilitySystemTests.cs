@@ -36,6 +36,18 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void LoadAbilityGraph_WithMissingPort_LogError()
+        {
+            // Have 1 missing node and 1 missing port
+            abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+
+            // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
+            StatTestHelper.LogAssert(LogType.Error);
+            StatTestHelper.LogAssert(LogType.Error);
+            StatTestHelper.LogAssert(LogType.Error);
+        }
+
+        [Test]
         public void AppendAbilityToOwner_OwnerOfInstanceReturnsAsExpected()
         {
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);

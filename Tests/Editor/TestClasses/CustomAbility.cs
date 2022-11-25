@@ -12,6 +12,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static AbilityGraphAsset HELLO_WORLD_MISSING_ELEMENTS
+        {
+            get
+            {
+                return ReadAbilityFile("HelloWorld_MissingElements");
+            }
+        }
+
         public static AbilityGraphAsset NORAML_ATTACK
         {
             get

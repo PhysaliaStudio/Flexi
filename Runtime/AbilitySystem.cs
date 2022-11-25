@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Physalia.AbilityFramework
@@ -56,6 +55,9 @@ namespace Physalia.AbilityFramework
                 Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
                 return;
             }
+
+            // Deserialize once to log potential errors
+            _ = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
         }
 
         public AbilityInstance GetAbilityInstance(int id)
@@ -67,7 +69,7 @@ namespace Physalia.AbilityFramework
                 return null;
             }
 
-            AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphAsset.Text);
+            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
             AbilityInstance instance = new AbilityInstance(id, this, graph);
             return instance;
         }
