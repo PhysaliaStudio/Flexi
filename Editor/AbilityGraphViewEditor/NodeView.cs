@@ -13,6 +13,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly Color ENTRY_COLOR = new(140f / 255f, 31f / 255f, 36f / 255f, 205f / 255f);
         private static readonly Color PROCESS_COLOR = new(73f / 255f, 114f / 255f, 140f / 255f, 205f / 255f);
         private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
+        private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f, 240f / 255f);  // Alpha 240 is the default port alpha from the source code
 
         private readonly Node node;
         private readonly AbilityGraphEditorWindow window;
@@ -143,6 +144,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     port.portName = GetPortName(portData.Name);
                     inputContainer.Add(port);
 
+                    if (portData is MissingInport)
+                    {
+                        port.portColor = MISSING_PORT_COLOR;
+                    }
+
                     portDataToViewTable.Add(portData, port);
                     portViewToDataTable.Add(port, portData);
                 }
@@ -152,6 +158,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, portData.ValueType);
                     port.portName = GetPortName(portData.Name);
                     outputContainer.Add(port);
+
+                    if (portData is MissingOutport)
+                    {
+                        port.portColor = MISSING_PORT_COLOR;
+                    }
 
                     portDataToViewTable.Add(portData, port);
                     portViewToDataTable.Add(port, portData);
