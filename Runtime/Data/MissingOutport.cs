@@ -2,7 +2,7 @@ using System;
 
 namespace Physalia.AbilityFramework
 {
-    internal sealed class MissingOutport : Outport
+    internal sealed class MissingOutport : Outport, IIsMissing
     {
         public override Type ValueType => Missing.TYPE;
 
