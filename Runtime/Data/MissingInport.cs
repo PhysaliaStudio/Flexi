@@ -4,7 +4,7 @@ namespace Physalia.AbilityFramework
 {
     internal sealed class MissingInport : Inport
     {
-        public override Type ValueType => typeof(object);
+        public override Type ValueType => Missing.TYPE;
 
         internal MissingInport(Node node, string name)
         {
