@@ -202,6 +202,26 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return fieldName;
         }
 
+        public void DestroyPort(Port port)
+        {
+            PortView portView = GetPortView(port);
+
+            if (port is Outport outport)
+            {
+                port.Node.RemoveOutport(outport);
+                outputContainer.Remove(portView);
+            }
+
+            if (port is Inport inport)
+            {
+                port.Node.RemoveInport(inport);
+                inputContainer.Remove(portView);
+            }
+
+            portDataToViewTable.Remove(port);
+            portViewToDataTable.Remove(portView);
+        }
+
         public PortView GetPortView(Port port)
         {
             if (portDataToViewTable.TryGetValue(port, out PortView portView))

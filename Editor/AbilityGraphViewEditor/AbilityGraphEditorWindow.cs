@@ -382,6 +382,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         Port outport = outputNodeView.GetPort(edgeView.output);
                         Port inport = inputNodeView.GetPort(edgeView.input);
                         outport.Disconnect(inport);
+
+                        if (outport is MissingOutport && outport.GetConnections().Count == 0)
+                        {
+                            outputNodeView.DestroyPort(outport);
+                        }
+
+                        if (inport is MissingInport && inport.GetConnections().Count == 0)
+                        {
+                            inputNodeView.DestroyPort(inport);
+                        }
                     }
                 }
             }
