@@ -135,33 +135,33 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void CreatePorts()
         {
+            foreach (Port portData in node.Ports)
+            {
+                if (portData is Inport)
+                {
+                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, portData.ValueType);
+                    port.portName = GetPortName(portData.Name);
+                    inputContainer.Add(port);
+
+                    portDataToViewTable.Add(portData, port);
+                    portViewToDataTable.Add(port, portData);
+                }
+
+                if (portData is Outport)
+                {
+                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, portData.ValueType);
+                    port.portName = GetPortName(portData.Name);
+                    outputContainer.Add(port);
+
+                    portDataToViewTable.Add(portData, port);
+                    portViewToDataTable.Add(port, portData);
+                }
+            }
+
             FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-
-                if (field.FieldType.IsSubclassOf(typeof(Inport)))
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = GetPortName(field.Name);
-                    inputContainer.Add(port);
-
-                    var portData = field.GetValue(node) as Port;
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
-
-                if (field.FieldType.IsSubclassOf(typeof(Outport)))
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = GetPortName(field.Name);
-                    outputContainer.Add(port);
-
-                    var portData = field.GetValue(node) as Port;
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
-
                 if (field.FieldType.IsSubclassOf(typeof(Variable)))
                 {
                     Type genericType = field.FieldType.GetGenericArguments()[0];
