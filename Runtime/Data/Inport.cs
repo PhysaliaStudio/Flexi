@@ -36,8 +36,6 @@ namespace Physalia.AbilityFramework
 
     public sealed class Inport<T> : Inport
     {
-        private readonly List<T> valuesCache = new();
-
         public override Type ValueType => typeof(T);
 
         public T GetValue()

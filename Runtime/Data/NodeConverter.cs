@@ -12,8 +12,6 @@ namespace Physalia.AbilityFramework
         private const string POSITION_KEY = "_position";
         private const string TYPE_KEY = "_type";
 
-        private static Assembly[] assembliesCache;
-
         public override Node ReadJson(JsonReader reader, Type objectType, Node existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject jsonObject = JObject.Load(reader);
