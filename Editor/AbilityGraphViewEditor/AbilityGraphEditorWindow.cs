@@ -124,7 +124,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool LoadFile(AbilityGraphAsset asset)
         {
-            AbilityGraph abilityGraph = AbilityGraphEditorIO.Deserialize(asset.Text);
+            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text);
             if (abilityGraph == null)
             {
                 return false;
@@ -169,7 +169,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             SetDirty(false);
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            currentAsset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            currentAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
             EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

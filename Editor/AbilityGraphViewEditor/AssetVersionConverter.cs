@@ -14,7 +14,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (objects[i] is not MonoScript && objects[i] is TextAsset textAsset)
                 {
                     string json = textAsset.text;
-                    AbilityGraph graph = AbilityGraphEditorIO.Deserialize(json);
+                    AbilityGraph graph = AbilityGraphUtility.Deserialize(textAsset.name, json);
                     if (graph != null)
                     {
                         ConvertFromTextAsset(textAsset);
@@ -23,8 +23,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
                 if (objects[i] is AbilityGraphAsset graphAsset)
                 {
-                    AbilityGraph graph = AbilityGraphEditorIO.Deserialize(graphAsset.Text);
-                    string json = AbilityGraphEditorIO.Serialize(graph);
+                    AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
+                    string json = AbilityGraphUtility.Serialize(graph);
                     graphAsset.Text = json;
                     EditorUtility.SetDirty(graphAsset);
                 }
