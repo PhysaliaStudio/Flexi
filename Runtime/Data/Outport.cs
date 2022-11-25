@@ -5,15 +5,7 @@ namespace Physalia.AbilityFramework
 {
     public abstract class Outport : Port
     {
-        internal abstract Func<object> GetValueConverter(Type toType);
-    }
-
-    public sealed class Outport<T> : Outport
-    {
         private readonly List<Inport> inports = new();
-        private T value;
-
-        public override Type ValueType => typeof(T);
 
         protected override bool CanConnectTo(Port port)
         {
@@ -40,6 +32,15 @@ namespace Physalia.AbilityFramework
         {
             return inports;
         }
+
+        internal abstract Func<object> GetValueConverter(Type toType);
+    }
+
+    public sealed class Outport<T> : Outport
+    {
+        private T value;
+
+        public override Type ValueType => typeof(T);
 
         public T GetValue()
         {
