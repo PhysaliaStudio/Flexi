@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
@@ -13,7 +14,7 @@ namespace Physalia.AbilityFramework
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
 
-        private readonly Dictionary<int, string> graphTable = new();
+        private readonly Dictionary<int, AbilityGraphAsset> graphTable = new();
 
         private IEnumerable<Actor> overridedIteratorGetter;
 
@@ -38,34 +39,35 @@ namespace Physalia.AbilityFramework
             return ownerRepository.GetOwner(id);
         }
 
-        public void LoadAbilityGraph(int id, string graphJson)
+        public void LoadAbilityGraph(int id, string graphName, string graphJson)
         {
-            bool success = graphTable.TryAdd(id, graphJson);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
-            }
+            AbilityGraphAsset graphAsset = ScriptableObject.CreateInstance<AbilityGraphAsset>();
+            graphAsset.name = graphName;
+            graphAsset.Text = graphJson;
+
+            LoadAbilityGraph(id, graphAsset);
         }
 
         public void LoadAbilityGraph(int id, AbilityGraphAsset graphAsset)
         {
-            bool success = graphTable.TryAdd(id, graphAsset.Text);
+            bool success = graphTable.TryAdd(id, graphAsset);
             if (!success)
             {
                 Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
+                return;
             }
         }
 
         public AbilityInstance GetAbilityInstance(int id)
         {
-            bool success = graphTable.TryGetValue(id, out string graphJson);
+            bool success = graphTable.TryGetValue(id, out AbilityGraphAsset graphAsset);
             if (!success)
             {
                 Logger.Error($"[{nameof(AbilitySystem)}] Get instance failed! Not exists graph with Id:{id}");
                 return null;
             }
 
-            AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
+            AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphAsset.Text);
             AbilityInstance instance = new AbilityInstance(id, this, graph);
             return instance;
         }
