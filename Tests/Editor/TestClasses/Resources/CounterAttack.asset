@@ -27,5 +27,5 @@ MonoBehaviour:
     \"id1\": 829185,\r\n      \"port1\": \"targetPort\",\r\n      \"id2\": 540835,\r\n     
     \"port2\": \"instigatorPort\"\r\n    },\r\n    {\r\n      \"id1\": 829185,\r\n     
     \"port1\": \"targetPort\",\r\n      \"id2\": 631924,\r\n      \"port2\": \"customUnitPort\"\r\n   
-    },\r\n    {\r\n      \"id1\": 540835,\r\n      \"port1\": \"baseValue\",\r\n     
-    \"id2\": 631924,\r\n      \"port2\": \"attackPort\"\r\n    }\r\n  ]\r\n}"
+    },\r\n    {\r\n      \"id1\": 631924,\r\n      \"port1\": \"attackPort\",\r\n     
+    \"id2\": 540835,\r\n      \"port2\": \"baseValue\"\r\n    }\r\n  ]\r\n}"
