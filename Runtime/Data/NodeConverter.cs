@@ -88,7 +88,7 @@ namespace Physalia.AbilityFramework
             if (typeToken == null)
             {
                 Logger.Error($"[{nameof(NodeConverter)}] Deserialize failed: Missing the type field");
-                return new UndefinedNode();
+                return new MissingNode("");
             }
 
             string typeName = typeToken.ToString();
@@ -96,7 +96,7 @@ namespace Physalia.AbilityFramework
             if (type == null)
             {
                 Logger.Error($"[{nameof(NodeConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {typeName}");
-                return new UndefinedNode();
+                return new MissingNode(typeName);
             }
 
             return NodeFactory.Create(type);

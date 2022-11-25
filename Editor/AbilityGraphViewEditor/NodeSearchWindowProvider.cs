@@ -11,7 +11,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
     public class NodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider
     {
         private static readonly string TEST_ASSEMBLY_NAME = "Physalia.AbilityFramework.Editor.Tests";
-        private static readonly Type MISSING_NODE_TYPE = typeof(UndefinedNode);
+        private static readonly Type MISSING_NODE_TYPE = typeof(MissingNode);
 
         private AbilityGraphView graphView;
         private List<SearchTreeEntry> searchTreeEntries;
