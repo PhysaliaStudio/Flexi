@@ -39,6 +39,7 @@ namespace Physalia.AbilityFramework
             JToken edgesToken = jsonObject[EDGES_KEY];
             if (edgesToken != null)
             {
+                // Rule: The port1 must be Outport, and the port2 must be Inport
                 List<Edge> edges = edgesToken.ToObject<List<Edge>>();
                 for (var i = 0; i < edges.Count; i++)
                 {
@@ -140,6 +141,8 @@ namespace Physalia.AbilityFramework
 
         private void AddEdges(Node node, ref List<Edge> edges, ref HashSet<Node> handledNodes)
         {
+            // Rule: The port1 must be Outport, and the port2 must be Inport
+
             var linkedNodes = new HashSet<Node>();
 
             foreach (Outport outport in node.Outports)
@@ -186,10 +189,10 @@ namespace Physalia.AbilityFramework
 
                     var edge = new Edge
                     {
-                        id1 = node.id,
-                        port1 = inport.name,
-                        id2 = outport.node.id,
-                        port2 = outport.name,
+                        id1 = outport.node.id,
+                        port1 = outport.name,
+                        id2 = node.id,
+                        port2 = inport.name,
                     };
                     edges.Add(edge);
                     linkedNodes.Add(outport.node);

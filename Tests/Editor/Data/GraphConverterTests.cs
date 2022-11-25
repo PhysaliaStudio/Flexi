@@ -64,8 +64,8 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+LogNode\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
-                "{\"id1\":2,\"port1\":\"owners\",\"id2\":3,\"port2\":\"owners\"}," +
-                "{\"id1\":2,\"port1\":\"baseValue\",\"id2\":4,\"port2\":\"output\"}]}";
+                "{\"id1\":3,\"port1\":\"owners\",\"id2\":2,\"port2\":\"owners\"}," +
+                "{\"id1\":4,\"port1\":\"output\",\"id2\":2,\"port2\":\"baseValue\"}]}";
 
             string json = JsonConvert.SerializeObject(graph);
             Assert.AreEqual(expected, json);
