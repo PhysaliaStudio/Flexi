@@ -18,7 +18,7 @@ namespace Physalia.AbilityFramework
             {
                 if (node is MissingNode missingNode)
                 {
-                    Logger.Error($"[{nameof(AbilitySystem)}] Detect a missing node! assetName: {graphName}, nodeType: {missingNode.TypeName}");
+                    Logger.Error($"[{nameof(AbilitySystem)}] Detect a missing node! assetName: {graphName}, nodeType: {missingNode.TypeFullName}");
                     continue;
                 }
 
