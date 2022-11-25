@@ -13,6 +13,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly Color ENTRY_COLOR = new(140f / 255f, 31f / 255f, 36f / 255f, 205f / 255f);
         private static readonly Color PROCESS_COLOR = new(73f / 255f, 114f / 255f, 140f / 255f, 205f / 255f);
         private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
+        private static readonly Color MISSING_NODE_COLOR = new(1f, 0f, 0f, 205f / 255f);
         private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f, 240f / 255f);  // Alpha 240 is the default port alpha from the source code
 
         private readonly Node node;
@@ -52,7 +53,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 titleContainer.style.backgroundColor = PROCESS_COLOR;
             }
 
-            if (nodeType == typeof(TrueNode))
+            if (node is MissingNode missingNode)
+            {
+                title = missingNode.TypeName;
+                titleContainer.style.backgroundColor = MISSING_NODE_COLOR;
+            }
+            else if (nodeType == typeof(TrueNode))
             {
                 title = "TRUE";
                 titleContainer.style.backgroundColor = CONSTANT_COLOR;
