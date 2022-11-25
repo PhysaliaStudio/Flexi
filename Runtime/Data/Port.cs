@@ -72,6 +72,11 @@ namespace Physalia.AbilityFramework
 
         public static bool CanPortCast(Type outportType, Type inportType)
         {
+            if (outportType == Missing.TYPE || inportType == Missing.TYPE)
+            {
+                return false;
+            }
+
             if (outportType == inportType)
             {
                 return true;
