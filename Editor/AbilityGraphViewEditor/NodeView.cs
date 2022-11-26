@@ -13,6 +13,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly Color ENTRY_COLOR = new(140f / 255f, 31f / 255f, 36f / 255f, 205f / 255f);
         private static readonly Color PROCESS_COLOR = new(73f / 255f, 114f / 255f, 140f / 255f, 205f / 255f);
         private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
+        private static readonly Color MISSING_NODE_COLOR = new(1f, 0f, 0f, 205f / 255f);
+        private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f, 240f / 255f);  // Alpha 240 is the default port alpha from the source code
 
         private readonly Node node;
         private readonly AbilityGraphEditorWindow window;
@@ -51,7 +53,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 titleContainer.style.backgroundColor = PROCESS_COLOR;
             }
 
-            if (nodeType == typeof(TrueNode))
+            if (node is MissingNode missingNode)
+            {
+                title = missingNode.TypeName;
+                titleContainer.style.backgroundColor = MISSING_NODE_COLOR;
+            }
+            else if (nodeType == typeof(TrueNode))
             {
                 title = "TRUE";
                 titleContainer.style.backgroundColor = CONSTANT_COLOR;
@@ -135,33 +142,43 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void CreatePorts()
         {
+            foreach (Port portData in node.Ports)
+            {
+                if (portData is Inport)
+                {
+                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, portData.ValueType);
+                    port.portName = GetPortName(portData.Name);
+                    inputContainer.Add(port);
+
+                    if (portData is MissingInport)
+                    {
+                        port.portColor = MISSING_PORT_COLOR;
+                    }
+
+                    portDataToViewTable.Add(portData, port);
+                    portViewToDataTable.Add(port, portData);
+                }
+
+                if (portData is Outport)
+                {
+                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, portData.ValueType);
+                    port.portName = GetPortName(portData.Name);
+                    outputContainer.Add(port);
+
+                    if (portData is MissingOutport)
+                    {
+                        port.portColor = MISSING_PORT_COLOR;
+                    }
+
+                    portDataToViewTable.Add(portData, port);
+                    portViewToDataTable.Add(port, portData);
+                }
+            }
+
             FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-
-                if (field.FieldType.IsSubclassOf(typeof(Inport)))
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = GetPortName(field.Name);
-                    inputContainer.Add(port);
-
-                    var portData = field.GetValue(node) as Port;
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
-
-                if (field.FieldType.IsSubclassOf(typeof(Outport)))
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, field.FieldType.GetGenericArguments()[0]);
-                    port.portName = GetPortName(field.Name);
-                    outputContainer.Add(port);
-
-                    var portData = field.GetValue(node) as Port;
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
-
                 if (field.FieldType.IsSubclassOf(typeof(Variable)))
                 {
                     Type genericType = field.FieldType.GetGenericArguments()[0];
@@ -189,6 +206,26 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             return fieldName;
+        }
+
+        public void DestroyPort(Port port)
+        {
+            PortView portView = GetPortView(port);
+
+            if (port is Outport outport)
+            {
+                port.Node.RemoveOutport(outport);
+                outputContainer.Remove(portView);
+            }
+
+            if (port is Inport inport)
+            {
+                port.Node.RemoveInport(inport);
+                inputContainer.Remove(portView);
+            }
+
+            portDataToViewTable.Remove(port);
+            portViewToDataTable.Remove(portView);
         }
 
         public PortView GetPortView(Port port)

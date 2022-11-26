@@ -4,7 +4,7 @@ namespace Physalia.AbilityFramework.Tests
 {
     public static class CustomAbility
     {
-        public static string HELLO_WORLD
+        public static AbilityGraphAsset HELLO_WORLD
         {
             get
             {
@@ -12,7 +12,15 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string NORAML_ATTACK
+        public static AbilityGraphAsset HELLO_WORLD_MISSING_ELEMENTS
+        {
+            get
+            {
+                return ReadAbilityFile("HelloWorld_MissingElements");
+            }
+        }
+
+        public static AbilityGraphAsset NORAML_ATTACK
         {
             get
             {
@@ -20,7 +28,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string NORAML_ATTACK_SELECTION
+        public static AbilityGraphAsset NORAML_ATTACK_SELECTION
         {
             get
             {
@@ -28,7 +36,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string NORMAL_ATTACK_5_TIMES
+        public static AbilityGraphAsset NORMAL_ATTACK_5_TIMES
         {
             get
             {
@@ -36,7 +44,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string ATTACK_DECREASE
+        public static AbilityGraphAsset ATTACK_DECREASE
         {
             get
             {
@@ -44,7 +52,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string ATTACK_DOUBLE
+        public static AbilityGraphAsset ATTACK_DOUBLE
         {
             get
             {
@@ -52,7 +60,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string ATTACK_UP_WHEN_LOW_HEALTH
+        public static AbilityGraphAsset ATTACK_UP_WHEN_LOW_HEALTH
         {
             get
             {
@@ -60,7 +68,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string ATTACK_DOUBLE_WHEN_DAMAGED
+        public static AbilityGraphAsset ATTACK_DOUBLE_WHEN_DAMAGED
         {
             get
             {
@@ -68,7 +76,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static string COUNTER_ATTACK
+        public static AbilityGraphAsset COUNTER_ATTACK
         {
             get
             {
@@ -76,15 +84,10 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        private static string ReadAbilityFile(string fileName)
+        private static AbilityGraphAsset ReadAbilityFile(string fileName)
         {
             var asset = Resources.Load<AbilityGraphAsset>(fileName);
-            if (asset == null)
-            {
-                return "";
-            }
-
-            return asset.Text;
+            return asset;
         }
     }
 }

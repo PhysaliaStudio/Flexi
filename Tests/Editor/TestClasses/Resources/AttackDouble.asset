@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
   m_Name: AttackDouble
   m_EditorClassIdentifier: 
-  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"nodes\":
-    [\r\n    {\r\n      \"_id\": 918227,\r\n      \"_position\": {\r\n        \"x\":
-    110.0,\r\n        \"y\": 175.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StartNode\"\r\n   
-    },\r\n    {\r\n      \"_id\": 216819,\r\n      \"_position\": {\r\n        \"x\":
-    129.0,\r\n        \"y\": 299.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.OwnerNode\"\r\n   
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
+    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 918227,\r\n      \"_position\":
+    {\r\n        \"x\": 110.0,\r\n        \"y\": 175.0\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.StartNode\"\r\n    },\r\n    {\r\n      \"_id\":
+    216819,\r\n      \"_position\": {\r\n        \"x\": 129.0,\r\n        \"y\":
+    299.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.OwnerNode\"\r\n   
     },\r\n    {\r\n      \"_id\": 553147,\r\n      \"_position\": {\r\n        \"x\":
     302.0,\r\n        \"y\": 211.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomAttackDoubleNode\"\r\n   
     }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 918227,\r\n      \"port1\":
     \"next\",\r\n      \"id2\": 553147,\r\n      \"port2\": \"previous\"\r\n    },\r\n   
-    {\r\n      \"id1\": 553147,\r\n      \"port1\": \"targetsPort\",\r\n      \"id2\":
-    216819,\r\n      \"port2\": \"owner\"\r\n    }\r\n  ]\r\n}"
+    {\r\n      \"id1\": 216819,\r\n      \"port1\": \"owner\",\r\n      \"id2\":
+    553147,\r\n      \"port2\": \"targetsPort\"\r\n    }\r\n  ]\r\n}"

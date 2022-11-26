@@ -8,6 +8,27 @@ namespace Physalia.AbilityFramework.Tests
     public class PortCastTests
     {
         [Test]
+        public void AnyToMissing_ReturnsFalse()
+        {
+            bool result = Port.CanPortCast(typeof(BoxCollider), typeof(Missing));
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void MissingToAny_ReturnsFalse()
+        {
+            bool result = Port.CanPortCast(typeof(Missing), typeof(BoxCollider));
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
+        public void MissingToMissing_ReturnsFalse()
+        {
+            bool result = Port.CanPortCast(typeof(Missing), typeof(Missing));
+            Assert.AreEqual(false, result);
+        }
+
+        [Test]
         public void SingleToSingle_SameType_ReturnsTrue()
         {
             bool result = Port.CanPortCast(typeof(BoxCollider), typeof(BoxCollider));

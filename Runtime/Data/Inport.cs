@@ -5,15 +5,7 @@ namespace Physalia.AbilityFramework
 {
     public abstract class Inport : Port
     {
-
-    }
-
-    public sealed class Inport<T> : Inport
-    {
-        private readonly List<Outport> outports = new();
-        private readonly List<T> valuesCache = new();
-
-        public override Type ValueType => typeof(T);
+        protected readonly List<Outport> outports = new();
 
         protected override bool CanConnectTo(Port port)
         {
@@ -40,6 +32,11 @@ namespace Physalia.AbilityFramework
         {
             return outports;
         }
+    }
+
+    public sealed class Inport<T> : Inport
+    {
+        public override Type ValueType => typeof(T);
 
         public T GetValue()
         {

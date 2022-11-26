@@ -34,6 +34,12 @@ namespace Physalia.AbilityFramework
             port.AddConnection(this);
         }
 
+        internal void ConnectForce(Port port)
+        {
+            AddConnection(port);
+            port.AddConnection(this);
+        }
+
         public void Disconnect(Port port)
         {
             RemoveConnection(port);
@@ -66,6 +72,11 @@ namespace Physalia.AbilityFramework
 
         public static bool CanPortCast(Type outportType, Type inportType)
         {
+            if (outportType == Missing.TYPE || inportType == Missing.TYPE)
+            {
+                return false;
+            }
+
             if (outportType == inportType)
             {
                 return true;

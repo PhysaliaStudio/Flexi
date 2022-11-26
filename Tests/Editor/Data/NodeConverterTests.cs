@@ -106,7 +106,7 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"value\":42}");
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
-            Assert.AreEqual(true, node is UndefinedNode);
+            Assert.AreEqual(true, node is MissingNode);
             Assert.AreEqual(1, node.id);
             Assert.AreEqual(new Vector2(200f, 100f), node.position);
         }
@@ -118,7 +118,7 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"_type\":\"NonExistedNodeClass\",\"value\":42}");
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
-            Assert.AreEqual(true, node is UndefinedNode);
+            Assert.AreEqual(true, node is MissingNode);
             Assert.AreEqual(1, node.id);
             Assert.AreEqual(new Vector2(200f, 100f), node.position);
         }

@@ -39,6 +39,7 @@ namespace Physalia.AbilityFramework
             JToken edgesToken = jsonObject[EDGES_KEY];
             if (edgesToken != null)
             {
+                // Rule: The port1 must be Outport, and the port2 must be Inport
                 List<Edge> edges = edgesToken.ToObject<List<Edge>>();
                 for (var i = 0; i < edges.Count; i++)
                 {
@@ -46,11 +47,23 @@ namespace Physalia.AbilityFramework
 
                     Node node1 = graph.GetNode(edge.id1);
                     Port port1 = node1.GetPort(edge.port1);
+                    if (port1 == null)
+                    {
+                        var missingOutport = new MissingOutport(node1, edge.port1);
+                        node1.AddOutport(edge.port1, missingOutport);
+                        port1 = missingOutport;
+                    }
 
                     Node node2 = graph.GetNode(edge.id2);
                     Port port2 = node2.GetPort(edge.port2);
+                    if (port2 == null)
+                    {
+                        var missingInport = new MissingInport(node2, edge.port2);
+                        node2.AddInport(edge.port2, missingInport);
+                        port2 = missingInport;
+                    }
 
-                    port1.Connect(port2);
+                    port1.ConnectForce(port2);
                 }
             }
 
@@ -140,6 +153,8 @@ namespace Physalia.AbilityFramework
 
         private void AddEdges(Node node, ref List<Edge> edges, ref HashSet<Node> handledNodes)
         {
+            // Rule: The port1 must be Outport, and the port2 must be Inport
+
             var linkedNodes = new HashSet<Node>();
 
             foreach (Outport outport in node.Outports)
@@ -186,10 +201,10 @@ namespace Physalia.AbilityFramework
 
                     var edge = new Edge
                     {
-                        id1 = node.id,
-                        port1 = inport.name,
-                        id2 = outport.node.id,
-                        port2 = outport.name,
+                        id1 = outport.node.id,
+                        port1 = outport.name,
+                        id2 = node.id,
+                        port2 = inport.name,
                     };
                     edges.Add(edge);
                     linkedNodes.Add(outport.node);

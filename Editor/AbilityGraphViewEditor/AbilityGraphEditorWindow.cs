@@ -124,7 +124,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool LoadFile(AbilityGraphAsset asset)
         {
-            AbilityGraph abilityGraph = AbilityGraphEditorIO.Deserialize(asset.Text);
+            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text);
             if (abilityGraph == null)
             {
                 return false;
@@ -152,6 +152,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool SaveFile()
         {
+            // Is the graph has any missing element, cancel saving
+            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
+            if (abilityGraph.HasMissingElement())
+            {
+                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
+                return false;
+            }
+
+            // Save as new asset if necessary
             if (currentAsset == null)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
@@ -167,12 +176,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 objectField.SetValueWithoutNotify(currentAsset);
             }
 
-            SetDirty(false);
-            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            currentAsset.Text = AbilityGraphEditorIO.Serialize(abilityGraph);
+            currentAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
             EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            SetDirty(false);
+
             return true;
         }
 
@@ -256,6 +265,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (element is NodeView nodeView)
                 {
                     Node node = nodeView.Node;
+                    if (node is IIsMissing)
+                    {
+                        continue;
+                    }
+
                     partialGraph.nodes.Add(node);
                 }
             }
@@ -273,6 +287,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     {
                         Port outport = outputNodeView.GetPort(edgeView.output);
                         Port inport = inputNodeView.GetPort(edgeView.input);
+                        if (outport is IIsMissing || inport is IIsMissing)
+                        {
+                            continue;
+                        }
+
                         Edge edge = new Edge
                         {
                             id1 = outputNodeView.Node.id,
@@ -284,6 +303,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         partialGraph.edges.Add(edge);
                     }
                 }
+            }
+
+            if (partialGraph.nodes.Count == 0 && partialGraph.edges.Count == 0)
+            {
+                return null;
             }
 
             string json = JsonConvert.SerializeObject(partialGraph);
@@ -382,6 +406,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         Port outport = outputNodeView.GetPort(edgeView.output);
                         Port inport = inputNodeView.GetPort(edgeView.input);
                         outport.Disconnect(inport);
+
+                        if (outport is MissingOutport && outport.GetConnections().Count == 0)
+                        {
+                            outputNodeView.DestroyPort(outport);
+                        }
+
+                        if (inport is MissingInport && inport.GetConnections().Count == 0)
+                        {
+                            inputNodeView.DestroyPort(inport);
+                        }
                     }
                 }
             }

@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
-  m_Name: HelloWorld
+  m_Name: HelloWorld_MissingElements
   m_EditorClassIdentifier: 
   text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
     [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 507088,\r\n      \"_position\":
@@ -19,7 +19,7 @@ MonoBehaviour:
     747695,\r\n      \"_position\": {\r\n        \"x\": 240.0,\r\n        \"y\":
     161.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
     },\r\n    {\r\n      \"_id\": 524447,\r\n      \"_position\": {\r\n        \"x\":
-    468.0,\r\n        \"y\": 175.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
+    468.0,\r\n        \"y\": 175.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNodeMissing\"\r\n   
     },\r\n    {\r\n      \"_id\": 675591,\r\n      \"_position\": {\r\n        \"x\":
     270.0,\r\n        \"y\": 316.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StringNode\",\r\n     
     \"text\": \"World!\"\r\n    },\r\n    {\r\n      \"_id\": 135698,\r\n      \"_position\":
@@ -30,5 +30,5 @@ MonoBehaviour:
     {\r\n      \"id1\": 747695,\r\n      \"port1\": \"next\",\r\n      \"id2\": 524447,\r\n     
     \"port2\": \"previous\"\r\n    },\r\n    {\r\n      \"id1\": 135698,\r\n     
     \"port1\": \"output\",\r\n      \"id2\": 747695,\r\n      \"port2\": \"text\"\r\n   
-    },\r\n    {\r\n      \"id1\": 675591,\r\n      \"port1\": \"output\",\r\n     
+    },\r\n    {\r\n      \"id1\": 675591,\r\n      \"port1\": \"value\",\r\n     
     \"id2\": 524447,\r\n      \"port2\": \"text\"\r\n    }\r\n  ]\r\n}"

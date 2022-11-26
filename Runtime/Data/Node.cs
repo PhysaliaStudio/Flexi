@@ -32,10 +32,28 @@ namespace Physalia.AbilityFramework
             inports.Add(name, inport);
         }
 
+        internal void RemoveInport(Inport inport)
+        {
+            inport.DisconnectAll();
+
+            string name = inport.Name;
+            ports.Remove(name);
+            inports.Remove(name);
+        }
+
         internal void AddOutport(string name, Outport outport)
         {
             ports.Add(name, outport);
             outports.Add(name, outport);
+        }
+
+        internal void RemoveOutport(Outport outport)
+        {
+            outport.DisconnectAll();
+
+            string name = outport.Name;
+            ports.Remove(name);
+            outports.Remove(name);
         }
 
         public Port GetPort(string name)

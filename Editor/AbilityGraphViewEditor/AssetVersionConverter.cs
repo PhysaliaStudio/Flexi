@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public static class AssetVersionConverter
     {
-        [MenuItem("Tools/Physalia/Convert Graph Assets (From json TextAsset)")]
+        [MenuItem("Tools/Physalia/Convert Graph Assets Version")]
         private static void ConvertFromSelectedObjects()
         {
             var objects = Selection.objects;
@@ -14,11 +14,19 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (objects[i] is not MonoScript && objects[i] is TextAsset textAsset)
                 {
                     string json = textAsset.text;
-                    AbilityGraph graph = AbilityGraphEditorIO.Deserialize(json);
+                    AbilityGraph graph = AbilityGraphUtility.Deserialize(textAsset.name, json);
                     if (graph != null)
                     {
                         ConvertFromTextAsset(textAsset);
                     }
+                }
+
+                if (objects[i] is AbilityGraphAsset graphAsset)
+                {
+                    AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
+                    string json = AbilityGraphUtility.Serialize(graph);
+                    graphAsset.Text = json;
+                    EditorUtility.SetDirty(graphAsset);
                 }
             }
             AssetDatabase.SaveAssets();

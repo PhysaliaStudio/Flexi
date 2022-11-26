@@ -31,5 +31,5 @@ MonoBehaviour:
     \"port1\": \"next\",\r\n      \"id2\": 515303,\r\n      \"port2\": \"previous\"\r\n   
     },\r\n    {\r\n      \"id1\": 829946,\r\n      \"port1\": \"targetPort\",\r\n     
     \"id2\": 515303,\r\n      \"port2\": \"targets\"\r\n    },\r\n    {\r\n     
-    \"id1\": 515303,\r\n      \"port1\": \"baseValue\",\r\n      \"id2\": 52447,\r\n     
-    \"port2\": \"attackPort\"\r\n    }\r\n  ]\r\n}"
+    \"id1\": 52447,\r\n      \"port1\": \"attackPort\",\r\n      \"id2\": 515303,\r\n     
+    \"port2\": \"baseValue\"\r\n    }\r\n  ]\r\n}"
