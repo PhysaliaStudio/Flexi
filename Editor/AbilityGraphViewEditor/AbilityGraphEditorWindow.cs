@@ -256,6 +256,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (element is NodeView nodeView)
                 {
                     Node node = nodeView.Node;
+                    if (node is IIsMissing)
+                    {
+                        continue;
+                    }
+
                     partialGraph.nodes.Add(node);
                 }
             }
@@ -273,6 +278,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     {
                         Port outport = outputNodeView.GetPort(edgeView.output);
                         Port inport = inputNodeView.GetPort(edgeView.input);
+                        if (outport is IIsMissing || inport is IIsMissing)
+                        {
+                            continue;
+                        }
+
                         Edge edge = new Edge
                         {
                             id1 = outputNodeView.Node.id,
@@ -284,6 +294,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         partialGraph.edges.Add(edge);
                     }
                 }
+            }
+
+            if (partialGraph.nodes.Count == 0 && partialGraph.edges.Count == 0)
+            {
+                return null;
             }
 
             string json = JsonConvert.SerializeObject(partialGraph);
