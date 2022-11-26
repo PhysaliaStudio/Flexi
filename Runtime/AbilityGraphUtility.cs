@@ -39,5 +39,26 @@ namespace Physalia.AbilityFramework
             string json = JsonConvert.SerializeObject(abilityGraph, SERIALIZER_SETTINGS);
             return json;
         }
+
+        internal static bool HasMissingElement(this AbilityGraph graph)
+        {
+            foreach (Node node in graph.Nodes)
+            {
+                if (node is MissingNode missingNode)
+                {
+                    return true;
+                }
+
+                foreach (Port port in node.Ports)
+                {
+                    if (port is IIsMissing)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }

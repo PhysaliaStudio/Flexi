@@ -152,6 +152,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool SaveFile()
         {
+            // Is the graph has any missing element, cancel saving
+            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
+            if (abilityGraph.HasMissingElement())
+            {
+                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
+                return false;
+            }
+
+            // Save as new asset if necessary
             if (currentAsset == null)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
@@ -167,12 +176,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 objectField.SetValueWithoutNotify(currentAsset);
             }
 
-            SetDirty(false);
-            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
             currentAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
             EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            SetDirty(false);
+
             return true;
         }
 
