@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
+using UnityEngine;
 
 namespace Physalia.AbilityFramework.Tests
 {
@@ -29,6 +30,21 @@ namespace Physalia.AbilityFramework.Tests
         public class LogNode : ProcessNode
         {
             public Inport<string> text;
+        }
+
+        [Test]
+        public void Serialize_Empty()
+        {
+            Graph graph = new Graph();
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
         }
 
         [Test]
@@ -145,6 +161,95 @@ namespace Physalia.AbilityFramework.Tests
             var missingPort = stringNode.GetOutput("value") as MissingOutport;
             Assert.NotNull(missingPort);
             Assert.AreEqual(logNode.text, missingPort.GetConnections()[0]);
+        }
+
+        [Test]
+        public void Serialize_WithSubgraphInOutNodes()
+        {
+            Graph graph = new Graph();
+            graph.AddSubgraphInOutNodes();
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void Deserialize_WithSubgraphInOutNodes()
+        {
+            var json =
+               "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+
+            Assert.NotNull(graph.GraphInputNode);
+            Assert.NotNull(graph.GraphOutputNode);
+            Assert.AreEqual(0, graph.Nodes.Count);
+        }
+
+        [Test]
+        public void Serialize_WithSubgraphInOutNodesAndData()
+        {
+            Graph graph = new Graph();
+            graph.AddSubgraphInOutNodes();
+
+            graph.GraphInputNode.position = new Vector2(1f, 2f);
+            graph.GraphOutputNode.position = new Vector2(8f, 4f);
+
+            PortFactory.CreateOutport<int>(graph.GraphInputNode, "test1");
+            PortFactory.CreateInport<string>(graph.GraphOutputNode, "test2");
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void Deserialize_WithSubgraphInOutNodesAndData()
+        {
+            var json =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+
+            Assert.NotNull(graph.GraphInputNode);
+            Assert.NotNull(graph.GraphOutputNode);
+            Assert.AreEqual(0, graph.Nodes.Count);
+
+            Assert.AreEqual(new Vector2(1f, 2f), graph.GraphInputNode.position);
+            Assert.AreEqual(new Vector2(8f, 4f), graph.GraphOutputNode.position);
+
+            Outport outport = graph.GraphInputNode.GetOutput("test1");
+            Assert.NotNull(outport, "The GraphInputNode doesn't receive custom ports");
+            Assert.AreEqual(typeof(int), outport.ValueType);
+
+            Inport inport = graph.GraphOutputNode.GetInput("test2");
+            Assert.NotNull(inport, "The GraphOutputNode doesn't receive custom ports");
+            Assert.AreEqual(typeof(string), inport.ValueType);
         }
     }
 }

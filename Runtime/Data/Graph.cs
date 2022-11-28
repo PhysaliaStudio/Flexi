@@ -7,13 +7,65 @@ namespace Physalia.AbilityFramework
     [JsonConverter(typeof(GraphConverter))]
     public class Graph
     {
+        private GraphInputNode graphInputNode;
+        private GraphOutputNode graphOutputNode;
+
         private readonly List<EntryNode> entryNodes = new();
         private readonly List<Node> nodes = new();
         private readonly List<BlackboardVariable> variables = new();
 
+        internal GraphInputNode GraphInputNode => graphInputNode;
+        internal GraphOutputNode GraphOutputNode => graphOutputNode;
+
         public IReadOnlyList<EntryNode> EntryNodes => entryNodes;
         public IReadOnlyList<Node> Nodes => nodes;
         public List<BlackboardVariable> BlackboardVariables => variables;
+
+        public void AddSubgraphInOutNodes()
+        {
+            AddGraphInputNode();
+            AddGraphOutputNode();
+        }
+
+        internal void AddGraphInputNode()
+        {
+            if (graphInputNode == null)
+            {
+                graphInputNode = NodeFactory.Create<GraphInputNode>();
+            }
+        }
+
+        internal void AddGraphOutputNode()
+        {
+            if (graphOutputNode == null)
+            {
+                graphOutputNode = NodeFactory.Create<GraphOutputNode>();
+            }
+        }
+
+        public void RemoveGraphInOutNodes()
+        {
+            RemoveGraphInputNode();
+            RemoveGraphOutputNode();
+        }
+
+        internal void RemoveGraphInputNode()
+        {
+            if (graphInputNode != null)
+            {
+                graphInputNode.DisconnectAllPorts();
+                graphInputNode = null;
+            }
+        }
+
+        internal void RemoveGraphOutputNode()
+        {
+            if (graphOutputNode != null)
+            {
+                graphOutputNode.DisconnectAllPorts();
+                graphOutputNode = null;
+            }
+        }
 
         public T AddNewNode<T>() where T : Node, new()
         {

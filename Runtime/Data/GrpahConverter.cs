@@ -8,6 +8,8 @@ namespace Physalia.AbilityFramework
     internal class GraphConverter : JsonConverter<Graph>
     {
         private const string TYPE_KEY = "_type";
+        private const string INPUT_KEY = "$input";
+        private const string OUTPUT_KEY = "$output";
         private const string VARIABLE_KEY = "variables";
         private const string NODES_KEY = "nodes";
         private const string EDGES_KEY = "edges";
@@ -16,6 +18,10 @@ namespace Physalia.AbilityFramework
         {
             JObject jsonObject = JObject.Load(reader);
             Graph graph = CreateGraphInstance(jsonObject);
+
+            // Graph input/output
+            ReadInputToken(graph, jsonObject);
+            ReadOutputToken(graph, jsonObject);
 
             // Variables
             JToken variablesToken = jsonObject[VARIABLE_KEY];
@@ -73,6 +79,66 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
+        private static void ReadInputToken(Graph graph, JObject jsonObject)
+        {
+            JToken token = jsonObject[INPUT_KEY];
+            if (token == null)
+            {
+                return;
+            }
+
+            // Create the node
+            graph.AddGraphInputNode();
+
+            // Setup
+            GraphInputData inputData = token.ToObject<GraphInputData>();
+            GraphInputNode node = graph.GraphInputNode;
+            node.position = inputData.position;
+            for (var i = 0; i < inputData.portDatas.Count; i++)
+            {
+                PortData portData = inputData.portDatas[i];
+
+                Type portDataType = ReflectionUtilities.GetTypeByName(portData.type);
+                if (portDataType == null)
+                {
+                    Logger.Error($"[{nameof(GraphConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {portData.type}");
+                    continue;
+                }
+
+                PortFactory.CreateOutport(node, portDataType, portData.name);
+            }
+        }
+
+        private static void ReadOutputToken(Graph graph, JObject jsonObject)
+        {
+            JToken token = jsonObject[OUTPUT_KEY];
+            if (token == null)
+            {
+                return;
+            }
+
+            // Create the node
+            graph.AddGraphOutputNode();
+
+            // Setup
+            GraphOutputData outputData = token.ToObject<GraphOutputData>();
+            GraphOutputNode node = graph.GraphOutputNode;
+            node.position = outputData.position;
+            for (var i = 0; i < outputData.portDatas.Count; i++)
+            {
+                PortData portData = outputData.portDatas[i];
+
+                Type portDataType = ReflectionUtilities.GetTypeByName(portData.type);
+                if (portDataType == null)
+                {
+                    Logger.Error($"[{nameof(GraphConverter)}] Deserialize failed: Cannot find the type from all assemblies, typeName: {portData.type}");
+                    continue;
+                }
+
+                PortFactory.CreateInport(node, portDataType, portData.name);
+            }
+        }
+
         private static Graph CreateGraphInstance(JObject jsonObject)
         {
             JToken typeToken = jsonObject[TYPE_KEY];
@@ -107,6 +173,10 @@ namespace Physalia.AbilityFramework
             writer.WritePropertyName(TYPE_KEY);
             Type graphType = value.GetType();
             writer.WriteValue(graphType.FullName);
+
+            // Graph input/output
+            WriteInputToken(writer, value, serializer);
+            WriteOutputToken(writer, value, serializer);
 
             // Variable
             writer.WritePropertyName(VARIABLE_KEY);
@@ -146,6 +216,76 @@ namespace Physalia.AbilityFramework
                 serializer.Serialize(writer, edges[i]);
             }
 
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
+        }
+
+        private static void WriteInputToken(JsonWriter writer, Graph graph, JsonSerializer serializer)
+        {
+            GraphInputNode inputNode = graph.GraphInputNode;
+            if (inputNode == null)
+            {
+                return;
+            }
+
+            writer.WritePropertyName(INPUT_KEY);
+
+            writer.WriteStartObject();
+
+            var inputData = new GraphInputData(inputNode);
+
+            // Position
+            writer.WritePropertyName(nameof(GraphInputData.position));
+            writer.WriteStartObject();
+            writer.WritePropertyName(nameof(GraphInputData.position.x));
+            writer.WriteValue(inputData.position.x);
+            writer.WritePropertyName(nameof(GraphInputData.position.y));
+            writer.WriteValue(inputData.position.y);
+            writer.WriteEndObject();
+
+            // Port datas
+            writer.WritePropertyName(nameof(GraphInputData.portDatas));
+            writer.WriteStartArray();
+            for (var i = 0; i < inputData.portDatas.Count; i++)
+            {
+                serializer.Serialize(writer, inputData.portDatas[i]);
+            }
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
+        }
+
+        private static void WriteOutputToken(JsonWriter writer, Graph graph, JsonSerializer serializer)
+        {
+            GraphOutputNode outputNode = graph.GraphOutputNode;
+            if (outputNode == null)
+            {
+                return;
+            }
+
+            writer.WritePropertyName(OUTPUT_KEY);
+
+            writer.WriteStartObject();
+
+            var outputData = new GraphOutputData(outputNode);
+
+            // Position
+            writer.WritePropertyName(nameof(GraphOutputData.position));
+            writer.WriteStartObject();
+            writer.WritePropertyName(nameof(GraphOutputData.position.x));
+            writer.WriteValue(outputData.position.x);
+            writer.WritePropertyName(nameof(GraphOutputData.position.y));
+            writer.WriteValue(outputData.position.y);
+            writer.WriteEndObject();
+
+            // Port datas
+            writer.WritePropertyName(nameof(GraphOutputData.portDatas));
+            writer.WriteStartArray();
+            for (var i = 0; i < outputData.portDatas.Count; i++)
+            {
+                serializer.Serialize(writer, outputData.portDatas[i]);
+            }
             writer.WriteEndArray();
 
             writer.WriteEndObject();

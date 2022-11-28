@@ -4,7 +4,14 @@ namespace Physalia.AbilityFramework
 {
     internal class GraphOutputNode : FlowNode
     {
+        private static readonly int NODE_ID = -2;
+
         internal Inport<FlowNode> previous;
+
+        public GraphOutputNode()
+        {
+            id = NODE_ID;
+        }
 
         public override FlowNode Previous
         {
