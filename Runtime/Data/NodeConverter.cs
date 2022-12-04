@@ -40,6 +40,21 @@ namespace Physalia.AbilityFramework
             }
 
             // Custom Fields
+            if (node is SubgraphNode subgraphNode)
+            {
+                JToken token = jsonObject[nameof(SubgraphNode.guid)];
+                subgraphNode.guid = token.ToObject<string>();
+            }
+            else
+            {
+                ReadVariables(serializer, jsonObject, node);
+            }
+
+            return node;
+        }
+
+        private static void ReadVariables(JsonSerializer serializer, JObject jsonObject, Node node)
+        {
             FieldInfo[] fields = node.GetType().GetFields();
             for (var i = 0; i < fields.Length; i++)
             {
@@ -76,8 +91,6 @@ namespace Physalia.AbilityFramework
                     }
                 }
             }
-
-            return node;
         }
 
         private static Node CreateNodeInstance(JObject jsonObject)
@@ -129,6 +142,21 @@ namespace Physalia.AbilityFramework
             writer.WriteValue(nodeType.FullName);
 
             // Custom Fields
+            if (value is SubgraphNode subgraphNode)
+            {
+                writer.WritePropertyName(nameof(SubgraphNode.guid));
+                serializer.Serialize(writer, subgraphNode.guid);
+            }
+            else
+            {
+                WriteVariables(writer, value, serializer, nodeType);
+            }
+
+            writer.WriteEndObject();
+        }
+
+        private static void WriteVariables(JsonWriter writer, Node value, JsonSerializer serializer, Type nodeType)
+        {
             FieldInfo[] fields = nodeType.GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
@@ -164,8 +192,6 @@ namespace Physalia.AbilityFramework
                     serializer.Serialize(writer, variable.Value);
                 }
             }
-
-            writer.WriteEndObject();
         }
     }
 }

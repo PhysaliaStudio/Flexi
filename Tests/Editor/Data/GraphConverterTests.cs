@@ -251,5 +251,41 @@ namespace Physalia.AbilityFramework.Tests
             Assert.NotNull(inport, "The GraphOutputNode doesn't receive custom ports");
             Assert.AreEqual(typeof(string), inport.ValueType);
         }
+
+        [Test]
+        public void Serialize_WithSubgraphNode()
+        {
+            Graph graph = new Graph();
+            SubgraphNode subgraphNode = graph.AddNewNode<SubgraphNode>();
+            subgraphNode.guid = "1234";
+
+            // Intentionally change node id for easier test
+            subgraphNode.id = 1;
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"edges\":[]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void Deserialize_WithSubgraphNode()
+        {
+            var json =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"edges\":[]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+
+            var subgraphNode = graph.GetNode(1) as SubgraphNode;
+            Assert.NotNull(subgraphNode);
+            Assert.AreEqual("1234", subgraphNode.guid);
+        }
     }
 }
