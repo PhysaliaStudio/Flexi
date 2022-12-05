@@ -7,7 +7,7 @@ namespace Physalia.AbilityFramework
     /// Largely reference TextAssetInspector.
     /// https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/Inspector/MonoScriptInspector.cs
     /// </remarks>
-    [CustomEditor(typeof(AbilityGraphAsset))]
+    [CustomEditor(typeof(AbilityGraphAsset), true)]
     [CanEditMultipleObjects]
     public class AbilityGraphAssetInspector : Editor
     {

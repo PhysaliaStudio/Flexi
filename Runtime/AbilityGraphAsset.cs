@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Physalia.AbilityFramework
 {
     [CreateAssetMenu(fileName = "GraphAsset", menuName = "Physalia/Ability System/Graph Asset", order = 1)]
-    public sealed class AbilityGraphAsset : ScriptableObject
+    public class AbilityGraphAsset : ScriptableObject
     {
         [SerializeField]
         [HideInInspector]
