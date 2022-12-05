@@ -31,6 +31,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly string NEW_BUTTON_NAME = "new-button";
         private static readonly string SAVE_BUTTON_NAME = "save-button";
         private static readonly string RELOAD_BUTTON_NAME = "reload-button";
+        private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
@@ -103,13 +104,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             });
 
             Button newButton = rootVisualElement.Query<Button>(NEW_BUTTON_NAME).First();
-            newButton.clicked += OnNewButtonClicked;
+            newButton.clicked += () => OnNewButtonClicked(false);
 
             Button saveButton = rootVisualElement.Query<Button>(SAVE_BUTTON_NAME).First();
             saveButton.clicked += OnSaveButtonClicked;
 
             Button reloadButton = rootVisualElement.Query<Button>(RELOAD_BUTTON_NAME).First();
             reloadButton.clicked += ReloadFile;
+
+            Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
+            newMacroButton.clicked += () => OnNewButtonClicked(true);
 
             if (currentAsset == null)
             {
@@ -170,8 +174,17 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return false;
                 }
 
-                AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
-                AssetDatabase.CreateAsset(newAsset, assetPath);
+                if (abilityGraph.HasSubgraphElement())
+                {
+                    MacroGraphAsset newAsset = CreateInstance<MacroGraphAsset>();
+                    AssetDatabase.CreateAsset(newAsset, assetPath);
+                }
+                else
+                {
+                    AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
+                    AssetDatabase.CreateAsset(newAsset, assetPath);
+                }
+
                 currentAsset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
             }
@@ -185,12 +198,19 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return true;
         }
 
-        private void OnNewButtonClicked()
+        private void OnNewButtonClicked(bool isMacro)
         {
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                NewGraphView();
+                if (isMacro)
+                {
+                    NewMacroGraphView();
+                }
+                else
+                {
+                    NewGraphView();
+                }
             }
         }
 
@@ -232,6 +252,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewGraphView()
         {
             SetUpGraphView(new AbilityGraphView(this));
+            SetDirty(false);
+            objectField.SetValueWithoutNotify(null);
+            currentAsset = null;
+        }
+
+        private void NewMacroGraphView()
+        {
+            AbilityGraph graph = new AbilityGraph();
+            graph.AddSubgraphInOutNodes();
+            graph.GraphInputNode.position = new Vector2(0, 250);
+            graph.GraphOutputNode.position = new Vector2(500, 250);
+
+            AbilityGraphView graphView = AbilityGraphView.Create(graph, this);
+            SetUpGraphView(graphView);
             SetDirty(false);
             objectField.SetValueWithoutNotify(null);
             currentAsset = null;
