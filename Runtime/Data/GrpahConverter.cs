@@ -200,10 +200,10 @@ namespace Physalia.AbilityFramework
 
             // Calculate edges
             var edges = new List<Edge>();
-            if (value.Nodes.Count > 0)
+            if (value.HasNode())
             {
                 var handledNodes = new HashSet<Node>();
-                Node node = value.Nodes[0];
+                Node node = value.GetFirstNode();
                 AddEdges(node, ref edges, ref handledNodes);
             }
 

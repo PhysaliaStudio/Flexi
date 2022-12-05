@@ -164,7 +164,7 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void Serialize_WithSubgraphInOutNodes()
+        public void SerializeMacro_Empty()
         {
             Graph graph = new Graph();
             graph.AddSubgraphInOutNodes();
@@ -182,7 +182,7 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void Deserialize_WithSubgraphInOutNodes()
+        public void DeserializeMacro_Empty()
         {
             var json =
                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
@@ -200,7 +200,7 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void Serialize_WithSubgraphInOutNodesAndData()
+        public void SerializeMacro_WithCustomPorts()
         {
             Graph graph = new Graph();
             graph.AddSubgraphInOutNodes();
@@ -224,7 +224,7 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void Deserialize_WithSubgraphInOutNodesAndData()
+        public void DeserializeMacro_WithCustomPorts()
         {
             var json =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
@@ -250,6 +250,52 @@ namespace Physalia.AbilityFramework.Tests
             Inport inport = graph.GraphOutputNode.GetInput("test2");
             Assert.NotNull(inport, "The GraphOutputNode doesn't receive custom ports");
             Assert.AreEqual(typeof(string), inport.ValueType);
+        }
+
+
+        [Test]
+        public void SerializeMacro_WithEdges()
+        {
+            Graph graph = new Graph();
+            graph.AddSubgraphInOutNodes();
+
+            PortFactory.CreateOutport<int>(graph.GraphInputNode, "test1");
+            PortFactory.CreateInport<int>(graph.GraphOutputNode, "test2");
+
+            graph.GraphInputNode.next.Connect(graph.GraphOutputNode.previous);
+            graph.GraphInputNode.GetOutput("test1").Connect(graph.GraphOutputNode.GetInput("test2"));
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
+                "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void DeserializeMacro_WithEdges()
+        {
+            var json =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
+                "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+            Assert.AreEqual(graph.GraphOutputNode.previous, graph.GraphInputNode.next.GetConnections()[0], "'next' and 'previous' didn't connect");
+
+            Outport test1 = graph.GraphInputNode.GetOutput("test1");
+            Inport test2 = graph.GraphOutputNode.GetInput("test2");
+            Assert.AreEqual(test2, test1.GetConnections()[0], "'test1' and 'test2' didn't connect");
         }
 
         [Test]

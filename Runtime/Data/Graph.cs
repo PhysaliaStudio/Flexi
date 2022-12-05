@@ -122,8 +122,43 @@ namespace Physalia.AbilityFramework
             return;
         }
 
+        public bool HasNode()
+        {
+            return graphInputNode != null || graphOutputNode != null || nodes.Count > 0;
+        }
+
+        internal Node GetFirstNode()
+        {
+            if (graphInputNode != null)
+            {
+                return graphInputNode;
+            }
+
+            if (nodes.Count > 0)
+            {
+                return nodes[0];
+            }
+
+            if (graphOutputNode != null)
+            {
+                return graphOutputNode;
+            }
+
+            return null;
+        }
+
         public Node GetNode(int id)
         {
+            if (id == -1)
+            {
+                return graphInputNode;
+            }
+
+            if (id == -2)
+            {
+                return graphOutputNode;
+            }
+
             for (var i = 0; i < nodes.Count; i++)
             {
                 if (nodes[i].id == id)

@@ -211,7 +211,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 unhandledNodes.Add(nodes[i]);
             }
 
-            Node current = abilityGraph.GraphInputNode ?? nodes[0];
+            Node current = abilityGraph.GetFirstNode();
             SearchAllNodes(current, ref graphView, ref unhandledNodes);
 
             return graphView;
