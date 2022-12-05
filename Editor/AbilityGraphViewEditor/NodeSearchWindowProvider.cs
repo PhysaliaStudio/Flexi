@@ -24,10 +24,13 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private static List<SearchTreeEntry> CreateSearchTreeEntries()
         {
+            // Title
+            var entries = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Node")) { level = 0 } };
+
+            // Nodes
             IReadOnlyList<Type> nodeTypes = GetAllNodeTypes();
             NodeTypeSearchTree searchTree = CreateNodeTypeSearchTree(nodeTypes);
 
-            var entries = new List<SearchTreeEntry> { new SearchTreeGroupEntry(new GUIContent("Node")) };
             IEnumerator<NodeTypeSearchTree.Node> enumerator = searchTree.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -40,6 +43,21 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 {
                     entries.Add(new SearchTreeGroupEntry(new GUIContent(node.Text)) { level = node.Level });
                 }
+            }
+
+            // Macros
+            IReadOnlyList<string> macroAssetPaths = GetAllMacroAssetPaths();
+
+            entries.Add(new SearchTreeGroupEntry(new GUIContent("Macros")) { level = 1 });
+            for (var i = 0; i < macroAssetPaths.Count; i++)
+            {
+                string name = macroAssetPaths[i].Split('/')[^1];
+                if (name.EndsWith(".asset"))
+                {
+                    name = name.Substring(0, name.Length - ".asset".Length);
+                }
+
+                entries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = macroAssetPaths[i] });
             }
 
             return entries;
@@ -76,6 +94,18 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return nodeTypes;
         }
 
+        private static IReadOnlyList<string> GetAllMacroAssetPaths()
+        {
+            string[] guids = AssetDatabase.FindAssets("t:MacroGraphAsset");
+            var assetPaths = new string[guids.Length];
+            for (var i = 0; i < guids.Length; i++)
+            {
+                assetPaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
+            }
+
+            return assetPaths;
+        }
+
         private static NodeTypeSearchTree CreateNodeTypeSearchTree(IReadOnlyList<Type> nodeTypes)
         {
             var searchTree = new NodeTypeSearchTree();
@@ -108,10 +138,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             Vector2 worldMousePosition = window.rootVisualElement.ChangeCoordinatesTo(window.rootVisualElement.parent, context.screenMousePosition - window.position.position);
             Vector2 localMousePosition = graphView.contentViewContainer.WorldToLocal(worldMousePosition);
 
-            var type = searchTreeEntry.userData as Type;
-            graphView.CreateNewNode(type, localMousePosition);
-            window.SetDirty(true);
-            return true;
+            if (searchTreeEntry.userData is Type type)
+            {
+                graphView.CreateNewNode(type, localMousePosition);
+                window.SetDirty(true);
+                return true;
+            }
+            else if (searchTreeEntry.userData is string assetPath)
+            {
+                graphView.CreateMacroNode(assetPath, localMousePosition);
+                window.SetDirty(true);
+                return true;
+            }
+
+            return false;
         }
     }
 }
