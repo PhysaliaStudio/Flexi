@@ -333,5 +333,74 @@ namespace Physalia.AbilityFramework.Tests
             Assert.NotNull(subgraphNode);
             Assert.AreEqual("1234", subgraphNode.guid);
         }
+
+        [Test]
+        public void Serialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
+        {
+            var macroJson =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
+                "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
+            var macroLibrary = new MacroLibrary { { "1234", macroJson } };
+
+            Graph graph = new Graph();
+            IntegerNode integerNode = graph.AddNewNode<IntegerNode>();
+            SubgraphNode subgraphNode = macroLibrary.AddMacroNode(graph, "1234");
+
+            Inport test1 = subgraphNode.GetInput("test1");
+            integerNode.output.Connect(test1);
+
+            // Intentionally change node id for easier test
+            integerNode.id = 1;
+            subgraphNode.id = 2;
+
+            var expected =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void Deserialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
+        {
+            var graphJson =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"variables\":[]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
+            var macroJson =
+                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
+                "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
+                "\"variables\":[]," +
+                "\"nodes\":[]," +
+                "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
+                "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
+
+            var macroLibrary = new MacroLibrary { { "1234", macroJson } };
+            Graph graph = JsonConvert.DeserializeObject<Graph>(graphJson);
+            macroLibrary.SetUpMacroNodes(graph);
+
+            var subgraphNode = graph.GetNode(2) as SubgraphNode;
+            Inport test1 = subgraphNode.GetInput("test1");
+            Outport test2 = subgraphNode.GetOutput("test2");
+            Assert.NotNull(test1, "The port 'test1' was not created.");
+            Assert.NotNull(test2, "The port 'test2' was not created.");
+
+            var integerNode = graph.GetNode(1) as IntegerNode;
+            var integerOutputConnections = integerNode.output.GetConnections();
+            Assert.AreEqual(1, integerOutputConnections.Count, "The edge to 'test1' is not correct.");
+            Assert.AreEqual(test1, integerOutputConnections[0], "The edge to 'test1' is not correct.");
+        }
     }
 }
