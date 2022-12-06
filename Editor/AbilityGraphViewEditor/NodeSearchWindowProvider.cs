@@ -15,6 +15,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private AbilityGraphView graphView;
         private List<SearchTreeEntry> searchTreeEntries;
+        private readonly MacroLibrary macroLibrary = new();
 
         public void Initialize(AbilityGraphView graphView)
         {
@@ -46,18 +47,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             // Macros
-            IReadOnlyList<string> macroAssetPaths = GetAllMacroAssetPaths();
+            Dictionary<string, string> macroTable = GetMacroTable();
 
             entries.Add(new SearchTreeGroupEntry(new GUIContent("Macros")) { level = 1 });
-            for (var i = 0; i < macroAssetPaths.Count; i++)
+            foreach (KeyValuePair<string, string> pair in macroTable)
             {
-                string name = macroAssetPaths[i].Split('/')[^1];
-                if (name.EndsWith(".asset"))
-                {
-                    name = name.Substring(0, name.Length - ".asset".Length);
-                }
-
-                entries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = macroAssetPaths[i] });
+                string name = pair.Key;
+                string guid = pair.Value;
+                entries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = guid });
             }
 
             return entries;
@@ -94,16 +91,26 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return nodeTypes;
         }
 
-        private static IReadOnlyList<string> GetAllMacroAssetPaths()
+        private static Dictionary<string, string> GetMacroTable()
         {
+            var macroNameToGuidTable = new Dictionary<string, string>();
+
             string[] guids = AssetDatabase.FindAssets("t:MacroGraphAsset");
             var assetPaths = new string[guids.Length];
             for (var i = 0; i < guids.Length; i++)
             {
-                assetPaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
+                string guid = guids[i];
+                assetPaths[i] = AssetDatabase.GUIDToAssetPath(guid);
+                string name = assetPaths[i].Split('/')[^1];
+                if (name.EndsWith(".asset"))
+                {
+                    name = name.Substring(0, name.Length - ".asset".Length);
+                }
+
+                macroNameToGuidTable.Add(name, guid);
             }
 
-            return assetPaths;
+            return macroNameToGuidTable;
         }
 
         private static NodeTypeSearchTree CreateNodeTypeSearchTree(IReadOnlyList<Type> nodeTypes)
@@ -144,9 +151,27 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 window.SetDirty(true);
                 return true;
             }
-            else if (searchTreeEntry.userData is string assetPath)
+            else if (searchTreeEntry.userData is string guid)
             {
-                graphView.CreateMacroNode(assetPath, localMousePosition);
+                // Always replace the data, in case users' edit from external.
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                MacroGraphAsset macroGraphAsset = AssetDatabase.LoadAssetAtPath<MacroGraphAsset>(assetPath);
+                if (macroGraphAsset == null)
+                {
+                    Debug.LogError($"Failed to load MacroGraphAsset at {assetPath}");
+                    return false;
+                }
+
+                if (macroLibrary.ContainsKey(guid))
+                {
+                    macroLibrary[guid] = macroGraphAsset.Text;
+                }
+                else
+                {
+                    macroLibrary.Add(guid, macroGraphAsset.Text);
+                }
+
+                graphView.CreateMacroNode(macroLibrary, guid, localMousePosition);
                 window.SetDirty(true);
                 return true;
             }

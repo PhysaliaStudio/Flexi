@@ -63,36 +63,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             nodeTable.Add(node, nodeView);
         }
 
-        public void CreateMacroNode(string assetPath, Vector2 position)
+        public void CreateMacroNode(MacroLibrary macroLibrary, string guid, Vector2 position)
         {
-            MacroGraphAsset macroGraphAsset = AssetDatabase.LoadAssetAtPath<MacroGraphAsset>(assetPath);
-            if (macroGraphAsset == null)
-            {
-                Debug.LogError($"Failed to load MacroGraphAsset at {assetPath}");
-                return;
-            }
-
-            SubgraphNode node = abilityGraph.AddNewNode<SubgraphNode>();
+            SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, guid);
             node.position = position;
-            node.guid = AssetDatabase.AssetPathToGUID(assetPath);
-
-            AbilityGraph graph = AbilityGraphUtility.Deserialize(macroGraphAsset.name, macroGraphAsset.Text);
-
-            var inputData = new GraphInputData(graph.GraphInputNode);
-            for (var i = 0; i < inputData.portDatas.Count; i++)
-            {
-                PortData portData = inputData.portDatas[i];
-                Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                PortFactory.CreateInport(node, type, portData.name);
-            }
-
-            var outputData = new GraphOutputData(graph.GraphOutputNode);
-            for (var i = 0; i < outputData.portDatas.Count; i++)
-            {
-                PortData portData = outputData.portDatas[i];
-                Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                PortFactory.CreateOutport(node, type, portData.name);
-            }
 
             NodeView nodeView = CreateNodeElement(node);
             nodeTable.Add(node, nodeView);
