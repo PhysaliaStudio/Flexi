@@ -24,7 +24,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly List<SearchTreeEntry> nodeTreeEntries = new();
         private static readonly List<SearchTreeEntry> macroTreeEntries = new();
 
-        internal static List<SearchTreeEntry> SearchTree => searchTreeEntries;
+        internal static List<SearchTreeEntry> Get()
+        {
+            return searchTreeEntries;
+        }
 
         private static void Rebuild(bool didDomainReload)
         {

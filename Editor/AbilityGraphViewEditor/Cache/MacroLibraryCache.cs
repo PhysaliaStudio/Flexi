@@ -2,7 +2,7 @@ using UnityEditor;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
 {
-    internal static class MacroGraphCache
+    internal static class MacroLibraryCache
     {
         internal class Postprocessor : AssetPostprocessor
         {
@@ -14,7 +14,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private static readonly MacroLibrary macroLibrary = new();
 
-        internal static MacroLibrary Library => macroLibrary;
+        internal static MacroLibrary Get()
+        {
+            return macroLibrary;
+        }
 
         private static void Rebuild()
         {

@@ -18,7 +18,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
-            return SearchTreeEntriesCache.SearchTree;
+            return SearchTreeEntriesCache.Get();
         }
 
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context)
@@ -35,7 +35,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
             else if (searchTreeEntry.userData is string guid)
             {
-                graphView.CreateMacroNode(MacroGraphCache.Library, guid, localMousePosition);
+                graphView.CreateMacroNode(MacroLibraryCache.Get(), guid, localMousePosition);
                 window.SetDirty(true);
                 return true;
             }
