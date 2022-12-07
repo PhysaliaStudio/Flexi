@@ -128,7 +128,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool LoadFile(AbilityGraphAsset asset)
         {
-            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text);
+            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text, MacroGraphCache.Library);
             if (abilityGraph == null)
             {
                 return false;
