@@ -58,7 +58,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             window.Show();
         }
 
-        private void OnEnable()
+        private void CreateGUI()
         {
             if (uiAsset == null)
             {
