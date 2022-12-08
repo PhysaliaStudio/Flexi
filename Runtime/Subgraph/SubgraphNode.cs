@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
+    [HideFromSearchWindow]
     public sealed class SubgraphNode : ProcessNode
     {
         private enum State { STANDBY, ENTERED, EXITED }

@@ -14,4 +14,10 @@ namespace Physalia.AbilityFramework
             this.name = name.Trim('/');
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+    public sealed class HideFromSearchWindow : Attribute
+    {
+
+    }
 }

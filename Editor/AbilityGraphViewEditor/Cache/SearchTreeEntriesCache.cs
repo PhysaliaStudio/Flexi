@@ -18,7 +18,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         }
 
         private static readonly string TEST_ASSEMBLY_NAME = "Physalia.AbilityFramework.Editor.Tests";
-        private static readonly Type MISSING_NODE_TYPE = typeof(MissingNode);
 
         private static readonly List<SearchTreeEntry> searchTreeEntries = new();
         private static readonly List<SearchTreeEntry> nodeTreeEntries = new();
@@ -87,8 +86,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 {
                     if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(Node)))
                     {
-                        // Hide the internal node types
-                        if (type == MISSING_NODE_TYPE)
+                        if (type.GetCustomAttribute<HideFromSearchWindow>() != null)
                         {
                             continue;
                         }

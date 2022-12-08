@@ -2,6 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
+    [HideFromSearchWindow]
     internal class GraphOutputNode : FlowNode
     {
         private static readonly int NODE_ID = -2;
