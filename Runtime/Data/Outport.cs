@@ -34,6 +34,13 @@ namespace Physalia.AbilityFramework
         }
 
         internal abstract Func<object> GetValueConverter(Type toType);
+
+        /// <remarks>
+        /// This method is used at the border nodes of macros:
+        /// 1. From inports of MacroNodes to outports of GraphInputNodes
+        /// 2. From inports of GraphOutputNodes to outports of MacroNodes
+        /// </remarks>
+        internal abstract void SetValueFromInport(Inport inport);
     }
 
     public sealed class Outport<T> : Outport
@@ -66,6 +73,31 @@ namespace Physalia.AbilityFramework
             }
 
             return null;
+        }
+
+        /// <remarks>
+        /// This method is used at the border nodes of macros:
+        /// 1. From inports of MacroNodes to outports of GraphInputNodes
+        /// 2. From inports of GraphOutputNodes to outports of MacroNodes
+        /// </remarks>
+        internal override void SetValueFromInport(Inport inport)
+        {
+            if (inport is Inport<T> genericInport)
+            {
+                T value = genericInport.GetValue();
+                this.value = value;
+                return;
+            }
+
+            var convertFunc = inport.GetValueConverter(typeof(T));
+            if (convertFunc != null)
+            {
+                T value = (T)convertFunc.Invoke();
+                this.value = value;
+                return;
+            }
+
+            value = default;
         }
     }
 }

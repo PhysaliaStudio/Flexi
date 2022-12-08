@@ -21,5 +21,10 @@ namespace Physalia.AbilityFramework
         {
             return null;
         }
+
+        internal override void SetValueFromInport(Inport inport)
+        {
+
+        }
     }
 }

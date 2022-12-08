@@ -12,6 +12,22 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static AbilityGraphAsset HELLO_WORLD_MACRO_CALLER
+        {
+            get
+            {
+                return ReadAbilityFile("HelloWorld_MacroCaller");
+            }
+        }
+
+        public static MacroGraphAsset HELLO_WORLD_MACRO
+        {
+            get
+            {
+                return ReadMacroAsset("HelloWorld_Macro");
+            }
+        }
+
         public static AbilityGraphAsset HELLO_WORLD_MISSING_ELEMENTS
         {
             get
@@ -87,6 +103,12 @@ namespace Physalia.AbilityFramework.Tests
         private static AbilityGraphAsset ReadAbilityFile(string fileName)
         {
             var asset = Resources.Load<AbilityGraphAsset>(fileName);
+            return asset;
+        }
+
+        private static MacroGraphAsset ReadMacroAsset(string fileName)
+        {
+            var asset = Resources.Load<MacroGraphAsset>(fileName);
             return asset;
         }
     }

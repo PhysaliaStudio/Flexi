@@ -16,5 +16,10 @@ namespace Physalia.AbilityFramework
         {
             return false;
         }
+
+        internal override Func<object> GetValueConverter(Type toType)
+        {
+            return null;
+        }
     }
 }

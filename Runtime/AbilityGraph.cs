@@ -8,7 +8,8 @@ namespace Physalia.AbilityFramework
         private int indexOfEntryNode;
         private bool isRunning;
 
-        private readonly Stack<FlowNode> stack = new();
+        private readonly Stack<FlowNode> nodeStack = new();
+        private readonly Stack<Graph> graphStack = new();
 
         public FlowNode Current => currentNode;
 
@@ -18,7 +19,8 @@ namespace Physalia.AbilityFramework
             this.indexOfEntryNode = indexOfEntryNode;
             isRunning = false;
 
-            stack.Clear();
+            nodeStack.Clear();
+            graphStack.Clear();
 
             IReadOnlyList<Node> nodes = Nodes;
             for (var i = 0; i < nodes.Count; i++)
@@ -47,13 +49,19 @@ namespace Physalia.AbilityFramework
             }
 
             currentNode = currentNode.Next;
+
             if (currentNode != null)
             {
                 return true;
             }
-            else if (stack.Count > 0)
+            else if (nodeStack.Count > 0)
             {
-                FlowNode flowNode = stack.Pop();
+                if (graphStack.Count > 0)
+                {
+                    graphStack.Pop();
+                }
+
+                FlowNode flowNode = nodeStack.Pop();
                 currentNode = flowNode;
                 return true;
             }
@@ -65,7 +73,13 @@ namespace Physalia.AbilityFramework
 
         public void Push(FlowNode flowNode)
         {
-            stack.Push(flowNode);
+            nodeStack.Push(flowNode);
+        }
+
+        internal void PushGraph(AbilityGraph graph)
+        {
+            nodeStack.Push(currentNode);
+            graphStack.Push(graph);
         }
     }
 }
