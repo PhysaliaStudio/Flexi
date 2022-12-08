@@ -33,6 +33,13 @@ namespace Physalia.AbilityFramework
 
         protected override AbilityState DoLogic()
         {
+            // If this node has already finished before, reset for restarting.
+            // This may happen when looping.
+            if (state == State.EXITED)
+            {
+                Reset();
+            }
+
             if (state == State.STANDBY)
             {
                 state = State.ENTERED;

@@ -20,6 +20,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static AbilityGraphAsset HELLO_WORLD_MACRO_CALLER_5_TIMES
+        {
+            get
+            {
+                return ReadAbilityFile("HelloWorld_MacroCaller5Times");
+            }
+        }
+
         public static MacroGraphAsset HELLO_WORLD_MACRO
         {
             get
