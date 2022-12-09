@@ -4,22 +4,22 @@ namespace Physalia.AbilityFramework
 {
     public static class PortFactory
     {
-        public static void CreateInport<T>(Node node, string portName)
+        public static Inport CreateInport<T>(Node node, string portName)
         {
-            CreateInport(node, typeof(T), portName);
+            return CreateInport(node, typeof(T), portName);
         }
 
-        public static void CreateOutport<T>(Node node, string portName)
+        public static Outport CreateOutport<T>(Node node, string portName)
         {
-            CreateOutport(node, typeof(T), portName);
+            return CreateOutport(node, typeof(T), portName);
         }
 
-        public static void CreateInport(Node node, Type portType, string portName)
+        public static Inport CreateInport(Node node, Type portType, string portName)
         {
             if (node.GetPort(portName) != null)
             {
                 Logger.Error($"[{nameof(PortFactory)}] Node(type:{node.GetType().FullName}) already has the port named with {portName}");
-                return;
+                return null;
             }
 
             Type inportType = typeof(Inport<>).MakeGenericType(portType);
@@ -28,14 +28,16 @@ namespace Physalia.AbilityFramework
             inport.node = node;
             inport.name = portName;
             node.AddInport(portName, inport);
+
+            return inport;
         }
 
-        public static void CreateOutport(Node node, Type portType, string portName)
+        public static Outport CreateOutport(Node node, Type portType, string portName)
         {
             if (node.GetPort(portName) != null)
             {
                 Logger.Error($"[{nameof(PortFactory)}] Node(type:{node.GetType().FullName}) already has the port named with {portName}");
-                return;
+                return null;
             }
 
             Type outportType = typeof(Outport<>).MakeGenericType(portType);
@@ -44,6 +46,8 @@ namespace Physalia.AbilityFramework
             outport.node = node;
             outport.name = portName;
             node.AddOutport(portName, outport);
+
+            return outport;
         }
     }
 }
