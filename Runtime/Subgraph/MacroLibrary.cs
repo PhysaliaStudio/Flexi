@@ -6,17 +6,17 @@ namespace Physalia.AbilityFramework
 {
     public class MacroLibrary : Dictionary<string, string>
     {
-        public SubgraphNode AddMacroNode(Graph graph, string guid)
+        public SubgraphNode AddMacroNode(Graph graph, string macroKey)
         {
-            bool success = TryGetValue(guid, out string macroJson);
+            bool success = TryGetValue(macroKey, out string macroJson);
             if (!success)
             {
-                Logger.Error($"[{nameof(MacroLibrary)}] Get macro failed! guid: {guid}");
+                Logger.Error($"[{nameof(MacroLibrary)}] Get macro failed! guid: {macroKey}");
                 return null;
             }
 
             SubgraphNode node = graph.AddNewNode<SubgraphNode>();
-            node.guid = guid;
+            node.key = macroKey;
 
             Graph macro = JsonConvert.DeserializeObject<Graph>(macroJson);
 
@@ -46,10 +46,10 @@ namespace Physalia.AbilityFramework
             {
                 if (nodes[i] is SubgraphNode macroNode)
                 {
-                    bool success = TryGetValue(macroNode.guid, out string macroJson);
+                    bool success = TryGetValue(macroNode.key, out string macroJson);
                     if (!success)
                     {
-                        Logger.Error($"[{nameof(MacroLibrary)}] Get macro failed! guid: {macroNode.guid}");
+                        Logger.Error($"[{nameof(MacroLibrary)}] Get macro failed! guid: {macroNode.key}");
                         continue;
                     }
 

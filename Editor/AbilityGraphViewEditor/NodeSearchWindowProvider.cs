@@ -33,9 +33,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 window.SetDirty(true);
                 return true;
             }
-            else if (searchTreeEntry.userData is string guid)
+            else if (searchTreeEntry.userData is string macroKey)
             {
-                graphView.CreateMacroNode(MacroLibraryCache.Get(), guid, localMousePosition);
+                graphView.CreateMacroNode(MacroLibraryCache.Get(), macroKey, localMousePosition);
                 window.SetDirty(true);
                 return true;
             }

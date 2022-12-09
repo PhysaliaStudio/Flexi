@@ -303,7 +303,7 @@ namespace Physalia.AbilityFramework.Tests
         {
             Graph graph = new Graph();
             SubgraphNode subgraphNode = graph.AddNewNode<SubgraphNode>();
-            subgraphNode.guid = "1234";
+            subgraphNode.key = "1234";
 
             // Intentionally change node id for easier test
             subgraphNode.id = 1;
@@ -311,7 +311,7 @@ namespace Physalia.AbilityFramework.Tests
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"variables\":[]," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -324,14 +324,14 @@ namespace Physalia.AbilityFramework.Tests
             var json =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"variables\":[]," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             Graph graph = JsonConvert.DeserializeObject<Graph>(json);
 
             var subgraphNode = graph.GetNode(1) as SubgraphNode;
             Assert.NotNull(subgraphNode);
-            Assert.AreEqual("1234", subgraphNode.guid);
+            Assert.AreEqual("1234", subgraphNode.key);
         }
 
         [Test]
@@ -362,7 +362,7 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -376,7 +376,7 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"guid\":\"1234\"}]," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
             var macroJson =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +

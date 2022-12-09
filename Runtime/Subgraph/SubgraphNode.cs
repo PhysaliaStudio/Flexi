@@ -7,7 +7,7 @@ namespace Physalia.AbilityFramework
     {
         private enum State { STANDBY, ENTERED, EXITED }
 
-        public string guid;
+        public string key;
 
         private AbilityGraph macroGraph;
         private State state;
@@ -46,7 +46,7 @@ namespace Physalia.AbilityFramework
                 state = State.ENTERED;
 
                 // Get graph
-                macroGraph = Instance.System.GetMacroGraph(guid);
+                macroGraph = Instance.System.GetMacroGraph(key);
                 for (var i = 0; i < macroGraph.Nodes.Count; i++)
                 {
                     macroGraph.Nodes[i].instance = Instance;
