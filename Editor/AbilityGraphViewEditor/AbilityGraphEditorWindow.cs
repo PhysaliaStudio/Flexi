@@ -10,18 +10,18 @@ using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
 {
+    // Note: For handling missing clear callback method
+    // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
+    internal class ElementCallbackToken<T> : IDisposable
+    {
+        internal INotifyValueChanged<T> element;
+        internal EventCallback<ChangeEvent<T>> callback;
+
+        public void Dispose() => element.UnregisterValueChangedCallback(callback);
+    }
+
     public class AbilityGraphEditorWindow : EditorWindow
     {
-        // Note: For handling missing clear callback method
-        // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
-        private class ElementCallbackToken<T> : IDisposable
-        {
-            public INotifyValueChanged<T> element;
-            public EventCallback<ChangeEvent<T>> callback;
-
-            public void Dispose() => element.UnregisterValueChangedCallback(callback);
-        }
-
         private static readonly string WINDOW_TITLE = "Ability Graph Editor";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
