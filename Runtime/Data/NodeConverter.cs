@@ -42,8 +42,8 @@ namespace Physalia.AbilityFramework
             // Custom Fields
             if (node is SubgraphNode subgraphNode)
             {
-                JToken token = jsonObject[nameof(SubgraphNode.guid)];
-                subgraphNode.guid = token.ToObject<string>();
+                JToken token = jsonObject[nameof(SubgraphNode.key)];
+                subgraphNode.key = token.ToObject<string>();
             }
             else
             {
@@ -144,8 +144,8 @@ namespace Physalia.AbilityFramework
             // Custom Fields
             if (value is SubgraphNode subgraphNode)
             {
-                writer.WritePropertyName(nameof(SubgraphNode.guid));
-                serializer.Serialize(writer, subgraphNode.guid);
+                writer.WritePropertyName(nameof(SubgraphNode.key));
+                serializer.Serialize(writer, subgraphNode.key);
             }
             else
             {
