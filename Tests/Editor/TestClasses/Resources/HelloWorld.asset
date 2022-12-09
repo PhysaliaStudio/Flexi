@@ -12,23 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
   m_Name: HelloWorld
   m_EditorClassIdentifier: 
-  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
-    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 507088,\r\n      \"_position\":
-    {\r\n        \"x\": 54.0,\r\n        \"y\": 98.0\r\n      },\r\n      \"_type\":
-    \"Physalia.AbilityFramework.StartNode\"\r\n    },\r\n    {\r\n      \"_id\":
-    747695,\r\n      \"_position\": {\r\n        \"x\": 240.0,\r\n        \"y\":
-    161.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
-    },\r\n    {\r\n      \"_id\": 524447,\r\n      \"_position\": {\r\n        \"x\":
-    468.0,\r\n        \"y\": 175.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
-    },\r\n    {\r\n      \"_id\": 675591,\r\n      \"_position\": {\r\n        \"x\":
-    270.0,\r\n        \"y\": 316.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StringNode\",\r\n     
-    \"text\": \"World!\"\r\n    },\r\n    {\r\n      \"_id\": 135698,\r\n      \"_position\":
-    {\r\n        \"x\": 72.0,\r\n        \"y\": 292.0\r\n      },\r\n      \"_type\":
-    \"Physalia.AbilityFramework.StringNode\",\r\n      \"text\": \"Hello\"\r\n   
-    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 507088,\r\n      \"port1\":
-    \"next\",\r\n      \"id2\": 747695,\r\n      \"port2\": \"previous\"\r\n    },\r\n   
-    {\r\n      \"id1\": 747695,\r\n      \"port1\": \"next\",\r\n      \"id2\": 524447,\r\n     
-    \"port2\": \"previous\"\r\n    },\r\n    {\r\n      \"id1\": 135698,\r\n     
-    \"port1\": \"output\",\r\n      \"id2\": 747695,\r\n      \"port2\": \"text\"\r\n   
-    },\r\n    {\r\n      \"id1\": 675591,\r\n      \"port1\": \"output\",\r\n     
-    \"id2\": 524447,\r\n      \"port2\": \"text\"\r\n    }\r\n  ]\r\n}"
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":507088,"_position":{"x":54.0,"y":98.0},"_type":"Physalia.AbilityFramework.StartNode"},{"_id":747695,"_position":{"x":240.0,"y":161.0},"_type":"Physalia.AbilityFramework.LogNode"},{"_id":524447,"_position":{"x":468.0,"y":175.0},"_type":"Physalia.AbilityFramework.LogNode"},{"_id":675591,"_position":{"x":270.0,"y":316.0},"_type":"Physalia.AbilityFramework.StringNode","text":"World!"},{"_id":135698,"_position":{"x":72.0,"y":292.0},"_type":"Physalia.AbilityFramework.StringNode","text":"Hello"}],"edges":[{"id1":507088,"port1":"next","id2":747695,"port2":"previous"},{"id1":747695,"port1":"next","id2":524447,"port2":"previous"},{"id1":135698,"port1":"output","id2":747695,"port2":"text"},{"id1":675591,"port1":"output","id2":524447,"port2":"text"}]}'

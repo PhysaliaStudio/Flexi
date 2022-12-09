@@ -12,18 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
   m_Name: AttackDecrease
   m_EditorClassIdentifier: 
-  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
-    [\r\n    {\r\n      \"key\": \"value\",\r\n      \"value\": 2\r\n    }\r\n  ],\r\n 
-    \"nodes\": [\r\n    {\r\n      \"_id\": 852984,\r\n      \"_position\": {\r\n       
-    \"x\": 414.0,\r\n        \"y\": 154.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomAttackDecreaseNode\"\r\n   
-    },\r\n    {\r\n      \"_id\": 530024,\r\n      \"_position\": {\r\n        \"x\":
-    161.0,\r\n        \"y\": 302.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.BlackboardNode\",\r\n     
-    \"key\": \"value\"\r\n    },\r\n    {\r\n      \"_id\": 479755,\r\n      \"_position\":
-    {\r\n        \"x\": 74.0,\r\n        \"y\": 81.0\r\n      },\r\n      \"_type\":
-    \"Physalia.AbilityFramework.Tests.CustomNormalAttackEntryNode\"\r\n    }\r\n 
-    ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 479755,\r\n      \"port1\": \"next\",\r\n     
-    \"id2\": 852984,\r\n      \"port2\": \"previous\"\r\n    },\r\n    {\r\n     
-    \"id1\": 479755,\r\n      \"port1\": \"targetPort\",\r\n      \"id2\": 852984,\r\n     
-    \"port2\": \"targets\"\r\n    },\r\n    {\r\n      \"id1\": 530024,\r\n     
-    \"port1\": \"value\",\r\n      \"id2\": 852984,\r\n      \"port2\": \"baseValue\"\r\n   
-    }\r\n  ]\r\n}"
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[{"key":"value","value":2}],"nodes":[{"_id":852984,"_position":{"x":414.0,"y":154.0},"_type":"Physalia.AbilityFramework.Tests.CustomAttackDecreaseNode"},{"_id":530024,"_position":{"x":161.0,"y":302.0},"_type":"Physalia.AbilityFramework.BlackboardNode","key":"value"},{"_id":479755,"_position":{"x":74.0,"y":81.0},"_type":"Physalia.AbilityFramework.Tests.CustomNormalAttackEntryNode"}],"edges":[{"id1":479755,"port1":"next","id2":852984,"port2":"previous"},{"id1":479755,"port1":"targetPort","id2":852984,"port2":"targets"},{"id1":530024,"port1":"value","id2":852984,"port2":"baseValue"}]}'
