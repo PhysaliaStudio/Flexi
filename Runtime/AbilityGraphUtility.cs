@@ -9,9 +9,13 @@ namespace Physalia.AbilityFramework
             Formatting = Formatting.Indented,
         };
 
-        internal static AbilityGraph Deserialize(string graphName, string graphJson)
+        internal static AbilityGraph Deserialize(string graphName, string graphJson, MacroLibrary macroLibrary = null)
         {
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
+            if (macroLibrary != null)
+            {
+                macroLibrary.SetUpMacroNodes(graph);
+            }
 
             // Log missing elements
             foreach (Node node in graph.Nodes)

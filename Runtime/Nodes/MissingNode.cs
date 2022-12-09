@@ -1,5 +1,6 @@
 namespace Physalia.AbilityFramework
 {
+    [HideFromSearchWindow]
     internal sealed class MissingNode : Node, IIsMissing
     {
         private readonly string typeFullName;

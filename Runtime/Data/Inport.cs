@@ -32,6 +32,8 @@ namespace Physalia.AbilityFramework
         {
             return outports;
         }
+
+        internal abstract Func<object> GetValueConverter(Type toType);
     }
 
     public sealed class Inport<T> : Inport
@@ -64,6 +66,24 @@ namespace Physalia.AbilityFramework
             }
 
             return default;
+        }
+
+        internal override Func<object> GetValueConverter(Type toType)
+        {
+            T value = GetValue();
+
+            if (toType.IsAssignableFrom(ValueType))
+            {
+                return () => value;
+            }
+
+            var converter = GetConverter(ValueType, toType);
+            if (converter != null)
+            {
+                return () => converter(value);
+            }
+
+            return null;
         }
     }
 }

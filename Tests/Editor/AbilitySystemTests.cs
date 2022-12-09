@@ -416,5 +416,41 @@ namespace Physalia.AbilityFramework.Tests
             abilitySystem.EnqueueAbilityAndRun(instance, payload);
             Assert.AreEqual(5, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
+
+        [Test]
+        public void ExecuteAbilitiy_Macro()
+        {
+            var macro = CustomAbility.HELLO_WORLD_MACRO;
+            var assetPath = UnityEditor.AssetDatabase.GetAssetPath(macro);
+            var guid = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
+            abilitySystem.LoadMacroGraph(guid, macro);
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER);
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            abilitySystem.EnqueueAbilityAndRun(instance, null);
+
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "end");
+        }
+
+        [Test]
+        public void ExecuteAbilitiy_LoopMacro5Times()
+        {
+            var macro = CustomAbility.HELLO_WORLD_MACRO;
+            var assetPath = UnityEditor.AssetDatabase.GetAssetPath(macro);
+            var guid = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
+            abilitySystem.LoadMacroGraph(guid, macro);
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
+
+            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            abilitySystem.EnqueueAbilityAndRun(instance, null);
+
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "Hello World!");
+            LogAssert.Expect(LogType.Log, "end");
+        }
     }
 }

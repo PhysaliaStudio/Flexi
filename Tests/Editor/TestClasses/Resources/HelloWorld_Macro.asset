@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92fbae696a330a4ba1956f20907b71d, type: 3}
+  m_Name: HelloWorld_Macro
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"$input\":
+    {\r\n    \"position\": {\r\n      \"x\": 0.0,\r\n      \"y\": 250.0\r\n    },\r\n   
+    \"portDatas\": [\r\n      {\r\n        \"name\": \"strIn\",\r\n        \"type\":
+    \"System.String\"\r\n      }\r\n    ]\r\n  },\r\n  \"$output\": {\r\n    \"position\":
+    {\r\n      \"x\": 408.0,\r\n      \"y\": 250.0\r\n    },\r\n    \"portDatas\":
+    [\r\n      {\r\n        \"name\": \"strOut\",\r\n        \"type\": \"System.String\"\r\n     
+    }\r\n    ]\r\n  },\r\n  \"variables\": [],\r\n  \"nodes\": [\r\n    {\r\n     
+    \"_id\": 130798,\r\n      \"_position\": {\r\n        \"x\": 211.0,\r\n       
+    \"y\": 250.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.LogNode\"\r\n   
+    },\r\n    {\r\n      \"_id\": 470816,\r\n      \"_position\": {\r\n        \"x\":
+    220.0,\r\n        \"y\": 380.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StringNode\",\r\n     
+    \"text\": \"end\"\r\n    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\":
+    -1,\r\n      \"port1\": \"next\",\r\n      \"id2\": 130798,\r\n      \"port2\":
+    \"previous\"\r\n    },\r\n    {\r\n      \"id1\": -1,\r\n      \"port1\": \"strIn\",\r\n     
+    \"id2\": 130798,\r\n      \"port2\": \"text\"\r\n    },\r\n    {\r\n      \"id1\":
+    130798,\r\n      \"port1\": \"next\",\r\n      \"id2\": -2,\r\n      \"port2\":
+    \"previous\"\r\n    },\r\n    {\r\n      \"id1\": 470816,\r\n      \"port1\":
+    \"output\",\r\n      \"id2\": -2,\r\n      \"port2\": \"strOut\"\r\n    }\r\n 
+    ]\r\n}"

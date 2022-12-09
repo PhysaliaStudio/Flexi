@@ -13,6 +13,7 @@ namespace Physalia.AbilityFramework
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
 
+        private readonly MacroLibrary macroLibrary = new();
         private readonly Dictionary<int, AbilityGraphAsset> graphTable = new();
 
         private IEnumerable<Actor> overridedIteratorGetter;
@@ -38,6 +39,11 @@ namespace Physalia.AbilityFramework
             return ownerRepository.GetOwner(id);
         }
 
+        public void LoadMacroGraph(string key, MacroGraphAsset macroGraphAsset)
+        {
+            macroLibrary.Add(key, macroGraphAsset.Text);
+        }
+
         public void LoadAbilityGraph(int id, string graphName, string graphJson)
         {
             AbilityGraphAsset graphAsset = ScriptableObject.CreateInstance<AbilityGraphAsset>();
@@ -57,7 +63,20 @@ namespace Physalia.AbilityFramework
             }
 
             // Deserialize once to log potential errors
-            _ = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
+            _ = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
+        }
+
+        public AbilityGraph GetMacroGraph(string key)
+        {
+            bool success = macroLibrary.TryGetValue(key, out string macroJson);
+            if (!success)
+            {
+                Logger.Error($"[{nameof(AbilitySystem)}] Get macro failed! key: {key}");
+                return null;
+            }
+
+            AbilityGraph graph = AbilityGraphUtility.Deserialize("", macroJson, macroLibrary);
+            return graph;
         }
 
         public AbilityInstance GetAbilityInstance(int id)
@@ -69,7 +88,7 @@ namespace Physalia.AbilityFramework
                 return null;
             }
 
-            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
+            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
             AbilityInstance instance = new AbilityInstance(id, this, graph);
             return instance;
         }

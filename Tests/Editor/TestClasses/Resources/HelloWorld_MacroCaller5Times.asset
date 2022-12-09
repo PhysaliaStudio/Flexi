@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: HelloWorld_MacroCaller5Times
+  m_EditorClassIdentifier: 
+  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
+    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 739212,\r\n      \"_position\":
+    {\r\n        \"x\": 88.0,\r\n        \"y\": 111.0\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.StartNode\"\r\n    },\r\n    {\r\n      \"_id\":
+    621192,\r\n      \"_position\": {\r\n        \"x\": 485.0,\r\n        \"y\":
+    111.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.SubgraphNode\",\r\n     
+    \"guid\": \"47215dc30bca5704d9ce517a86f361be\"\r\n    },\r\n    {\r\n      \"_id\":
+    336900,\r\n      \"_position\": {\r\n        \"x\": 273.0,\r\n        \"y\":
+    261.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.StringNode\",\r\n     
+    \"text\": \"Hello World!\"\r\n    },\r\n    {\r\n      \"_id\": 575307,\r\n     
+    \"_position\": {\r\n        \"x\": 230.0,\r\n        \"y\": 111.0\r\n      },\r\n     
+    \"_type\": \"Physalia.AbilityFramework.ForLoopNode\"\r\n    },\r\n    {\r\n     
+    \"_id\": 664540,\r\n      \"_position\": {\r\n        \"x\": 76.0,\r\n       
+    \"y\": 222.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.IntegerNode\",\r\n     
+    \"value\": 5\r\n    },\r\n    {\r\n      \"_id\": 694805,\r\n      \"_position\":
+    {\r\n        \"x\": 670.0,\r\n        \"y\": 212.0\r\n      },\r\n      \"_type\":
+    \"Physalia.AbilityFramework.LogNode\"\r\n    }\r\n  ],\r\n  \"edges\": [\r\n   
+    {\r\n      \"id1\": 739212,\r\n      \"port1\": \"next\",\r\n      \"id2\": 575307,\r\n     
+    \"port2\": \"previousPort\"\r\n    },\r\n    {\r\n      \"id1\": 575307,\r\n     
+    \"port1\": \"loopBodyPort\",\r\n      \"id2\": 621192,\r\n      \"port2\": \"previous\"\r\n   
+    },\r\n    {\r\n      \"id1\": 575307,\r\n      \"port1\": \"completedPort\",\r\n     
+    \"id2\": 694805,\r\n      \"port2\": \"previous\"\r\n    },\r\n    {\r\n     
+    \"id1\": 664540,\r\n      \"port1\": \"output\",\r\n      \"id2\": 575307,\r\n     
+    \"port2\": \"endIndexPort\"\r\n    },\r\n    {\r\n      \"id1\": 621192,\r\n     
+    \"port1\": \"strOut\",\r\n      \"id2\": 694805,\r\n      \"port2\": \"text\"\r\n   
+    },\r\n    {\r\n      \"id1\": 336900,\r\n      \"port1\": \"output\",\r\n     
+    \"id2\": 621192,\r\n      \"port2\": \"strIn\"\r\n    }\r\n  ]\r\n}"

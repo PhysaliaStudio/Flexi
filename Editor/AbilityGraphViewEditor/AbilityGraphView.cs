@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -58,6 +59,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             Node node = abilityGraph.AddNewNode(nodeType);
             node.position = position;
+            NodeView nodeView = CreateNodeElement(node);
+            nodeTable.Add(node, nodeView);
+        }
+
+        public void CreateMacroNode(MacroLibrary macroLibrary, string guid, Vector2 position)
+        {
+            SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, guid);
+            node.position = position;
+
             NodeView nodeView = CreateNodeElement(node);
             nodeTable.Add(node, nodeView);
         }
@@ -153,9 +163,30 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             var graphView = new AbilityGraphView(abilityGraph, window);
 
             IReadOnlyList<Node> nodes = abilityGraph.Nodes;
-            if (nodes.Count == 0)
+            if (!abilityGraph.HasSubgraphElement() && nodes.Count == 0)
             {
                 return graphView;
+            }
+
+            // Create subgraph input/output if necessary
+            if (abilityGraph.GraphInputNode != null)
+            {
+                Node node = abilityGraph.GraphInputNode;
+
+                var nodeView = new NodeView(node, window);
+                nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
+                graphView.AddElement(nodeView);
+                graphView.nodeTable.Add(node, nodeView);
+            }
+
+            if (abilityGraph.GraphOutputNode != null)
+            {
+                Node node = abilityGraph.GraphOutputNode;
+
+                var nodeView = new NodeView(node, window);
+                nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
+                graphView.AddElement(nodeView);
+                graphView.nodeTable.Add(node, nodeView);
             }
 
             // Create nodes
@@ -177,12 +208,20 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             // Create edges with DFS
             var unhandledNodes = new HashSet<Node>();
+            if (abilityGraph.GraphInputNode != null)
+            {
+                unhandledNodes.Add(abilityGraph.GraphInputNode);
+            }
+            if (abilityGraph.GraphOutputNode != null)
+            {
+                unhandledNodes.Add(abilityGraph.GraphOutputNode);
+            }
             for (var i = 0; i < nodes.Count; i++)
             {
                 unhandledNodes.Add(nodes[i]);
             }
 
-            Node current = nodes[0];
+            Node current = abilityGraph.GetFirstNode();
             SearchAllNodes(current, ref graphView, ref unhandledNodes);
 
             return graphView;
