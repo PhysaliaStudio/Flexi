@@ -4,11 +4,6 @@ namespace Physalia.AbilityFramework
 {
     internal static class AbilityGraphUtility
     {
-        private static readonly JsonSerializerSettings SERIALIZER_SETTINGS = new()
-        {
-            Formatting = Formatting.Indented,
-        };
-
         internal static AbilityGraph Deserialize(string graphName, string graphJson, MacroLibrary macroLibrary = null)
         {
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
@@ -40,7 +35,7 @@ namespace Physalia.AbilityFramework
 
         internal static string Serialize(AbilityGraph abilityGraph)
         {
-            string json = JsonConvert.SerializeObject(abilityGraph, SERIALIZER_SETTINGS);
+            string json = JsonConvert.SerializeObject(abilityGraph);
             return json;
         }
 
