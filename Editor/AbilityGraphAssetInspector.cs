@@ -15,7 +15,7 @@ namespace Physalia.AbilityFramework
 
         private GUIStyle textStyle;
         private AbilityGraphAsset asset;
-        private string guid;
+        private string assetPath;
 
         private Hash128 lastDependencyHash;
         private GUIContent cachedPreview;
@@ -23,8 +23,7 @@ namespace Physalia.AbilityFramework
         private void OnEnable()
         {
             asset = target as AbilityGraphAsset;
-            string assetPath = AssetDatabase.GetAssetPath(asset);
-            guid = AssetDatabase.AssetPathToGUID(assetPath);
+            assetPath = AssetDatabase.GetAssetPath(asset);
             CachePreview();
         }
 
@@ -38,7 +37,7 @@ namespace Physalia.AbilityFramework
             base.OnInspectorGUI();
             EditorGUILayout.Space();
 
-            Hash128 dependencyHash = AssetDatabase.GetAssetDependencyHash(guid);
+            Hash128 dependencyHash = AssetDatabase.GetAssetDependencyHash(assetPath);
             if (lastDependencyHash != dependencyHash)
             {
                 CachePreview();
