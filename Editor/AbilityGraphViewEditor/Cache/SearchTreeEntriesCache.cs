@@ -127,37 +127,36 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             macroTreeEntries.Add(new SearchTreeGroupEntry(new GUIContent("Macros")) { level = 1 });
 
-            Dictionary<string, string> macroGuidToNameTable = GetMacroNameToGuidTable();
-            foreach (KeyValuePair<string, string> pair in macroGuidToNameTable)
+            Dictionary<string, string> macroKeyToNameTable = GetMacroKeyToNameTable();
+            foreach (KeyValuePair<string, string> pair in macroKeyToNameTable)
             {
-                string guid = pair.Key;
+                string key = pair.Key;
                 string name = pair.Value;
-                macroTreeEntries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = guid });
+                macroTreeEntries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = key });
             }
         }
 
 
-        private static Dictionary<string, string> GetMacroNameToGuidTable()
+        private static Dictionary<string, string> GetMacroKeyToNameTable()
         {
-            var macroGuidToNameTable = new Dictionary<string, string>();
+            var macroKeyToNameTable = new Dictionary<string, string>();
 
             string[] guids = AssetDatabase.FindAssets($"t:{nameof(MacroGraphAsset)}");
             var assetPaths = new string[guids.Length];
             for (var i = 0; i < guids.Length; i++)
             {
-                string guid = guids[i];
-
-                assetPaths[i] = AssetDatabase.GUIDToAssetPath(guid);
+                assetPaths[i] = AssetDatabase.GUIDToAssetPath(guids[i]);
                 string name = assetPaths[i].Split('/')[^1];
                 if (name.EndsWith(".asset"))
                 {
                     name = name.Substring(0, name.Length - ".asset".Length);
                 }
 
-                macroGuidToNameTable.Add(guid, name);
+                string key = name;  // TODO
+                macroKeyToNameTable.Add(key, name);
             }
 
-            return macroGuidToNameTable;
+            return macroKeyToNameTable;
         }
     }
 }

@@ -421,9 +421,7 @@ namespace Physalia.AbilityFramework.Tests
         public void ExecuteAbilitiy_Macro()
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
-            var assetPath = UnityEditor.AssetDatabase.GetAssetPath(macro);
-            var guid = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
-            abilitySystem.LoadMacroGraph(guid, macro);
+            abilitySystem.LoadMacroGraph(macro.name, macro);
             abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
@@ -437,9 +435,7 @@ namespace Physalia.AbilityFramework.Tests
         public void ExecuteAbilitiy_LoopMacro5Times()
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
-            var assetPath = UnityEditor.AssetDatabase.GetAssetPath(macro);
-            var guid = UnityEditor.AssetDatabase.AssetPathToGUID(assetPath);
-            abilitySystem.LoadMacroGraph(guid, macro);
+            abilitySystem.LoadMacroGraph(macro.name, macro);
             abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(1);

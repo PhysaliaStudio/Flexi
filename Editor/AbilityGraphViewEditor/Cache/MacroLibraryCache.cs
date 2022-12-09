@@ -33,7 +33,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
                 MacroGraphAsset macroGraphAsset = AssetDatabase.LoadAssetAtPath<MacroGraphAsset>(assetPath);
-                macroLibrary.Add(guids[i], macroGraphAsset.Text);
+                macroLibrary.Add(macroGraphAsset.name, macroGraphAsset.Text);
             }
         }
     }

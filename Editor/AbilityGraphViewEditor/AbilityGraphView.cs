@@ -63,9 +63,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             nodeTable.Add(node, nodeView);
         }
 
-        public void CreateMacroNode(MacroLibrary macroLibrary, string guid, Vector2 position)
+        public void CreateMacroNode(MacroLibrary macroLibrary, string macroKey, Vector2 position)
         {
-            SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, guid);
+            SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, macroKey);
             node.position = position;
 
             NodeView nodeView = CreateNodeElement(node);
