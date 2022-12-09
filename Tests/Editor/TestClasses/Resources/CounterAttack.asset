@@ -12,20 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
   m_Name: CounterAttack
   m_EditorClassIdentifier: 
-  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
-    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 829185,\r\n      \"_position\":
-    {\r\n        \"x\": 59.0,\r\n        \"y\": 107.0\r\n      },\r\n      \"_type\":
-    \"Physalia.AbilityFramework.Tests.CustomDamageEventNode\"\r\n    },\r\n    {\r\n     
-    \"_id\": 540835,\r\n      \"_position\": {\r\n        \"x\": 512.0,\r\n       
-    \"y\": 107.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomDamageNode\"\r\n   
-    },\r\n    {\r\n      \"_id\": 631924,\r\n      \"_position\": {\r\n        \"x\":
-    286.0,\r\n        \"y\": 262.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.Tests.CustomUnitNode\"\r\n   
-    }\r\n  ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 829185,\r\n      \"port1\":
-    \"next\",\r\n      \"id2\": 540835,\r\n      \"port2\": \"previous\"\r\n    },\r\n   
-    {\r\n      \"id1\": 829185,\r\n      \"port1\": \"instigatorPort\",\r\n     
-    \"id2\": 540835,\r\n      \"port2\": \"targets\"\r\n    },\r\n    {\r\n     
-    \"id1\": 829185,\r\n      \"port1\": \"targetPort\",\r\n      \"id2\": 540835,\r\n     
-    \"port2\": \"instigatorPort\"\r\n    },\r\n    {\r\n      \"id1\": 829185,\r\n     
-    \"port1\": \"targetPort\",\r\n      \"id2\": 631924,\r\n      \"port2\": \"customUnitPort\"\r\n   
-    },\r\n    {\r\n      \"id1\": 631924,\r\n      \"port1\": \"attackPort\",\r\n     
-    \"id2\": 540835,\r\n      \"port2\": \"baseValue\"\r\n    }\r\n  ]\r\n}"
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":829185,"_position":{"x":59.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageEventNode"},{"_id":540835,"_position":{"x":512.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageNode"},{"_id":631924,"_position":{"x":286.0,"y":262.0},"_type":"Physalia.AbilityFramework.Tests.CustomUnitNode"}],"edges":[{"id1":829185,"port1":"next","id2":540835,"port2":"previous"},{"id1":829185,"port1":"instigatorPort","id2":540835,"port2":"targets"},{"id1":829185,"port1":"targetPort","id2":540835,"port2":"instigatorPort"},{"id1":829185,"port1":"targetPort","id2":631924,"port2":"customUnitPort"},{"id1":631924,"port1":"attackPort","id2":540835,"port2":"baseValue"}]}'

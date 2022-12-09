@@ -1,3 +1,5 @@
+using System.IO;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -61,7 +63,7 @@ namespace Physalia.AbilityFramework
             }
             else
             {
-                text = asset.Text;
+                text = IndentJson(asset.Text);
                 if (text.Length >= MAX_CHARACTERS)
                 {
                     text = text.Substring(0, MAX_CHARACTERS) + "...\n\n<...etc...>";
@@ -69,6 +71,16 @@ namespace Physalia.AbilityFramework
             }
 
             cachedPreview = new GUIContent(text);
+        }
+
+        private static string IndentJson(string json)
+        {
+            using var sr = new StringReader(json);
+            using var sw = new StringWriter();
+            var jtr = new JsonTextReader(sr);
+            var jtw = new JsonTextWriter(sw) { Formatting = Formatting.Indented };
+            jtw.WriteToken(jtr);
+            return sw.ToString();
         }
     }
 }

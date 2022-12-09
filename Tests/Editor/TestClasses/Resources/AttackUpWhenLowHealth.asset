@@ -12,24 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
   m_Name: AttackUpWhenLowHealth
   m_EditorClassIdentifier: 
-  text: "{\r\n  \"_type\": \"Physalia.AbilityFramework.AbilityGraph\",\r\n  \"variables\":
-    [],\r\n  \"nodes\": [\r\n    {\r\n      \"_id\": 284761,\r\n      \"_position\":
-    {\r\n        \"x\": 56.0,\r\n        \"y\": 186.0\r\n      },\r\n      \"_type\":
-    \"Physalia.AbilityFramework.StatRefreshEventNode\"\r\n    },\r\n    {\r\n     
-    \"_id\": 534912,\r\n      \"_position\": {\r\n        \"x\": 497.0,\r\n       
-    \"y\": 201.0\r\n      },\r\n      \"_type\": \"Physalia.AbilityFramework.ConditionalModifierNode\",\r\n     
-    \"modifierVariable\": {\r\n        \"items\": [\r\n          {\r\n           
-    \"statId\": 11,\r\n            \"op\": 1,\r\n            \"value\": 2\r\n         
-    }\r\n        ]\r\n      }\r\n    },\r\n    {\r\n      \"_id\": 995143,\r\n     
-    \"_position\": {\r\n        \"x\": 252.0,\r\n        \"y\": 346.0\r\n      },\r\n     
-    \"_type\": \"Physalia.AbilityFramework.StatCompareNode\",\r\n      \"statId\":
-    1,\r\n      \"op\": 3,\r\n      \"value\": 3\r\n    },\r\n    {\r\n      \"_id\":
-    325630,\r\n      \"_position\": {\r\n        \"x\": 65.0,\r\n        \"y\": 284.0\r\n     
-    },\r\n      \"_type\": \"Physalia.AbilityFramework.OwnerNode\"\r\n    }\r\n 
-    ],\r\n  \"edges\": [\r\n    {\r\n      \"id1\": 284761,\r\n      \"port1\": \"next\",\r\n     
-    \"id2\": 534912,\r\n      \"port2\": \"previous\"\r\n    },\r\n    {\r\n     
-    \"id1\": 325630,\r\n      \"port1\": \"owner\",\r\n      \"id2\": 534912,\r\n     
-    \"port2\": \"ownersPort\"\r\n    },\r\n    {\r\n      \"id1\": 995143,\r\n     
-    \"port1\": \"resultPort\",\r\n      \"id2\": 534912,\r\n      \"port2\": \"enabledPort\"\r\n   
-    },\r\n    {\r\n      \"id1\": 325630,\r\n      \"port1\": \"owner\",\r\n     
-    \"id2\": 995143,\r\n      \"port2\": \"ownerPort\"\r\n    }\r\n  ]\r\n}"
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":284761,"_position":{"x":56.0,"y":186.0},"_type":"Physalia.AbilityFramework.StatRefreshEventNode"},{"_id":534912,"_position":{"x":497.0,"y":201.0},"_type":"Physalia.AbilityFramework.ConditionalModifierNode","modifierVariable":{"items":[{"statId":11,"op":1,"value":2}]}},{"_id":995143,"_position":{"x":252.0,"y":346.0},"_type":"Physalia.AbilityFramework.StatCompareNode","statId":1,"op":3,"value":3},{"_id":325630,"_position":{"x":65.0,"y":284.0},"_type":"Physalia.AbilityFramework.OwnerNode"}],"edges":[{"id1":284761,"port1":"next","id2":534912,"port2":"previous"},{"id1":325630,"port1":"owner","id2":534912,"port2":"ownersPort"},{"id1":995143,"port1":"resultPort","id2":534912,"port2":"enabledPort"},{"id1":325630,"port1":"owner","id2":995143,"port2":"ownerPort"}]}'
