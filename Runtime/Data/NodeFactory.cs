@@ -44,28 +44,20 @@ namespace Physalia.AbilityFramework
                 if (fieldType.IsSubclassOf(typeof(Inport)))
                 {
                     // If the inport is not defined, create a new instance.
-                    if (field.GetValue(node) is not Inport inport)
+                    if (field.GetValue(node) == null)
                     {
-                        inport = Activator.CreateInstance(fieldType) as Inport;
+                        Inport inport = node.CreateInportWithPortType(fieldType, field.Name);
                         field.SetValue(node, inport);
                     }
-
-                    inport.node = node;
-                    inport.name = field.Name;
-                    node.AddInport(field.Name, inport);
                 }
                 else if (fieldType.IsSubclassOf(typeof(Outport)))
                 {
                     // If the outport is not defined, create a new instance.
-                    if (field.GetValue(node) is not Outport outport)
+                    if (field.GetValue(node) == null)
                     {
-                        outport = Activator.CreateInstance(fieldType) as Outport;
+                        Outport outport = node.CreateOutportWithPortType(fieldType, field.Name);
                         field.SetValue(node, outport);
                     }
-
-                    outport.node = node;
-                    outport.name = field.Name;
-                    node.AddOutport(field.Name, outport);
                 }
                 else if (fieldType.IsSubclassOf(typeof(Variable)))
                 {

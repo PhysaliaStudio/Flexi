@@ -55,7 +55,7 @@ namespace Physalia.AbilityFramework
                     Port port1 = node1.GetPort(edge.port1);
                     if (port1 == null)
                     {
-                        var missingOutport = new MissingOutport(node1, edge.port1);
+                        var missingOutport = new MissingOutport(node1, edge.port1, true);
                         node1.AddOutport(edge.port1, missingOutport);
                         port1 = missingOutport;
                     }
@@ -64,7 +64,7 @@ namespace Physalia.AbilityFramework
                     Port port2 = node2.GetPort(edge.port2);
                     if (port2 == null)
                     {
-                        var missingInport = new MissingInport(node2, edge.port2);
+                        var missingInport = new MissingInport(node2, edge.port2, true);
                         node2.AddInport(edge.port2, missingInport);
                         port2 = missingInport;
                     }
@@ -105,7 +105,7 @@ namespace Physalia.AbilityFramework
                     continue;
                 }
 
-                PortFactory.CreateOutport(node, portDataType, portData.name);
+                node.CreateOutportWithArgumentType(portDataType, portData.name);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Physalia.AbilityFramework
                     continue;
                 }
 
-                PortFactory.CreateInport(node, portDataType, portData.name);
+                node.CreateInportWithArgumentType(portDataType, portData.name);
             }
         }
 
@@ -307,7 +307,7 @@ namespace Physalia.AbilityFramework
                         continue;
                     }
 
-                    if (handledNodes.Contains(inport.node))
+                    if (handledNodes.Contains(inport.Node))
                     {
                         continue;
                     }
@@ -315,12 +315,12 @@ namespace Physalia.AbilityFramework
                     var edge = new Edge
                     {
                         id1 = node.id,
-                        port1 = outport.name,
-                        id2 = inport.node.id,
-                        port2 = inport.name,
+                        port1 = outport.Name,
+                        id2 = inport.Node.id,
+                        port2 = inport.Name,
                     };
                     edges.Add(edge);
-                    linkedNodes.Add(inport.node);
+                    linkedNodes.Add(inport.Node);
                 }
             }
 
@@ -334,20 +334,20 @@ namespace Physalia.AbilityFramework
                         continue;
                     }
 
-                    if (handledNodes.Contains(outport.node))
+                    if (handledNodes.Contains(outport.Node))
                     {
                         continue;
                     }
 
                     var edge = new Edge
                     {
-                        id1 = outport.node.id,
-                        port1 = outport.name,
+                        id1 = outport.Node.id,
+                        port1 = outport.Name,
                         id2 = node.id,
-                        port2 = inport.name,
+                        port2 = inport.Name,
                     };
                     edges.Add(edge);
-                    linkedNodes.Add(outport.node);
+                    linkedNodes.Add(outport.Node);
                 }
             }
 

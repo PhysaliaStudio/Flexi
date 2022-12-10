@@ -7,6 +7,11 @@ namespace Physalia.AbilityFramework
     {
         protected readonly List<Outport> outports = new();
 
+        protected Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
+        {
+
+        }
+
         protected override bool CanConnectTo(Port port)
         {
             return port is Outport;
@@ -39,6 +44,11 @@ namespace Physalia.AbilityFramework
     public sealed class Inport<T> : Inport
     {
         public override Type ValueType => typeof(T);
+
+        internal Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
+        {
+
+        }
 
         public T GetValue()
         {

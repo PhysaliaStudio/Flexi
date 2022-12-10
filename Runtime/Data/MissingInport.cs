@@ -6,10 +6,9 @@ namespace Physalia.AbilityFramework
     {
         public override Type ValueType => Missing.TYPE;
 
-        internal MissingInport(Node node, string name)
+        internal MissingInport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
-            this.node = node;
-            this.name = name;
+
         }
 
         protected override bool CanConnectTo(Port port)

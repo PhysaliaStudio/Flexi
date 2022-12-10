@@ -6,17 +6,26 @@ namespace Physalia.AbilityFramework
 {
     public abstract class Port
     {
-        internal Node node;
-        internal string name;
+        private readonly Node node;
+        private readonly bool isDynamic;
+        private string name;
 
         public Node Node => node;
-        public string Name => name;
+        internal bool IsDynamic => isDynamic;
+        public string Name { get { return name; } internal set { name = value; } }
         public abstract Type ValueType { get; }
 
         protected abstract bool CanConnectTo(Port port);
         protected abstract void AddConnection(Port port);
         protected abstract void RemoveConnection(Port port);
         public abstract IReadOnlyList<Port> GetConnections();
+
+        protected Port(Node node, string name, bool isDynamic)
+        {
+            this.node = node;
+            this.name = name;
+            this.isDynamic = isDynamic;
+        }
 
         public void Connect(Port port)
         {

@@ -32,8 +32,8 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(nameof(node.input), node.input.Name);
             Assert.AreEqual(nameof(node.output), node.output.Name);
 
-            Assert.AreEqual(node.input, node.GetInput(nameof(node.input)));
-            Assert.AreEqual(node.output, node.GetOutput(nameof(node.output)));
+            Assert.AreEqual(node.input, node.GetInport(nameof(node.input)));
+            Assert.AreEqual(node.output, node.GetOutport(nameof(node.output)));
         }
 
         [Test]
@@ -56,10 +56,10 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(nameof(node.input), node.input.Name);
             Assert.AreEqual(nameof(node.output), node.output.Name);
 
-            Assert.AreEqual(node.next, node.GetOutput(nameof(node.next)));
-            Assert.AreEqual(node.previous, node.GetInput(nameof(node.previous)));
-            Assert.AreEqual(node.input, node.GetInput(nameof(node.input)));
-            Assert.AreEqual(node.output, node.GetOutput(nameof(node.output)));
+            Assert.AreEqual(node.next, node.GetOutport(nameof(node.next)));
+            Assert.AreEqual(node.previous, node.GetInport(nameof(node.previous)));
+            Assert.AreEqual(node.input, node.GetInport(nameof(node.input)));
+            Assert.AreEqual(node.output, node.GetOutport(nameof(node.output)));
         }
     }
 }

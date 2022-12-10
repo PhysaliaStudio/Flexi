@@ -19,17 +19,26 @@ namespace Physalia.AbilityFramework
         [NonSerialized]
         private readonly Dictionary<string, Outport> outports = new();
 
+        private readonly List<Inport> dynamicInports = new();
+        private readonly List<Outport> dynamicOutports = new();
+
         internal AbilityInstance instance;
 
         public IEnumerable<Port> Ports => ports.Values;
         public IEnumerable<Inport> Inports => inports.Values;
         public IEnumerable<Outport> Outports => outports.Values;
+        public IReadOnlyList<Inport> DynamicInports => dynamicInports;
+        public IReadOnlyList<Outport> DynamicOutports => dynamicOutports;
         public AbilityInstance Instance => instance;
 
         internal void AddInport(string name, Inport inport)
         {
             ports.Add(name, inport);
             inports.Add(name, inport);
+            if (inport.IsDynamic)
+            {
+                dynamicInports.Add(inport);
+            }
         }
 
         internal void RemoveInport(Inport inport)
@@ -39,12 +48,20 @@ namespace Physalia.AbilityFramework
             string name = inport.Name;
             ports.Remove(name);
             inports.Remove(name);
+            if (inport.IsDynamic)
+            {
+                dynamicInports.Remove(inport);
+            }
         }
 
         internal void AddOutport(string name, Outport outport)
         {
             ports.Add(name, outport);
             outports.Add(name, outport);
+            if (outport.IsDynamic)
+            {
+                dynamicOutports.Add(outport);
+            }
         }
 
         internal void RemoveOutport(Outport outport)
@@ -54,6 +71,10 @@ namespace Physalia.AbilityFramework
             string name = outport.Name;
             ports.Remove(name);
             outports.Remove(name);
+            if (outport.IsDynamic)
+            {
+                dynamicOutports.Remove(outport);
+            }
         }
 
         public Port GetPort(string name)
@@ -66,7 +87,7 @@ namespace Physalia.AbilityFramework
             return null;
         }
 
-        public Inport GetInput(string name)
+        public Inport GetInport(string name)
         {
             if (inports.TryGetValue(name, out Inport inport))
             {
@@ -76,7 +97,7 @@ namespace Physalia.AbilityFramework
             return null;
         }
 
-        public Outport GetOutput(string name)
+        public Outport GetOutport(string name)
         {
             if (outports.TryGetValue(name, out Outport outport))
             {
@@ -84,6 +105,87 @@ namespace Physalia.AbilityFramework
             }
 
             return null;
+        }
+
+        public bool TryRenamePort(string oldName, string newName)
+        {
+            // Ensure the port with the old name exists.
+            Port port = GetPort(oldName);
+            if (port == null)
+            {
+                Logger.Error($"The port with the old name '{oldName}' doesn't exist!");
+                return false;
+            }
+
+            // Ensure the port is dynamic
+            if (!port.IsDynamic)
+            {
+                Logger.Error($"The port with the old name '{oldName}' is not dynamic! You can only modify dynamic ports.");
+                return false;
+            }
+
+            // Ensure the new name is not used.
+            Port portWithNewName = GetPort(newName);
+            if (portWithNewName != null)
+            {
+                Logger.Error($"The new name '{newName}' has been used!");
+                return false;
+            }
+
+            port.Name = newName;
+            ports.Remove(oldName);
+            ports.Add(newName, port);
+
+            if (port is Inport inport)
+            {
+                inports.Remove(oldName);
+                inports.Add(oldName, inport);
+            }
+            else if (port is Outport outport)
+            {
+                outports.Remove(oldName);
+                outports.Add(oldName, outport);
+            }
+
+            return true;
+        }
+
+        public void InsertOrMoveDynamicPort(int index, Port port)
+        {
+            // Ensure the port belong to this node
+            if (port.Node != this)
+            {
+                Logger.Error($"The port with the name '{port.Name}' does not belong to this node!");
+                return;
+            }
+
+            // Ensure the port is dynamic
+            if (!port.IsDynamic)
+            {
+                Logger.Error($"The port with the name '{port.Name}' is not dynamic! You can only modify dynamic ports.");
+                return;
+            }
+
+            if (port is Inport inport)
+            {
+                if (index < 0 || index > dynamicInports.Count)
+                {
+                    throw new ArgumentException();
+                }
+
+                dynamicInports.Remove(inport);
+                dynamicInports.Insert(index, inport);
+            }
+            else if (port is Outport outport)
+            {
+                if (index < 0 || index > dynamicOutports.Count)
+                {
+                    throw new ArgumentException();
+                }
+
+                dynamicOutports.Remove(outport);
+                dynamicOutports.Insert(index, outport);
+            }
         }
 
         public void DisconnectAllPorts()
