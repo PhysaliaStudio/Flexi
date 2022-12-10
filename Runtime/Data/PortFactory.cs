@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 namespace Physalia.AbilityFramework
 {
@@ -6,15 +7,27 @@ namespace Physalia.AbilityFramework
     {
         public static Inport CreateInport<T>(Node node, string portName)
         {
-            return CreateInport(node, typeof(T), portName);
+            return CreateInportWithArgumentType(node, typeof(T), portName);
         }
 
         public static Outport CreateOutport<T>(Node node, string portName)
         {
-            return CreateOutport(node, typeof(T), portName);
+            return CreateOutportWithArgumentType(node, typeof(T), portName);
         }
 
-        public static Inport CreateInport(Node node, Type portType, string portName)
+        public static Inport CreateInportWithArgumentType(Node node, Type portType, string portName)
+        {
+            Type inportType = typeof(Inport<>).MakeGenericType(portType);
+            return CreateInportWithPortType(node, inportType, portName);
+        }
+
+        public static Outport CreateOutportWithArgumentType(Node node, Type portType, string portName)
+        {
+            Type outportType = typeof(Outport<>).MakeGenericType(portType);
+            return CreateOutportWithPortType(node, outportType, portName);
+        }
+
+        public static Inport CreateInportWithPortType(Node node, Type portType, string portName)
         {
             if (node.GetPort(portName) != null)
             {
@@ -22,17 +35,14 @@ namespace Physalia.AbilityFramework
                 return null;
             }
 
-            Type inportType = typeof(Inport<>).MakeGenericType(portType);
-            var inport = Activator.CreateInstance(inportType) as Inport;
-
-            inport.node = node;
-            inport.name = portName;
+            var inport = Activator.CreateInstance(portType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new object[] { node, portName }, null) as Inport;
             node.AddInport(portName, inport);
 
             return inport;
         }
 
-        public static Outport CreateOutport(Node node, Type portType, string portName)
+        public static Outport CreateOutportWithPortType(Node node, Type portType, string portName)
         {
             if (node.GetPort(portName) != null)
             {
@@ -40,11 +50,8 @@ namespace Physalia.AbilityFramework
                 return null;
             }
 
-            Type outportType = typeof(Outport<>).MakeGenericType(portType);
-            var outport = Activator.CreateInstance(outportType) as Outport;
-
-            outport.node = node;
-            outport.name = portName;
+            var outport = Activator.CreateInstance(portType,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null, new object[] { node, portName }, null) as Outport;
             node.AddOutport(portName, outport);
 
             return outport;

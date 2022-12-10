@@ -25,7 +25,7 @@ namespace Physalia.AbilityFramework
                 }
 
                 Type dataType = port.GetType().GenericTypeArguments[0];
-                portDatas.Add(new PortData { name = port.name, type = dataType.FullName });
+                portDatas.Add(new PortData { name = port.Name, type = dataType.FullName });
             }
         }
     }
@@ -51,7 +51,7 @@ namespace Physalia.AbilityFramework
                 }
 
                 Type dataType = port.GetType().GenericTypeArguments[0];
-                portDatas.Add(new PortData { name = port.name, type = dataType.FullName });
+                portDatas.Add(new PortData { name = port.Name, type = dataType.FullName });
             }
         }
     }
