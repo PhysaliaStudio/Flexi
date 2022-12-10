@@ -86,6 +86,42 @@ namespace Physalia.AbilityFramework
             return null;
         }
 
+        public bool TryRenamePort(string oldName, string newName)
+        {
+            // Ensure the port with the old name exists.
+            Port port = GetPort(oldName);
+            if (port == null)
+            {
+                Logger.Error($"The port with the old name '{oldName}' doesn't exist!");
+                return false;
+            }
+
+            // Ensure the new name is not used.
+            Port portWithNewName = GetPort(newName);
+            if (portWithNewName != null)
+            {
+                Logger.Error($"The new name '{newName}' has been used!");
+                return false;
+            }
+
+            port.Name = newName;
+            ports.Remove(oldName);
+            ports.Add(newName, port);
+
+            if (port is Inport inport)
+            {
+                inports.Remove(oldName);
+                inports.Add(oldName, inport);
+            }
+            else if (port is Outport outport)
+            {
+                outports.Remove(oldName);
+                outports.Add(oldName, outport);
+            }
+
+            return true;
+        }
+
         public void DisconnectAllPorts()
         {
             foreach (Port port in Ports)
