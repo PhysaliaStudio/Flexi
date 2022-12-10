@@ -6,7 +6,7 @@ namespace Physalia.AbilityFramework
     {
         public override Type ValueType => Missing.TYPE;
 
-        internal MissingOutport(Node node, string name) : base(node, name)
+        internal MissingOutport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
         }

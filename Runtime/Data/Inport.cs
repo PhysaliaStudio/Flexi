@@ -7,7 +7,7 @@ namespace Physalia.AbilityFramework
     {
         protected readonly List<Outport> outports = new();
 
-        protected Inport(Node node, string name) : base(node, name)
+        protected Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
         }
@@ -45,7 +45,7 @@ namespace Physalia.AbilityFramework
     {
         public override Type ValueType => typeof(T);
 
-        internal Inport(Node node, string name) : base(node, name)
+        internal Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
         }
