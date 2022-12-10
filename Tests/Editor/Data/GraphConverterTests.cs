@@ -158,7 +158,7 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(logNode, startNode.Next);
             Assert.AreEqual(startNode, logNode.Previous);
 
-            var missingPort = stringNode.GetOutput("value") as MissingOutport;
+            var missingPort = stringNode.GetOutport("value") as MissingOutport;
             Assert.NotNull(missingPort);
             Assert.AreEqual(logNode.text, missingPort.GetConnections()[0]);
         }
@@ -243,11 +243,11 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(new Vector2(1f, 2f), graph.GraphInputNode.position);
             Assert.AreEqual(new Vector2(8f, 4f), graph.GraphOutputNode.position);
 
-            Outport outport = graph.GraphInputNode.GetOutput("test1");
+            Outport outport = graph.GraphInputNode.GetOutport("test1");
             Assert.NotNull(outport, "The GraphInputNode doesn't receive custom ports");
             Assert.AreEqual(typeof(int), outport.ValueType);
 
-            Inport inport = graph.GraphOutputNode.GetInput("test2");
+            Inport inport = graph.GraphOutputNode.GetInport("test2");
             Assert.NotNull(inport, "The GraphOutputNode doesn't receive custom ports");
             Assert.AreEqual(typeof(string), inport.ValueType);
         }
@@ -263,7 +263,7 @@ namespace Physalia.AbilityFramework.Tests
             graph.GraphOutputNode.CreateInport<int>("test2");
 
             graph.GraphInputNode.next.Connect(graph.GraphOutputNode.previous);
-            graph.GraphInputNode.GetOutput("test1").Connect(graph.GraphOutputNode.GetInput("test2"));
+            graph.GraphInputNode.GetOutport("test1").Connect(graph.GraphOutputNode.GetInport("test2"));
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
@@ -293,8 +293,8 @@ namespace Physalia.AbilityFramework.Tests
             Graph graph = JsonConvert.DeserializeObject<Graph>(json);
             Assert.AreEqual(graph.GraphOutputNode.previous, graph.GraphInputNode.next.GetConnections()[0], "'next' and 'previous' didn't connect");
 
-            Outport test1 = graph.GraphInputNode.GetOutput("test1");
-            Inport test2 = graph.GraphOutputNode.GetInput("test2");
+            Outport test1 = graph.GraphInputNode.GetOutport("test1");
+            Inport test2 = graph.GraphOutputNode.GetInport("test2");
             Assert.AreEqual(test2, test1.GetConnections()[0], "'test1' and 'test2' didn't connect");
         }
 
@@ -351,7 +351,7 @@ namespace Physalia.AbilityFramework.Tests
             IntegerNode integerNode = graph.AddNewNode<IntegerNode>();
             SubgraphNode subgraphNode = macroLibrary.AddMacroNode(graph, "1234");
 
-            Inport test1 = subgraphNode.GetInput("test1");
+            Inport test1 = subgraphNode.GetInport("test1");
             integerNode.output.Connect(test1);
 
             // Intentionally change node id for easier test
@@ -392,8 +392,8 @@ namespace Physalia.AbilityFramework.Tests
             macroLibrary.SetUpMacroNodes(graph);
 
             var subgraphNode = graph.GetNode(2) as SubgraphNode;
-            Inport test1 = subgraphNode.GetInput("test1");
-            Outport test2 = subgraphNode.GetOutput("test2");
+            Inport test1 = subgraphNode.GetInport("test1");
+            Outport test2 = subgraphNode.GetOutport("test2");
             Assert.NotNull(test1, "The port 'test1' was not created.");
             Assert.NotNull(test2, "The port 'test2' was not created.");
 

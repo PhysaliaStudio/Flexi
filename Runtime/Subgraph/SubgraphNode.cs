@@ -60,7 +60,7 @@ namespace Physalia.AbilityFramework
                         continue;
                     }
 
-                    Outport macroOutport = macroGraph.GraphInputNode.GetOutput(inport.Name);
+                    Outport macroOutport = macroGraph.GraphInputNode.GetOutport(inport.Name);
                     macroOutport.SetValueFromInport(inport);
                 }
 
@@ -79,7 +79,7 @@ namespace Physalia.AbilityFramework
                         continue;
                     }
 
-                    Inport macroInport = macroGraph.GraphOutputNode.GetInput(outport.Name);
+                    Inport macroInport = macroGraph.GraphOutputNode.GetInport(outport.Name);
                     outport.SetValueFromInport(macroInport);
                 }
             }

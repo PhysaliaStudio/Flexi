@@ -66,7 +66,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = inputData.portDatas[i];
 
-                Inport existedPort = node.GetInput(portData.name);
+                Inport existedPort = node.GetInport(portData.name);
                 if (existedPort != null)
                 {
                     var portsCache = new List<Port>(existedPort.GetConnections());
@@ -79,7 +79,7 @@ namespace Physalia.AbilityFramework
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
                     node.CreateInportWithArgumentType(type, portData.name);
 
-                    Inport fixedPort = node.GetInput(portData.name);
+                    Inport fixedPort = node.GetInport(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
                     {
                         portsCache[j].Connect(fixedPort);
@@ -97,7 +97,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = outputData.portDatas[i];
 
-                Outport existedPort = node.GetOutput(portData.name);
+                Outport existedPort = node.GetOutport(portData.name);
                 if (existedPort != null)
                 {
                     var portsCache = new List<Port>(existedPort.GetConnections());
@@ -111,7 +111,7 @@ namespace Physalia.AbilityFramework
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
                     node.CreateOutportWithArgumentType(type, portData.name);
 
-                    Outport fixedPort = node.GetOutput(portData.name);
+                    Outport fixedPort = node.GetOutport(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
                     {
                         portsCache[j].Connect(fixedPort);

@@ -66,7 +66,7 @@ namespace Physalia.AbilityFramework
             return null;
         }
 
-        public Inport GetInput(string name)
+        public Inport GetInport(string name)
         {
             if (inports.TryGetValue(name, out Inport inport))
             {
@@ -76,7 +76,7 @@ namespace Physalia.AbilityFramework
             return null;
         }
 
-        public Outport GetOutput(string name)
+        public Outport GetOutport(string name)
         {
             if (outports.TryGetValue(name, out Outport outport))
             {
