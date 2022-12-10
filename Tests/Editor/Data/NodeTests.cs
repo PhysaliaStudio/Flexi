@@ -60,6 +60,17 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void TryRenamePort_PortWithOldNameIsNotDynamic_LogsErrorAndReturnsFalse()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            _ = node.CreateInport<int>("abc");  // Create a static port
+            bool success = node.TryRenamePort("abc", "def");
+
+            TestUtilities.LogAssertAnyString(LogType.Error);
+            Assert.AreEqual(false, success);
+        }
+
+        [Test]
         public void TryRenamePort_PortWithNewNameAlreadyExist_LogsErrorAndReturnsFalse()
         {
             Node node = NodeFactory.Create<EmptyNode>();
@@ -74,7 +85,7 @@ namespace Physalia.AbilityFramework.Tests
         public void TryRenamePort_Success_ThePortNameIsChanged()
         {
             Node node = NodeFactory.Create<EmptyNode>();
-            Inport inport = node.CreateInport<int>("abc");
+            Inport inport = node.CreateInport<int>("abc", true);
             bool success = node.TryRenamePort("abc", "def");
 
             Assert.AreEqual(true, success);
@@ -85,7 +96,7 @@ namespace Physalia.AbilityFramework.Tests
         public void TryRenamePort_Success_NoOtherPortCreated()
         {
             Node node = NodeFactory.Create<EmptyNode>();
-            Inport inport = node.CreateInport<int>("abc");
+            Inport inport = node.CreateInport<int>("abc", true);
 
             _ = node.TryRenamePort("abc", "def");
 
@@ -99,7 +110,7 @@ namespace Physalia.AbilityFramework.Tests
         {
             Node node = NodeFactory.Create<EmptyNode>();
             Node otherNode = NodeFactory.Create<EmptyNode>();
-            Inport inport = node.CreateInport<int>("abc");
+            Inport inport = node.CreateInport<int>("abc", true);
             Outport outport = otherNode.CreateOutport<int>("other");
             inport.Connect(outport);
 

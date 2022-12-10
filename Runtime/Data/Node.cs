@@ -117,6 +117,13 @@ namespace Physalia.AbilityFramework
                 return false;
             }
 
+            // Ensure the port is dynamic
+            if (!port.IsDynamic)
+            {
+                Logger.Error($"The port with the old name '{oldName}' is not dynamic! You can only modify dynamic ports.");
+                return false;
+            }
+
             // Ensure the new name is not used.
             Port portWithNewName = GetPort(newName);
             if (portWithNewName != null)
