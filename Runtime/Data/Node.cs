@@ -150,6 +150,44 @@ namespace Physalia.AbilityFramework
             return true;
         }
 
+        public void InsertOrMoveDynamicPort(int index, Port port)
+        {
+            // Ensure the port belong to this node
+            if (port.Node != this)
+            {
+                Logger.Error($"The port with the name '{port.Name}' does not belong to this node!");
+                return;
+            }
+
+            // Ensure the port is dynamic
+            if (!port.IsDynamic)
+            {
+                Logger.Error($"The port with the name '{port.Name}' is not dynamic! You can only modify dynamic ports.");
+                return;
+            }
+
+            if (port is Inport inport)
+            {
+                if (index < 0 || index > dynamicInports.Count)
+                {
+                    throw new ArgumentException();
+                }
+
+                dynamicInports.Remove(inport);
+                dynamicInports.Insert(index, inport);
+            }
+            else if (port is Outport outport)
+            {
+                if (index < 0 || index > dynamicOutports.Count)
+                {
+                    throw new ArgumentException();
+                }
+
+                dynamicOutports.Remove(outport);
+                dynamicOutports.Insert(index, outport);
+            }
+        }
+
         public void DisconnectAllPorts()
         {
             foreach (Port port in Ports)

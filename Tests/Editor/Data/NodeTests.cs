@@ -120,5 +120,41 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(1, connections.Count);
             Assert.AreEqual(outport, connections[0]);
         }
+
+        [Test]
+        public void InsertOrMoveDynamicPort_ThePortDoesNotBelongToTheTargetNode_LogsError()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Node otherNode = NodeFactory.Create<EmptyNode>();
+            Inport inport = otherNode.CreateInport<int>("abc", true);
+
+            node.InsertOrMoveDynamicPort(0, inport);
+
+            TestUtilities.LogAssertAnyString(LogType.Error);
+        }
+
+        [Test]
+        public void InsertOrMoveDynamicPort_ThePortIsNotDynamic_LogsError()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Inport inport = node.CreateInport<int>("abc");
+
+            node.InsertOrMoveDynamicPort(0, inport);
+
+            TestUtilities.LogAssertAnyString(LogType.Error);
+        }
+
+        [Test]
+        public void InsertOrMoveDynamicPort_Success_WorksAsExpected()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Inport abc = node.CreateInport<int>("abc", true);
+            Inport def = node.CreateInport<int>("def", true);
+
+            node.InsertOrMoveDynamicPort(0, def);
+
+            Assert.AreEqual(def, node.DynamicInports[0]);
+            Assert.AreEqual(abc, node.DynamicInports[1]);
+        }
     }
 }
