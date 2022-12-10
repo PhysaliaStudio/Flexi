@@ -8,6 +8,48 @@ namespace Physalia.AbilityFramework.Tests
     public class NodeTests
     {
         [Test]
+        public void AddDynamicInport()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Inport inport = node.CreateInport<int>("dyna", true);
+
+            Assert.AreEqual(true, inport.IsDynamic);
+            Assert.AreEqual(1, node.DynamicInports.Count);
+            Assert.AreEqual(inport, node.DynamicInports[0]);
+        }
+
+        [Test]
+        public void AddDynamicOutport()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Outport outport = node.CreateOutport<int>("dyna", true);
+
+            Assert.AreEqual(true, outport.IsDynamic);
+            Assert.AreEqual(1, node.DynamicOutports.Count);
+            Assert.AreEqual(outport, node.DynamicOutports[0]);
+        }
+
+        [Test]
+        public void RemoveDynamicInport()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Inport inport = node.CreateInport<int>("dyna", true);
+            node.RemoveInport(inport);
+
+            Assert.AreEqual(0, node.DynamicInports.Count);
+        }
+
+        [Test]
+        public void RemoveDynamicOutport()
+        {
+            Node node = NodeFactory.Create<EmptyNode>();
+            Outport outport = node.CreateOutport<int>("dyna", true);
+            node.RemoveOutport(outport);
+
+            Assert.AreEqual(0, node.DynamicOutports.Count);
+        }
+
+        [Test]
         public void TryRenamePort_PortWithOldNameDoesNotExist_LogsErrorAndReturnsFalse()
         {
             Node node = NodeFactory.Create<EmptyNode>();

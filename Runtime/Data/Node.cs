@@ -19,17 +19,26 @@ namespace Physalia.AbilityFramework
         [NonSerialized]
         private readonly Dictionary<string, Outport> outports = new();
 
+        private readonly List<Inport> dynamicInports = new();
+        private readonly List<Outport> dynamicOutports = new();
+
         internal AbilityInstance instance;
 
         public IEnumerable<Port> Ports => ports.Values;
         public IEnumerable<Inport> Inports => inports.Values;
         public IEnumerable<Outport> Outports => outports.Values;
+        public IReadOnlyList<Inport> DynamicInports => dynamicInports;
+        public IReadOnlyList<Outport> DynamicOutports => dynamicOutports;
         public AbilityInstance Instance => instance;
 
         internal void AddInport(string name, Inport inport)
         {
             ports.Add(name, inport);
             inports.Add(name, inport);
+            if (inport.IsDynamic)
+            {
+                dynamicInports.Add(inport);
+            }
         }
 
         internal void RemoveInport(Inport inport)
@@ -39,12 +48,20 @@ namespace Physalia.AbilityFramework
             string name = inport.Name;
             ports.Remove(name);
             inports.Remove(name);
+            if (inport.IsDynamic)
+            {
+                dynamicInports.Remove(inport);
+            }
         }
 
         internal void AddOutport(string name, Outport outport)
         {
             ports.Add(name, outport);
             outports.Add(name, outport);
+            if (outport.IsDynamic)
+            {
+                dynamicOutports.Add(outport);
+            }
         }
 
         internal void RemoveOutport(Outport outport)
@@ -54,6 +71,10 @@ namespace Physalia.AbilityFramework
             string name = outport.Name;
             ports.Remove(name);
             outports.Remove(name);
+            if (outport.IsDynamic)
+            {
+                dynamicOutports.Remove(outport);
+            }
         }
 
         public Port GetPort(string name)
