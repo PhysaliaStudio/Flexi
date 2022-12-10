@@ -46,7 +46,7 @@ namespace Physalia.AbilityFramework
                     // If the inport is not defined, create a new instance.
                     if (field.GetValue(node) == null)
                     {
-                        Inport inport = PortFactory.CreateInportWithPortType(node, fieldType, field.Name);
+                        Inport inport = node.CreateInportWithPortType(fieldType, field.Name);
                         field.SetValue(node, inport);
                     }
                 }
@@ -55,7 +55,7 @@ namespace Physalia.AbilityFramework
                     // If the outport is not defined, create a new instance.
                     if (field.GetValue(node) == null)
                     {
-                        Outport outport = PortFactory.CreateOutportWithPortType(node, fieldType, field.Name);
+                        Outport outport = node.CreateOutportWithPortType(fieldType, field.Name);
                         field.SetValue(node, outport);
                     }
                 }

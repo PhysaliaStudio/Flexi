@@ -25,7 +25,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = inputData.portDatas[i];
                 Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                PortFactory.CreateInportWithArgumentType(node, type, portData.name);
+                node.CreateInportWithArgumentType(type, portData.name);
             }
 
             var outputData = new GraphOutputData(macro.GraphOutputNode);
@@ -33,7 +33,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = outputData.portDatas[i];
                 Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                PortFactory.CreateOutportWithArgumentType(node, type, portData.name);
+                node.CreateOutportWithArgumentType(type, portData.name);
             }
 
             return node;
@@ -77,7 +77,7 @@ namespace Physalia.AbilityFramework
                     node.RemoveInport(existedPort);
 
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    PortFactory.CreateInportWithArgumentType(node, type, portData.name);
+                    node.CreateInportWithArgumentType(type, portData.name);
 
                     Inport fixedPort = node.GetInput(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
@@ -88,7 +88,7 @@ namespace Physalia.AbilityFramework
                 else
                 {
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    PortFactory.CreateInportWithArgumentType(node, type, portData.name);
+                    node.CreateInportWithArgumentType(type, portData.name);
                 }
             }
 
@@ -109,7 +109,7 @@ namespace Physalia.AbilityFramework
                     node.RemoveOutport(existedPort);
 
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    PortFactory.CreateOutportWithArgumentType(node, type, portData.name);
+                    node.CreateOutportWithArgumentType(type, portData.name);
 
                     Outport fixedPort = node.GetOutput(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
@@ -120,7 +120,7 @@ namespace Physalia.AbilityFramework
                 else
                 {
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    PortFactory.CreateOutportWithArgumentType(node, type, portData.name);
+                    node.CreateOutportWithArgumentType(type, portData.name);
                 }
             }
         }
