@@ -32,11 +32,19 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly string SAVE_BUTTON_NAME = "save-button";
         private static readonly string RELOAD_BUTTON_NAME = "reload-button";
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
+
+        private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
         [SerializeField]
         private VisualTreeAsset uiAsset = null;
+
+        [Space]
+        [SerializeField]
+        private VisualTreeAsset nodeInspectorAsset;
+        [SerializeField]
+        private VisualTreeAsset portListViewItemAsset;
         [SerializeField]
         private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
@@ -115,6 +123,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
+            SetUpNodeInspector();
+
             if (currentAsset == null)
             {
                 NewGraphView();
@@ -124,6 +134,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 objectField.SetValueWithoutNotify(currentAsset);
                 LoadFile(currentAsset);
             }
+        }
+
+        private void SetUpNodeInspector()
+        {
+            VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
+            nodeInspectorParent.Add(new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset));
         }
 
         private bool LoadFile(AbilityGraphAsset asset)
