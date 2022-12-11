@@ -52,7 +52,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private AbilityGraphAsset currentAsset = null;
 
         private ObjectField objectField;
+
         private AbilityGraphView graphView;
+        private NodeInspector nodeInspector;
         private Blackboard blackboard;
         private bool isDirty;
 
@@ -139,7 +141,18 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void SetUpNodeInspector()
         {
             VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
-            nodeInspectorParent.Add(new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset));
+            nodeInspector = new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset);
+            nodeInspectorParent.Add(nodeInspector);
+        }
+
+        public void ShowNodeInspector(NodeView nodeView)
+        {
+            nodeInspector.SetNodeView(nodeView);
+        }
+
+        public void HideNodeInspector()
+        {
+            nodeInspector.SetNodeView(null);
         }
 
         private bool LoadFile(AbilityGraphAsset asset)

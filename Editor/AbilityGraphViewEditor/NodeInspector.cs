@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
@@ -20,6 +21,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private readonly HashSet<VisualElement> bindingItems = new();
         private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
+        private ListView listView;
         private NodeView currentNodeView;
 
         public NodeInspector(AbilityGraphEditorWindow window, VisualTreeAsset uiAsset, VisualTreeAsset listViewItemAsset) : base()
@@ -34,7 +36,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             uiAsset.CloneTree(this);
 
-            ListView listView = this.Query<ListView>().First();
+            listView = this.Query<ListView>().First();
             listView.itemsSource = portDatas;
 
             listView.itemsAdded += OnItemsAdded;
@@ -50,6 +52,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             window.SetDirty(true);
             foreach (int i in indexes)
             {
+                // The new item has empty name and null type, so we don't create the port now
                 portDatas[i] = new PortData();
             }
         }
@@ -57,11 +60,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void OnItemsRemoved(IEnumerable<int> indexes)
         {
             window.SetDirty(true);
+            foreach (int i in indexes)
+            {
+                currentNodeView.RemovePort(Direction.Output, i);
+            }
         }
 
         private void OnItemIndexChanged(int index1, int index2)
         {
             window.SetDirty(true);
+            currentNodeView.ChangePortIndex(Direction.Output, index1, index2);
         }
 
         private VisualElement MakeItem()
@@ -90,9 +98,42 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = nameField,
                     callback = evt =>
                     {
-                        window.SetDirty(true);
-                        portData.name = evt.newValue;
-                        // TODO: Rename port
+                        if (string.IsNullOrEmpty(evt.newValue))
+                        {
+                            nameField.SetValueWithoutNotify(evt.previousValue);
+                            return;
+                        }
+
+                        Port portWithNewName = currentNodeView.GetPort(evt.newValue);
+                        if (portWithNewName != null)
+                        {
+                            nameField.SetValueWithoutNotify(evt.previousValue);
+                            return;
+                        }
+
+                        Port port = currentNodeView.GetPort(evt.previousValue);
+                        if (port == null)
+                        {
+                            portData.name = evt.newValue;
+                            if (!string.IsNullOrEmpty(evt.newValue) && portData.type != null)
+                            {
+                                window.SetDirty(true);
+                                currentNodeView.AddPort(portData.name, Direction.Output, portData.type);
+                            }
+                        }
+                        else
+                        {
+                            bool success = currentNodeView.TryRenamePort(evt.previousValue, evt.newValue);
+                            if (success)
+                            {
+                                window.SetDirty(true);
+                                portData.name = evt.newValue;
+                            }
+                            else
+                            {
+                                nameField.SetValueWithoutNotify(evt.previousValue);
+                            }
+                        }
                     },
                 };
                 callbackTable.Add(nameField, token);
@@ -107,12 +148,28 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     element = typeField,
                     callback = evt =>
                     {
-                        window.SetDirty(true);
                         Type type = ReflectionUtilities.GetTypeByName(evt.newValue);
-                        if (type != null)
+                        if (type == null)
                         {
-                            portData.type = type;
-                            // TODO: Change Port Type
+                            typeField.SetValueWithoutNotify(evt.previousValue);
+                            return;
+                        }
+
+                        portData.type = type;
+
+                        Port port = currentNodeView.GetPort(portData.name);
+                        if (port == null)
+                        {
+                            if (!string.IsNullOrEmpty(portData.name) && portData.type != null)
+                            {
+                                window.SetDirty(true);
+                                currentNodeView.AddPort(portData.name, Direction.Output, portData.type);
+                            }
+                        }
+                        else
+                        {
+                            window.SetDirty(true);
+                            currentNodeView.ChangePortType(portData.name, type);
                         }
                     },
                 };
@@ -141,6 +198,33 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         public void SetNodeView(NodeView nodeView)
         {
             currentNodeView = nodeView;
+            if (currentNodeView == null)
+            {
+                listView.itemsSource = null;
+                listView.Rebuild();
+                portDatas.Clear();
+                visible = false;
+            }
+            else
+            {
+                listView.itemsSource = null;
+                portDatas.Clear();
+
+                IReadOnlyList<Outport> dynamicOutports = nodeView.Node.DynamicOutports;
+                for (var i = 0; i < dynamicOutports.Count; i++)
+                {
+                    var portData = new PortData
+                    {
+                        name = dynamicOutports[i].Name,
+                        type = dynamicOutports[i].ValueType
+                    };
+                    portDatas.Add(portData);
+                }
+
+                listView.itemsSource = portDatas;
+                listView.Rebuild();
+                visible = true;
+            }
         }
     }
 }

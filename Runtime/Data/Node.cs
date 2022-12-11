@@ -150,6 +150,92 @@ namespace Physalia.AbilityFramework
             return true;
         }
 
+        public void ChangeDynamicPortType(string portName, Type newType)
+        {
+            Port oldPort = GetPort(portName);
+
+            //IReadOnlyList<Port> connections = oldPort.GetConnections();  // Cache the connections
+
+            if (oldPort is Inport inport)
+            {
+                int oldIndex = dynamicInports.IndexOf(inport);  // Cache the index;
+
+                RemoveInport(inport);
+                Port newPort = this.CreateInportWithArgumentType(newType, portName, true);
+                InsertOrMoveDynamicPort(oldIndex, newPort);
+            }
+            else if (oldPort is Outport outport)
+            {
+                int oldIndex = dynamicOutports.IndexOf(outport);  // Cache the index;
+
+                RemoveOutport(outport);
+                Port newPort = this.CreateOutportWithArgumentType(newType, portName, true);
+                InsertOrMoveDynamicPort(oldIndex, newPort);
+            }
+        }
+
+        public int GetCountOfStaticInport()
+        {
+            return inports.Count - dynamicInports.Count;
+        }
+
+        public int GetCountOfStaticOutport()
+        {
+            return outports.Count - dynamicOutports.Count;
+        }
+
+        public Inport GetDynamicInport(int index)
+        {
+            return dynamicInports[index];
+        }
+
+        public Outport GetDynamicOutport(int index)
+        {
+            return dynamicOutports[index];
+        }
+
+        public int GetIndexOfDynamicPort(Port port)
+        {
+            // Ensure the port belong to this node
+            if (port.Node != this)
+            {
+                Logger.Error($"The port with the name '{port.Name}' does not belong to this node!");
+                return -1;
+            }
+
+            // Ensure the port is dynamic
+            if (!port.IsDynamic)
+            {
+                Logger.Error($"The port with the name '{port.Name}' is not dynamic! You can only modify dynamic ports.");
+                return -1;
+            }
+
+            if (port is Inport inport)
+            {
+                return dynamicInports.IndexOf(inport);
+            }
+            else if (port is Outport outport)
+            {
+                return dynamicOutports.IndexOf(outport);
+            }
+
+            return -1;
+        }
+
+        public void SwapDynamicInportIndex(int index1, int index2)
+        {
+            Inport temp = dynamicInports[index1];
+            dynamicInports[index1] = dynamicInports[index2];
+            dynamicInports[index2] = temp;
+        }
+
+        public void SwapDynamicOutportIndex(int index1, int index2)
+        {
+            Outport temp = dynamicOutports[index1];
+            dynamicOutports[index1] = dynamicOutports[index2];
+            dynamicOutports[index2] = temp;
+        }
+
         public void InsertOrMoveDynamicPort(int index, Port port)
         {
             // Ensure the port belong to this node

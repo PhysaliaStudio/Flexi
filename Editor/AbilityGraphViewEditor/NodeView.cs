@@ -247,5 +247,205 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             return null;
         }
+
+        public Port GetPort(string name)
+        {
+            return node.GetPort(name);
+        }
+
+        public void AddPort(string name, Direction direction, Type type)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return;
+            }
+
+            Port port = node.GetPort(name);
+            if (port != null)
+            {
+                return;
+            }
+
+            if (direction == Direction.Input)
+            {
+                port = node.CreateInportWithArgumentType(type, name, true);
+            }
+            else if (direction == Direction.Output)
+            {
+                port = node.CreateOutportWithArgumentType(type, name, true);
+            }
+
+            AddPortView(port);
+        }
+
+        private void AddPortView(Port port, int index = -1)
+        {
+            if (port is Inport)
+            {
+                PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, port.ValueType);
+                portView.portName = GetPortName(port.Name);
+                if (index == -1)
+                {
+                    inputContainer.Add(portView);
+                }
+                else
+                {
+                    inputContainer.Insert(index, portView);
+                }
+
+                if (port is MissingInport)
+                {
+                    portView.portColor = MISSING_PORT_COLOR;
+                }
+
+                portDataToViewTable.Add(port, portView);
+                portViewToDataTable.Add(portView, port);
+            }
+            else if (port is Outport)
+            {
+                PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, port.ValueType);
+                portView.portName = GetPortName(port.Name);
+                if (index == -1)
+                {
+                    outputContainer.Add(portView);
+                }
+                else
+                {
+                    outputContainer.Insert(index, portView);
+                }
+
+                if (port is MissingOutport)
+                {
+                    portView.portColor = MISSING_PORT_COLOR;
+                }
+
+                portDataToViewTable.Add(port, portView);
+                portViewToDataTable.Add(portView, port);
+            }
+        }
+
+        public void RemovePort(Direction direction, int index)
+        {
+            if (direction == Direction.Input)
+            {
+                Inport inport = node.GetDynamicInport(index);
+                if (inport == null)
+                {
+                    return;
+                }
+
+                node.RemoveInport(inport);
+                RemovePortView(inport);
+            }
+            else if (direction == Direction.Output)
+            {
+                Outport outport = node.GetDynamicOutport(index);
+                if (outport == null)
+                {
+                    return;
+                }
+
+                node.RemoveOutport(outport);
+                RemovePortView(outport);
+            }
+        }
+
+        private void RemovePortView(Port port)
+        {
+            PortView portView = GetPortView(port);
+            if (portView == null)
+            {
+                return;
+            }
+
+            if (portView.direction == Direction.Input)
+            {
+                inputContainer.Remove(portView);
+            }
+            else if (portView.direction == Direction.Output)
+            {
+                outputContainer.Remove(portView);
+            }
+
+            portDataToViewTable.Remove(port);
+            portViewToDataTable.Remove(portView);
+        }
+
+        public void ChangePortIndex(Direction direction, int index1, int index2)
+        {
+            if (direction == Direction.Input)
+            {
+                Port port = node.GetDynamicInport(index1);
+                node.InsertOrMoveDynamicPort(index2, port);
+
+                PortView portView = GetPortView(port);
+                inputContainer.Remove(portView);
+
+                int portViewNewIndex = index2 + node.GetCountOfStaticInport();
+                inputContainer.Insert(portViewNewIndex, portView);
+            }
+            else if (direction == Direction.Output)
+            {
+                Port port = node.GetDynamicOutport(index1);
+                node.InsertOrMoveDynamicPort(index2, port);
+
+                PortView portView = GetPortView(port);
+                outputContainer.Remove(portView);
+
+                int portViewNewIndex = index2 + node.GetCountOfStaticOutport();
+                outputContainer.Insert(portViewNewIndex, portView);
+            }
+        }
+
+        public bool TryRenamePort(string oldName, string newName)
+        {
+            // Ensure the port with the old name exists.
+            Port port = node.GetPort(oldName);
+            if (port == null)
+            {
+                Logger.Error($"The port with the old name '{oldName}' doesn't exist!");
+                return false;
+            }
+
+            // Ensure the new name is not used.
+            Port portWithNewName = node.GetPort(newName);
+            if (portWithNewName != null)
+            {
+                Logger.Error($"The new name '{newName}' has been used!");
+                return false;
+            }
+
+            bool success = node.TryRenamePort(oldName, newName);
+            if (!success)
+            {
+                return false;
+            }
+
+            PortView portView = portDataToViewTable[port];
+            portView.portName = newName;
+            return true;
+        }
+
+        public void ChangePortType(string name, Type type)
+        {
+            Port oldPort = node.GetPort(name);
+            RemovePortView(oldPort);
+
+            node.ChangeDynamicPortType(name, type);
+
+            Port newPort = node.GetPort(name);
+            int index = node.GetIndexOfDynamicPort(newPort);
+
+            if (newPort is Inport)
+            {
+                index += node.GetCountOfStaticInport();
+            }
+            else if (newPort is Outport)
+            {
+                index += node.GetCountOfStaticOutport();
+            }
+
+            AddPortView(newPort, index);
+        }
     }
 }

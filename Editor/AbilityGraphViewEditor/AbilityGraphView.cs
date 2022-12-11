@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -156,6 +155,38 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 }
             }
             return compatiblePorts;
+        }
+
+        public override void AddToSelection(ISelectable selectable)
+        {
+            base.AddToSelection(selectable);
+            if (selection.Count == 1 && selection[0] is NodeView nodeView)
+            {
+                window.ShowNodeInspector(nodeView);
+            }
+            else
+            {
+                window.HideNodeInspector();
+            }
+        }
+
+        public override void RemoveFromSelection(ISelectable selectable)
+        {
+            base.RemoveFromSelection(selectable);
+            if (selection.Count == 1 && selection[0] is NodeView nodeView)
+            {
+                window.ShowNodeInspector(nodeView);
+            }
+            else
+            {
+                window.HideNodeInspector();
+            }
+        }
+
+        public override void ClearSelection()
+        {
+            base.ClearSelection();
+            window.HideNodeInspector();
         }
 
         public static AbilityGraphView Create(AbilityGraph abilityGraph, AbilityGraphEditorWindow window)
