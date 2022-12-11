@@ -17,13 +17,11 @@ namespace Physalia.AbilityFramework
         internal GraphInputData(GraphInputNode node)
         {
             position = node.position;
-            foreach (Port port in node.Outports)
-            {
-                if (port == node.next)
-                {
-                    continue;
-                }
 
+            IReadOnlyList<Outport> dynamicOutports = node.DynamicOutports;
+            for (var i = 0; i < dynamicOutports.Count; i++)
+            {
+                Port port = dynamicOutports[i];
                 Type dataType = port.GetType().GenericTypeArguments[0];
                 portDatas.Add(new PortData { name = port.Name, type = dataType.FullName });
             }
@@ -43,13 +41,11 @@ namespace Physalia.AbilityFramework
         internal GraphOutputData(GraphOutputNode node)
         {
             position = node.position;
-            foreach (Port port in node.Inports)
-            {
-                if (port == node.previous)
-                {
-                    continue;
-                }
 
+            IReadOnlyList<Inport> dynamicInports = node.DynamicInports;
+            for (var i = 0; i < dynamicInports.Count; i++)
+            {
+                Port port = dynamicInports[i];
                 Type dataType = port.GetType().GenericTypeArguments[0];
                 portDatas.Add(new PortData { name = port.Name, type = dataType.FullName });
             }
