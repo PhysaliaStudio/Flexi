@@ -14,8 +14,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private DynamicPortListView dynamicInportListView;
         private DynamicPortListView dynamicOutportListView;
 
-        private NodeView currentNodeView;
-
         public NodeInspector(AbilityGraphEditorWindow window, VisualTreeAsset uiAsset, VisualTreeAsset listViewItemAsset) : base()
         {
             this.window = window;
@@ -40,17 +38,41 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         public void SetNodeView(NodeView nodeView)
         {
-            currentNodeView = nodeView;
             dynamicInportListView.SetNodeView(nodeView);
             dynamicOutportListView.SetNodeView(nodeView);
 
-            if (currentNodeView == null)
+            if (nodeView == null)
             {
                 visible = false;
+                return;
             }
-            else
+
+            visible = true;
+
+            Node node = nodeView.Node;
+            if (node is GraphInputNode)
             {
-                visible = true;
+                if (dynamicInportGroup.parent == this)
+                {
+                    Remove(dynamicInportGroup);
+                }
+
+                if (dynamicOutportGroup.parent == null)
+                {
+                    Add(dynamicOutportGroup);
+                }
+            }
+            else if (node is GraphOutputNode)
+            {
+                if (dynamicInportGroup.parent == null)
+                {
+                    Add(dynamicInportGroup);
+                }
+
+                if (dynamicOutportGroup.parent == this)
+                {
+                    Remove(dynamicOutportGroup);
+                }
             }
         }
     }
