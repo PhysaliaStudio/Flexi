@@ -139,12 +139,12 @@ namespace Physalia.AbilityFramework
             if (port is Inport inport)
             {
                 inports.Remove(oldName);
-                inports.Add(oldName, inport);
+                inports.Add(newName, inport);
             }
             else if (port is Outport outport)
             {
                 outports.Remove(oldName);
-                outports.Add(oldName, outport);
+                outports.Add(newName, outport);
             }
 
             return true;

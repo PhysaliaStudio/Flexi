@@ -103,6 +103,8 @@ namespace Physalia.AbilityFramework.Tests
             Assert.AreEqual(1, node.Ports.Count());
             Assert.AreEqual(null, node.GetPort("abc"));
             Assert.AreEqual(inport, node.GetPort("def"));
+            Assert.AreEqual(null, node.GetInport("abc"));
+            Assert.AreEqual(inport, node.GetInport("def"));
         }
 
         [Test]
