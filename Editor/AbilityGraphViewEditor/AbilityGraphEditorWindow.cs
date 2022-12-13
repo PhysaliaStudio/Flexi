@@ -163,6 +163,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return false;
             }
 
+            HideNodeInspector();
+
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
             SetDirty(false);
