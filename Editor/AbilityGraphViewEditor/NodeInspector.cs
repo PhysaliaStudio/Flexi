@@ -26,6 +26,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             uiAsset.CloneTree(this);
 
+            dynamicInportListView = new DynamicPortListView(window, Direction.Input, listViewItemAsset);
+            Add(dynamicInportListView);
+
             dynamicOutportListView = new DynamicPortListView(window, Direction.Output, listViewItemAsset);
             Add(dynamicOutportListView);
         }
@@ -33,6 +36,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         public void SetNodeView(NodeView nodeView)
         {
             currentNodeView = nodeView;
+            dynamicInportListView.SetNodeView(nodeView);
             dynamicOutportListView.SetNodeView(nodeView);
         }
     }
