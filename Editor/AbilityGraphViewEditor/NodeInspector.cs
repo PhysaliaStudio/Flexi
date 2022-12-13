@@ -9,6 +9,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private readonly VisualTreeAsset uiAsset;
         private readonly VisualTreeAsset listViewItemAsset;
 
+        private Label nodeNameLabel;
         private VisualElement dynamicInportGroup;
         private VisualElement dynamicOutportGroup;
         private DynamicPortListView dynamicInportListView;
@@ -25,6 +26,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void CreateGUI()
         {
             uiAsset.CloneTree(this);
+
+            nodeNameLabel = this.Query<Label>("node-name");
 
             dynamicInportGroup = this.Query("inport-group");
             dynamicOutportGroup = this.Query("outport-group");
@@ -50,6 +53,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             visible = true;
 
             Node node = nodeView.Node;
+            nodeNameLabel.text = node.GetType().Name;
+
             if (node is GraphInputNode)
             {
                 if (dynamicInportGroup.parent == this)
