@@ -79,6 +79,18 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     Remove(dynamicOutportGroup);
                 }
             }
+            else
+            {
+                if (dynamicInportGroup.parent == this)
+                {
+                    Remove(dynamicInportGroup);
+                }
+
+                if (dynamicOutportGroup.parent == this)
+                {
+                    Remove(dynamicOutportGroup);
+                }
+            }
         }
     }
 }
