@@ -7,30 +7,36 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class DynamicPortListView : VisualElement
     {
+        public new class UxmlFactory : UxmlFactory<DynamicPortListView, UxmlTraits> { }
+
         private class PortData
         {
             public string name = "";
             public Type type = null;
         }
 
-        private readonly VisualTreeAsset listViewItemAsset;
+        private VisualTreeAsset listViewItemAsset;
 
-        private readonly AbilityGraphEditorWindow window;
-        private readonly Direction direction;
+        private AbilityGraphEditorWindow window;
+        private Direction direction;
+
         private ListView listView;
-
         private NodeView currentNodeView;
         private readonly List<PortData> portDatas = new();
 
         private readonly HashSet<VisualElement> bindingItems = new();
         private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
-        public DynamicPortListView(AbilityGraphEditorWindow window, Direction direction, VisualTreeAsset listViewItemAsset)
+        public DynamicPortListView()
+        {
+            CreateGUI();
+        }
+
+        public void SetUp(AbilityGraphEditorWindow window, Direction direction, VisualTreeAsset listViewItemAsset)
         {
             this.window = window;
             this.direction = direction;
             this.listViewItemAsset = listViewItemAsset;
-            CreateGUI();
         }
 
         private void CreateGUI()
@@ -208,7 +214,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 listView.itemsSource = null;
                 listView.Rebuild();
                 portDatas.Clear();
-                visible = false;
             }
             else
             {
@@ -240,7 +245,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
                 listView.itemsSource = portDatas;
                 listView.Rebuild();
-                visible = true;
             }
         }
     }
