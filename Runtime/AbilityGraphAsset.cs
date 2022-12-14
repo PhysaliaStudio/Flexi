@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
-    [CreateAssetMenu(fileName = "GraphAsset", menuName = "Physalia/Ability System/Graph Asset", order = 1)]
+    [CreateAssetMenu(fileName = "GraphAsset", menuName = "Ability System/Graph Asset", order = 151)]
     public class AbilityGraphAsset : ScriptableObject
     {
         [SerializeField]

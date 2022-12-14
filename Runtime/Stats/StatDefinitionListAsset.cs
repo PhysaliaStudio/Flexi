@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
-    [CreateAssetMenu(fileName = "NewStatDefinitionListAsset", menuName = "Physalia/Ability System/Stat List Asset", order = 0)]
+    [CreateAssetMenu(fileName = "NewStatDefinitionListAsset", menuName = "Ability System/Stat List Asset", order = 150)]
     public class StatDefinitionListAsset : ScriptableObject
     {
         public string namespaceName = "";
