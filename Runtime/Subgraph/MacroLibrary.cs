@@ -25,7 +25,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = inputData.portDatas[i];
                 Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                node.CreateInportWithArgumentType(type, portData.name);
+                node.CreateInportWithArgumentType(type, portData.name, true);
             }
 
             var outputData = new GraphOutputData(macro.GraphOutputNode);
@@ -33,7 +33,7 @@ namespace Physalia.AbilityFramework
             {
                 PortData portData = outputData.portDatas[i];
                 Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                node.CreateOutportWithArgumentType(type, portData.name);
+                node.CreateOutportWithArgumentType(type, portData.name, true);
             }
 
             return node;
@@ -77,7 +77,7 @@ namespace Physalia.AbilityFramework
                     node.RemoveInport(existedPort);
 
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    node.CreateInportWithArgumentType(type, portData.name);
+                    node.CreateInportWithArgumentType(type, portData.name, true);
 
                     Inport fixedPort = node.GetInport(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
@@ -88,7 +88,7 @@ namespace Physalia.AbilityFramework
                 else
                 {
                     Type type = ReflectionUtilities.GetTypeByName(portData.type);
-                    node.CreateInportWithArgumentType(type, portData.name);
+                    node.CreateInportWithArgumentType(type, portData.name, true);
                 }
             }
 

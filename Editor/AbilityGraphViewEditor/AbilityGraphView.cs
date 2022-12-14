@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -86,7 +85,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private NodeView CreateNodeElement(Node node)
         {
-            var nodeView = new NodeView(node, window);
+            var nodeView = new NodeView(node, window, this);
             nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
             AddElement(nodeView);
             return nodeView;
@@ -116,6 +115,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             PortView portView2 = anotherNodeView.GetPortView(port2);
             EdgeView edgeView = portView1.ConnectTo(portView2);
             AddElement(edgeView);
+        }
+
+        public void RemoveEdgeView(EdgeView edgeView)
+        {
+            edgeView.input?.Disconnect(edgeView);
+            edgeView.output?.Disconnect(edgeView);
+            RemoveElement(edgeView);
+        }
+
+        public void RemoveAllEdgeViewsFromPortView(PortView portView)
+        {
+            var edgeViews = new List<EdgeView>(portView.connections);
+            for (var i = 0; i < edgeViews.Count; i++)
+            {
+                RemoveEdgeView(edgeViews[i]);
+            }
         }
 
         public void ValidateNodeIds()
@@ -158,6 +173,38 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return compatiblePorts;
         }
 
+        public override void AddToSelection(ISelectable selectable)
+        {
+            base.AddToSelection(selectable);
+            if (selection.Count == 1 && selection[0] is NodeView nodeView)
+            {
+                window.ShowNodeInspector(nodeView);
+            }
+            else
+            {
+                window.HideNodeInspector();
+            }
+        }
+
+        public override void RemoveFromSelection(ISelectable selectable)
+        {
+            base.RemoveFromSelection(selectable);
+            if (selection.Count == 1 && selection[0] is NodeView nodeView)
+            {
+                window.ShowNodeInspector(nodeView);
+            }
+            else
+            {
+                window.HideNodeInspector();
+            }
+        }
+
+        public override void ClearSelection()
+        {
+            base.ClearSelection();
+            window.HideNodeInspector();
+        }
+
         public static AbilityGraphView Create(AbilityGraph abilityGraph, AbilityGraphEditorWindow window)
         {
             var graphView = new AbilityGraphView(abilityGraph, window);
@@ -173,7 +220,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node node = abilityGraph.GraphInputNode;
 
-                var nodeView = new NodeView(node, window);
+                var nodeView = new NodeView(node, window, graphView);
                 nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
                 graphView.nodeTable.Add(node, nodeView);
@@ -183,7 +230,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node node = abilityGraph.GraphOutputNode;
 
-                var nodeView = new NodeView(node, window);
+                var nodeView = new NodeView(node, window, graphView);
                 nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
                 graphView.nodeTable.Add(node, nodeView);
@@ -194,7 +241,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node nodeData = nodes[i];
 
-                var node = new NodeView(nodeData, window);
+                var node = new NodeView(nodeData, window, graphView);
                 node.SetPosition(new Rect(nodeData.position, node.GetPosition().size));
                 graphView.AddElement(node);
 

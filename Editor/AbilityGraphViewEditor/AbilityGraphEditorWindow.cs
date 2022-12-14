@@ -10,18 +10,18 @@ using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
 namespace Physalia.AbilityFramework.GraphViewEditor
 {
+    // Note: For handling missing clear callback method
+    // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
+    internal class ElementCallbackToken<T> : IDisposable
+    {
+        internal INotifyValueChanged<T> element;
+        internal EventCallback<ChangeEvent<T>> callback;
+
+        public void Dispose() => element.UnregisterValueChangedCallback(callback);
+    }
+
     public class AbilityGraphEditorWindow : EditorWindow
     {
-        // Note: For handling missing clear callback method
-        // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
-        private class ElementCallbackToken<T> : IDisposable
-        {
-            public INotifyValueChanged<T> element;
-            public EventCallback<ChangeEvent<T>> callback;
-
-            public void Dispose() => element.UnregisterValueChangedCallback(callback);
-        }
-
         private static readonly string WINDOW_TITLE = "Ability Graph Editor";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
@@ -32,11 +32,19 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly string SAVE_BUTTON_NAME = "save-button";
         private static readonly string RELOAD_BUTTON_NAME = "reload-button";
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
+
+        private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
         [SerializeField]
         private VisualTreeAsset uiAsset = null;
+
+        [Space]
+        [SerializeField]
+        private VisualTreeAsset nodeInspectorAsset;
+        [SerializeField]
+        private VisualTreeAsset portListViewItemAsset;
         [SerializeField]
         private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
@@ -44,7 +52,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private AbilityGraphAsset currentAsset = null;
 
         private ObjectField objectField;
+
         private AbilityGraphView graphView;
+        private NodeInspector nodeInspector;
         private Blackboard blackboard;
         private bool isDirty;
 
@@ -115,6 +125,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
+            SetUpNodeInspector();
+
             if (currentAsset == null)
             {
                 NewGraphView();
@@ -126,6 +138,23 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
         }
 
+        private void SetUpNodeInspector()
+        {
+            VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
+            nodeInspector = new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset);
+            nodeInspectorParent.Add(nodeInspector);
+        }
+
+        public void ShowNodeInspector(NodeView nodeView)
+        {
+            nodeInspector.SetNodeView(nodeView);
+        }
+
+        public void HideNodeInspector()
+        {
+            nodeInspector.SetNodeView(null);
+        }
+
         private bool LoadFile(AbilityGraphAsset asset)
         {
             AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text, MacroLibraryCache.Get());
@@ -133,6 +162,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 return false;
             }
+
+            HideNodeInspector();
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);

@@ -105,7 +105,7 @@ namespace Physalia.AbilityFramework
                     continue;
                 }
 
-                node.CreateOutportWithArgumentType(portDataType, portData.name);
+                node.CreateOutportWithArgumentType(portDataType, portData.name, true);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Physalia.AbilityFramework
                     continue;
                 }
 
-                node.CreateInportWithArgumentType(portDataType, portData.name);
+                node.CreateInportWithArgumentType(portDataType, portData.name, true);
             }
         }
 
