@@ -92,8 +92,11 @@ public static class {className}
                 className = PathToFileName(statDefinitionListAsset.scriptAssetPath);
             }
 
+            string folderPath = !string.IsNullOrEmpty(statDefinitionListAsset.scriptAssetPath) ?
+                AssetPathToFolderPath(statDefinitionListAsset.scriptAssetPath) : "Assets/";
+
             var assetPath = EditorUtility.SaveFilePanelInProject("Save StatId cs file", className, "cs",
-                "Please enter a file name to save the script to", statDefinitionListAsset.scriptAssetPath);
+                "Please enter a file name to save the script to", folderPath);
             return assetPath;
         }
 
@@ -104,6 +107,13 @@ public static class {className}
             string ext = fileInfo.Extension;
             string className = fileNameWithExt.Remove(fileNameWithExt.Length - ext.Length, ext.Length);
             return className;
+        }
+
+        private static string AssetPathToFolderPath(string assetPath)
+        {
+            var fileInfo = new FileInfo(assetPath);
+            string folderPath = fileInfo.Directory.FullName.Replace('\\', '/');
+            return folderPath;
         }
 
         private static string ToConstantName(string name)
