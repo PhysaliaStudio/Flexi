@@ -85,7 +85,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private NodeView CreateNodeElement(Node node)
         {
-            var nodeView = new NodeView(node, window);
+            var nodeView = new NodeView(node, window, this);
             nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
             AddElement(nodeView);
             return nodeView;
@@ -115,6 +115,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             PortView portView2 = anotherNodeView.GetPortView(port2);
             EdgeView edgeView = portView1.ConnectTo(portView2);
             AddElement(edgeView);
+        }
+
+        public void RemoveEdgeView(EdgeView edgeView)
+        {
+            edgeView.input?.Disconnect(edgeView);
+            edgeView.output?.Disconnect(edgeView);
+            RemoveElement(edgeView);
+        }
+
+        public void RemoveAllEdgeViewsFromPortView(PortView portView)
+        {
+            var edgeViews = new List<EdgeView>(portView.connections);
+            for (var i = 0; i < edgeViews.Count; i++)
+            {
+                RemoveEdgeView(edgeViews[i]);
+            }
         }
 
         public void ValidateNodeIds()
@@ -204,7 +220,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node node = abilityGraph.GraphInputNode;
 
-                var nodeView = new NodeView(node, window);
+                var nodeView = new NodeView(node, window, graphView);
                 nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
                 graphView.nodeTable.Add(node, nodeView);
@@ -214,7 +230,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node node = abilityGraph.GraphOutputNode;
 
-                var nodeView = new NodeView(node, window);
+                var nodeView = new NodeView(node, window, graphView);
                 nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
                 graphView.nodeTable.Add(node, nodeView);
@@ -225,7 +241,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Node nodeData = nodes[i];
 
-                var node = new NodeView(nodeData, window);
+                var node = new NodeView(nodeData, window, graphView);
                 node.SetPosition(new Rect(nodeData.position, node.GetPosition().size));
                 graphView.AddElement(node);
 

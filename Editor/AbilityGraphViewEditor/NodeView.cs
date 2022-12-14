@@ -18,15 +18,17 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private readonly Node node;
         private readonly AbilityGraphEditorWindow window;
+        private readonly AbilityGraphView graphView;
         private readonly Dictionary<Port, PortView> portDataToViewTable = new();
         private readonly Dictionary<PortView, Port> portViewToDataTable = new();
 
         public Node Node => node;
 
-        public NodeView(Node node, AbilityGraphEditorWindow window) : base()
+        public NodeView(Node node, AbilityGraphEditorWindow window, AbilityGraphView graphView) : base()
         {
             this.node = node;
             this.window = window;
+            this.graphView = graphView;
             HandleNodeStyles(node);
             CreatePorts();
         }
@@ -358,6 +360,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 return;
             }
 
+            // Remove all connected edges
+            graphView.RemoveAllEdgeViewsFromPortView(portView);
+
+            // Remove the port
             if (portView.direction == Direction.Input)
             {
                 inputContainer.Remove(portView);
