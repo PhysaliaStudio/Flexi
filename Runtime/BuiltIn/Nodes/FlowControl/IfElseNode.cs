@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.AbilityFramework
 {
     [NodeCategory("Built-in/Flow Control")]
-    public class BranchNode : FlowNode
+    public class IfElseNode : FlowNode
     {
         internal Inport<FlowNode> previousPort;
         internal Inport<bool> conditionPort;
