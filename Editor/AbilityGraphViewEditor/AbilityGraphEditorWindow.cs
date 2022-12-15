@@ -314,6 +314,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewGraphView()
         {
+            HideNodeInspector();
+
             SetUpGraphView(new AbilityGraphView(this));
             SetDirty(false);
             objectField.SetValueWithoutNotify(null);
@@ -322,6 +324,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewMacroGraphView()
         {
+            HideNodeInspector();
+
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();
             graph.GraphInputNode.position = new Vector2(0, 250);
