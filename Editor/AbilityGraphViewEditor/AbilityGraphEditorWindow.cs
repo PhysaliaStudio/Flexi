@@ -40,6 +40,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         [SerializeField]
         private VisualTreeAsset uiAsset = null;
+        [SerializeField]
+        private StyleSheet uiStyleSheet;
 
         [Space]
         [SerializeField]
@@ -100,6 +102,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             uiAsset.CloneTree(rootVisualElement);
+            rootVisualElement.styleSheets.Add(uiStyleSheet);
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
             objectField.objectType = typeof(AbilityGraphAsset);
@@ -311,6 +314,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewGraphView()
         {
+            HideNodeInspector();
+
             SetUpGraphView(new AbilityGraphView(this));
             SetDirty(false);
             objectField.SetValueWithoutNotify(null);
@@ -319,6 +324,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void NewMacroGraphView()
         {
+            HideNodeInspector();
+
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();
             graph.GraphInputNode.position = new Vector2(0, 250);

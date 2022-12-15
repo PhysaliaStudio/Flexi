@@ -9,8 +9,8 @@
         <ui:VisualElement name="space" style="width: 50px;" />
         <uie:ToolbarButton name="new-macro-button" text="New Macro" enable-rich-text="false" />
     </uie:Toolbar>
-    <ui:TwoPaneSplitView fixed-pane-initial-dimension="400">
-        <ui:VisualElement name="node-inspector-parent" style="max-width: 400px; min-width: 200px;" />
+    <ui:TwoPaneSplitView fixed-pane-initial-dimension="300">
+        <ui:VisualElement name="node-inspector-parent" style="min-width: 200px;" />
         <ui:VisualElement name="graph-view-parent" />
     </ui:TwoPaneSplitView>
 </ui:UXML>

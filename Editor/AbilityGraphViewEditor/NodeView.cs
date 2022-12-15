@@ -10,11 +10,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
-        private static readonly Color ENTRY_COLOR = new(140f / 255f, 31f / 255f, 36f / 255f, 205f / 255f);
-        private static readonly Color PROCESS_COLOR = new(73f / 255f, 114f / 255f, 140f / 255f, 205f / 255f);
-        private static readonly Color CONSTANT_COLOR = new(104f / 255f, 54f / 255f, 175f / 255f, 205f / 255f);
-        private static readonly Color MISSING_NODE_COLOR = new(1f, 0f, 0f, 205f / 255f);
-        private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f, 240f / 255f);  // Alpha 240 is the default port alpha from the source code
+        private const string USS_CLASS_ENTRY_NODE = "entry-node";
+        private const string USS_CLASS_PROCESS_NODE = "process-node";
+        private const string USS_CLASS_CONSTANT_NODE = "constant-node";
+        private const string USS_CLASS_MACRO_NODE = "macro-node";
+        private const string USS_CLASS_MISSING_NODE = "missing-node";
+
+        private const string USS_CLASS_INTEGER_NODE = "integer-node";
+        private const string USS_CLASS_STRING_NODE = "string-node";
+
+        private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f);
 
         private readonly Node node;
         private readonly AbilityGraphEditorWindow window;
@@ -48,28 +53,40 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             Type nodeType = node.GetType();
             if (node is EntryNode)
             {
-                titleContainer.style.backgroundColor = ENTRY_COLOR;
+                AddToClassList(USS_CLASS_ENTRY_NODE);
+            }
+            else if (node is SubgraphNode)
+            {
+                AddToClassList(USS_CLASS_MACRO_NODE);
+            }
+            else if (node is GraphInputNode)
+            {
+                AddToClassList(USS_CLASS_MACRO_NODE);
+            }
+            else if (node is GraphOutputNode)
+            {
+                AddToClassList(USS_CLASS_MACRO_NODE);
             }
             else if (node is ProcessNode)
             {
-                titleContainer.style.backgroundColor = PROCESS_COLOR;
+                AddToClassList(USS_CLASS_PROCESS_NODE);
             }
 
             if (node is MissingNode missingNode)
             {
                 title = missingNode.TypeName;
-                titleContainer.style.backgroundColor = MISSING_NODE_COLOR;
+                AddToClassList(USS_CLASS_MISSING_NODE);
             }
             else if (nodeType == typeof(TrueNode))
             {
                 title = "TRUE";
-                titleContainer.style.backgroundColor = CONSTANT_COLOR;
+                AddToClassList(USS_CLASS_CONSTANT_NODE);
                 HandleConstantNodeStyle();
             }
             else if (nodeType == typeof(FalseNode))
             {
                 title = "FALSE";
-                titleContainer.style.backgroundColor = CONSTANT_COLOR;
+                AddToClassList(USS_CLASS_CONSTANT_NODE);
                 HandleConstantNodeStyle();
             }
             else if (nodeType == typeof(EqualNode))
@@ -125,6 +142,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             else
             {
                 title = nodeType.Name;
+                if (nodeType == typeof(IntegerNode))
+                {
+                    AddToClassList(USS_CLASS_INTEGER_NODE);
+                }
+                else if (nodeType == typeof(StringNode))
+                {
+                    AddToClassList(USS_CLASS_STRING_NODE);
+                }
             }
         }
 
