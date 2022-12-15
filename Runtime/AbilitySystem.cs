@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
-    public class AbilitySystem
+    public class AbilitySystem : ICreateStatOwner
     {
         public event Action<IEventContext> EventReceived;
         public event Action<IChoiceContext> ChoiceOccurred;
@@ -95,19 +95,14 @@ namespace Physalia.AbilityFramework
 
         public AbilityInstance AppendAbility(Actor actor, int abilityId)
         {
-            return AppendAbility(actor.Owner, abilityId);
-        }
-
-        public AbilityInstance AppendAbility(StatOwner owner, int abilityId)
-        {
             AbilityInstance abilityInstance = GetAbilityInstance(abilityId);
             if (abilityInstance == null)
             {
                 return null;
             }
 
-            abilityInstance.SetOwner(owner);
-            owner.AppendAbility(abilityInstance);
+            abilityInstance.SetOwner(actor);
+            actor.AppendAbility(abilityInstance);
             return abilityInstance;
         }
 

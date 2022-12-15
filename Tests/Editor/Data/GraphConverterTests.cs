@@ -208,8 +208,8 @@ namespace Physalia.AbilityFramework.Tests
             graph.GraphInputNode.position = new Vector2(1f, 2f);
             graph.GraphOutputNode.position = new Vector2(8f, 4f);
 
-            graph.GraphInputNode.CreateOutport<int>("test1");
-            graph.GraphOutputNode.CreateInport<string>("test2");
+            graph.GraphInputNode.CreateOutport<int>("test1", true);
+            graph.GraphOutputNode.CreateInport<string>("test2", true);
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
@@ -259,8 +259,8 @@ namespace Physalia.AbilityFramework.Tests
             Graph graph = new Graph();
             graph.AddSubgraphInOutNodes();
 
-            graph.GraphInputNode.CreateOutport<int>("test1");
-            graph.GraphOutputNode.CreateInport<int>("test2");
+            graph.GraphInputNode.CreateOutport<int>("test1", true);
+            graph.GraphOutputNode.CreateInport<int>("test2", true);
 
             graph.GraphInputNode.next.Connect(graph.GraphOutputNode.previous);
             graph.GraphInputNode.GetOutport("test1").Connect(graph.GraphOutputNode.GetInport("test2"));

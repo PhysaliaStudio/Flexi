@@ -113,8 +113,7 @@ namespace Physalia.AbilityFramework.Tests
 
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            StatOwner owner = ownerRepository.CreateOwner();
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
 
             var payload = new CustomPayload { owner = unit, };
             instance.SetPayload(payload);
@@ -308,10 +307,9 @@ namespace Physalia.AbilityFramework.Tests
 
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            StatOwner owner = ownerRepository.CreateOwner();
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
 
-            instance.SetOwner(owner);
+            instance.SetOwner(unit);
             var payload = new CustomDamageEvent { target = unit, };
 
             Assert.AreEqual(true, instance.CanExecute(payload));
@@ -359,10 +357,9 @@ namespace Physalia.AbilityFramework.Tests
 
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            StatOwner owner = ownerRepository.CreateOwner();
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, owner);
+            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
 
-            instance.SetOwner(owner);
+            instance.SetOwner(unit);
             var payload = new CustomDamageEvent { target = unit, };
 
             instance.SetPayload(payload);

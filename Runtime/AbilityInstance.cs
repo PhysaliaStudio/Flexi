@@ -10,14 +10,14 @@ namespace Physalia.AbilityFramework
 
         private readonly Dictionary<string, int> blackboard = new();
 
-        private StatOwner owner;
+        private Actor actor;
         private IEventContext payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
         public int AbilityId => abilityId;
         public AbilitySystem System => system;
         internal AbilityGraph Graph => graph;
-        public StatOwner Owner => owner;
+        public Actor Actor => actor;
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
@@ -44,9 +44,9 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        internal void SetOwner(StatOwner owner)
+        internal void SetOwner(Actor actor)
         {
-            this.owner = owner;
+            this.actor = actor;
         }
 
         public void SetPayload(IEventContext payload)

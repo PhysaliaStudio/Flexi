@@ -1,19 +1,19 @@
 namespace Physalia.AbilityFramework
 {
     [NodeCategory("Built-in/Common")]
-    public class OwnerNode : ValueNode
+    public class ActorNode : ValueNode
     {
-        public Outport<StatOwner> owner;
+        public Outport<Actor> actor;
 
         protected override void EvaluateSelf()
         {
             if (Instance != null)
             {
-                owner.SetValue(Instance.Owner);
+                actor.SetValue(Instance.Actor);
             }
             else
             {
-                owner.SetValue(null);
+                actor.SetValue(null);
             }
         }
     }

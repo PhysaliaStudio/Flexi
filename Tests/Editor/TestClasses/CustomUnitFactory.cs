@@ -11,12 +11,10 @@ namespace Physalia.AbilityFramework.Tests
 
         public CustomUnit Create(CustomUnitData data)
         {
-            StatOwner owner = abilitySystem.CreateOwner();
-            owner.AddStat(CustomStats.HEALTH, data.health);
-            owner.AddStat(CustomStats.MAX_HEALTH, data.health);
-            owner.AddStat(CustomStats.ATTACK, data.attack);
-
-            var unit = new CustomUnit(data, owner);
+            var unit = new CustomUnit(data, abilitySystem);
+            unit.AddStat(CustomStats.HEALTH, data.health);
+            unit.AddStat(CustomStats.MAX_HEALTH, data.health);
+            unit.AddStat(CustomStats.ATTACK, data.attack);
             return unit;
         }
     }
