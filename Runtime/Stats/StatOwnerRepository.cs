@@ -1,10 +1,9 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
-using Random = System.Random;
 
 namespace Physalia.AbilityFramework
 {
-    public class StatOwnerRepository
+    public class StatOwnerRepository : ICreateStatOwner
     {
         private readonly StatDefinitionTable table;
         private readonly IModifierAlgorithm modifierAlgorithm;
