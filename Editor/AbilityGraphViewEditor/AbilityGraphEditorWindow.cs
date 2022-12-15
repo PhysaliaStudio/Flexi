@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -68,6 +69,28 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             window.Show();
         }
 
+        [OnOpenAsset()]
+        private static bool OpenWithAsset(int instanceID, int line)
+        {
+            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
+            AbilityGraphAsset asset = obj as AbilityGraphAsset;
+            if (asset == null)
+            {
+                return false;
+            }
+
+            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
+            window.Focus();
+
+            bool ok = window.AskForOpenAssetIfDirty(asset);
+            if (ok)
+            {
+                window.objectField.SetValueWithoutNotify(asset);
+            }
+
+            return ok;
+        }
+
         private void CreateGUI()
         {
             if (uiAsset == null)
@@ -93,21 +116,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return;
                 }
 
-                bool ok = AskForSaveIfDirty();
-                if (ok)
-                {
-                    var asset = evt.newValue as AbilityGraphAsset;
-                    bool success = LoadFile(asset);
-                    if (!success)
-                    {
-                        objectField.SetValueWithoutNotify(evt.previousValue);
-                    }
-                    else
-                    {
-                        currentAsset = asset;
-                    }
-                }
-                else
+                var asset = evt.newValue as AbilityGraphAsset;
+                bool ok = AskForOpenAssetIfDirty(asset);
+                if (!ok)
                 {
                     objectField.SetValueWithoutNotify(evt.previousValue);
                 }
@@ -248,6 +259,24 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void OnSaveButtonClicked()
         {
             SaveFile();
+        }
+
+        private bool AskForOpenAssetIfDirty(AbilityGraphAsset asset)
+        {
+            bool ok = AskForSaveIfDirty();
+            if (ok)
+            {
+                bool success = LoadFile(asset);
+                if (success)
+                {
+                    currentAsset = asset;
+                    return true;
+                }
+
+                return false;
+            }
+
+            return false;
         }
 
         private bool AskForSaveIfDirty()
