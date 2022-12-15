@@ -56,7 +56,7 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
 
-            Assert.AreEqual(unit.Owner, instance.Owner);
+            Assert.AreEqual(unit, instance.Actor);
         }
 
         [Test]

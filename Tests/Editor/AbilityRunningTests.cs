@@ -309,7 +309,7 @@ namespace Physalia.AbilityFramework.Tests
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
 
-            instance.SetOwner(unit.Owner);
+            instance.SetOwner(unit);
             var payload = new CustomDamageEvent { target = unit, };
 
             Assert.AreEqual(true, instance.CanExecute(payload));
@@ -359,7 +359,7 @@ namespace Physalia.AbilityFramework.Tests
             StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
 
-            instance.SetOwner(unit.Owner);
+            instance.SetOwner(unit);
             var payload = new CustomDamageEvent { target = unit, };
 
             instance.SetPayload(payload);

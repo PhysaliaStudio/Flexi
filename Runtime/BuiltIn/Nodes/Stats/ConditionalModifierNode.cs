@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework
     [NodeCategory("Built-in/Stats")]
     public class ConditionalModifierNode : ProcessNode
     {
-        public Inport<IReadOnlyList<StatOwner>> ownersPort;
+        public Inport<IReadOnlyList<Actor>> actorsPort;
         public Inport<bool> enabledPort;
         public Variable<StatModifier> modifierVariable;
 
@@ -13,7 +13,7 @@ namespace Physalia.AbilityFramework
 
         protected override AbilityState DoLogic()
         {
-            IReadOnlyList<StatOwner> owners = ownersPort.GetValue();
+            IReadOnlyList<Actor> owners = actorsPort.GetValue();
             bool enabled = enabledPort.GetValue();
 
             StatModifier modifier = modifierVariable.Value;

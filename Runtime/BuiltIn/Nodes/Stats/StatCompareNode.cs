@@ -3,7 +3,7 @@ namespace Physalia.AbilityFramework
     [NodeCategory("Built-in/Stats")]
     public class StatCompareNode : ValueNode
     {
-        public Inport<StatOwner> ownerPort;
+        public Inport<Actor> actorPort;
         public Outport<bool> resultPort;
         public Variable<int> statId;
         public Variable<CompareOperator> op;
@@ -11,8 +11,8 @@ namespace Physalia.AbilityFramework
 
         protected override void EvaluateSelf()
         {
-            StatOwner owner = ownerPort.GetValue();
-            Stat stat = owner.GetStat(statId.Value);
+            Actor actor = actorPort.GetValue();
+            Stat stat = actor.GetStat(statId.Value);
             if (stat == null)
             {
                 resultPort.SetValue(false);
