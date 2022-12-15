@@ -40,6 +40,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         [SerializeField]
         private VisualTreeAsset uiAsset = null;
+        [SerializeField]
+        private StyleSheet uiStyleSheet;
 
         [Space]
         [SerializeField]
@@ -100,6 +102,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             uiAsset.CloneTree(rootVisualElement);
+            rootVisualElement.styleSheets.Add(uiStyleSheet);
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
             objectField.objectType = typeof(AbilityGraphAsset);
