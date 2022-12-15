@@ -1,3 +1,7 @@
+#node-inspector-parent .unity-base-field__label {
+  min-width: 75px;
+}
+
 .entry-node #title {
   background-color: rgba(140, 31, 36, 0.8);
 }
