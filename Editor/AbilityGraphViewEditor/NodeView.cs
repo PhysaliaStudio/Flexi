@@ -99,6 +99,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 default:
                     title = node.GetType().Name;
                     break;
+                case SubgraphNode subgraphNode:
+                    title = subgraphNode.key;
+                    break;
                 case TrueNode:
                     title = "TRUE";
                     break;
