@@ -6,12 +6,20 @@
   background-color: rgba(140, 31, 36, 0.8);
 }
 
+.flow-control-node #title {
+  background-color: rgba(73, 114, 140, 0.8);
+}
+
 .process-node #title {
   background-color: rgba(73, 114, 140, 0.8);
 }
 
 .constant-node #title {
   background-color: rgba(104, 54, 175, 0.8);
+}
+
+.constant-node #title-label {
+  font-size: 24px;
 }
 
 .macro-node #title {
