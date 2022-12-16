@@ -51,114 +51,90 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private void HandleNodeStyles(Node node)
         {
-            Type nodeType = node.GetType();
-            if (node is EntryNode)
+            switch (node)
             {
-                AddToClassList(USS_CLASS_ENTRY_NODE);
-            }
-            else if (node is SubgraphNode)
-            {
-                AddToClassList(USS_CLASS_MACRO_NODE);
-            }
-            else if (node is GraphInputNode)
-            {
-                AddToClassList(USS_CLASS_MACRO_NODE);
-            }
-            else if (node is GraphOutputNode)
-            {
-                AddToClassList(USS_CLASS_MACRO_NODE);
-            }
-            else if (node is ProcessNode)
-            {
-                AddToClassList(USS_CLASS_PROCESS_NODE);
-            }
-            else if (node is IfElseNode)
-            {
-                AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
-            }
-            else if (node is ForLoopNode)
-            {
-                AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
+                case EntryNode:
+                    AddToClassList(USS_CLASS_ENTRY_NODE);
+                    break;
+                case SubgraphNode:
+                case GraphInputNode:
+                case GraphOutputNode:
+                    AddToClassList(USS_CLASS_MACRO_NODE);
+                    break;
+                case ProcessNode:
+                    AddToClassList(USS_CLASS_PROCESS_NODE);
+                    break;
+                case IfElseNode:
+                case ForLoopNode:
+                    AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
+                    break;
+                case MissingNode missingNode:
+                    title = missingNode.TypeName;
+                    AddToClassList(USS_CLASS_MISSING_NODE);
+                    break;
+                case IntegerNode:
+                    AddToClassList(USS_CLASS_INTEGER_NODE);
+                    break;
+                case StringNode:
+                    AddToClassList(USS_CLASS_STRING_NODE);
+                    break;
+                case TrueNode:
+                case FalseNode:
+                case EqualNode:
+                case NotEqualNode:
+                case LessNode:
+                case GreaterNode:
+                case LessOrEqualNode:
+                case GreaterOrEqualNode:
+                case AndNode:
+                case OrNode:
+                case XorNode:
+                case NotNode:
+                    AddToClassList(USS_CLASS_CONSTANT_NODE);
+                    break;
             }
 
-            if (node is MissingNode missingNode)
+            switch (node)
             {
-                title = missingNode.TypeName;
-                AddToClassList(USS_CLASS_MISSING_NODE);
-            }
-            else if (nodeType == typeof(TrueNode))
-            {
-                title = "TRUE";
-                AddToClassList(USS_CLASS_CONSTANT_NODE);
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(FalseNode))
-            {
-                title = "FALSE";
-                AddToClassList(USS_CLASS_CONSTANT_NODE);
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(EqualNode))
-            {
-                title = "==";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(NotEqualNode))
-            {
-                title = "!=";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(LessNode))
-            {
-                title = "<";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(GreaterNode))
-            {
-                title = ">";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(LessOrEqualNode))
-            {
-                title = "<=";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(GreaterOrEqualNode))
-            {
-                title = ">=";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(AndNode))
-            {
-                title = "AND";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(OrNode))
-            {
-                title = "OR";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(XorNode))
-            {
-                title = "XOR";
-                HandleConstantNodeStyle();
-            }
-            else if (nodeType == typeof(NotNode))
-            {
-                title = "NOT";
-                HandleConstantNodeStyle();
-            }
-            else
-            {
-                title = nodeType.Name;
-                if (nodeType == typeof(IntegerNode))
-                {
-                    AddToClassList(USS_CLASS_INTEGER_NODE);
-                }
-                else if (nodeType == typeof(StringNode))
-                {
-                    AddToClassList(USS_CLASS_STRING_NODE);
-                }
+                default:
+                    title = node.GetType().Name;
+                    break;
+                case TrueNode:
+                    title = "TRUE";
+                    break;
+                case FalseNode:
+                    title = "FALSE";
+                    break;
+                case EqualNode:
+                    title = "==";
+                    break;
+                case NotEqualNode:
+                    title = "!=";
+                    break;
+                case LessNode:
+                    title = "<";
+                    break;
+                case GreaterNode:
+                    title = ">";
+                    break;
+                case LessOrEqualNode:
+                    title = "<=";
+                    break;
+                case GreaterOrEqualNode:
+                    title = ">=";
+                    break;
+                case AndNode:
+                    title = "AND";
+                    break;
+                case OrNode:
+                    title = "OR";
+                    break;
+                case XorNode:
+                    title = "XOR";
+                    break;
+                case NotNode:
+                    title = "NOT";
+                    break;
             }
         }
 

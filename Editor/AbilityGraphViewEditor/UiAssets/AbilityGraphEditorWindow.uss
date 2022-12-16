@@ -18,6 +18,10 @@
   background-color: rgba(104, 54, 175, 0.8);
 }
 
+.constant-node #title-label {
+  font-size: 24px;
+}
+
 .macro-node #title {
   background-color: rgba(74, 140, 76, 0.8);
 }
