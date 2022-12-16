@@ -141,20 +141,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
         }
 
-        private void HandleConstantNodeStyle()
-        {
-            titleButtonContainer.style.display = DisplayStyle.None;
-            Label label = titleContainer.Query<Label>("title-label").First();
-            if (label != null)
-            {
-                label.style.fontSize = 24f;
-
-                // Because we hide the titleButtonContainer
-                // Bug? No effect?
-                label.style.marginRight = label.style.marginLeft;
-            }
-        }
-
         private void CreatePorts()
         {
             foreach (Port portData in node.Ports)
