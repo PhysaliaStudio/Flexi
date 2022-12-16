@@ -162,7 +162,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (portData is Inport)
                 {
                     PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, portData.ValueType);
-                    port.portName = GetPortName(portData.Name);
+                    port.portName = GetPortPrettyName(portData.Name);
                     inputContainer.Add(port);
 
                     if (portData is MissingInport)
@@ -177,7 +177,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (portData is Outport)
                 {
                     PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, portData.ValueType);
-                    port.portName = GetPortName(portData.Name);
+                    port.portName = GetPortPrettyName(portData.Name);
                     outputContainer.Add(port);
 
                     if (portData is MissingOutport)
@@ -223,14 +223,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             return nodeName;
         }
 
-        private string GetPortName(string fieldName)
+        private static string GetPortPrettyName(string portName)
         {
-            if (fieldName.EndsWith("Port"))
+            if (portName.EndsWith("Port"))
             {
-                return fieldName.Substring(0, fieldName.Length - 4);
+                return portName[0..^4];
             }
 
-            return fieldName;
+            return portName;
         }
 
         public void DestroyPort(Port port)
@@ -308,7 +308,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             if (port is Inport)
             {
                 PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, port.ValueType);
-                portView.portName = GetPortName(port.Name);
+                portView.portName = GetPortPrettyName(port.Name);
                 if (index == -1)
                 {
                     inputContainer.Add(portView);
@@ -329,7 +329,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             else if (port is Outport)
             {
                 PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, port.ValueType);
-                portView.portName = GetPortName(port.Name);
+                portView.portName = GetPortPrettyName(port.Name);
                 if (index == -1)
                 {
                     outputContainer.Add(portView);
