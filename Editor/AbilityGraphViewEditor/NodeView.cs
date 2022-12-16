@@ -97,7 +97,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             switch (node)
             {
                 default:
-                    title = node.GetType().Name;
+                    title = GetNodePrettyName(node.GetType().Name);
                     break;
                 case SubgraphNode subgraphNode:
                     title = subgraphNode.key;
@@ -211,6 +211,16 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
             // Unity rule: After adding custom elements to the extensionContainer, call this method in order for them to become visible.
             RefreshExpandedState();
+        }
+
+        private static string GetNodePrettyName(string nodeName)
+        {
+            if (nodeName.EndsWith("Node"))
+            {
+                return nodeName[0..^4];
+            }
+
+            return nodeName;
         }
 
         private string GetPortName(string fieldName)
