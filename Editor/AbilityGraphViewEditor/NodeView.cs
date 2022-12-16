@@ -11,6 +11,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         private const string USS_CLASS_ENTRY_NODE = "entry-node";
+        private const string USS_CLASS_FLOW_CONTROL_NODE = "flow-control-node";
         private const string USS_CLASS_PROCESS_NODE = "process-node";
         private const string USS_CLASS_CONSTANT_NODE = "constant-node";
         private const string USS_CLASS_MACRO_NODE = "macro-node";
@@ -70,6 +71,14 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             else if (node is ProcessNode)
             {
                 AddToClassList(USS_CLASS_PROCESS_NODE);
+            }
+            else if (node is IfElseNode)
+            {
+                AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
+            }
+            else if (node is ForLoopNode)
+            {
+                AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
             }
 
             if (node is MissingNode missingNode)
