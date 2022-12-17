@@ -108,6 +108,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static AbilityGraphAsset POISON
+        {
+            get
+            {
+                return ReadAbilityFile("Poison");
+            }
+        }
+
         private static AbilityGraphAsset ReadAbilityFile(string fileName)
         {
             var asset = Resources.Load<AbilityGraphAsset>(fileName);
