@@ -17,7 +17,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
         }
 
+#if !SHOW_TEST_NODES
         private static readonly string TEST_ASSEMBLY_NAME = "Physalia.AbilityFramework.Editor.Tests";
+#endif
 
         private static readonly List<SearchTreeEntry> searchTreeEntries = new();
         private static readonly List<SearchTreeEntry> nodeTreeEntries = new();
