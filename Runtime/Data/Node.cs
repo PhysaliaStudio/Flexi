@@ -29,7 +29,11 @@ namespace Physalia.AbilityFramework
         public IEnumerable<Outport> Outports => outports.Values;
         public IReadOnlyList<Inport> DynamicInports => dynamicInports;
         public IReadOnlyList<Outport> DynamicOutports => dynamicOutports;
+
+        #region AbilityInstance Members
         public AbilityInstance Instance => instance;
+        public Actor Actor => instance?.Actor;
+        #endregion
 
         internal void AddInport(string name, Inport inport)
         {

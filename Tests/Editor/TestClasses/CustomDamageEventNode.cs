@@ -14,7 +14,7 @@ namespace Physalia.AbilityFramework.Tests
                 return false;
             }
 
-            if (payload.target == Instance.Actor)
+            if (payload.target == Actor)
             {
                 return true;
             }
