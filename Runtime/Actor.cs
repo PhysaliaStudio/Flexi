@@ -47,6 +47,11 @@ namespace Physalia.AbilityFramework
             owner.ModifyStat(statId, value);
         }
 
+        public AbilityInstance FindAbility(int abilityId)
+        {
+            return owner.FindAbility(abilityId);
+        }
+
         internal void AppendAbility(AbilityInstance ability)
         {
             owner.AppendAbility(ability);

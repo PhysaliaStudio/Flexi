@@ -9,7 +9,7 @@ namespace Physalia.AbilityFramework
         {
             if (Instance != null)
             {
-                actor.SetValue(Instance.Actor);
+                actor.SetValue(Actor);
             }
             else
             {

@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: Poison
+  m_EditorClassIdentifier: 
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":818170,"_position":{"x":80.0,"y":89.0},"_type":"Physalia.AbilityFramework.Tests.CustomUnitTriggerNode"},{"_id":964791,"_position":{"x":348.0,"y":89.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageNode"},{"_id":776634,"_position":{"x":157.0,"y":222.0},"_type":"Physalia.AbilityFramework.StackNode"}],"edges":[{"id1":818170,"port1":"next","id2":964791,"port2":"previous"},{"id1":818170,"port1":"unitPort","id2":964791,"port2":"targets"},{"id1":776634,"port1":"value","id2":964791,"port2":"baseValue"}]}'

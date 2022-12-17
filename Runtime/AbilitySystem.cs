@@ -106,9 +106,44 @@ namespace Physalia.AbilityFramework
             return abilityInstance;
         }
 
-        public void RemoveAbility(StatOwner owner, int abilityId)
+        public void AddAbilityStack(Actor actor, int abilityId, int amount)
         {
-            owner.RemoveAbility(abilityId);
+            if (amount <= 0)
+            {
+                Logger.Warn($"[{nameof(AbilitySystem)}] AddAbilityStack failed! Since amount is less or equal to 0 (amount = {amount})");
+                return;
+            }
+
+            AbilityInstance instance = actor.FindAbility(abilityId);
+            if (instance == null)
+            {
+                instance = AppendAbility(actor, abilityId);
+                instance.Stack += amount - 1;
+                return;
+            }
+
+            instance.Stack += amount;
+        }
+
+        public void RemoveAbilityStack(Actor actor, int abilityId, int amount)
+        {
+            if (amount <= 0)
+            {
+                Logger.Warn($"[{nameof(AbilitySystem)}] RemoveAbilityStack failed! Since amount is less or equal to 0 (amount = {amount})");
+                return;
+            }
+
+            AbilityInstance instance = actor.FindAbility(abilityId);
+            if (instance == null)
+            {
+                return;
+            }
+
+            instance.Stack -= amount;
+            if (instance.Stack <= 0)
+            {
+                actor.RemoveAbility(instance);
+            }
         }
 
         public void ClearAllAbilities(StatOwner owner)

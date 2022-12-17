@@ -398,6 +398,22 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void ExecuteAbilitiy_Stackable()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.POISON);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 30 });
+            abilitySystem.AddAbilityStack(unit, 1, 4);
+
+            AbilityInstance instance = unit.FindAbility(1);
+            var context = new CustomUnitTriggerContext { unit = unit };
+            abilitySystem.EnqueueAbilityAndRun(instance, context);
+
+            Assert.AreEqual(26, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+        }
+
+        [Test]
         public void ExecuteAbilitiy_ForLoop_StatsAreCorrect()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
@@ -82,6 +83,24 @@ namespace Physalia.AbilityFramework
                 stat.CurrentBase += value;
                 RefreshStats();
             }
+        }
+
+        public AbilityInstance FindAbility(int abilityId)
+        {
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                if (abilities[i].AbilityId == abilityId)
+                {
+                    return abilities[i];
+                }
+            }
+
+            return null;
+        }
+
+        public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
+        {
+            return abilities.Find(match);
         }
 
         internal void AppendAbility(AbilityInstance ability)
