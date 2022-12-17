@@ -82,7 +82,7 @@ namespace Physalia.AbilityFramework
                     Inport fixedPort = node.GetInport(portData.name);
                     for (var j = 0; j < portsCache.Count; j++)
                     {
-                        portsCache[j].Connect(fixedPort);
+                        portsCache[j].ConnectForce(fixedPort);
                     }
                 }
                 else
