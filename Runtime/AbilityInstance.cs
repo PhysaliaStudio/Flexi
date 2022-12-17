@@ -21,6 +21,8 @@ namespace Physalia.AbilityFramework
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
+        public int Stack { get; internal set; } = 1;
+
         internal AbilityInstance(AbilityGraph graph) : this(0, null, graph)
         {
 
