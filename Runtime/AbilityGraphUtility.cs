@@ -6,6 +6,11 @@ namespace Physalia.AbilityFramework
     {
         internal static AbilityGraph Deserialize(string graphName, string graphJson, MacroLibrary macroLibrary = null)
         {
+            if (string.IsNullOrEmpty(graphJson))
+            {
+                return new AbilityGraph();
+            }
+
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
             if (macroLibrary != null)
             {
