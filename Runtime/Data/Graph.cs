@@ -21,6 +21,11 @@ namespace Physalia.AbilityFramework
         public IReadOnlyList<Node> Nodes => nodes;
         public List<BlackboardVariable> BlackboardVariables => variables;
 
+        public bool HasCorrectSubgraphElement()
+        {
+            return graphInputNode != null && graphOutputNode != null;
+        }
+
         public bool HasSubgraphElement()
         {
             return graphInputNode != null || graphOutputNode != null;

@@ -171,13 +171,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private bool LoadFile(AbilityGraphAsset asset)
         {
-            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text, MacroLibraryCache.Get());
-            if (abilityGraph == null)
-            {
-                return false;
-            }
-
             HideNodeInspector();
+
+            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text, MacroLibraryCache.Get());
+            if (asset is MacroGraphAsset && !abilityGraph.HasCorrectSubgraphElement())
+            {
+                abilityGraph.AddSubgraphInOutNodes();
+                abilityGraph.GraphInputNode.position = new Vector2(0, 250);
+                abilityGraph.GraphOutputNode.position = new Vector2(500, 250);
+            }
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);

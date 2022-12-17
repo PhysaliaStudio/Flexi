@@ -56,18 +56,30 @@ namespace Physalia.AbilityFramework
 
         private void CachePreview()
         {
-            string text;
             if (targets.Length > 1)
             {
-                text = $"{targets.Length} Graph Asset";
+                cachedPreview = new GUIContent($"{targets.Length} Graph Asset");
+                return;
             }
-            else
+
+            if (string.IsNullOrEmpty(asset.Text))
+            {
+                cachedPreview = new GUIContent();
+                return;
+            }
+
+            string text;
+            try
             {
                 text = IndentJson(asset.Text);
                 if (text.Length >= MAX_CHARACTERS)
                 {
                     text = text.Substring(0, MAX_CHARACTERS) + "...\n\n<...etc...>";
                 }
+            }
+            catch
+            {
+                text = "[Error] Json Parse Failed!";
             }
 
             cachedPreview = new GUIContent(text);
