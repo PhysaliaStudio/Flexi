@@ -41,11 +41,21 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            evt.menu.AppendAction("Edit Script", action =>
+            switch (node)
             {
-                Utility.OpenScriptOfType(node.GetType());
-            });
-            evt.menu.AppendSeparator();
+                default:
+                    evt.menu.AppendAction("Edit Script", action =>
+                    {
+                        Utility.OpenScriptOfType(node.GetType());
+                    });
+                    evt.menu.AppendSeparator();
+                    break;
+                case SubgraphNode:
+                case GraphInputNode:
+                case GraphOutputNode:
+                    break;
+            }
+
             base.BuildContextualMenu(evt);
         }
 
