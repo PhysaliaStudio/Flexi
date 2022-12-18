@@ -45,7 +45,7 @@ namespace Physalia.AbilityFramework.Tests
 
             repository.RemoveOwner(null);
 
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace Physalia.AbilityFramework.Tests
 
             repository2.RemoveOwner(ownerFrom1);
 
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]

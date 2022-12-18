@@ -21,8 +21,8 @@ namespace Physalia.AbilityFramework.Tests
         {
             StatDefinitionTable table = new StatDefinitionTable.Factory().Create(StatTestHelper.IdConflictList);
             Assert.IsNull(table);
-            StatTestHelper.LogAssert(LogType.Error);
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace Physalia.AbilityFramework.Tests
         {
             var table = new StatDefinitionTable();
             Assert.AreSame(null, table.GetStatDefinition(999));
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
     }
 }

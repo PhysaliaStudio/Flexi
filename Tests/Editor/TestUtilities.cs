@@ -6,7 +6,7 @@ namespace Physalia.AbilityFramework.Tests
 {
     internal static class TestUtilities
     {
-        private static readonly Regex ANY_STRING = new Regex(".*");
+        private static readonly Regex ANY_STRING = new(".*");
 
         internal static void LogAssertAnyString(LogType type)
         {

@@ -42,9 +42,9 @@ namespace Physalia.AbilityFramework.Tests
             abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
-            StatTestHelper.LogAssert(LogType.Error);
-            StatTestHelper.LogAssert(LogType.Error);
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]
@@ -218,7 +218,7 @@ namespace Physalia.AbilityFramework.Tests
             var answerContext = new CustomSingleTargetAnswerContext { target = null };
             abilitySystem.Resume(answerContext);
 
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
             Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
         }
 
