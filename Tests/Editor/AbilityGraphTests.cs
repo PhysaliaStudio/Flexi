@@ -8,14 +8,14 @@ namespace Physalia.AbilityFramework.Tests
         private const string TEST_JSON =
             "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
             "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-            "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+DamageNode\"}," +
+            "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageNode\"}," +
             "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+OwnerFilterNode\"}," +
-            "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+IntNode\",\"value\":0}," +
-            "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+LogNode\"}]," +
+            "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
+            "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.LogNode\"}]," +
             "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
             "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
-            "{\"id1\":2,\"port1\":\"owners\",\"id2\":3,\"port2\":\"owners\"}," +
-            "{\"id1\":2,\"port1\":\"baseValue\",\"id2\":4,\"port2\":\"output\"}]}";
+            "{\"id1\":3,\"port1\":\"owners\",\"id2\":2,\"port2\":\"targets\"}," +
+            "{\"id1\":4,\"port1\":\"output\",\"id2\":2,\"port2\":\"baseValue\"}]}";
 
         [Test]
         public void CreateInstance_CurrentNodeIsNull()

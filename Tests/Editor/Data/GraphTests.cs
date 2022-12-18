@@ -4,31 +4,19 @@ namespace Physalia.AbilityFramework.Tests
 {
     public class GraphTests
     {
-        [NodeCategory("Built-in/[Test Custom]")]
-        public class IntNode : Node
-        {
-            public Outport<int> output;
-        }
-
-        [NodeCategory("Built-in/[Test Custom]")]
-        public class DamageNode : ProcessNode
-        {
-            public Inport<int> baseValue;
-        }
-
         [Test]
         public void AddNode_TheLastIndexOfNodeIsTheNewNode()
         {
             var graph = new Graph();
-            IntNode intNode = graph.AddNewNode<IntNode>();
-            Assert.AreEqual(intNode, graph.Nodes[0]);
+            TestNode node = graph.AddNewNode<TestNode>();
+            Assert.AreEqual(node, graph.Nodes[0]);
         }
 
         [Test]
         public void AddNode_TheEntryNodeListDoesNotChange()
         {
             var graph = new Graph();
-            _ = graph.AddNewNode<IntNode>();
+            _ = graph.AddNewNode<TestNode>();
             Assert.AreEqual(0, graph.EntryNodes.Count);
         }
 
@@ -36,8 +24,8 @@ namespace Physalia.AbilityFramework.Tests
         public void RemoveNode_TheNodeIsRemovedFromTheNodeList()
         {
             var graph = new Graph();
-            IntNode intNode = graph.AddNewNode<IntNode>();
-            graph.RemoveNode(intNode);
+            TestNode node = graph.AddNewNode<TestNode>();
+            graph.RemoveNode(node);
             Assert.AreEqual(0, graph.Nodes.Count);
         }
 
@@ -45,12 +33,12 @@ namespace Physalia.AbilityFramework.Tests
         public void RemoveNode_AlsoDisconnectFromAllOtherNodes()
         {
             var graph = new Graph();
-            DamageNode damageNode = graph.AddNewNode<DamageNode>();
-            IntNode intNode = graph.AddNewNode<IntNode>();
-            damageNode.baseValue.Connect(intNode.output);
+            TestProcessNode node1 = graph.AddNewNode<TestProcessNode>();
+            TestNode node2 = graph.AddNewNode<TestNode>();
+            node1.input.Connect(node2.output);
 
-            graph.RemoveNode(intNode);
-            Assert.AreEqual(0, damageNode.baseValue.GetConnections().Count);
+            graph.RemoveNode(node2);
+            Assert.AreEqual(0, node1.input.GetConnections().Count);
         }
 
         [Test]
