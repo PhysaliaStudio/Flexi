@@ -30,7 +30,7 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
             Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
-            StatTestHelper.LogAssert(LogType.Warning);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]
@@ -43,10 +43,10 @@ namespace Physalia.AbilityFramework.Tests
             AbilityInstance instance = new AbilityInstance(abilityGraph);
             instance.OverrideBlackboardVariable("not-exist", 10);
 
-            StatTestHelper.LogAssert(LogType.Warning);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
 
             Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
-            StatTestHelper.LogAssert(LogType.Warning);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]

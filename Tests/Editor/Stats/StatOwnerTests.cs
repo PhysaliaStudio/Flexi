@@ -34,8 +34,8 @@ namespace Physalia.AbilityFramework.Tests
             StatOwner owner = repository.CreateOwner();
 
             owner.AddStat(999, 2);
-            StatTestHelper.LogAssert(LogType.Error);
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace Physalia.AbilityFramework.Tests
 
             owner.AddStat(11, 2);
             owner.AddStat(11, 2);
-            StatTestHelper.LogAssert(LogType.Error);
+            TestUtilities.LogAssertAnyString(LogType.Error);
         }
 
         [Test]

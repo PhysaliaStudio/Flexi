@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
@@ -47,10 +45,5 @@ namespace Physalia.AbilityFramework
                 Name = "Attack"
             },
         };
-
-        internal static void LogAssert(LogType type)
-        {
-            UnityEngine.TestTools.LogAssert.Expect(type, new Regex(".*"));
-        }
     }
 }
