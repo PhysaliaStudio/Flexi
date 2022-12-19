@@ -6,7 +6,7 @@ namespace Physalia.AbilityFramework.Tests
 
         public string Name => data.name;
 
-        public CustomUnit(CustomUnitData data, ICreateStatOwner ownerCreater) : base(ownerCreater)
+        public CustomUnit(CustomUnitData data, AbilitySystem abilitySystem) : base(abilitySystem)
         {
             this.data = data;
         }

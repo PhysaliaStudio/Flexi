@@ -12,9 +12,9 @@ namespace Physalia.AbilityFramework
         public IReadOnlyList<AbilityInstance> Abilities => owner.Abilities;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => owner.Modifiers;
 
-        public Actor(ICreateStatOwner ownerCreater)
+        public Actor(AbilitySystem abilitySystem)
         {
-            owner = ownerCreater.CreateOwner();
+            owner = abilitySystem.CreateOwner();
         }
 
         public bool IsValid()
