@@ -79,6 +79,13 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
+        internal AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
+        {
+            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
+            AbilityInstance instance = new AbilityInstance(0, this, graph);
+            return instance;
+        }
+
         public AbilityInstance GetAbilityInstance(int id)
         {
             bool success = graphTable.TryGetValue(id, out AbilityGraphAsset graphAsset);

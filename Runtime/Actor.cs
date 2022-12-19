@@ -4,6 +4,7 @@ namespace Physalia.AbilityFramework
 {
     public abstract class Actor
     {
+        private readonly AbilitySystem abilitySystem;
         private readonly StatOwner owner;
 
         public int OwnerId => owner.Id;
@@ -14,6 +15,7 @@ namespace Physalia.AbilityFramework
 
         public Actor(AbilitySystem abilitySystem)
         {
+            this.abilitySystem = abilitySystem;
             owner = abilitySystem.CreateOwner();
         }
 
@@ -50,6 +52,14 @@ namespace Physalia.AbilityFramework
         public AbilityInstance FindAbility(int abilityId)
         {
             return owner.FindAbility(abilityId);
+        }
+
+        public AbilityInstance AppendAbility(AbilityGraphAsset graphAsset)
+        {
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(graphAsset);
+            instance.SetOwner(this);
+            owner.AppendAbility(instance);
+            return instance;
         }
 
         internal void AppendAbility(AbilityInstance ability)
