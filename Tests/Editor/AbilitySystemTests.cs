@@ -50,11 +50,9 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void AppendAbilityToOwner_OwnerOfInstanceReturnsAsExpected()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE);
 
             Assert.AreEqual(unit, instance.Actor);
         }
@@ -62,11 +60,9 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ActivateInstance()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE);
 
             abilitySystem.EnqueueAbilityAndRun(instance, null);
             Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -153,12 +149,10 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalEntryNode_WithConditionSuccess_ExecuteAsExpected()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.LOG_WHEN_ATTACKED);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1", });
 
-            AbilityInstance instance = abilitySystem.AppendAbility(unit, 1);
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.LOG_WHEN_ATTACKED);
             var context = new CustomDamageEvent { target = unit, };
             abilitySystem.EnqueueAbilityAndRun(instance, context);
 
@@ -268,13 +262,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.Owner.SetStat(CustomStats.HEALTH, 3);
+            unit.SetStat(CustomStats.HEALTH, 3);
 
-            abilitySystem.AppendAbility(unit, 1);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -285,12 +277,10 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_NotReachCondition_ModifierNotAppendedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            abilitySystem.AppendAbility(unit, 1);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
@@ -301,13 +291,10 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_ReachConditionThenMakeNotReach_ModifierRemovedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.Owner.SetStat(CustomStats.HEALTH, 3);
-
-            abilitySystem.AppendAbility(unit, 1);
+            unit.SetStat(CustomStats.HEALTH, 3);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -326,12 +313,11 @@ namespace Physalia.AbilityFramework.Tests
         public void ConditionalModifier_ReachConditionWhileRunningSystem_ModifierNotAppendedAndStatsAreCorrect()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
 
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            abilitySystem.AppendAbility(unit2, 2);
+            unit2.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
             var payload1 = new CustomNormalAttackPayload
@@ -359,12 +345,11 @@ namespace Physalia.AbilityFramework.Tests
         public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
 
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            abilitySystem.AppendAbility(unit2, 2);
+            unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
             var payload1 = new CustomNormalAttackPayload
@@ -391,14 +376,12 @@ namespace Physalia.AbilityFramework.Tests
         public void ChainEffect_MultipleAbilities_TriggeredByCorrectOrder()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
-            abilitySystem.LoadAbilityGraph(3, CustomAbility.COUNTER_ATTACK);
 
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
-            abilitySystem.AppendAbility(unit2, 2);
-            abilitySystem.AppendAbility(unit2, 3);
+            unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+            unit2.AppendAbility(CustomAbility.COUNTER_ATTACK);
 
             AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
             var payload = new CustomNormalAttackPayload
