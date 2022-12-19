@@ -100,6 +100,14 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
+        public static AbilityGraphAsset LOG_WHEN_ATTACKED
+        {
+            get
+            {
+                return ReadAbilityFile("LogWhenAttacked");
+            }
+        }
+
         public static AbilityGraphAsset COUNTER_ATTACK
         {
             get

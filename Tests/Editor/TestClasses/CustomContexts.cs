@@ -23,11 +23,4 @@ namespace Physalia.AbilityFramework.Tests
         public CustomUnit instigator;
         public CustomUnit target;
     }
-
-    public class CustomPayload : IEventContext
-    {
-        public CustomUnit owner;
-        public CustomUnit instigator;
-        public List<CustomUnit> targets = new();
-    }
 }

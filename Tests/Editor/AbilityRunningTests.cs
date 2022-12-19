@@ -100,29 +100,6 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void RunAbility_WithCustomPayload_DoTasksWithPayload()
-        {
-            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":0,\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-                "{\"_id\":1,\"_type\":\"Physalia.AbilityFramework.Tests.CustomPayloadNode\"}," +
-                "{\"_id\":2,\"_type\":\"Physalia.AbilityFramework.Tests.LogCharacterNameNode\"}]," +
-                "\"edges\":[{\"id1\":0,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
-                "{\"id1\":2,\"port1\":\"character\",\"id2\":1,\"port2\":\"owner\"}]}";
-            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
-
-            var payload = new CustomPayload { owner = unit, };
-            instance.SetPayload(payload);
-            instance.Execute();
-
-            LogAssert.Expect(LogType.Log, "My name is Mob1");
-        }
-
-        [Test]
         public void RunAbility_EncounterPauseState()
         {
             var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
@@ -250,71 +227,29 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void ConditionalTrigger_NoCondition()
+        public void CanExecute_NotMatchCondition_ReturnsFalse()
         {
             var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"World!\"}," +
-                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"Hello\"}]," +
-                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
-                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.StatRefreshEventNode\"}]," +
+                "\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            Assert.AreEqual(true, instance.CanExecute(null));
+            bool success = instance.CanExecute(null);
+            Assert.AreEqual(false, success);
         }
 
         [Test]
-        public void ConditionalTrigger_FailedWithEmptyCondition()
+        public void CanExecute_MatchCondition_ReturnsTrue()
         {
             var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageEventNode\"}," +
-                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I'm damaged!\"}," +
-                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I will revenge!\"}]," +
-                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
-                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
+                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.StatRefreshEventNode\"}]," +
+                "\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
             AbilityInstance instance = new AbilityInstance(abilityGraph);
 
-            Assert.AreEqual(false, instance.CanExecute(null));
-
-            LogAssert.NoUnexpectedReceived();
-        }
-
-        [Test]
-        public void ConditionalTrigger_SuccessWhenMatchCondition()
-        {
-            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageEventNode\"}," +
-                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I'm damaged!\"}," +
-                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I will revenge!\"}]," +
-                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
-                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
-            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
-
-            instance.SetOwner(unit);
-            var payload = new CustomDamageEvent { target = unit, };
-
-            Assert.AreEqual(true, instance.CanExecute(payload));
-
-            LogAssert.NoUnexpectedReceived();
+            bool success = instance.CanExecute(new StatRefreshEvent());
+            Assert.AreEqual(true, success);
         }
 
         [Test]
@@ -336,37 +271,6 @@ namespace Physalia.AbilityFramework.Tests
             instance.Execute();
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
-            LogAssert.NoUnexpectedReceived();
-        }
-
-        [Test]
-        public void RunAbility_WithConditionSuccess_ExecuteAsExpected()
-        {
-            var json = "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageEventNode\"}," +
-                "{\"_id\":747695,\"_position\":{\"x\":240,\"y\":161},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":524447,\"_position\":{\"x\":468,\"y\":175},\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":135698,\"_position\":{\"x\":72,\"y\":292},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I'm damaged!\"}," +
-                "{\"_id\":675591,\"_position\":{\"x\":270,\"y\":316},\"_type\":\"Physalia.AbilityFramework.StringNode\",\"text\":\"I will revenge!\"}]," +
-                "\"edges\":[{\"id1\":507088,\"port1\":\"next\",\"id2\":747695,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"next\",\"id2\":524447,\"port2\":\"previous\"}," +
-                "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
-                "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
-            AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            StatOwnerRepository ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            var unit = new CustomUnit(new CustomUnitData { name = "Mob1", }, ownerRepository);
-
-            instance.SetOwner(unit);
-            var payload = new CustomDamageEvent { target = unit, };
-
-            instance.SetPayload(payload);
-            instance.Execute();
-
-            LogAssert.Expect(LogType.Log, "I'm damaged!");
-            LogAssert.Expect(LogType.Log, "I will revenge!");
             LogAssert.NoUnexpectedReceived();
         }
     }

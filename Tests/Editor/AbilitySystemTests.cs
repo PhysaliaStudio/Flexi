@@ -151,6 +151,23 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void ConditionalEntryNode_WithConditionSuccess_ExecuteAsExpected()
+        {
+            abilitySystem.LoadAbilityGraph(1, CustomAbility.LOG_WHEN_ATTACKED);
+
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1", });
+
+            AbilityInstance instance = abilitySystem.AppendAbility(unit, 1);
+            var context = new CustomDamageEvent { target = unit, };
+            abilitySystem.EnqueueAbilityAndRun(instance, context);
+
+            LogAssert.Expect(LogType.Log, "I'm damaged!");
+            LogAssert.Expect(LogType.Log, "I will revenge!");
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
         public void TargetSelectionAbilitiy_ReceivesChoice()
         {
             abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
