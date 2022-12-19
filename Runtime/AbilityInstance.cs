@@ -7,6 +7,7 @@ namespace Physalia.AbilityFramework
         private readonly int abilityId;
         private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
+        private readonly object userData;
 
         private readonly Dictionary<string, int> blackboard = new();
 
@@ -17,6 +18,8 @@ namespace Physalia.AbilityFramework
         public int AbilityId => abilityId;
         public AbilitySystem System => system;
         internal AbilityGraph Graph => graph;
+        public object UserData => userData;
+
         public Actor Actor => actor;
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
@@ -28,11 +31,12 @@ namespace Physalia.AbilityFramework
 
         }
 
-        internal AbilityInstance(int abilityId, AbilitySystem system, AbilityGraph graph)
+        internal AbilityInstance(int abilityId, AbilitySystem system, AbilityGraph graph, object userData = null)
         {
             this.abilityId = abilityId;
             this.system = system;
             this.graph = graph;
+            this.userData = userData;
 
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
