@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
-    public class AbilitySystem : ICreateStatOwner
+    public class AbilitySystem
     {
         public event Action<IEventContext> EventReceived;
         public event Action<IChoiceContext> ChoiceOccurred;
