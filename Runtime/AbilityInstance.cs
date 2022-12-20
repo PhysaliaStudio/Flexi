@@ -4,7 +4,6 @@ namespace Physalia.AbilityFramework
 {
     public sealed class AbilityInstance
     {
-        private readonly int abilityId;
         private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
 
@@ -16,7 +15,6 @@ namespace Physalia.AbilityFramework
         private IEventContext payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
-        public int AbilityId => abilityId;
         public AbilitySystem System => system;
         internal AbilityGraph Graph => graph;
 
@@ -24,14 +22,13 @@ namespace Physalia.AbilityFramework
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
-        internal AbilityInstance(AbilityGraph graph) : this(0, null, graph)
+        internal AbilityInstance(AbilityGraph graph) : this(null, graph)
         {
 
         }
 
-        internal AbilityInstance(int abilityId, AbilitySystem system, AbilityGraph graph)
+        internal AbilityInstance(AbilitySystem system, AbilityGraph graph)
         {
-            this.abilityId = abilityId;
             this.system = system;
             this.graph = graph;
 

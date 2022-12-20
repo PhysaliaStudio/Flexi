@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
@@ -44,28 +43,6 @@ namespace Physalia.AbilityFramework
             macroLibrary.Add(key, macroGraphAsset.Text);
         }
 
-        public void LoadAbilityGraph(int id, string graphName, string graphJson)
-        {
-            AbilityGraphAsset graphAsset = ScriptableObject.CreateInstance<AbilityGraphAsset>();
-            graphAsset.name = graphName;
-            graphAsset.Text = graphJson;
-
-            LoadAbilityGraph(id, graphAsset);
-        }
-
-        public void LoadAbilityGraph(int id, AbilityGraphAsset graphAsset)
-        {
-            bool success = graphTable.TryAdd(id, graphAsset);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
-                return;
-            }
-
-            // Deserialize once to log potential errors
-            _ = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-        }
-
         public AbilityGraph GetMacroGraph(string key)
         {
             bool success = macroLibrary.TryGetValue(key, out string macroJson);
@@ -79,24 +56,10 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
-        internal AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
+        public AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
         {
             AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityInstance instance = new AbilityInstance(0, this, graph);
-            return instance;
-        }
-
-        public AbilityInstance GetAbilityInstance(int id)
-        {
-            bool success = graphTable.TryGetValue(id, out AbilityGraphAsset graphAsset);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] Get instance failed! Not exists graph with Id:{id}");
-                return null;
-            }
-
-            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityInstance instance = new AbilityInstance(id, this, graph);
+            AbilityInstance instance = new AbilityInstance(this, graph);
             return instance;
         }
 

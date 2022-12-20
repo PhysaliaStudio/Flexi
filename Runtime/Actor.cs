@@ -50,11 +50,6 @@ namespace Physalia.AbilityFramework
             owner.ModifyStat(statId, value);
         }
 
-        public AbilityInstance FindAbility(int abilityId)
-        {
-            return owner.FindAbility(abilityId);
-        }
-
         public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
         {
             return owner.FindAbility(match);
@@ -81,11 +76,6 @@ namespace Physalia.AbilityFramework
         internal void RemoveAbility(AbilityInstance ability)
         {
             owner.RemoveAbility(ability);
-        }
-
-        internal void RemoveAbility(int abilityId)
-        {
-            owner.RemoveAbility(abilityId);
         }
 
         internal void ClearAllAbilities()

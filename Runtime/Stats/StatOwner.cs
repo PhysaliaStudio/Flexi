@@ -85,19 +85,6 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public AbilityInstance FindAbility(int abilityId)
-        {
-            for (var i = 0; i < abilities.Count; i++)
-            {
-                if (abilities[i].AbilityId == abilityId)
-                {
-                    return abilities[i];
-                }
-            }
-
-            return null;
-        }
-
         public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
         {
             return abilities.Find(match);
@@ -111,18 +98,6 @@ namespace Physalia.AbilityFramework
         internal void RemoveAbility(AbilityInstance ability)
         {
             abilities.Remove(ability);
-        }
-
-        internal void RemoveAbility(int abilityId)
-        {
-            for (var i = 0; i < abilities.Count; i++)
-            {
-                if (abilities[i].AbilityId == abilityId)
-                {
-                    abilities.RemoveAt(i);
-                    return;
-                }
-            }
         }
 
         internal bool RemoveAbility(Predicate<AbilityInstance> match)
