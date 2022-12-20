@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
@@ -54,12 +55,22 @@ namespace Physalia.AbilityFramework
             return owner.FindAbility(abilityId);
         }
 
+        public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
+        {
+            return owner.FindAbility(match);
+        }
+
         public AbilityInstance AppendAbility(AbilityGraphAsset graphAsset)
         {
             AbilityInstance instance = abilitySystem.CreateAbilityInstance(graphAsset);
             instance.SetOwner(this);
             owner.AppendAbility(instance);
             return instance;
+        }
+
+        public bool RemoveAbility(Predicate<AbilityInstance> match)
+        {
+            return owner.RemoveAbility(match);
         }
 
         internal void AppendAbility(AbilityInstance ability)

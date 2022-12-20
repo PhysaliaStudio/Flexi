@@ -125,6 +125,18 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        internal bool RemoveAbility(Predicate<AbilityInstance> match)
+        {
+            AbilityInstance instance = abilities.Find(match);
+            if (instance == null)
+            {
+                return false;
+            }
+
+            abilities.Remove(instance);
+            return true;
+        }
+
         internal void ClearAllAbilities()
         {
             abilities.Clear();
