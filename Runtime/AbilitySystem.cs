@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Physalia.AbilityFramework
 {
-    public class AbilitySystem : ICreateStatOwner
+    public class AbilitySystem
     {
         public event Action<IEventContext> EventReceived;
         public event Action<IChoiceContext> ChoiceOccurred;
@@ -44,28 +43,6 @@ namespace Physalia.AbilityFramework
             macroLibrary.Add(key, macroGraphAsset.Text);
         }
 
-        public void LoadAbilityGraph(int id, string graphName, string graphJson)
-        {
-            AbilityGraphAsset graphAsset = ScriptableObject.CreateInstance<AbilityGraphAsset>();
-            graphAsset.name = graphName;
-            graphAsset.Text = graphJson;
-
-            LoadAbilityGraph(id, graphAsset);
-        }
-
-        public void LoadAbilityGraph(int id, AbilityGraphAsset graphAsset)
-        {
-            bool success = graphTable.TryAdd(id, graphAsset);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] Load graph failed! Already exists graph with Id:{id}");
-                return;
-            }
-
-            // Deserialize once to log potential errors
-            _ = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-        }
-
         public AbilityGraph GetMacroGraph(string key)
         {
             bool success = macroLibrary.TryGetValue(key, out string macroJson);
@@ -79,76 +56,11 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
-        public AbilityInstance GetAbilityInstance(int id)
+        public AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
         {
-            bool success = graphTable.TryGetValue(id, out AbilityGraphAsset graphAsset);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] Get instance failed! Not exists graph with Id:{id}");
-                return null;
-            }
-
             AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityInstance instance = new AbilityInstance(id, this, graph);
+            AbilityInstance instance = new AbilityInstance(this, graph);
             return instance;
-        }
-
-        public AbilityInstance AppendAbility(Actor actor, int abilityId)
-        {
-            AbilityInstance abilityInstance = GetAbilityInstance(abilityId);
-            if (abilityInstance == null)
-            {
-                return null;
-            }
-
-            abilityInstance.SetOwner(actor);
-            actor.AppendAbility(abilityInstance);
-            return abilityInstance;
-        }
-
-        public void AddAbilityStack(Actor actor, int abilityId, int amount)
-        {
-            if (amount <= 0)
-            {
-                Logger.Warn($"[{nameof(AbilitySystem)}] AddAbilityStack failed! Since amount is less or equal to 0 (amount = {amount})");
-                return;
-            }
-
-            AbilityInstance instance = actor.FindAbility(abilityId);
-            if (instance == null)
-            {
-                instance = AppendAbility(actor, abilityId);
-                instance.Stack += amount - 1;
-                return;
-            }
-
-            instance.Stack += amount;
-        }
-
-        public void RemoveAbilityStack(Actor actor, int abilityId, int amount)
-        {
-            if (amount <= 0)
-            {
-                Logger.Warn($"[{nameof(AbilitySystem)}] RemoveAbilityStack failed! Since amount is less or equal to 0 (amount = {amount})");
-                return;
-            }
-
-            AbilityInstance instance = actor.FindAbility(abilityId);
-            if (instance == null)
-            {
-                return;
-            }
-
-            instance.Stack -= amount;
-            if (instance.Stack <= 0)
-            {
-                actor.RemoveAbility(instance);
-            }
-        }
-
-        public void ClearAllAbilities(StatOwner owner)
-        {
-            owner.ClearAllAbilities();
         }
 
         public void OverrideIterator(IEnumerable<Actor> iterator)

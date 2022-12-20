@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Name: LogWhenAttacked
+  m_EditorClassIdentifier: 
+  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":507088,"_position":{"x":54.0,"y":98.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageEventNode"},{"_id":747695,"_position":{"x":240.0,"y":161.0},"_type":"Physalia.AbilityFramework.LogNode"},{"_id":524447,"_position":{"x":468.0,"y":175.0},"_type":"Physalia.AbilityFramework.LogNode"},{"_id":135698,"_position":{"x":72.0,"y":292.0},"_type":"Physalia.AbilityFramework.StringNode","text":"I''m
+    damaged!"},{"_id":675591,"_position":{"x":270.0,"y":316.0},"_type":"Physalia.AbilityFramework.StringNode","text":"I
+    will revenge!"}],"edges":[{"id1":507088,"port1":"next","id2":747695,"port2":"previous"},{"id1":747695,"port1":"next","id2":524447,"port2":"previous"},{"id1":135698,"port1":"output","id2":747695,"port2":"text"},{"id1":675591,"port1":"output","id2":524447,"port2":"text"}]}'

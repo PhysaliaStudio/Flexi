@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
     public abstract class Actor
     {
+        private readonly AbilitySystem abilitySystem;
         private readonly StatOwner owner;
 
         public int OwnerId => owner.Id;
@@ -12,9 +14,10 @@ namespace Physalia.AbilityFramework
         public IReadOnlyList<AbilityInstance> Abilities => owner.Abilities;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => owner.Modifiers;
 
-        public Actor(ICreateStatOwner ownerCreater)
+        public Actor(AbilitySystem abilitySystem)
         {
-            owner = ownerCreater.CreateOwner();
+            this.abilitySystem = abilitySystem;
+            owner = abilitySystem.CreateOwner();
         }
 
         public bool IsValid()
@@ -47,9 +50,22 @@ namespace Physalia.AbilityFramework
             owner.ModifyStat(statId, value);
         }
 
-        public AbilityInstance FindAbility(int abilityId)
+        public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
         {
-            return owner.FindAbility(abilityId);
+            return owner.FindAbility(match);
+        }
+
+        public AbilityInstance AppendAbility(AbilityGraphAsset graphAsset)
+        {
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(graphAsset);
+            instance.SetOwner(this);
+            owner.AppendAbility(instance);
+            return instance;
+        }
+
+        public bool RemoveAbility(Predicate<AbilityInstance> match)
+        {
+            return owner.RemoveAbility(match);
         }
 
         internal void AppendAbility(AbilityInstance ability)
@@ -60,11 +76,6 @@ namespace Physalia.AbilityFramework
         internal void RemoveAbility(AbilityInstance ability)
         {
             owner.RemoveAbility(ability);
-        }
-
-        internal void RemoveAbility(int abilityId)
-        {
-            owner.RemoveAbility(abilityId);
         }
 
         internal void ClearAllAbilities()

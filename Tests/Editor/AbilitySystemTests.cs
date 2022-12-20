@@ -36,10 +36,10 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void LoadAbilityGraph_WithMissingPort_LogError()
+        public void CreateAbilityInstance_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            _ = abilitySystem.CreateAbilityInstance(CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
             TestUtilities.LogAssertAnyString(LogType.Error);
@@ -50,11 +50,9 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void AppendAbilityToOwner_OwnerOfInstanceReturnsAsExpected()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE);
 
             Assert.AreEqual(unit, instance.Actor);
         }
@@ -62,11 +60,9 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ActivateInstance()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.ATTACK_DOUBLE);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityInstance instance = abilitySystem.AppendAbility(unit, 123456);
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE);
 
             abilitySystem.EnqueueAbilityAndRun(instance, null);
             Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -78,9 +74,7 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.HELLO_WORLD);
-
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.HELLO_WORLD);
             abilitySystem.EnqueueAbilityAndRun(instance, null);
 
             // Check if the instance can do the same thing
@@ -91,13 +85,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ExecuteCustomNodesAndAbilitiy()
         {
-            abilitySystem.LoadAbilityGraph(123456, CustomAbility.NORAML_ATTACK);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(123456);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -120,15 +112,12 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ExecuteAbilitiySequence()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_DECREASE);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.NORAML_ATTACK);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
-            AbilityInstance instance2 = abilitySystem.GetAbilityInstance(2);
+            AbilityInstance instance1 = abilitySystem.CreateAbilityInstance(CustomAbility.ATTACK_DECREASE);
+            AbilityInstance instance2 = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -151,15 +140,28 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
+        public void ConditionalEntryNode_WithConditionSuccess_ExecuteAsExpected()
+        {
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1", });
+
+            AbilityInstance instance = unit.AppendAbility(CustomAbility.LOG_WHEN_ATTACKED);
+            var context = new CustomDamageEvent { target = unit, };
+            abilitySystem.EnqueueAbilityAndRun(instance, context);
+
+            LogAssert.Expect(LogType.Log, "I'm damaged!");
+            LogAssert.Expect(LogType.Log, "I will revenge!");
+            LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
         public void TargetSelectionAbilitiy_ReceivesChoice()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance1 = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK_SELECTION);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -174,13 +176,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveValidAnswer_EffectOccurred()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance1 = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK_SELECTION);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -199,13 +199,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveInvalidAnswer_LogErrorAndEffectNotOccurred()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance1 = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK_SELECTION);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -225,13 +223,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveCancellation()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK_SELECTION);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance1 = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance1 = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK_SELECTION);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -251,13 +247,11 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.Owner.SetStat(CustomStats.HEALTH, 3);
+            unit.SetStat(CustomStats.HEALTH, 3);
 
-            abilitySystem.AppendAbility(unit, 1);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -268,12 +262,10 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_NotReachCondition_ModifierNotAppendedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            abilitySystem.AppendAbility(unit, 1);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
@@ -284,13 +276,10 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_ReachConditionThenMakeNotReach_ModifierRemovedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.Owner.SetStat(CustomStats.HEALTH, 3);
-
-            abilitySystem.AppendAbility(unit, 1);
+            unit.SetStat(CustomStats.HEALTH, 3);
+            unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -308,15 +297,12 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ConditionalModifier_ReachConditionWhileRunningSystem_ModifierNotAppendedAndStatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            abilitySystem.AppendAbility(unit2, 2);
+            unit2.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -341,15 +327,12 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORAML_ATTACK);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            abilitySystem.AppendAbility(unit2, 2);
+            unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.NORAML_ATTACK);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -373,17 +356,13 @@ namespace Physalia.AbilityFramework.Tests
         [Test]
         public void ChainEffect_MultipleAbilities_TriggeredByCorrectOrder()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);
-            abilitySystem.LoadAbilityGraph(2, CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
-            abilitySystem.LoadAbilityGraph(3, CustomAbility.COUNTER_ATTACK);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
-            abilitySystem.AppendAbility(unit2, 2);
-            abilitySystem.AppendAbility(unit2, 3);
+            unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+            unit2.AppendAbility(CustomAbility.COUNTER_ATTACK);
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.NORMAL_ATTACK_5_TIMES);
             var payload = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -398,31 +377,13 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void ExecuteAbilitiy_Stackable()
-        {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.POISON);
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 30 });
-            abilitySystem.AddAbilityStack(unit, 1, 4);
-
-            AbilityInstance instance = unit.FindAbility(1);
-            var context = new CustomUnitTriggerContext { unit = unit };
-            abilitySystem.EnqueueAbilityAndRun(instance, context);
-
-            Assert.AreEqual(26, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-        }
-
-        [Test]
         public void ExecuteAbilitiy_ForLoop_StatsAreCorrect()
         {
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.NORMAL_ATTACK_5_TIMES);
-
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.NORMAL_ATTACK_5_TIMES);
             var payload = new CustomNormalAttackPayload
             {
                 attacker = unit2,
@@ -438,9 +399,8 @@ namespace Physalia.AbilityFramework.Tests
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER);
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.HELLO_WORLD_MACRO_CALLER);
             abilitySystem.EnqueueAbilityAndRun(instance, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -452,9 +412,8 @@ namespace Physalia.AbilityFramework.Tests
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
-            abilitySystem.LoadAbilityGraph(1, CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
 
-            AbilityInstance instance = abilitySystem.GetAbilityInstance(1);
+            AbilityInstance instance = abilitySystem.CreateAbilityInstance(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
             abilitySystem.EnqueueAbilityAndRun(instance, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");

@@ -4,9 +4,10 @@ namespace Physalia.AbilityFramework
 {
     public sealed class AbilityInstance
     {
-        private readonly int abilityId;
         private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
+
+        public object userData;
 
         private readonly Dictionary<string, int> blackboard = new();
 
@@ -14,23 +15,20 @@ namespace Physalia.AbilityFramework
         private IEventContext payload;
         private AbilityState currentState = AbilityState.CLEAN;
 
-        public int AbilityId => abilityId;
         public AbilitySystem System => system;
         internal AbilityGraph Graph => graph;
+
         public Actor Actor => actor;
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
-        public int Stack { get; internal set; } = 1;
-
-        internal AbilityInstance(AbilityGraph graph) : this(0, null, graph)
+        internal AbilityInstance(AbilityGraph graph) : this(null, graph)
         {
 
         }
 
-        internal AbilityInstance(int abilityId, AbilitySystem system, AbilityGraph graph)
+        internal AbilityInstance(AbilitySystem system, AbilityGraph graph)
         {
-            this.abilityId = abilityId;
             this.system = system;
             this.graph = graph;
 

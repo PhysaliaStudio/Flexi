@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
-    public class StatOwnerRepository : ICreateStatOwner
+    public class StatOwnerRepository
     {
         private readonly StatDefinitionTable table;
         private readonly IModifierAlgorithm modifierAlgorithm;
