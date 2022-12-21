@@ -21,12 +21,9 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     }
                 }
 
-                if (objects[i] is AbilityGraphAsset graphAsset)
+                if (objects[i] is AbilityGraphAsset graphAsset && objects[i] is not MacroGraphAsset)
                 {
-                    AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
-                    string json = AbilityGraphUtility.Serialize(graph);
-                    graphAsset.Text = json;
-                    EditorUtility.SetDirty(graphAsset);
+                    ConvertFromGraphAsset(graphAsset);
                 }
             }
             AssetDatabase.SaveAssets();
@@ -41,6 +38,21 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             var asset = ScriptableObject.CreateInstance<AbilityGraphAsset>();
             asset.Text = textAsset.text;
             AssetDatabase.CreateAsset(asset, assetPath);
+        }
+
+        private static void ConvertFromGraphAsset(AbilityGraphAsset graphAsset)
+        {
+            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
+            AbilityAsset abilityAsset = ScriptableObject.CreateInstance<AbilityAsset>();
+            abilityAsset.AddGraphJson(graphAsset.Text);
+            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
+            {
+                abilityAsset.AddBlackboardVariable(graph.BlackboardVariables[i]);
+            }
+
+            string assetPath = AssetDatabase.GetAssetPath(graphAsset);
+            AssetDatabase.DeleteAsset(assetPath);
+            AssetDatabase.CreateAsset(abilityAsset, assetPath);
         }
     }
 }
