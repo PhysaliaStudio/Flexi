@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
 {
-    public sealed class AbilityInstance
+    public sealed class AbilityFlow
     {
         private readonly AbilitySystem system;
         private readonly AbilityGraph graph;
@@ -22,19 +22,19 @@ namespace Physalia.AbilityFramework
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
-        internal AbilityInstance(AbilityGraph graph) : this(null, graph)
+        internal AbilityFlow(AbilityGraph graph) : this(null, graph)
         {
 
         }
 
-        internal AbilityInstance(AbilitySystem system, AbilityGraph graph)
+        internal AbilityFlow(AbilitySystem system, AbilityGraph graph)
         {
             this.system = system;
             this.graph = graph;
 
             for (var i = 0; i < graph.Nodes.Count; i++)
             {
-                graph.Nodes[i].instance = this;
+                graph.Nodes[i].flow = this;
             }
 
             for (var i = 0; i < graph.BlackboardVariables.Count; i++)
@@ -58,7 +58,7 @@ namespace Physalia.AbilityFramework
         {
             if (!blackboard.ContainsKey(key))
             {
-                Logger.Warn($"[{nameof(AbilityInstance)}] Blackboard does not have key: {key}. Cancel the override");
+                Logger.Warn($"[{nameof(AbilityFlow)}] Blackboard does not have key: {key}. Cancel the override");
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace Physalia.AbilityFramework
                 return value;
             }
 
-            Logger.Warn($"[{nameof(AbilityInstance)}] Blackboard does not have key: {key}. Returns 0");
+            Logger.Warn($"[{nameof(AbilityFlow)}] Blackboard does not have key: {key}. Returns 0");
             return 0;
         }
 
@@ -91,13 +91,13 @@ namespace Physalia.AbilityFramework
         {
             if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
             {
-                Logger.Error($"[{nameof(AbilityInstance)}] You can not execute any unfinished ability instance!");
+                Logger.Error($"[{nameof(AbilityFlow)}] You can not execute any unfinished ability instance!");
                 return;
             }
 
             if (!CanExecute(payload))
             {
-                Logger.Error($"[{nameof(AbilityInstance)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
+                Logger.Error($"[{nameof(AbilityFlow)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
                 return;
             }
 
@@ -110,14 +110,14 @@ namespace Physalia.AbilityFramework
         {
             if (currentState != AbilityState.PAUSE)
             {
-                Logger.Error($"[{nameof(AbilityInstance)}] You can not resume any unpaused ability instance!");
+                Logger.Error($"[{nameof(AbilityFlow)}] You can not resume any unpaused ability instance!");
                 return;
             }
 
             bool success = graph.Current.CheckNodeContext(resumeContext);
             if (!success)
             {
-                Logger.Error($"[{nameof(AbilityInstance)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
+                Logger.Error($"[{nameof(AbilityFlow)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
                 return;
             }
 

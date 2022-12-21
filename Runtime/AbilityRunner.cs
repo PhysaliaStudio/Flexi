@@ -4,24 +4,24 @@ namespace Physalia.AbilityFramework
 {
     public abstract class AbilityRunner
     {
-        private readonly Stack<Queue<AbilityInstance>> queueStack = new();
+        private readonly Stack<Queue<AbilityFlow>> queueStack = new();
 
         private AbilityState currentState = AbilityState.CLEAN;
 
-        public void Add(AbilityInstance instance)
+        public void Add(AbilityFlow flow)
         {
             if (queueStack.Count == 0)
             {
                 PushNewAbilityQueue();
             }
 
-            Queue<AbilityInstance> queue = queueStack.Peek();
-            queue.Enqueue(instance);
+            Queue<AbilityFlow> queue = queueStack.Peek();
+            queue.Enqueue(flow);
         }
 
         public void PushNewAbilityQueue()
         {
-            queueStack.Push(new Queue<AbilityInstance>());
+            queueStack.Push(new Queue<AbilityFlow>());
         }
 
         public void PopEmptyQueues()
@@ -51,8 +51,8 @@ namespace Physalia.AbilityFramework
 
         public void Resume(AbilitySystem abilitySystem, IResumeContext resumeContext)
         {
-            AbilityInstance instance = Peek();
-            AbilityGraph graph = instance.Graph;
+            AbilityFlow flow = Peek();
+            AbilityGraph graph = flow.Graph;
 
             if (currentState != AbilityState.PAUSE)
             {
@@ -89,8 +89,8 @@ namespace Physalia.AbilityFramework
         {
             while (queueStack.Count > 0)
             {
-                AbilityInstance instance = Peek();
-                AbilityGraph graph = instance.Graph;
+                AbilityFlow flow = Peek();
+                AbilityGraph graph = flow.Graph;
 
                 if (graph.MoveNext())
                 {
@@ -118,16 +118,16 @@ namespace Physalia.AbilityFramework
             currentState = AbilityState.DONE;
         }
 
-        private AbilityInstance Peek()
+        private AbilityFlow Peek()
         {
             if (queueStack.Count == 0)
             {
                 return null;
             }
 
-            Queue<AbilityInstance> queue = queueStack.Peek();
-            AbilityInstance instance = queue.Peek();
-            return instance;
+            Queue<AbilityFlow> queue = queueStack.Peek();
+            AbilityFlow flow = queue.Peek();
+            return flow;
         }
 
         private void Dequeue()
@@ -137,7 +137,7 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            Queue<AbilityInstance> queue = queueStack.Peek();
+            Queue<AbilityFlow> queue = queueStack.Peek();
             if (queue.Count > 0)
             {
                 queue.Dequeue();

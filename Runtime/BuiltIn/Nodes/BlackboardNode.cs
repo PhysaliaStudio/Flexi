@@ -8,7 +8,7 @@ namespace Physalia.AbilityFramework
 
         protected override void EvaluateSelf()
         {
-            value.SetValue(Instance.GetBlackboardVariable(key.Value));
+            value.SetValue(Flow.GetBlackboardVariable(key.Value));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Physalia.AbilityFramework
         private readonly List<Inport> dynamicInports = new();
         private readonly List<Outport> dynamicOutports = new();
 
-        internal AbilityInstance instance;
+        internal AbilityFlow flow;
 
         public IEnumerable<Port> Ports => ports.Values;
         public IEnumerable<Inport> Inports => inports.Values;
@@ -31,8 +31,8 @@ namespace Physalia.AbilityFramework
         public IReadOnlyList<Outport> DynamicOutports => dynamicOutports;
 
         #region AbilityInstance Members
-        public AbilityInstance Instance => instance;
-        public Actor Actor => instance?.Actor;
+        public AbilityFlow Flow => flow;
+        public Actor Actor => flow?.Actor;
         #endregion
 
         internal void AddInport(string name, Inport inport)
@@ -288,12 +288,12 @@ namespace Physalia.AbilityFramework
 
         public T GetPayload<T>() where T : class
         {
-            if (instance == null)
+            if (flow == null)
             {
                 return null;
             }
 
-            return instance.Payload as T;
+            return flow.Payload as T;
         }
 
         public virtual bool CheckNodeContext(IResumeContext resumeContext)

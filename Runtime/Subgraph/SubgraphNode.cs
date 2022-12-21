@@ -46,10 +46,10 @@ namespace Physalia.AbilityFramework
                 state = State.ENTERED;
 
                 // Get graph
-                macroGraph = Instance.System.GetMacroGraph(key);
+                macroGraph = Flow.System.GetMacroGraph(key);
                 for (var i = 0; i < macroGraph.Nodes.Count; i++)
                 {
-                    macroGraph.Nodes[i].instance = Instance;
+                    macroGraph.Nodes[i].flow = Flow;
                 }
 
                 // Copy inport values
@@ -65,7 +65,7 @@ namespace Physalia.AbilityFramework
                 }
 
                 // Push
-                Instance.Graph.PushGraph(macroGraph);
+                Flow.Graph.PushGraph(macroGraph);
             }
             else if (state == State.ENTERED)
             {

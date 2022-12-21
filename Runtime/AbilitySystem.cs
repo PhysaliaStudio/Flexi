@@ -56,11 +56,11 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
-        public AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
+        public AbilityFlow CreateAbilityFlow(AbilityGraphAsset graphAsset)
         {
             AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityInstance instance = new AbilityInstance(this, graph);
-            return instance;
+            AbilityFlow flow = new AbilityFlow(this, graph);
+            return flow;
         }
 
         public void OverrideIterator(IEnumerable<Actor> iterator)
@@ -112,26 +112,26 @@ namespace Physalia.AbilityFramework
 
         private void EnqueueAbilityIfAble(StatOwner owner, IEventContext eventContext)
         {
-            foreach (AbilityInstance ability in owner.Abilities)
+            foreach (AbilityFlow flow in owner.AbilityFlows)
             {
-                if (ability.CanExecute(eventContext))
+                if (flow.CanExecute(eventContext))
                 {
-                    EnqueueAbility(ability, eventContext);
+                    EnqueueAbility(flow, eventContext);
                 }
             }
         }
 
-        public void EnqueueAbilityAndRun(AbilityInstance instance, IEventContext eventContext)
+        public void EnqueueAbilityAndRun(AbilityFlow flow, IEventContext eventContext)
         {
-            EnqueueAbility(instance, eventContext);
+            EnqueueAbility(flow, eventContext);
             Run();
         }
 
-        public void EnqueueAbility(AbilityInstance instance, IEventContext eventContext)
+        public void EnqueueAbility(AbilityFlow flow, IEventContext eventContext)
         {
-            instance.Reset();
-            instance.SetPayload(eventContext);
-            runner.Add(instance);
+            flow.Reset();
+            flow.SetPayload(eventContext);
+            runner.Add(flow);
         }
 
         public void Run()
@@ -179,12 +179,12 @@ namespace Physalia.AbilityFramework
 
         private void CheckModifiers(StatOwner owner, StatRefreshEvent refreshEvent)
         {
-            foreach (AbilityInstance ability in owner.Abilities)
+            foreach (AbilityFlow flow in owner.AbilityFlows)
             {
-                if (ability.CanExecute(refreshEvent))
+                if (flow.CanExecute(refreshEvent))
                 {
-                    ability.SetPayload(refreshEvent);
-                    ability.Execute();
+                    flow.SetPayload(refreshEvent);
+                    flow.Execute();
                 }
             }
         }
