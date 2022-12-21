@@ -4,27 +4,27 @@ namespace Physalia.AbilityFramework.Tests
 {
     public static class CustomAbility
     {
-        public static AbilityGraphAsset HELLO_WORLD
+        public static AbilityAsset HELLO_WORLD
         {
             get
             {
-                return ReadAbilityFile("HelloWorld");
+                return LoadAbilityAsset("HelloWorld");
             }
         }
 
-        public static AbilityGraphAsset HELLO_WORLD_MACRO_CALLER
+        public static AbilityAsset HELLO_WORLD_MACRO_CALLER
         {
             get
             {
-                return ReadAbilityFile("HelloWorld_MacroCaller");
+                return LoadAbilityAsset("HelloWorld_MacroCaller");
             }
         }
 
-        public static AbilityGraphAsset HELLO_WORLD_MACRO_CALLER_5_TIMES
+        public static AbilityAsset HELLO_WORLD_MACRO_CALLER_5_TIMES
         {
             get
             {
-                return ReadAbilityFile("HelloWorld_MacroCaller5Times");
+                return LoadAbilityAsset("HelloWorld_MacroCaller5Times");
             }
         }
 
@@ -36,97 +36,97 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static AbilityGraphAsset HELLO_WORLD_MISSING_ELEMENTS
+        public static AbilityAsset HELLO_WORLD_MISSING_ELEMENTS
         {
             get
             {
-                return ReadAbilityFile("HelloWorld_MissingElements");
+                return LoadAbilityAsset("HelloWorld_MissingElements");
             }
         }
 
-        public static AbilityGraphAsset NORAML_ATTACK
+        public static AbilityAsset NORAML_ATTACK
         {
             get
             {
-                return ReadAbilityFile("NormalAttack");
+                return LoadAbilityAsset("NormalAttack");
             }
         }
 
-        public static AbilityGraphAsset NORAML_ATTACK_SELECTION
+        public static AbilityAsset NORAML_ATTACK_SELECTION
         {
             get
             {
-                return ReadAbilityFile("NormalAttackSelection");
+                return LoadAbilityAsset("NormalAttackSelection");
             }
         }
 
-        public static AbilityGraphAsset NORMAL_ATTACK_5_TIMES
+        public static AbilityAsset NORMAL_ATTACK_5_TIMES
         {
             get
             {
-                return ReadAbilityFile("NormalAttack5Times");
+                return LoadAbilityAsset("NormalAttack5Times");
             }
         }
 
-        public static AbilityGraphAsset ATTACK_DECREASE
+        public static AbilityAsset ATTACK_DECREASE
         {
             get
             {
-                return ReadAbilityFile("AttackDecrease");
+                return LoadAbilityAsset("AttackDecrease");
             }
         }
 
-        public static AbilityGraphAsset ATTACK_DOUBLE
+        public static AbilityAsset ATTACK_DOUBLE
         {
             get
             {
-                return ReadAbilityFile("AttackDouble");
+                return LoadAbilityAsset("AttackDouble");
             }
         }
 
-        public static AbilityGraphAsset ATTACK_UP_WHEN_LOW_HEALTH
+        public static AbilityAsset ATTACK_UP_WHEN_LOW_HEALTH
         {
             get
             {
-                return ReadAbilityFile("AttackUpWhenLowHealth");
+                return LoadAbilityAsset("AttackUpWhenLowHealth");
             }
         }
 
-        public static AbilityGraphAsset ATTACK_DOUBLE_WHEN_DAMAGED
+        public static AbilityAsset ATTACK_DOUBLE_WHEN_DAMAGED
         {
             get
             {
-                return ReadAbilityFile("AttackDoubleWhenDamaged");
+                return LoadAbilityAsset("AttackDoubleWhenDamaged");
             }
         }
 
-        public static AbilityGraphAsset LOG_WHEN_ATTACKED
+        public static AbilityAsset LOG_WHEN_ATTACKED
         {
             get
             {
-                return ReadAbilityFile("LogWhenAttacked");
+                return LoadAbilityAsset("LogWhenAttacked");
             }
         }
 
-        public static AbilityGraphAsset COUNTER_ATTACK
+        public static AbilityAsset COUNTER_ATTACK
         {
             get
             {
-                return ReadAbilityFile("CounterAttack");
+                return LoadAbilityAsset("CounterAttack");
             }
         }
 
-        public static AbilityGraphAsset POISON
+        public static AbilityAsset POISON
         {
             get
             {
-                return ReadAbilityFile("Poison");
+                return LoadAbilityAsset("Poison");
             }
         }
 
-        private static AbilityGraphAsset ReadAbilityFile(string fileName)
+        private static AbilityAsset LoadAbilityAsset(string fileName)
         {
-            var asset = Resources.Load<AbilityGraphAsset>(fileName);
+            var asset = Resources.Load<AbilityAsset>(fileName);
             return asset;
         }
 

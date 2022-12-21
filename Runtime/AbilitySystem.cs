@@ -136,6 +136,20 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        internal void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
+        {
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.CanExecute(eventContext))
+                {
+                    EnqueueAbility(abilityFlow, eventContext);
+                }
+            }
+
+            Run();
+        }
+
         public void EnqueueAbilityAndRun(AbilityFlow flow, IEventContext eventContext)
         {
             EnqueueAbility(flow, eventContext);

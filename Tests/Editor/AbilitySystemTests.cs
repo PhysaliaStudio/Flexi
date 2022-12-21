@@ -36,10 +36,10 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void CreateAbilityInstance_WithMissingPort_LogError()
+        public void InstantiateAbility_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port
-            _ = abilitySystem.CreateAbilityFlow(CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            _ = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MISSING_ELEMENTS.Data);
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
             TestUtilities.LogAssertAnyString(LogType.Error);
@@ -48,34 +48,24 @@ namespace Physalia.AbilityFramework.Tests
         }
 
         [Test]
-        public void AppendAbilityToOwner_OwnerOfInstanceReturnsAsExpected()
-        {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityFlow abilityFlow = unit.AppendAbilityFlow(CustomAbility.ATTACK_DOUBLE);
-
-            Assert.AreEqual(unit, abilityFlow.Actor);
-        }
-
-        [Test]
         public void ActivateInstance()
         {
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityFlow abilityFlow = unit.AppendAbilityFlow(CustomAbility.ATTACK_DOUBLE);
+            Ability ability = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE.Data);
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, null);
+            abilitySystem.EnqueueAbilityAndRun(ability, null);
             Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, null);
+            abilitySystem.EnqueueAbilityAndRun(ability, null);
             Assert.AreEqual(8, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.HELLO_WORLD);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, null);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD.Data);
+            abilitySystem.EnqueueAbilityAndRun(ability, null);
 
             // Check if the instance can do the same thing
             LogAssert.Expect(LogType.Log, "Hello");
@@ -89,7 +79,7 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK.Data);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -102,8 +92,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload1);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload2);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
 
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -116,8 +106,8 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow1 = abilitySystem.CreateAbilityFlow(CustomAbility.ATTACK_DECREASE);
-            AbilityFlow abilityFlow2 = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK);
+            Ability ability1 = abilitySystem.InstantiateAbility(CustomAbility.ATTACK_DECREASE.Data);
+            Ability ability2 = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK.Data);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -130,9 +120,9 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow1, payload1);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow2, payload1);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow2, payload2);
+            abilitySystem.EnqueueAbilityAndRun(ability1, payload1);
+            abilitySystem.EnqueueAbilityAndRun(ability2, payload1);
+            abilitySystem.EnqueueAbilityAndRun(ability2, payload2);
 
             Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -145,9 +135,9 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1", });
 
-            AbilityFlow abilityFlow = unit.AppendAbilityFlow(CustomAbility.LOG_WHEN_ATTACKED);
+            Ability ability = unit.AppendAbility(CustomAbility.LOG_WHEN_ATTACKED.Data);
             var context = new CustomDamageEvent { target = unit, };
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, context);
+            abilitySystem.EnqueueAbilityAndRun(ability, context);
 
             LogAssert.Expect(LogType.Log, "I'm damaged!");
             LogAssert.Expect(LogType.Log, "I will revenge!");
@@ -161,13 +151,13 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK_SELECTION);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK_SELECTION.Data);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
 
             Assert.IsNotNull(choiceContext);
             Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
@@ -180,13 +170,13 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK_SELECTION);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK_SELECTION.Data);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -203,13 +193,13 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK_SELECTION);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK_SELECTION.Data);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -227,13 +217,13 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK_SELECTION);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK_SELECTION.Data);
             var payload = new CustomActivationPayload { activator = unit1 };
 
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -251,7 +241,7 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.SetStat(CustomStats.HEALTH, 3);
 
-            _ = unit.AppendAbilityFlow(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+            _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -265,7 +255,7 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            _ = unit.AppendAbilityFlow(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+            _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
@@ -279,7 +269,7 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.SetStat(CustomStats.HEALTH, 3);
-            _ = unit.AppendAbilityFlow(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+            _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
             abilitySystem.RefreshModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
@@ -300,9 +290,9 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            _ = unit2.AppendAbilityFlow(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
+            _ = unit2.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK.Data);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -315,8 +305,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload1);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload2);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
 
             Assert.AreEqual(1, unit2.Owner.Modifiers.Count);
             Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -330,9 +320,9 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            _ = unit2.AppendAbilityFlow(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+            _ = unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED.Data);
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORAML_ATTACK);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORAML_ATTACK.Data);
             var payload1 = new CustomNormalAttackPayload
             {
                 attacker = unit1,
@@ -345,8 +335,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload1);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload2);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
 
             Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -359,17 +349,17 @@ namespace Physalia.AbilityFramework.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
-            _ = unit2.AppendAbilityFlow(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
-            _ = unit2.AppendAbilityFlow(CustomAbility.COUNTER_ATTACK);
+            _ = unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED.Data);
+            _ = unit2.AppendAbility(CustomAbility.COUNTER_ATTACK.Data);
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORMAL_ATTACK_5_TIMES);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORMAL_ATTACK_5_TIMES.Data);
             var payload = new CustomNormalAttackPayload
             {
                 attacker = unit1,
                 mainTarget = unit2,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
 
             Assert.AreEqual(2, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(5, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -383,14 +373,14 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.NORMAL_ATTACK_5_TIMES);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.NORMAL_ATTACK_5_TIMES.Data);
             var payload = new CustomNormalAttackPayload
             {
                 attacker = unit2,
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, payload);
+            abilitySystem.EnqueueAbilityAndRun(ability, payload);
             Assert.AreEqual(5, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
@@ -400,8 +390,8 @@ namespace Physalia.AbilityFramework.Tests
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.HELLO_WORLD_MACRO_CALLER);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, null);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MACRO_CALLER.Data);
+            abilitySystem.EnqueueAbilityAndRun(ability, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "end");
@@ -413,8 +403,8 @@ namespace Physalia.AbilityFramework.Tests
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
-            abilitySystem.EnqueueAbilityAndRun(abilityFlow, null);
+            Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES.Data);
+            abilitySystem.EnqueueAbilityAndRun(ability, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "Hello World!");
