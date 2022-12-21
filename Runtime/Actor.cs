@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
@@ -11,6 +10,7 @@ namespace Physalia.AbilityFramework
         public int OwnerId => owner.Id;
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
+        public IReadOnlyList<Ability> Abilities => owner.Abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => owner.Modifiers;
 
@@ -93,39 +93,6 @@ namespace Physalia.AbilityFramework
             }
 
             return true;
-        }
-
-        public AbilityFlow FindAbilityFlow(Predicate<AbilityFlow> match)
-        {
-            return owner.FindAbilityFlow(match);
-        }
-
-        public AbilityFlow AppendAbilityFlow(AbilityGraphAsset graphAsset)
-        {
-            AbilityFlow abilityFlow = abilitySystem.CreateAbilityFlow(graphAsset);
-            abilityFlow.SetOwner(this);
-            owner.AppendAbilityFlow(abilityFlow);
-            return abilityFlow;
-        }
-
-        public bool RemoveAbility(Predicate<AbilityFlow> match)
-        {
-            return owner.RemoveAbilityFlow(match);
-        }
-
-        internal void AppendAbilityFlow(AbilityFlow abilityFlow)
-        {
-            owner.AppendAbilityFlow(abilityFlow);
-        }
-
-        internal void RemoveAbilityFlow(AbilityFlow abilityFlow)
-        {
-            owner.RemoveAbilityFlow(abilityFlow);
-        }
-
-        internal void ClearAllAbilityFlow()
-        {
-            owner.ClearAllAbilityFlows();
         }
 
         public void AppendModifier(StatModifierInstance modifier)

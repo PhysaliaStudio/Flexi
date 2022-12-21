@@ -19,6 +19,7 @@ namespace Physalia.AbilityFramework
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
+        public IReadOnlyList<Ability> Abilities => abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => abilityFlows;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
 

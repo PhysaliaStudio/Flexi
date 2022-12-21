@@ -56,7 +56,7 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
-        internal Ability InstantiateAbility(AbilityData abilityData)
+        public Ability InstantiateAbility(AbilityData abilityData)
         {
             var ability = new Ability(this, abilityData);
             ability.Initialize();
@@ -131,32 +131,44 @@ namespace Physalia.AbilityFramework
             {
                 if (flow.CanExecute(eventContext))
                 {
-                    EnqueueAbility(flow, eventContext);
+                    EnqueueAbilityFlow(flow, eventContext);
                 }
             }
         }
 
-        internal void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
+        public bool CanEnqueueAbility(Ability ability, IEventContext eventContext)
         {
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
                 if (abilityFlow.CanExecute(eventContext))
                 {
-                    EnqueueAbility(abilityFlow, eventContext);
+                    return true;
                 }
             }
 
-            Run();
+            return false;
         }
 
-        public void EnqueueAbilityAndRun(AbilityFlow flow, IEventContext eventContext)
+        public void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
         {
-            EnqueueAbility(flow, eventContext);
+            EnqueueAbility(ability, eventContext);
             Run();
         }
 
-        public void EnqueueAbility(AbilityFlow flow, IEventContext eventContext)
+        public void EnqueueAbility(Ability ability, IEventContext eventContext)
+        {
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.CanExecute(eventContext))
+                {
+                    EnqueueAbilityFlow(abilityFlow, eventContext);
+                }
+            }
+        }
+
+        private void EnqueueAbilityFlow(AbilityFlow flow, IEventContext eventContext)
         {
             flow.Reset();
             flow.SetPayload(eventContext);
