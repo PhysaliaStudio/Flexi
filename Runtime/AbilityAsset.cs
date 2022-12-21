@@ -8,10 +8,14 @@ namespace Physalia.AbilityFramework
     {
         [SerializeField]
         private List<BlackboardVariable> blackboard = new();
+        [HideInInspector]
         [SerializeField]
         private List<string> graphJsons = new();
 
         private AbilityData abilityData;
+
+        internal List<BlackboardVariable> Blackboard => blackboard;
+        internal List<string> GraphJsons => graphJsons;
 
         public AbilityData Data
         {
@@ -29,6 +33,16 @@ namespace Physalia.AbilityFramework
 
                 return abilityData;
             }
+        }
+
+        internal void AddBlackboardVariable(BlackboardVariable variable)
+        {
+            blackboard.Add(variable);
+        }
+
+        internal void AddGraphJson(string graphJson)
+        {
+            graphJsons.Add(graphJson);
         }
     }
 }
