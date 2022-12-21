@@ -56,10 +56,25 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
+        internal Ability InstantiateAbility(AbilityData abilityData)
+        {
+            var ability = new Ability(this, abilityData);
+            ability.Initialize();
+            return ability;
+        }
+
+        internal AbilityFlow InstantiateAbilityFlow(Ability ability, int index)
+        {
+            string graphJson = ability.Data.graphJsons[index];
+            AbilityGraph graph = AbilityGraphUtility.Deserialize("", graphJson, macroLibrary);
+            AbilityFlow flow = new AbilityFlow(this, graph, ability);
+            return flow;
+        }
+
         public AbilityFlow CreateAbilityFlow(AbilityGraphAsset graphAsset)
         {
             AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityFlow flow = new AbilityFlow(this, graph);
+            AbilityFlow flow = new AbilityFlow(this, graph, null);
             return flow;
         }
 

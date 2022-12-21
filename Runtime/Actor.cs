@@ -50,6 +50,51 @@ namespace Physalia.AbilityFramework
             owner.ModifyStat(statId, value);
         }
 
+        public Ability FindAbility(AbilityData abilityData)
+        {
+            return owner.FindAbility(abilityData);
+        }
+
+        public Ability AppendAbility(AbilityData abilityData)
+        {
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            ability.Actor = this;
+            owner.AppendAbility(ability);
+
+            IReadOnlyList<AbilityFlow> abilityFlows = ability.Flows;
+            for (var i = 0; i < abilityFlows.Count; i++)
+            {
+                AbilityFlow abilityFlow = abilityFlows[i];
+                abilityFlow.SetOwner(this);
+                owner.AppendAbilityFlow(abilityFlow);
+            }
+
+            return ability;
+        }
+
+        public bool RemoveAbility(AbilityData abilityData)
+        {
+            Ability ability = owner.FindAbility(abilityData);
+            if (ability == null)
+            {
+                return false;
+            }
+
+            owner.RemoveAbility(ability);
+
+            IReadOnlyList<AbilityFlow> abilityFlows = Owner.AbilityFlows;
+            for (var i = abilityFlows.Count - 1; i >= 0; i--)
+            {
+                AbilityFlow abilityFlow = abilityFlows[i];
+                if (abilityFlow.Ability.Data == abilityData)
+                {
+                    owner.RemoveAbilityFlowAt(i);
+                }
+            }
+
+            return true;
+        }
+
         public AbilityFlow FindAbilityFlow(Predicate<AbilityFlow> match)
         {
             return owner.FindAbilityFlow(match);

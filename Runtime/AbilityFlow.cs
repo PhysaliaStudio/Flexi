@@ -5,6 +5,7 @@ namespace Physalia.AbilityFramework
     public sealed class AbilityFlow
     {
         private readonly AbilitySystem system;
+        private readonly Ability ability;
         private readonly AbilityGraph graph;
 
         public object userData;
@@ -16,20 +17,22 @@ namespace Physalia.AbilityFramework
         private AbilityState currentState = AbilityState.CLEAN;
 
         public AbilitySystem System => system;
+        internal Ability Ability => ability;
         internal AbilityGraph Graph => graph;
 
         public Actor Actor => actor;
         internal IEventContext Payload => payload;
         public AbilityState CurrentState => currentState;
 
-        internal AbilityFlow(AbilityGraph graph) : this(null, graph)
+        internal AbilityFlow(AbilityGraph graph) : this(null, graph, null)
         {
 
         }
 
-        internal AbilityFlow(AbilitySystem system, AbilityGraph graph)
+        internal AbilityFlow(AbilitySystem system, AbilityGraph graph, Ability ability)
         {
             this.system = system;
+            this.ability = ability;
             this.graph = graph;
 
             for (var i = 0; i < graph.Nodes.Count; i++)

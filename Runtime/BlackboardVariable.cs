@@ -7,5 +7,14 @@ namespace Physalia.AbilityFramework
     {
         public string key = "";
         public int value;
+
+        public BlackboardVariable Clone()
+        {
+            return new BlackboardVariable
+            {
+                key = key,
+                value = value,
+            };
+        }
     }
 }

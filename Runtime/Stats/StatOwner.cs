@@ -10,6 +10,7 @@ namespace Physalia.AbilityFramework
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
+        private readonly List<Ability> abilities = new();
         private readonly List<AbilityFlow> abilityFlows = new();
         private readonly HashSet<StatModifierInstance> modifiers = new();
 
@@ -85,6 +86,21 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        internal Ability FindAbility(AbilityData abilityData)
+        {
+            return abilities.Find(x => x.Data == abilityData);
+        }
+
+        internal void AppendAbility(Ability ability)
+        {
+            abilities.Add(ability);
+        }
+
+        internal void RemoveAbility(Ability ability)
+        {
+            abilities.Remove(ability);
+        }
+
         public AbilityFlow FindAbilityFlow(Predicate<AbilityFlow> match)
         {
             return abilityFlows.Find(match);
@@ -110,6 +126,11 @@ namespace Physalia.AbilityFramework
 
             abilityFlows.Remove(abilityFlow);
             return true;
+        }
+
+        internal void RemoveAbilityFlowAt(int index)
+        {
+            abilityFlows.RemoveAt(index);
         }
 
         internal void ClearAllAbilityFlows()
