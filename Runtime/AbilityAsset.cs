@@ -44,5 +44,15 @@ namespace Physalia.AbilityFramework
         {
             graphJsons.Add(graphJson);
         }
+
+        private void OnValidate()
+        {
+            if (abilityData != null)
+            {
+                abilityData.name = name;
+                abilityData.blackboard = blackboard;
+                abilityData.graphJsons = graphJsons;
+            }
+        }
     }
 }
