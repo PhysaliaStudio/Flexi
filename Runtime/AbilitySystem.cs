@@ -22,17 +22,17 @@ namespace Physalia.AbilityFramework
             this.runner = runner;
         }
 
-        public StatOwner CreateOwner()
+        internal StatOwner CreateOwner()
         {
             return ownerRepository.CreateOwner();
         }
 
-        public void RemoveOwner(StatOwner owner)
+        internal void RemoveOwner(StatOwner owner)
         {
             ownerRepository.RemoveOwner(owner);
         }
 
-        public StatOwner GetOwner(int id)
+        internal StatOwner GetOwner(int id)
         {
             return ownerRepository.GetOwner(id);
         }
@@ -42,7 +42,7 @@ namespace Physalia.AbilityFramework
             macroLibrary.Add(key, macroGraphAsset.Text);
         }
 
-        public AbilityGraph GetMacroGraph(string key)
+        internal AbilityGraph GetMacroGraph(string key)
         {
             bool success = macroLibrary.TryGetValue(key, out string macroJson);
             if (!success)
