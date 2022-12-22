@@ -52,7 +52,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
         [SerializeField]
-        private AbilityGraphAsset currentAsset = null;
+        private AbilityAsset currentAsset = null;
 
         private ObjectField objectField;
 
@@ -75,7 +75,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static bool OpenWithAsset(int instanceID, int line)
         {
             UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
-            AbilityGraphAsset asset = obj as AbilityGraphAsset;
+            AbilityAsset asset = obj as AbilityAsset;
             if (asset == null)
             {
                 return false;
@@ -105,7 +105,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             rootVisualElement.styleSheets.Add(uiStyleSheet);
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
-            objectField.objectType = typeof(AbilityGraphAsset);
+            objectField.objectType = typeof(AbilityAsset);
             objectField.RegisterValueChangedCallback(evt =>
             {
                 if (evt.previousValue == evt.newValue)
@@ -119,7 +119,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return;
                 }
 
-                var asset = evt.newValue as AbilityGraphAsset;
+                var asset = evt.newValue as AbilityAsset;
                 bool ok = AskForOpenAssetIfDirty(asset);
                 if (!ok)
                 {
@@ -169,11 +169,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             nodeInspector.SetNodeView(null);
         }
 
-        private bool LoadFile(AbilityGraphAsset asset)
+        private bool LoadFile(AbilityAsset asset)
         {
             HideNodeInspector();
 
-            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.Text, MacroLibraryCache.Get());
+            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.GraphJsons[0], MacroLibraryCache.Get());
             if (asset is MacroGraphAsset && !abilityGraph.HasCorrectSubgraphElement())
             {
                 abilityGraph.AddSubgraphInOutNodes();
@@ -224,20 +224,25 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 if (abilityGraph.HasSubgraphElement())
                 {
                     MacroGraphAsset newAsset = CreateInstance<MacroGraphAsset>();
+                    newAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
                 else
                 {
-                    AbilityGraphAsset newAsset = CreateInstance<AbilityGraphAsset>();
+                    AbilityAsset newAsset = CreateInstance<AbilityAsset>();
+                    newAsset.AddGraphJson(AbilityGraphUtility.Serialize(abilityGraph));
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
 
-                currentAsset = AssetDatabase.LoadAssetAtPath<AbilityGraphAsset>(assetPath);
+                currentAsset = AssetDatabase.LoadAssetAtPath<AbilityAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
             }
+            else
+            {
+                currentAsset.GraphJsons[0] = AbilityGraphUtility.Serialize(abilityGraph);
+                EditorUtility.SetDirty(currentAsset);
+            }
 
-            currentAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
-            EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             SetDirty(false);
@@ -266,7 +271,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             SaveFile();
         }
 
-        private bool AskForOpenAssetIfDirty(AbilityGraphAsset asset)
+        private bool AskForOpenAssetIfDirty(AbilityAsset asset)
         {
             bool ok = AskForSaveIfDirty();
             if (ok)
