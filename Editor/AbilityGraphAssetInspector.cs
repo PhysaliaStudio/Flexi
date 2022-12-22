@@ -6,17 +6,17 @@ using UnityEngine;
 namespace Physalia.AbilityFramework
 {
     /// <remarks>
-    /// Largely reference TextAssetInspector.
+    /// Largely refer from TextAssetInspector.
     /// https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/Inspector/MonoScriptInspector.cs
     /// </remarks>
-    [CustomEditor(typeof(AbilityGraphAsset), true)]
+    [CustomEditor(typeof(MacroGraphAsset))]
     [CanEditMultipleObjects]
     public class AbilityGraphAssetInspector : Editor
     {
         private static readonly int MAX_CHARACTERS = 7000;
 
         private GUIStyle textStyle;
-        private AbilityGraphAsset asset;
+        private MacroGraphAsset asset;
         private string assetPath;
 
         private Hash128 lastDependencyHash;
@@ -24,7 +24,7 @@ namespace Physalia.AbilityFramework
 
         private void OnEnable()
         {
-            asset = target as AbilityGraphAsset;
+            asset = target as MacroGraphAsset;
             assetPath = AssetDatabase.GetAssetPath(asset);
             CachePreview();
         }

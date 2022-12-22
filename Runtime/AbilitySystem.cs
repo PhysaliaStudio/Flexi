@@ -13,7 +13,6 @@ namespace Physalia.AbilityFramework
         private readonly AbilityEventQueue eventQueue = new();
 
         private readonly MacroLibrary macroLibrary = new();
-        private readonly Dictionary<int, AbilityGraphAsset> graphTable = new();
 
         private IEnumerable<Actor> overridedIteratorGetter;
 
@@ -68,13 +67,6 @@ namespace Physalia.AbilityFramework
             string graphJson = ability.Data.graphJsons[index];
             AbilityGraph graph = AbilityGraphUtility.Deserialize("", graphJson, macroLibrary);
             AbilityFlow flow = new AbilityFlow(this, graph, ability);
-            return flow;
-        }
-
-        public AbilityFlow CreateAbilityFlow(AbilityGraphAsset graphAsset)
-        {
-            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityFlow flow = new AbilityFlow(this, graph, null);
             return flow;
         }
 
