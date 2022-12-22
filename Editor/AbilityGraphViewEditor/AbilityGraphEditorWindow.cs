@@ -52,7 +52,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private VisualTreeAsset blackboardItemAsset = null;
         [HideInInspector]
         [SerializeField]
-        private AbilityAsset currentAsset = null;
+        private GraphAsset currentAsset = null;
 
         private ObjectField objectField;
 
@@ -75,7 +75,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static bool OpenWithAsset(int instanceID, int line)
         {
             UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
-            AbilityAsset asset = obj as AbilityAsset;
+            GraphAsset asset = obj as GraphAsset;
             if (asset == null)
             {
                 return false;
@@ -105,7 +105,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             rootVisualElement.styleSheets.Add(uiStyleSheet);
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
-            objectField.objectType = typeof(AbilityAsset);
+            objectField.objectType = typeof(GraphAsset);
             objectField.RegisterValueChangedCallback(evt =>
             {
                 if (evt.previousValue == evt.newValue)
@@ -119,7 +119,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     return;
                 }
 
-                var asset = evt.newValue as AbilityAsset;
+                var asset = evt.newValue as GraphAsset;
                 bool ok = AskForOpenAssetIfDirty(asset);
                 if (!ok)
                 {
@@ -169,16 +169,27 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             nodeInspector.SetNodeView(null);
         }
 
-        private bool LoadFile(AbilityAsset asset)
+        private bool LoadFile(GraphAsset asset)
         {
             HideNodeInspector();
 
-            AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(asset.name, asset.GraphJsons[0], MacroLibraryCache.Get());
-            if (asset is MacroGraphAsset && !abilityGraph.HasCorrectSubgraphElement())
+            AbilityGraph abilityGraph;
+            switch (asset)
             {
-                abilityGraph.AddSubgraphInOutNodes();
-                abilityGraph.GraphInputNode.position = new Vector2(0, 250);
-                abilityGraph.GraphOutputNode.position = new Vector2(500, 250);
+                default:
+                    return false;
+                case AbilityAsset abilityAsset:
+                    abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, abilityAsset.GraphJsons[0], MacroLibraryCache.Get());
+                    break;
+                case MacroGraphAsset macroAsset:
+                    abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
+                    if (!abilityGraph.HasCorrectSubgraphElement())
+                    {
+                        abilityGraph.AddSubgraphInOutNodes();
+                        abilityGraph.GraphInputNode.position = new Vector2(0, 250);
+                        abilityGraph.GraphOutputNode.position = new Vector2(500, 250);
+                    }
+                    break;
             }
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
@@ -234,13 +245,22 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
 
-                currentAsset = AssetDatabase.LoadAssetAtPath<AbilityAsset>(assetPath);
+                currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
             }
             else
             {
-                currentAsset.GraphJsons[0] = AbilityGraphUtility.Serialize(abilityGraph);
-                EditorUtility.SetDirty(currentAsset);
+                switch (currentAsset)
+                {
+                    case AbilityAsset abilityAsset:
+                        abilityAsset.GraphJsons[0] = AbilityGraphUtility.Serialize(abilityGraph);
+                        EditorUtility.SetDirty(currentAsset);
+                        break;
+                    case MacroGraphAsset macroAsset:
+                        macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
+                        EditorUtility.SetDirty(currentAsset);
+                        break;
+                }
             }
 
             AssetDatabase.SaveAssets();
@@ -271,7 +291,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             SaveFile();
         }
 
-        private bool AskForOpenAssetIfDirty(AbilityAsset asset)
+        private bool AskForOpenAssetIfDirty(GraphAsset asset)
         {
             bool ok = AskForSaveIfDirty();
             if (ok)
