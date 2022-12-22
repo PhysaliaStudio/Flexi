@@ -54,10 +54,10 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             Ability ability = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE.Data);
 
-            abilitySystem.EnqueueAbilityAndRun(ability, null);
+            abilitySystem.TryEnqueueAndRunAbility(ability, null);
             Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            abilitySystem.EnqueueAbilityAndRun(ability, null);
+            abilitySystem.TryEnqueueAndRunAbility(ability, null);
             Assert.AreEqual(8, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
@@ -65,7 +65,7 @@ namespace Physalia.AbilityFramework.Tests
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
             Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD.Data);
-            abilitySystem.EnqueueAbilityAndRun(ability, null);
+            abilitySystem.TryEnqueueAndRunAbility(ability, null);
 
             // Check if the instance can do the same thing
             LogAssert.Expect(LogType.Log, "Hello");
@@ -92,8 +92,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
-            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -120,9 +120,9 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability1, payload1);
-            abilitySystem.EnqueueAbilityAndRun(ability2, payload1);
-            abilitySystem.EnqueueAbilityAndRun(ability2, payload2);
+            abilitySystem.TryEnqueueAndRunAbility(ability1, payload1);
+            abilitySystem.TryEnqueueAndRunAbility(ability2, payload1);
+            abilitySystem.TryEnqueueAndRunAbility(ability2, payload2);
 
             Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -137,7 +137,7 @@ namespace Physalia.AbilityFramework.Tests
 
             Ability ability = unit.AppendAbility(CustomAbility.LOG_WHEN_ATTACKED.Data);
             var context = new CustomDamageEvent { target = unit, };
-            abilitySystem.EnqueueAbilityAndRun(ability, context);
+            abilitySystem.TryEnqueueAndRunAbility(ability, context);
 
             LogAssert.Expect(LogType.Log, "I'm damaged!");
             LogAssert.Expect(LogType.Log, "I will revenge!");
@@ -157,7 +157,7 @@ namespace Physalia.AbilityFramework.Tests
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.IsNotNull(choiceContext);
             Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
@@ -176,7 +176,7 @@ namespace Physalia.AbilityFramework.Tests
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -199,7 +199,7 @@ namespace Physalia.AbilityFramework.Tests
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -223,7 +223,7 @@ namespace Physalia.AbilityFramework.Tests
             IChoiceContext choiceContext = null;
             abilitySystem.ChoiceOccurred += context => choiceContext = context;
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.IsNotNull(choiceContext);
 
@@ -305,8 +305,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
-            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
             Assert.AreEqual(1, unit2.Owner.Modifiers.Count);
             Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -335,8 +335,8 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload1);
-            abilitySystem.EnqueueAbilityAndRun(ability, payload2);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
             Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -359,7 +359,7 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit2,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.AreEqual(2, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(5, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -380,7 +380,7 @@ namespace Physalia.AbilityFramework.Tests
                 mainTarget = unit1,
             };
 
-            abilitySystem.EnqueueAbilityAndRun(ability, payload);
+            abilitySystem.TryEnqueueAndRunAbility(ability, payload);
             Assert.AreEqual(5, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
@@ -391,7 +391,7 @@ namespace Physalia.AbilityFramework.Tests
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
             Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MACRO_CALLER.Data);
-            abilitySystem.EnqueueAbilityAndRun(ability, null);
+            abilitySystem.TryEnqueueAndRunAbility(ability, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "end");
@@ -404,7 +404,7 @@ namespace Physalia.AbilityFramework.Tests
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
             Ability ability = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES.Data);
-            abilitySystem.EnqueueAbilityAndRun(ability, null);
+            abilitySystem.TryEnqueueAndRunAbility(ability, null);
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "Hello World!");

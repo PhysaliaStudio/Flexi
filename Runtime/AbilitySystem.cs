@@ -128,36 +128,71 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public bool CanEnqueueAbility(Ability ability, IEventContext eventContext)
+        public bool TryEnqueueAndRunAbility(Ability ability, IEventContext eventContext)
         {
-            for (var i = 0; i < ability.Flows.Count; i++)
+            bool success = TryEnqueueAbility(ability, eventContext);
+            if (success)
             {
-                AbilityFlow abilityFlow = ability.Flows[i];
-                if (abilityFlow.CanExecute(eventContext))
-                {
-                    return true;
-                }
+                Run();
+                return true;
             }
-
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
-        public void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
+        public bool TryEnqueueAndRunAbilities(IReadOnlyList<Ability> abilities, IEventContext eventContext)
         {
-            EnqueueAbility(ability, eventContext);
-            Run();
+            bool success = TryEnqueueAbilities(abilities, eventContext);
+            if (success)
+            {
+                Run();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public void EnqueueAbility(Ability ability, IEventContext eventContext)
+        public bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
         {
+            bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
                 if (abilityFlow.CanExecute(eventContext))
                 {
+                    hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, eventContext);
+                    break;
                 }
             }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbilities(IReadOnlyList<Ability> abilities, IEventContext eventContext)
+        {
+            bool hasAnyEnqueued = false;
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                Ability ability = abilities[i];
+                for (var j = 0; j < ability.Flows.Count; j++)
+                {
+                    AbilityFlow abilityFlow = ability.Flows[j];
+                    if (abilityFlow.CanExecute(eventContext))
+                    {
+                        // Move to next ability
+                        hasAnyEnqueued = true;
+                        EnqueueAbilityFlow(abilityFlow, eventContext);
+                        break;
+                    }
+                }
+            }
+
+            return hasAnyEnqueued;
         }
 
         private void EnqueueAbilityFlow(AbilityFlow flow, IEventContext eventContext)
