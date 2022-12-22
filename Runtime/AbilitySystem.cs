@@ -13,7 +13,6 @@ namespace Physalia.AbilityFramework
         private readonly AbilityEventQueue eventQueue = new();
 
         private readonly MacroLibrary macroLibrary = new();
-        private readonly Dictionary<int, AbilityGraphAsset> graphTable = new();
 
         private IEnumerable<Actor> overridedIteratorGetter;
 
@@ -23,17 +22,17 @@ namespace Physalia.AbilityFramework
             this.runner = runner;
         }
 
-        public StatOwner CreateOwner()
+        internal StatOwner CreateOwner()
         {
             return ownerRepository.CreateOwner();
         }
 
-        public void RemoveOwner(StatOwner owner)
+        internal void RemoveOwner(StatOwner owner)
         {
             ownerRepository.RemoveOwner(owner);
         }
 
-        public StatOwner GetOwner(int id)
+        internal StatOwner GetOwner(int id)
         {
             return ownerRepository.GetOwner(id);
         }
@@ -43,7 +42,7 @@ namespace Physalia.AbilityFramework
             macroLibrary.Add(key, macroGraphAsset.Text);
         }
 
-        public AbilityGraph GetMacroGraph(string key)
+        internal AbilityGraph GetMacroGraph(string key)
         {
             bool success = macroLibrary.TryGetValue(key, out string macroJson);
             if (!success)
@@ -56,11 +55,19 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
-        public AbilityInstance CreateAbilityInstance(AbilityGraphAsset graphAsset)
+        public Ability InstantiateAbility(AbilityData abilityData)
         {
-            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text, macroLibrary);
-            AbilityInstance instance = new AbilityInstance(this, graph);
-            return instance;
+            var ability = new Ability(this, abilityData);
+            ability.Initialize();
+            return ability;
+        }
+
+        internal AbilityFlow InstantiateAbilityFlow(Ability ability, int index)
+        {
+            string graphJson = ability.Data.graphJsons[index];
+            AbilityGraph graph = AbilityGraphUtility.Deserialize("", graphJson, macroLibrary);
+            AbilityFlow flow = new AbilityFlow(this, graph, ability);
+            return flow;
         }
 
         public void OverrideIterator(IEnumerable<Actor> iterator)
@@ -112,26 +119,52 @@ namespace Physalia.AbilityFramework
 
         private void EnqueueAbilityIfAble(StatOwner owner, IEventContext eventContext)
         {
-            foreach (AbilityInstance ability in owner.Abilities)
+            foreach (AbilityFlow flow in owner.AbilityFlows)
             {
-                if (ability.CanExecute(eventContext))
+                if (flow.CanExecute(eventContext))
                 {
-                    EnqueueAbility(ability, eventContext);
+                    EnqueueAbilityFlow(flow, eventContext);
                 }
             }
         }
 
-        public void EnqueueAbilityAndRun(AbilityInstance instance, IEventContext eventContext)
+        public bool CanEnqueueAbility(Ability ability, IEventContext eventContext)
         {
-            EnqueueAbility(instance, eventContext);
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.CanExecute(eventContext))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
+        {
+            EnqueueAbility(ability, eventContext);
             Run();
         }
 
-        public void EnqueueAbility(AbilityInstance instance, IEventContext eventContext)
+        public void EnqueueAbility(Ability ability, IEventContext eventContext)
         {
-            instance.Reset();
-            instance.SetPayload(eventContext);
-            runner.Add(instance);
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.CanExecute(eventContext))
+                {
+                    EnqueueAbilityFlow(abilityFlow, eventContext);
+                }
+            }
+        }
+
+        private void EnqueueAbilityFlow(AbilityFlow flow, IEventContext eventContext)
+        {
+            flow.Reset();
+            flow.SetPayload(eventContext);
+            runner.Add(flow);
         }
 
         public void Run()
@@ -179,12 +212,12 @@ namespace Physalia.AbilityFramework
 
         private void CheckModifiers(StatOwner owner, StatRefreshEvent refreshEvent)
         {
-            foreach (AbilityInstance ability in owner.Abilities)
+            foreach (AbilityFlow flow in owner.AbilityFlows)
             {
-                if (ability.CanExecute(refreshEvent))
+                if (flow.CanExecute(refreshEvent))
                 {
-                    ability.SetPayload(refreshEvent);
-                    ability.Execute();
+                    flow.SetPayload(refreshEvent);
+                    flow.Execute();
                 }
             }
         }

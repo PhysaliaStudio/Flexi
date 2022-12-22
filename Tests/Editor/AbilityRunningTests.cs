@@ -15,9 +15,9 @@ namespace Physalia.AbilityFramework.Tests
                 "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
                 "\"nodes\":[],\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            Assert.AreEqual(5, instance.GetBlackboardVariable("damage"));
+            Assert.AreEqual(5, abilityFlow.GetBlackboardVariable("damage"));
         }
 
         [Test]
@@ -27,9 +27,9 @@ namespace Physalia.AbilityFramework.Tests
                 "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
                 "\"nodes\":[],\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
+            Assert.AreEqual(0, abilityFlow.GetBlackboardVariable("not-exist"));
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
@@ -40,12 +40,12 @@ namespace Physalia.AbilityFramework.Tests
                 "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
                 "\"nodes\":[],\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.OverrideBlackboardVariable("not-exist", 10);
+            var abilityFlow = new AbilityFlow(abilityGraph);
+            abilityFlow.OverrideBlackboardVariable("not-exist", 10);
 
             TestUtilities.LogAssertAnyString(LogType.Warning);
 
-            Assert.AreEqual(0, instance.GetBlackboardVariable("not-exist"));
+            Assert.AreEqual(0, abilityFlow.GetBlackboardVariable("not-exist"));
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
@@ -56,10 +56,10 @@ namespace Physalia.AbilityFramework.Tests
                 "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
                 "\"nodes\":[],\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.OverrideBlackboardVariable("damage", 10);
+            var abilityFlow = new AbilityFlow(abilityGraph);
+            abilityFlow.OverrideBlackboardVariable("damage", 10);
 
-            Assert.AreEqual(10, instance.GetBlackboardVariable("damage"));
+            Assert.AreEqual(10, abilityFlow.GetBlackboardVariable("damage"));
         }
 
         [Test]
@@ -69,11 +69,11 @@ namespace Physalia.AbilityFramework.Tests
                 "\"variables\":[{\"key\":\"damage\",\"value\":5}]," +
                 "\"nodes\":[],\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.OverrideBlackboardVariable("damage", 10);
-            instance.Reset();
+            var abilityFlow = new AbilityFlow(abilityGraph);
+            abilityFlow.OverrideBlackboardVariable("damage", 10);
+            abilityFlow.Reset();
 
-            Assert.AreEqual(5, instance.GetBlackboardVariable("damage"));
+            Assert.AreEqual(5, abilityFlow.GetBlackboardVariable("damage"));
         }
 
         [Test]
@@ -90,13 +90,13 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.Execute();
+            var abilityFlow = new AbilityFlow(abilityGraph);
+            abilityFlow.Execute();
 
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
 
-            Assert.AreEqual(AbilityState.DONE, instance.CurrentState);
+            Assert.AreEqual(AbilityState.DONE, abilityFlow.CurrentState);
         }
 
         [Test]
@@ -115,9 +115,9 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            instance.Execute();
+            abilityFlow.Execute();
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.NoUnexpectedReceived();
@@ -139,10 +139,10 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            instance.Execute();
-            instance.Resume(null);
+            abilityFlow.Execute();
+            abilityFlow.Resume(null);
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -162,10 +162,10 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
-            instance.Execute();
+            var abilityFlow = new AbilityFlow(abilityGraph);
+            abilityFlow.Execute();
 
-            instance.Resume(null);
+            abilityFlow.Resume(null);
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
         }
@@ -186,10 +186,10 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            instance.Execute();  // This will encounter pause
-            instance.Execute();  // Then execute again
+            abilityFlow.Execute();  // This will encounter pause
+            abilityFlow.Execute();  // Then execute again
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Error, new Regex(".*"));
@@ -212,14 +212,14 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":5,\"port1\":\"text\",\"id2\":6,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            instance.Execute();  // This will encounter pause
-            instance.Reset();
+            abilityFlow.Execute();  // This will encounter pause
+            abilityFlow.Reset();
 
-            Assert.AreEqual(AbilityState.CLEAN, instance.CurrentState);
+            Assert.AreEqual(AbilityState.CLEAN, abilityFlow.CurrentState);
 
-            instance.Execute();  // Then execute again
+            abilityFlow.Execute();  // Then execute again
 
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
             LogAssert.Expect(LogType.Log, "Ready to Pause!");
@@ -233,9 +233,9 @@ namespace Physalia.AbilityFramework.Tests
                 "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.StatRefreshEventNode\"}]," +
                 "\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            bool success = instance.CanExecute(null);
+            bool success = abilityFlow.CanExecute(null);
             Assert.AreEqual(false, success);
         }
 
@@ -246,9 +246,9 @@ namespace Physalia.AbilityFramework.Tests
                 "\"nodes\":[{\"_id\":507088,\"_position\":{\"x\":54,\"y\":98},\"_type\":\"Physalia.AbilityFramework.StatRefreshEventNode\"}]," +
                 "\"edges\":[]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            bool success = instance.CanExecute(new StatRefreshEvent());
+            bool success = abilityFlow.CanExecute(new StatRefreshEvent());
             Assert.AreEqual(true, success);
         }
 
@@ -266,9 +266,9 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"id1\":747695,\"port1\":\"text\",\"id2\":135698,\"port2\":\"output\"}," +
                 "{\"id1\":524447,\"port1\":\"text\",\"id2\":675591,\"port2\":\"output\"}]}";
             AbilityGraph abilityGraph = JsonConvert.DeserializeObject<AbilityGraph>(json);
-            AbilityInstance instance = new AbilityInstance(abilityGraph);
+            var abilityFlow = new AbilityFlow(abilityGraph);
 
-            instance.Execute();
+            abilityFlow.Execute();
 
             LogAssert.Expect(LogType.Error, new Regex(".*"));
             LogAssert.NoUnexpectedReceived();

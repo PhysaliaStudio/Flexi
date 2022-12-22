@@ -7,7 +7,7 @@ namespace Physalia.AbilityFramework
 
         protected override void EvaluateSelf()
         {
-            if (Instance != null)
+            if (Flow != null)
             {
                 actor.SetValue(Actor);
             }

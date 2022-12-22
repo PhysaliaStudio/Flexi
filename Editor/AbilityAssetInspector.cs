@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 using UnityEditor;
@@ -9,24 +10,24 @@ namespace Physalia.AbilityFramework
     /// Largely refer from TextAssetInspector.
     /// https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/Inspector/MonoScriptInspector.cs
     /// </remarks>
-    [CustomEditor(typeof(MacroGraphAsset))]
+    [CustomEditor(typeof(AbilityAsset))]
     [CanEditMultipleObjects]
-    public class AbilityGraphAssetInspector : Editor
+    public class AbilityAssetInspector : Editor
     {
         private static readonly int MAX_CHARACTERS = 7000;
 
         private GUIStyle textStyle;
-        private MacroGraphAsset asset;
+        private AbilityAsset asset;
         private string assetPath;
 
+        private readonly List<GUIContent> cachedPreviews = new();
         private Hash128 lastDependencyHash;
-        private GUIContent cachedPreview;
 
         private void OnEnable()
         {
-            asset = target as MacroGraphAsset;
+            asset = target as AbilityAsset;
             assetPath = AssetDatabase.GetAssetPath(asset);
-            CachePreview();
+            CachePreviews();
         }
 
         public override void OnInspectorGUI()
@@ -42,36 +43,55 @@ namespace Physalia.AbilityFramework
             Hash128 dependencyHash = AssetDatabase.GetAssetDependencyHash(assetPath);
             if (lastDependencyHash != dependencyHash)
             {
-                CachePreview();
+                CachePreviews();
                 lastDependencyHash = dependencyHash;
             }
 
-            Rect rect = GUILayoutUtility.GetRect(cachedPreview, textStyle);
+            for (var i = 0; i < cachedPreviews.Count; i++)
+            {
+                RenderPreview(cachedPreviews[i]);
+            }
+        }
+
+        private void RenderPreview(GUIContent content)
+        {
+            Rect rect = GUILayoutUtility.GetRect(content, textStyle);
             float addedWidth = rect.x;
             rect.x = 0;
             rect.y -= 3;
             rect.width += addedWidth + 5;
-            GUI.Box(rect, cachedPreview, textStyle);
+            GUI.Box(rect, content, textStyle);
         }
 
-        private void CachePreview()
+        private void CachePreviews()
         {
+            cachedPreviews.Clear();
+
             if (targets.Length > 1)
             {
-                cachedPreview = new GUIContent($"{targets.Length} Graph Asset");
+                var content = new GUIContent($"{targets.Length} Graph Asset");
+                cachedPreviews.Add(content);
                 return;
             }
 
-            if (string.IsNullOrEmpty(asset.Text))
+            for (var i = 0; i < asset.GraphJsons.Count; i++)
             {
-                cachedPreview = new GUIContent();
-                return;
+                GUIContent content = CreateJsonPreview(asset.GraphJsons[i]);
+                cachedPreviews.Add(content);
+            }
+        }
+
+        private static GUIContent CreateJsonPreview(string json)
+        {
+            if (string.IsNullOrEmpty(json))
+            {
+                return new GUIContent();
             }
 
             string text;
             try
             {
-                text = IndentJson(asset.Text);
+                text = IndentJson(json);
                 if (text.Length >= MAX_CHARACTERS)
                 {
                     text = text.Substring(0, MAX_CHARACTERS) + "...\n\n<...etc...>";
@@ -82,7 +102,7 @@ namespace Physalia.AbilityFramework
                 text = "[Error] Json Parse Failed!";
             }
 
-            cachedPreview = new GUIContent(text);
+            return new GUIContent(text);
         }
 
         private static string IndentJson(string json)

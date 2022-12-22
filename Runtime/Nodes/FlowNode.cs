@@ -42,18 +42,18 @@ namespace Physalia.AbilityFramework
 
         protected void PushSelf()
         {
-            Instance?.Push(this);
+            Flow?.Push(this);
         }
 
         protected AbilityState WaitAndChoice(IChoiceContext context)
         {
-            Instance.System?.TriggerChoice(context);
+            Flow.System?.TriggerChoice(context);
             return AbilityState.PAUSE;
         }
 
         protected void EnqueueEvent(IEventContext eventContext)
         {
-            Instance.System?.EnqueueEvent(eventContext);
+            Flow.System?.EnqueueEvent(eventContext);
         }
     }
 }

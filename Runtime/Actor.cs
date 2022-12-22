@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Physalia.AbilityFramework
@@ -11,7 +10,8 @@ namespace Physalia.AbilityFramework
         public int OwnerId => owner.Id;
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
-        public IReadOnlyList<AbilityInstance> Abilities => owner.Abilities;
+        public IReadOnlyList<Ability> Abilities => owner.Abilities;
+        public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
         internal IReadOnlyCollection<StatModifierInstance> Modifiers => owner.Modifiers;
 
         public Actor(AbilitySystem abilitySystem)
@@ -50,37 +50,49 @@ namespace Physalia.AbilityFramework
             owner.ModifyStat(statId, value);
         }
 
-        public AbilityInstance FindAbility(Predicate<AbilityInstance> match)
+        public Ability FindAbility(AbilityData abilityData)
         {
-            return owner.FindAbility(match);
+            return owner.FindAbility(abilityData);
         }
 
-        public AbilityInstance AppendAbility(AbilityGraphAsset graphAsset)
+        public Ability AppendAbility(AbilityData abilityData)
         {
-            AbilityInstance instance = abilitySystem.CreateAbilityInstance(graphAsset);
-            instance.SetOwner(this);
-            owner.AppendAbility(instance);
-            return instance;
-        }
-
-        public bool RemoveAbility(Predicate<AbilityInstance> match)
-        {
-            return owner.RemoveAbility(match);
-        }
-
-        internal void AppendAbility(AbilityInstance ability)
-        {
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            ability.Actor = this;
             owner.AppendAbility(ability);
+
+            IReadOnlyList<AbilityFlow> abilityFlows = ability.Flows;
+            for (var i = 0; i < abilityFlows.Count; i++)
+            {
+                AbilityFlow abilityFlow = abilityFlows[i];
+                abilityFlow.SetOwner(this);
+                owner.AppendAbilityFlow(abilityFlow);
+            }
+
+            return ability;
         }
 
-        internal void RemoveAbility(AbilityInstance ability)
+        public bool RemoveAbility(AbilityData abilityData)
         {
+            Ability ability = owner.FindAbility(abilityData);
+            if (ability == null)
+            {
+                return false;
+            }
+
             owner.RemoveAbility(ability);
-        }
 
-        internal void ClearAllAbilities()
-        {
-            owner.ClearAllAbilities();
+            IReadOnlyList<AbilityFlow> abilityFlows = Owner.AbilityFlows;
+            for (var i = abilityFlows.Count - 1; i >= 0; i--)
+            {
+                AbilityFlow abilityFlow = abilityFlows[i];
+                if (abilityFlow.Ability.Data == abilityData)
+                {
+                    owner.RemoveAbilityFlowAt(i);
+                }
+            }
+
+            return true;
         }
 
         public void AppendModifier(StatModifierInstance modifier)

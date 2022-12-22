@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2df4f149b2bea4b4e853d03314c7e176, type: 3}
+  m_Script: {fileID: 11500000, guid: 32f4e526f6c4d2a49979457203108d7a, type: 3}
   m_Name: CounterAttack
   m_EditorClassIdentifier: 
-  text: '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":829185,"_position":{"x":59.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageEventNode"},{"_id":540835,"_position":{"x":512.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageNode"},{"_id":631924,"_position":{"x":286.0,"y":262.0},"_type":"Physalia.AbilityFramework.Tests.CustomUnitNode"}],"edges":[{"id1":829185,"port1":"next","id2":540835,"port2":"previous"},{"id1":829185,"port1":"instigatorPort","id2":540835,"port2":"targets"},{"id1":829185,"port1":"targetPort","id2":540835,"port2":"instigatorPort"},{"id1":829185,"port1":"targetPort","id2":631924,"port2":"customUnitPort"},{"id1":631924,"port1":"attackPort","id2":540835,"port2":"baseValue"}]}'
+  blackboard: []
+  graphJsons:
+  - '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":829185,"_position":{"x":59.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageEventNode"},{"_id":540835,"_position":{"x":512.0,"y":107.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageNode"},{"_id":631924,"_position":{"x":286.0,"y":262.0},"_type":"Physalia.AbilityFramework.Tests.CustomUnitNode"}],"edges":[{"id1":829185,"port1":"next","id2":540835,"port2":"previous"},{"id1":829185,"port1":"instigatorPort","id2":540835,"port2":"targets"},{"id1":829185,"port1":"targetPort","id2":540835,"port2":"instigatorPort"},{"id1":829185,"port1":"targetPort","id2":631924,"port2":"customUnitPort"},{"id1":631924,"port1":"attackPort","id2":540835,"port2":"baseValue"}]}'
