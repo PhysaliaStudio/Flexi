@@ -179,7 +179,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 default:
                     return false;
                 case AbilityAsset abilityAsset:
-                    abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, abilityAsset.GraphJsons[0], MacroLibraryCache.Get());
+                    string graphJson = abilityAsset.GraphJsons.Count > 0 ? abilityAsset.GraphJsons[0] : "";
+                    abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
@@ -253,7 +254,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 switch (currentAsset)
                 {
                     case AbilityAsset abilityAsset:
-                        abilityAsset.GraphJsons[0] = AbilityGraphUtility.Serialize(abilityGraph);
+                        string json = AbilityGraphUtility.Serialize(abilityGraph);
+                        if (abilityAsset.GraphJsons.Count == 0)
+                        {
+                            abilityAsset.AddGraphJson(json);
+                        }
+                        else
+                        {
+                            abilityAsset.GraphJsons[0] = json;
+                        }
                         EditorUtility.SetDirty(currentAsset);
                         break;
                     case MacroAsset macroAsset:
