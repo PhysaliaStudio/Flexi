@@ -11,7 +11,7 @@ namespace Physalia.AbilityFramework
     /// </remarks>
     [CustomEditor(typeof(MacroGraphAsset))]
     [CanEditMultipleObjects]
-    public class AbilityGraphAssetInspector : Editor
+    public class MacroGraphAssetInspector : Editor
     {
         private static readonly int MAX_CHARACTERS = 7000;
 
