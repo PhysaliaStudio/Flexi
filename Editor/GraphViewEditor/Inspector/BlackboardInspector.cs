@@ -25,6 +25,11 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             CreateGUI();
         }
 
+        public List<BlackboardVariable> GetBlackboard()
+        {
+            return variables;
+        }
+
         public void SetBlackboard(List<BlackboardVariable> variables)
         {
             this.variables.Clear();

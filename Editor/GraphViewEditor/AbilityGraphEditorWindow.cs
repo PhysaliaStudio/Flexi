@@ -260,6 +260,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 else
                 {
                     AbilityAsset newAsset = CreateInstance<AbilityAsset>();
+                    newAsset.Blackboard = blackboardInspector.GetBlackboard();
                     newAsset.AddGraphJson(AbilityGraphUtility.Serialize(abilityGraph));
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
@@ -272,6 +273,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 switch (currentAsset)
                 {
                     case AbilityAsset abilityAsset:
+                        abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
+
                         string json = AbilityGraphUtility.Serialize(abilityGraph);
                         if (abilityAsset.GraphJsons.Count == 0)
                         {

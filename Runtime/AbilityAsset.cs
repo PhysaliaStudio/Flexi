@@ -14,7 +14,26 @@ namespace Physalia.AbilityFramework
 
         private AbilityData abilityData;
 
-        internal List<BlackboardVariable> Blackboard => blackboard;
+        internal List<BlackboardVariable> Blackboard
+        {
+            get
+            {
+                return blackboard;
+            }
+            set
+            {
+                blackboard.Clear();
+                if (value != null)
+                {
+                    // Clone each variable to prevent modify the source
+                    for (var i = 0; i < value.Count; i++)
+                    {
+                        blackboard.Add(value[i].Clone());
+                    }
+                }
+            }
+        }
+
         internal List<string> GraphJsons => graphJsons;
 
         public AbilityData Data
