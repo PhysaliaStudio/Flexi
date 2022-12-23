@@ -22,7 +22,7 @@ namespace Physalia.AbilityFramework.Tests
 
         public override bool CheckNodeContext(IResumeContext resumeContext)
         {
-            if (resumeContext is CancellationContext)
+            if (resumeContext is CustomCancellation)
             {
                 return true;
             }
@@ -40,7 +40,7 @@ namespace Physalia.AbilityFramework.Tests
 
         protected override AbilityState ResumeLogic(IResumeContext resumeContext)
         {
-            if (resumeContext is CancellationContext)
+            if (resumeContext is CustomCancellation)
             {
                 return AbilityState.ABORT;
             }
