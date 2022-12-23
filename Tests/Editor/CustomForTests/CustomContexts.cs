@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Physalia.AbilityFramework.Tests
 {
     public class CustomActivationPayload : IEventContext
@@ -22,5 +20,10 @@ namespace Physalia.AbilityFramework.Tests
     {
         public CustomUnit instigator;
         public CustomUnit target;
+    }
+
+    public class CustomCancellation : IResumeContext
+    {
+
     }
 }

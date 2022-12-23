@@ -227,7 +227,7 @@ namespace Physalia.AbilityFramework.Tests
 
             Assert.IsNotNull(choiceContext);
 
-            abilitySystem.Resume(new CancellationContext());
+            abilitySystem.Resume(new CustomCancellation());
 
             // Nothing happened
             Assert.AreEqual(25, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);

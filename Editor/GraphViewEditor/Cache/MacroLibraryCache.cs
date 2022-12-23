@@ -28,12 +28,12 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             macroLibrary.Clear();
 
-            string[] guids = AssetDatabase.FindAssets($"t:{nameof(MacroGraphAsset)}");
+            string[] guids = AssetDatabase.FindAssets($"t:{nameof(MacroAsset)}");
             for (var i = 0; i < guids.Length; i++)
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
-                MacroGraphAsset macroGraphAsset = AssetDatabase.LoadAssetAtPath<MacroGraphAsset>(assetPath);
-                macroLibrary.Add(macroGraphAsset.name, macroGraphAsset.Text);
+                MacroAsset macroAsset = AssetDatabase.LoadAssetAtPath<MacroAsset>(assetPath);
+                macroLibrary.Add(macroAsset.name, macroAsset.Text);
             }
         }
     }

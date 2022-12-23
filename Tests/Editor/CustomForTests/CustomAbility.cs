@@ -28,7 +28,7 @@ namespace Physalia.AbilityFramework.Tests
             }
         }
 
-        public static MacroGraphAsset HELLO_WORLD_MACRO
+        public static MacroAsset HELLO_WORLD_MACRO
         {
             get
             {
@@ -130,9 +130,9 @@ namespace Physalia.AbilityFramework.Tests
             return asset;
         }
 
-        private static MacroGraphAsset ReadMacroAsset(string fileName)
+        private static MacroAsset ReadMacroAsset(string fileName)
         {
-            var asset = Resources.Load<MacroGraphAsset>(fileName);
+            var asset = Resources.Load<MacroAsset>(fileName);
             return asset;
         }
     }

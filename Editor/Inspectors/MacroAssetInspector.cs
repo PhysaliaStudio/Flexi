@@ -9,14 +9,14 @@ namespace Physalia.AbilityFramework
     /// Largely refer from TextAssetInspector.
     /// https://github.com/Unity-Technologies/UnityCsReference/blob/master/Editor/Mono/Inspector/MonoScriptInspector.cs
     /// </remarks>
-    [CustomEditor(typeof(MacroGraphAsset))]
+    [CustomEditor(typeof(MacroAsset))]
     [CanEditMultipleObjects]
-    public class MacroGraphAssetInspector : Editor
+    public class MacroAssetInspector : Editor
     {
         private static readonly int MAX_CHARACTERS = 7000;
 
         private GUIStyle textStyle;
-        private MacroGraphAsset asset;
+        private MacroAsset asset;
         private string assetPath;
 
         private Hash128 lastDependencyHash;
@@ -24,7 +24,7 @@ namespace Physalia.AbilityFramework
 
         private void OnEnable()
         {
-            asset = target as MacroGraphAsset;
+            asset = target as MacroAsset;
             assetPath = AssetDatabase.GetAssetPath(asset);
             CachePreview();
         }
