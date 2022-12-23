@@ -55,6 +55,13 @@ namespace Physalia.AbilityFramework
             return owner.FindAbility(abilityData);
         }
 
+#if UNITY_5_3_OR_NEWER
+        public Ability AppendAbility(AbilityAsset abilityAsset)
+        {
+            return AppendAbility(abilityAsset.Data);
+        }
+#endif
+
         public Ability AppendAbility(AbilityData abilityData)
         {
             Ability ability = abilitySystem.InstantiateAbility(abilityData);
@@ -71,6 +78,13 @@ namespace Physalia.AbilityFramework
 
             return ability;
         }
+
+#if UNITY_5_3_OR_NEWER
+        public bool RemoveAbility(AbilityAsset abilityAsset)
+        {
+            return RemoveAbility(abilityAsset.Data);
+        }
+#endif
 
         public bool RemoveAbility(AbilityData abilityData)
         {

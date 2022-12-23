@@ -46,7 +46,10 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            Iterate(abilitySystem);
+            if (queueStack.Count > 0)
+            {
+                Iterate(abilitySystem);
+            }
         }
 
         public void Resume(AbilitySystem abilitySystem, IResumeContext resumeContext)

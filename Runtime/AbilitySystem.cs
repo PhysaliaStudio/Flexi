@@ -5,16 +5,18 @@ namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
-        public event Action<IEventContext> EventReceived;
+        private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
+
+        public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
+
+        public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
 
         private readonly MacroLibrary macroLibrary = new();
-
-        private IEnumerable<Actor> overridedIteratorGetter;
 
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
         {
@@ -55,6 +57,13 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
+#if UNITY_5_3_OR_NEWER
+        public Ability InstantiateAbility(AbilityAsset abilityAsset)
+        {
+            return InstantiateAbility(abilityAsset.Data);
+        }
+#endif
+
         public Ability InstantiateAbility(AbilityData abilityData)
         {
             var ability = new Ability(this, abilityData);
@@ -70,15 +79,10 @@ namespace Physalia.AbilityFramework
             return flow;
         }
 
-        public void OverrideIterator(IEnumerable<Actor> iterator)
-        {
-            overridedIteratorGetter = iterator;
-        }
-
         internal void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
-            EventReceived?.Invoke(eventContext);
+            EventOccurred?.Invoke(eventContext);
         }
 
         internal void TriggerCachedEvents()
@@ -92,72 +96,92 @@ namespace Physalia.AbilityFramework
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
-                IterateAbilitiesFromStatOwners(eventContext);
+                if (EventResolveMethod != null)
+                {
+                    EventResolveMethod.Invoke(eventContext);
+                }
+                else
+                {
+                    EnqueueAbilitiesForAllOwners(eventContext);
+                }
             }
+
             runner.PopEmptyQueues();
         }
 
-        private void IterateAbilitiesFromStatOwners(IEventContext eventContext)
+        private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
         {
-            if (overridedIteratorGetter != null)
+            foreach (StatOwner owner in ownerRepository.Owners)
             {
-                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    Actor actor = enumerator.Current;
-                    EnqueueAbilityIfAble(actor.Owner, eventContext);
-                }
+                _ = TryEnqueueAbility(owner.Abilities, eventContext);
+            }
+        }
+
+        public bool TryEnqueueAndRunAbility(Ability ability, IEventContext eventContext)
+        {
+            bool success = TryEnqueueAbility(ability, eventContext);
+            if (success)
+            {
+                Run();
+                return true;
             }
             else
             {
-                foreach (StatOwner owner in ownerRepository.Owners)
-                {
-                    EnqueueAbilityIfAble(owner, eventContext);
-                }
+                return false;
             }
         }
 
-        private void EnqueueAbilityIfAble(StatOwner owner, IEventContext eventContext)
+        public bool TryEnqueueAndRunAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
         {
-            foreach (AbilityFlow flow in owner.AbilityFlows)
+            bool success = TryEnqueueAbility(abilities, eventContext);
+            if (success)
             {
-                if (flow.CanExecute(eventContext))
-                {
-                    EnqueueAbilityFlow(flow, eventContext);
-                }
+                Run();
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
-        public bool CanEnqueueAbility(Ability ability, IEventContext eventContext)
+        public bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
         {
+            bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
                 if (abilityFlow.CanExecute(eventContext))
                 {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public void EnqueueAbilityAndRun(Ability ability, IEventContext eventContext)
-        {
-            EnqueueAbility(ability, eventContext);
-            Run();
-        }
-
-        public void EnqueueAbility(Ability ability, IEventContext eventContext)
-        {
-            for (var i = 0; i < ability.Flows.Count; i++)
-            {
-                AbilityFlow abilityFlow = ability.Flows[i];
-                if (abilityFlow.CanExecute(eventContext))
-                {
+                    hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, eventContext);
+                    break;
                 }
             }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
+        {
+            bool hasAnyEnqueued = false;
+            for (var i = 0; i < abilities.Count; i++)
+            {
+                Ability ability = abilities[i];
+                for (var j = 0; j < ability.Flows.Count; j++)
+                {
+                    AbilityFlow abilityFlow = ability.Flows[j];
+                    if (abilityFlow.CanExecute(eventContext))
+                    {
+                        // Move to next ability
+                        hasAnyEnqueued = true;
+                        EnqueueAbilityFlow(abilityFlow, eventContext);
+                        break;
+                    }
+                }
+            }
+
+            return hasAnyEnqueued;
         }
 
         private void EnqueueAbilityFlow(AbilityFlow flow, IEventContext eventContext)
@@ -180,44 +204,26 @@ namespace Physalia.AbilityFramework
         public void RefreshStatsAndModifiers()
         {
             ownerRepository.RefreshStatsForAllOwners();
-            RefreshModifiers();
-        }
-
-        public void RefreshModifiers()
-        {
-            var refreshEvent = new StatRefreshEvent();
-            IterateModifierCheckFromStatOwners(refreshEvent);
+            DoStatRefreshLogicForAllOwners();
             ownerRepository.RefreshStatsForAllOwners();
         }
 
-        private void IterateModifierCheckFromStatOwners(StatRefreshEvent refreshEvent)
+        /// <remarks>
+        /// StatRefresh does not run with other events and abilities. It runs in another line.
+        /// </remarks>
+        private void DoStatRefreshLogicForAllOwners()
         {
-            if (overridedIteratorGetter != null)
+            foreach (StatOwner owner in ownerRepository.Owners)
             {
-                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
-                while (enumerator.MoveNext())
+                for (var i = 0; i < owner.AbilityFlows.Count; i++)
                 {
-                    Actor actor = enumerator.Current;
-                    CheckModifiers(actor.Owner, refreshEvent);
-                }
-            }
-            else
-            {
-                foreach (StatOwner owner in ownerRepository.Owners)
-                {
-                    CheckModifiers(owner, refreshEvent);
-                }
-            }
-        }
-
-        private void CheckModifiers(StatOwner owner, StatRefreshEvent refreshEvent)
-        {
-            foreach (AbilityFlow flow in owner.AbilityFlows)
-            {
-                if (flow.CanExecute(refreshEvent))
-                {
-                    flow.SetPayload(refreshEvent);
-                    flow.Execute();
+                    AbilityFlow abilityFlow = owner.AbilityFlows[i];
+                    if (abilityFlow.CanExecute(STAT_REFRESH_EVENT))
+                    {
+                        abilityFlow.Reset();
+                        abilityFlow.SetPayload(STAT_REFRESH_EVENT);
+                        abilityFlow.Execute();
+                    }
                 }
             }
         }
