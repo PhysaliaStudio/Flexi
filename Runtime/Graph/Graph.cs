@@ -12,14 +12,12 @@ namespace Physalia.AbilityFramework
 
         private readonly List<EntryNode> entryNodes = new();
         private readonly List<Node> nodes = new();
-        private readonly List<BlackboardVariable> variables = new();
 
         internal GraphInputNode GraphInputNode => graphInputNode;
         internal GraphOutputNode GraphOutputNode => graphOutputNode;
 
         public IReadOnlyList<EntryNode> EntryNodes => entryNodes;
         public IReadOnlyList<Node> Nodes => nodes;
-        public List<BlackboardVariable> BlackboardVariables => variables;
 
         public bool HasCorrectSubgraphElement()
         {
@@ -216,24 +214,6 @@ namespace Physalia.AbilityFramework
                     GenerateNodeId(nodes[i]);
                 }
             }
-        }
-
-        public void AddVariables(IReadOnlyList<BlackboardVariable> newVariables)
-        {
-            for (var i = 0; i < newVariables.Count; i++)
-            {
-                AddVariable(newVariables[i]);
-            }
-        }
-
-        public void AddVariable(BlackboardVariable variable)
-        {
-            variables.Add(variable);
-        }
-
-        public void RemoveVariable(BlackboardVariable variable)
-        {
-            variables.Remove(variable);
         }
     }
 }

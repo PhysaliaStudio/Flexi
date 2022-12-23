@@ -32,6 +32,7 @@ namespace Physalia.AbilityFramework
 
         #region AbilityInstance Members
         public AbilityFlow Flow => flow;
+        public Ability Ability => flow?.Ability;
         public Actor Actor => flow?.Actor;
         #endregion
 

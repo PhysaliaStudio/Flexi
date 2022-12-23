@@ -10,8 +10,6 @@ namespace Physalia.AbilityFramework
 
         public object userData;
 
-        private readonly Dictionary<string, int> blackboard = new();
-
         private Actor actor;
         private IEventContext payload;
         private AbilityState currentState = AbilityState.CLEAN;
@@ -39,12 +37,6 @@ namespace Physalia.AbilityFramework
             {
                 graph.Nodes[i].flow = this;
             }
-
-            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
-            {
-                BlackboardVariable variable = graph.BlackboardVariables[i];
-                blackboard.Add(variable.key, variable.value);
-            }
         }
 
         internal void SetOwner(Actor actor)
@@ -55,28 +47,6 @@ namespace Physalia.AbilityFramework
         public void SetPayload(IEventContext payload)
         {
             this.payload = payload;
-        }
-
-        public void OverrideBlackboardVariable(string key, int value)
-        {
-            if (!blackboard.ContainsKey(key))
-            {
-                Logger.Warn($"[{nameof(AbilityFlow)}] Blackboard does not have key: {key}. Cancel the override");
-                return;
-            }
-
-            blackboard[key] = value;
-        }
-
-        public int GetBlackboardVariable(string key)
-        {
-            if (blackboard.TryGetValue(key, out int value))
-            {
-                return value;
-            }
-
-            Logger.Warn($"[{nameof(AbilityFlow)}] Blackboard does not have key: {key}. Returns 0");
-            return 0;
         }
 
         public bool CanExecute(IEventContext payload)
@@ -157,13 +127,6 @@ namespace Physalia.AbilityFramework
             graph.Reset(0);
             currentState = AbilityState.CLEAN;
             SetPayload(null);
-
-            blackboard.Clear();
-            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
-            {
-                BlackboardVariable variable = graph.BlackboardVariables[i];
-                blackboard.Add(variable.key, variable.value);
-            }
         }
     }
 }
