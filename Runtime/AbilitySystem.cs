@@ -57,6 +57,13 @@ namespace Physalia.AbilityFramework
             return graph;
         }
 
+#if UNITY_5_3_OR_NEWER
+        public Ability InstantiateAbility(AbilityAsset abilityAsset)
+        {
+            return InstantiateAbility(abilityAsset.Data);
+        }
+#endif
+
         public Ability InstantiateAbility(AbilityData abilityData)
         {
             var ability = new Ability(this, abilityData);
