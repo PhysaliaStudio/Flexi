@@ -5,7 +5,7 @@ namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
-        public event Action<IEventContext> EventReceived;
+        public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
 
         private readonly StatOwnerRepository ownerRepository;
@@ -78,7 +78,7 @@ namespace Physalia.AbilityFramework
         internal void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
-            EventReceived?.Invoke(eventContext);
+            EventOccurred?.Invoke(eventContext);
         }
 
         internal void TriggerCachedEvents()
