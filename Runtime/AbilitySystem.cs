@@ -113,7 +113,7 @@ namespace Physalia.AbilityFramework
         {
             foreach (StatOwner owner in ownerRepository.Owners)
             {
-                _ = TryEnqueueAbilities(owner.Abilities, eventContext);
+                _ = TryEnqueueAbility(owner.Abilities, eventContext);
             }
         }
 
@@ -131,9 +131,9 @@ namespace Physalia.AbilityFramework
             }
         }
 
-        public bool TryEnqueueAndRunAbilities(IReadOnlyList<Ability> abilities, IEventContext eventContext)
+        public bool TryEnqueueAndRunAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
         {
-            bool success = TryEnqueueAbilities(abilities, eventContext);
+            bool success = TryEnqueueAbility(abilities, eventContext);
             if (success)
             {
                 Run();
@@ -162,7 +162,7 @@ namespace Physalia.AbilityFramework
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbilities(IReadOnlyList<Ability> abilities, IEventContext eventContext)
+        public bool TryEnqueueAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
         {
             bool hasAnyEnqueued = false;
             for (var i = 0; i < abilities.Count; i++)
