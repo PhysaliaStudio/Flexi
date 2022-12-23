@@ -35,6 +35,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
 
         private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
+        private static readonly string BLACKBOARD_INSPECTOR_PARENT_NAME = "blackboard-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
@@ -48,8 +49,13 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private VisualTreeAsset nodeInspectorAsset;
         [SerializeField]
         private VisualTreeAsset portListViewItemAsset;
+
+        [Space]
+        [SerializeField]
+        private VisualTreeAsset blackboardInspectorAsset = null;
         [SerializeField]
         private VisualTreeAsset blackboardItemAsset = null;
+
         [HideInInspector]
         [SerializeField]
         private GraphAsset currentAsset = null;
@@ -58,6 +64,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private AbilityGraphView graphView;
         private NodeInspector nodeInspector;
+        private BlackboardInspector blackboardInspector;
         private Blackboard blackboard;
         private bool isDirty;
 
@@ -140,6 +147,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
             SetUpNodeInspector();
+            SetUpBlackboardInspector();
 
             if (currentAsset == null)
             {
@@ -157,6 +165,13 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
             nodeInspector = new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset);
             nodeInspectorParent.Add(nodeInspector);
+        }
+
+        private void SetUpBlackboardInspector()
+        {
+            VisualElement blackboardInspectorParent = rootVisualElement.Query<VisualElement>(BLACKBOARD_INSPECTOR_PARENT_NAME).First();
+            blackboardInspector = new BlackboardInspector(this, blackboardInspectorAsset, blackboardItemAsset);
+            blackboardInspectorParent.Add(blackboardInspector);
         }
 
         public void ShowNodeInspector(NodeView nodeView)
@@ -177,12 +192,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             switch (asset)
             {
                 default:
+                    blackboardInspector.SetBlackboard(null);
                     return false;
                 case AbilityAsset abilityAsset:
+                    blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
                     string graphJson = abilityAsset.GraphJsons.Count > 0 ? abilityAsset.GraphJsons[0] : "";
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
+                    blackboardInspector.SetBlackboard(null);
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
                     {
@@ -351,6 +369,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewGraphView()
         {
             HideNodeInspector();
+            blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
             SetUpGraphView(new AbilityGraphView(this));
             SetDirty(false);
@@ -361,6 +380,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewMacroGraphView()
         {
             HideNodeInspector();
+            blackboardInspector.SetBlackboard(null);
 
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();

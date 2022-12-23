@@ -10,7 +10,13 @@
         <uie:ToolbarButton name="new-macro-button" text="New Macro" enable-rich-text="false" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="300">
-        <ui:VisualElement name="node-inspector-parent" style="min-width: 200px;" />
+        <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" orientation="Vertical" style="min-width: 200px;">
+            <ui:VisualElement name="ability-index" style="min-height: 150px;" />
+            <ui:TwoPaneSplitView fixed-pane-initial-dimension="150" orientation="Vertical" style="min-width: 200px;">
+                <ui:VisualElement name="node-inspector-parent" style="min-height: 150px;" />
+                <ui:VisualElement name="blackboard-inspector-parent" />
+            </ui:TwoPaneSplitView>
+        </ui:TwoPaneSplitView>
         <ui:VisualElement name="graph-view-parent" />
     </ui:TwoPaneSplitView>
 </ui:UXML>
