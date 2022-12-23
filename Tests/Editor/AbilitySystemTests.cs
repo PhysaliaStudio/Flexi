@@ -242,7 +242,7 @@ namespace Physalia.AbilityFramework.Tests
             unit.SetStat(CustomStats.HEALTH, 3);
 
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
-            abilitySystem.RefreshModifiers();
+            abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
             Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -256,7 +256,7 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
-            abilitySystem.RefreshModifiers();
+            abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -270,14 +270,14 @@ namespace Physalia.AbilityFramework.Tests
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.SetStat(CustomStats.HEALTH, 3);
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH.Data);
-            abilitySystem.RefreshModifiers();
+            abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Owner.Modifiers.Count);
             Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
 
             unit.Owner.SetStat(CustomStats.HEALTH, 6);
-            abilitySystem.RefreshModifiers();
+            abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);

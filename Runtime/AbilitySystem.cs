@@ -5,16 +5,18 @@ namespace Physalia.AbilityFramework
 {
     public class AbilitySystem
     {
+        private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
+
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
+
+        public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
 
         private readonly MacroLibrary macroLibrary = new();
-
-        private IEnumerable<Actor> overridedIteratorGetter;
 
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
         {
@@ -70,11 +72,6 @@ namespace Physalia.AbilityFramework
             return flow;
         }
 
-        public void OverrideIterator(IEnumerable<Actor> iterator)
-        {
-            overridedIteratorGetter = iterator;
-        }
-
         internal void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
@@ -92,39 +89,24 @@ namespace Physalia.AbilityFramework
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
-                IterateAbilitiesFromStatOwners(eventContext);
+                if (EventResolveMethod != null)
+                {
+                    EventResolveMethod.Invoke(eventContext);
+                }
+                else
+                {
+                    EnqueueAbilitiesForAllOwners(eventContext);
+                }
             }
+
             runner.PopEmptyQueues();
         }
 
-        private void IterateAbilitiesFromStatOwners(IEventContext eventContext)
+        private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
         {
-            if (overridedIteratorGetter != null)
+            foreach (StatOwner owner in ownerRepository.Owners)
             {
-                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    Actor actor = enumerator.Current;
-                    EnqueueAbilityIfAble(actor.Owner, eventContext);
-                }
-            }
-            else
-            {
-                foreach (StatOwner owner in ownerRepository.Owners)
-                {
-                    EnqueueAbilityIfAble(owner, eventContext);
-                }
-            }
-        }
-
-        private void EnqueueAbilityIfAble(StatOwner owner, IEventContext eventContext)
-        {
-            foreach (AbilityFlow flow in owner.AbilityFlows)
-            {
-                if (flow.CanExecute(eventContext))
-                {
-                    EnqueueAbilityFlow(flow, eventContext);
-                }
+                _ = TryEnqueueAbilities(owner.Abilities, eventContext);
             }
         }
 
@@ -215,44 +197,26 @@ namespace Physalia.AbilityFramework
         public void RefreshStatsAndModifiers()
         {
             ownerRepository.RefreshStatsForAllOwners();
-            RefreshModifiers();
-        }
-
-        public void RefreshModifiers()
-        {
-            var refreshEvent = new StatRefreshEvent();
-            IterateModifierCheckFromStatOwners(refreshEvent);
+            DoStatRefreshLogicForAllOwners();
             ownerRepository.RefreshStatsForAllOwners();
         }
 
-        private void IterateModifierCheckFromStatOwners(StatRefreshEvent refreshEvent)
+        /// <remarks>
+        /// StatRefresh does not run with other events and abilities. It runs in another line.
+        /// </remarks>
+        private void DoStatRefreshLogicForAllOwners()
         {
-            if (overridedIteratorGetter != null)
+            foreach (StatOwner owner in ownerRepository.Owners)
             {
-                IEnumerator<Actor> enumerator = overridedIteratorGetter.GetEnumerator();
-                while (enumerator.MoveNext())
+                for (var i = 0; i < owner.AbilityFlows.Count; i++)
                 {
-                    Actor actor = enumerator.Current;
-                    CheckModifiers(actor.Owner, refreshEvent);
-                }
-            }
-            else
-            {
-                foreach (StatOwner owner in ownerRepository.Owners)
-                {
-                    CheckModifiers(owner, refreshEvent);
-                }
-            }
-        }
-
-        private void CheckModifiers(StatOwner owner, StatRefreshEvent refreshEvent)
-        {
-            foreach (AbilityFlow flow in owner.AbilityFlows)
-            {
-                if (flow.CanExecute(refreshEvent))
-                {
-                    flow.SetPayload(refreshEvent);
-                    flow.Execute();
+                    AbilityFlow abilityFlow = owner.AbilityFlows[i];
+                    if (abilityFlow.CanExecute(STAT_REFRESH_EVENT))
+                    {
+                        abilityFlow.Reset();
+                        abilityFlow.SetPayload(STAT_REFRESH_EVENT);
+                        abilityFlow.Execute();
+                    }
                 }
             }
         }
