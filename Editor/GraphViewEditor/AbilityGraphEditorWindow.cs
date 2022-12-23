@@ -181,7 +181,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 case AbilityAsset abilityAsset:
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, abilityAsset.GraphJsons[0], MacroLibraryCache.Get());
                     break;
-                case MacroGraphAsset macroAsset:
+                case MacroAsset macroAsset:
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
                     {
@@ -234,7 +234,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
                 if (abilityGraph.HasSubgraphElement())
                 {
-                    MacroGraphAsset newAsset = CreateInstance<MacroGraphAsset>();
+                    MacroAsset newAsset = CreateInstance<MacroAsset>();
                     newAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
@@ -256,7 +256,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                         abilityAsset.GraphJsons[0] = AbilityGraphUtility.Serialize(abilityGraph);
                         EditorUtility.SetDirty(currentAsset);
                         break;
-                    case MacroGraphAsset macroAsset:
+                    case MacroAsset macroAsset:
                         macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
                         EditorUtility.SetDirty(currentAsset);
                         break;

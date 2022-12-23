@@ -143,7 +143,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             var macroKeyToNameTable = new Dictionary<string, string>();
 
-            string[] guids = AssetDatabase.FindAssets($"t:{nameof(MacroGraphAsset)}");
+            string[] guids = AssetDatabase.FindAssets($"t:{nameof(MacroAsset)}");
             var assetPaths = new string[guids.Length];
             for (var i = 0; i < guids.Length; i++)
             {

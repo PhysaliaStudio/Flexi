@@ -39,9 +39,9 @@ namespace Physalia.AbilityFramework
             return ownerRepository.GetOwner(id);
         }
 
-        public void LoadMacroGraph(string key, MacroGraphAsset macroGraphAsset)
+        public void LoadMacroGraph(string key, MacroAsset macroAsset)
         {
-            macroLibrary.Add(key, macroGraphAsset.Text);
+            macroLibrary.Add(key, macroAsset.Text);
         }
 
         internal AbilityGraph GetMacroGraph(string key)
