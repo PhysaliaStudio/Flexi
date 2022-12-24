@@ -39,12 +39,98 @@ namespace Physalia.AbilityFramework.Tests
         public void InstantiateAbility_Contains3Variables_VariableCountIs3()
         {
             var abilityData = new AbilityData();
-            abilityData.blackboard.Add(new BlackboardVariable());
-            abilityData.blackboard.Add(new BlackboardVariable());
-            abilityData.blackboard.Add(new BlackboardVariable());
+            abilityData.blackboard.Add(new BlackboardVariable { key = "a" });
+            abilityData.blackboard.Add(new BlackboardVariable { key = "b" });
+            abilityData.blackboard.Add(new BlackboardVariable { key = "c" });
 
             Ability ability = abilitySystem.InstantiateAbility(abilityData);
             Assert.AreEqual(3, ability.Blackboard.Count);
+        }
+
+        [Test]
+        public void InstantiateAbility_ContainsVariableWithEmptyKey_LogWarning()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable());
+
+            _ = abilitySystem.InstantiateAbility(abilityData);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
+        }
+
+        [Test]
+        public void InstantiateAbility_ContainsVariableWithWhiteSpaceKey_LogWarning()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable { key = " " });
+
+            _ = abilitySystem.InstantiateAbility(abilityData);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
+        }
+
+        [Test]
+        public void InstantiateAbility_ContainsVariablesA5AndA3_LogWarning()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
+
+            _ = abilitySystem.InstantiateAbility(abilityData);
+            TestUtilities.LogAssertAnyString(LogType.Warning);
+        }
+
+        [Test]
+        public void InstantiateAbility_ContainsVariablesA5AndA3_GetVariableWithAReturns5()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
+
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            Assert.AreEqual(5, ability.GetVariable("A"));
+        }
+
+        [Test]
+        public void GetVariableWithA_ContainsVariableA42_Returns42()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
+
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            Assert.AreEqual(42, ability.GetVariable("A"));
+        }
+
+        [Test]
+        public void GetVariableWithA_NoSuchKey_Returns0AndLogWarning()
+        {
+            var abilityData = new AbilityData();
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+
+            Assert.AreEqual(0, ability.GetVariable("A"));
+            TestUtilities.LogAssertAnyString(LogType.Warning);
+        }
+
+        [Test]
+        public void OverrideVariableAWith99_TheOriginalValueIs42_GetVariableWithAReturns99()
+        {
+            var abilityData = new AbilityData();
+            abilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
+
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            ability.OverrideVariable("A", 99);
+
+            Assert.AreEqual(99, ability.GetVariable("A"));
+        }
+
+        [Test]
+        public void OverrideVariableAWith99_NoMatchKey_GetVariableWithAReturns99AndLogWarning()
+        {
+            var abilityData = new AbilityData();
+
+            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            ability.OverrideVariable("A", 99);
+
+            Assert.AreEqual(99, ability.GetVariable("A"));
+            TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]

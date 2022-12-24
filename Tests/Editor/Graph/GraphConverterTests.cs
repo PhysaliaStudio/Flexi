@@ -19,7 +19,6 @@ namespace Physalia.AbilityFramework.Tests
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -52,7 +51,6 @@ namespace Physalia.AbilityFramework.Tests
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageNode\"}," +
                 "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+OwnerFilterNode\"}," +
@@ -153,7 +151,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -168,7 +165,6 @@ namespace Physalia.AbilityFramework.Tests
                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -195,7 +191,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -210,7 +205,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -249,7 +243,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
                 "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
@@ -265,7 +258,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
                 "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
@@ -290,7 +282,6 @@ namespace Physalia.AbilityFramework.Tests
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
@@ -303,7 +294,6 @@ namespace Physalia.AbilityFramework.Tests
         {
             var json =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
@@ -321,7 +311,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
                 "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";
@@ -340,7 +329,6 @@ namespace Physalia.AbilityFramework.Tests
 
             var expected =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
@@ -354,7 +342,6 @@ namespace Physalia.AbilityFramework.Tests
         {
             var graphJson =
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"variables\":[]," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
                 "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
@@ -362,7 +349,6 @@ namespace Physalia.AbilityFramework.Tests
                 "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
-                "\"variables\":[]," +
                 "\"nodes\":[]," +
                 "\"edges\":[{\"id1\":-1,\"port1\":\"next\",\"id2\":-2,\"port2\":\"previous\"}," +
                 "{\"id1\":-1,\"port1\":\"test1\",\"id2\":-2,\"port2\":\"test2\"}]}";

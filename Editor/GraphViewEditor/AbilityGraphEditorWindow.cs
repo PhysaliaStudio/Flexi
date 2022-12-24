@@ -35,6 +35,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
 
         private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
+        private static readonly string BLACKBOARD_INSPECTOR_PARENT_NAME = "blackboard-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
@@ -48,8 +49,13 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private VisualTreeAsset nodeInspectorAsset;
         [SerializeField]
         private VisualTreeAsset portListViewItemAsset;
+
+        [Space]
+        [SerializeField]
+        private VisualTreeAsset blackboardInspectorAsset = null;
         [SerializeField]
         private VisualTreeAsset blackboardItemAsset = null;
+
         [HideInInspector]
         [SerializeField]
         private GraphAsset currentAsset = null;
@@ -58,11 +64,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
         private AbilityGraphView graphView;
         private NodeInspector nodeInspector;
-        private Blackboard blackboard;
+        private BlackboardInspector blackboardInspector;
         private bool isDirty;
-
-        private readonly HashSet<VisualElement> usingVariableItems = new();
-        private readonly Dictionary<VisualElement, IDisposable> callbackTable = new();
 
         [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
         private static void Open()
@@ -140,6 +143,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
             SetUpNodeInspector();
+            SetUpBlackboardInspector();
 
             if (currentAsset == null)
             {
@@ -157,6 +161,13 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
             nodeInspector = new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset);
             nodeInspectorParent.Add(nodeInspector);
+        }
+
+        private void SetUpBlackboardInspector()
+        {
+            VisualElement blackboardInspectorParent = rootVisualElement.Query<VisualElement>(BLACKBOARD_INSPECTOR_PARENT_NAME).First();
+            blackboardInspector = new BlackboardInspector(this, blackboardInspectorAsset, blackboardItemAsset);
+            blackboardInspectorParent.Add(blackboardInspector);
         }
 
         public void ShowNodeInspector(NodeView nodeView)
@@ -177,12 +188,15 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             switch (asset)
             {
                 default:
+                    blackboardInspector.SetBlackboard(null);
                     return false;
                 case AbilityAsset abilityAsset:
+                    blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
                     string graphJson = abilityAsset.GraphJsons.Count > 0 ? abilityAsset.GraphJsons[0] : "";
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
+                    blackboardInspector.SetBlackboard(null);
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
                     {
@@ -242,6 +256,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 else
                 {
                     AbilityAsset newAsset = CreateInstance<AbilityAsset>();
+                    newAsset.Blackboard = blackboardInspector.GetBlackboard();
                     newAsset.AddGraphJson(AbilityGraphUtility.Serialize(abilityGraph));
                     AssetDatabase.CreateAsset(newAsset, assetPath);
                 }
@@ -254,6 +269,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
                 switch (currentAsset)
                 {
                     case AbilityAsset abilityAsset:
+                        abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
+
                         string json = AbilityGraphUtility.Serialize(abilityGraph);
                         if (abilityAsset.GraphJsons.Count == 0)
                         {
@@ -351,6 +368,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewGraphView()
         {
             HideNodeInspector();
+            blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
             SetUpGraphView(new AbilityGraphView(this));
             SetDirty(false);
@@ -361,6 +379,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private void NewMacroGraphView()
         {
             HideNodeInspector();
+            blackboardInspector.SetBlackboard(null);
 
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();
@@ -378,7 +397,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         {
             VisualElement graphViewParent = rootVisualElement.Query<VisualElement>(GRAPH_VIEW_PARENT_NAME).First();
             graphViewParent.Clear();
-            callbackTable.Clear();
 
             this.graphView = graphView;
             graphView.name = GRAPH_VIEW_NAME;
@@ -387,9 +405,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             graphView.canPasteSerializedData += CanPasteSerializedData;
             graphView.unserializeAndPaste += UnserializeAndPaste;
             graphViewParent.Add(graphView);
-
-            Blackboard blackboard = CreateBlackboard(graphView);
-            graphViewParent.Add(blackboard);
         }
 
         private string SerializeGraphElements(IEnumerable<GraphElement> elements)
@@ -583,116 +598,6 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             }
 
             return graphViewChange;
-        }
-
-        private Blackboard CreateBlackboard(AbilityGraphView graphView)
-        {
-            blackboard = new Blackboard(graphView)
-            {
-                scrollable = true,
-                windowed = true,
-            };
-            blackboard.style.width = 200f;
-            blackboard.style.height = Length.Percent(80f);
-            blackboard.style.position = Position.Absolute;
-            blackboard.style.alignSelf = Align.FlexEnd;
-
-            var listView = new ListView(graphView.GetAbilityGraph().BlackboardVariables)
-            {
-                reorderable = true,
-                showAddRemoveFooter = true,
-            };
-            listView.itemsAdded += OnBlackboardItemAdded;
-            listView.itemsRemoved += OnBlackboardItemRemoved;
-            listView.itemIndexChanged += OnBlackboardItemIndexChanged;
-            listView.makeItem += blackboardItemAsset.CloneTree;
-            listView.bindItem += BindVariableItem;
-            listView.unbindItem += UnbindVariableItem;
-            blackboard.contentContainer.Add(listView);
-
-            return blackboard;
-        }
-
-        private void OnBlackboardItemAdded(IEnumerable<int> indexes)
-        {
-            SetDirty(true);
-            foreach (int i in indexes)
-            {
-                graphView.GetAbilityGraph().BlackboardVariables[i] = new BlackboardVariable();
-            }
-        }
-
-        private void OnBlackboardItemRemoved(IEnumerable<int> indexes)
-        {
-            SetDirty(true);
-        }
-
-        private void OnBlackboardItemIndexChanged(int index1, int index2)
-        {
-            SetDirty(true);
-        }
-
-        // Unity use pool to manage variable items, and all items respawn when the list changes.
-        // So there are many unseen bind and unbind method calls when the list changes.
-        private void BindVariableItem(VisualElement element, int i)
-        {
-            BlackboardVariable variable = graphView.GetAbilityGraph().BlackboardVariables[i];
-
-            if (usingVariableItems.Contains(element))
-            {
-                UnbindVariableItem(element, -1);
-            }
-
-            usingVariableItems.Add(element);
-
-            {
-                var keyField = element.Q<TextField>("key");
-                keyField.SetValueWithoutNotify(variable.key);
-                var token = new ElementCallbackToken<string>
-                {
-                    element = keyField,
-                    callback = evt =>
-                    {
-                        SetDirty(true);
-                        variable.key = evt.newValue;
-                    },
-                };
-                callbackTable.Add(keyField, token);
-                keyField.RegisterValueChangedCallback(token.callback);
-            }
-
-            {
-                var valueField = element.Q<IntegerField>("value");
-                valueField.SetValueWithoutNotify(variable.value);
-                var token = new ElementCallbackToken<int>
-                {
-                    element = valueField,
-                    callback = evt =>
-                    {
-                        SetDirty(true);
-                        variable.value = evt.newValue;
-                    },
-                };
-                callbackTable.Add(valueField, token);
-                valueField.RegisterValueChangedCallback(token.callback);
-            }
-        }
-
-        private void UnbindVariableItem(VisualElement element, int i)
-        {
-            usingVariableItems.Remove(element);
-
-            var keyField = element.Q<TextField>("key");
-            var keyToken = callbackTable[keyField] as ElementCallbackToken<string>;
-            keyField.UnregisterValueChangedCallback(keyToken.callback);
-            callbackTable[keyField].Dispose();
-            callbackTable.Remove(keyField);
-
-            var valueField = element.Q<IntegerField>("value");
-            var valueToken = callbackTable[valueField] as ElementCallbackToken<int>;
-            valueField.UnregisterValueChangedCallback(valueToken.callback);
-            callbackTable[valueField].Dispose();
-            callbackTable.Remove(valueField);
         }
 
         public void SetDirty(bool value)
