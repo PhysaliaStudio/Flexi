@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Physalia.AbilityFramework
 {
     public sealed class AbilityFlow
@@ -60,6 +58,7 @@ namespace Physalia.AbilityFramework
             return result;
         }
 
+        // TODO: Obsolete
         public void Execute()
         {
             if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
@@ -79,30 +78,7 @@ namespace Physalia.AbilityFramework
             IterateGraph();
         }
 
-        public void Resume(IResumeContext resumeContext)
-        {
-            if (currentState != AbilityState.PAUSE)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] You can not resume any unpaused ability instance!");
-                return;
-            }
-
-            bool success = graph.Current.CheckNodeContext(resumeContext);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
-                return;
-            }
-
-            currentState = graph.Current.Resume(resumeContext);
-            if (currentState != AbilityState.RUNNING)
-            {
-                return;
-            }
-
-            IterateGraph();
-        }
-
+        // TODO: Obsolete
         private void IterateGraph()
         {
             while (graph.MoveNext())
