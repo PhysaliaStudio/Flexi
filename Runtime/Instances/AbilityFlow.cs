@@ -10,7 +10,6 @@ namespace Physalia.AbilityFramework
 
         private Actor actor;
         private IEventContext payload;
-        private AbilityState currentState = AbilityState.CLEAN;
 
         public AbilitySystem System => system;
         internal Ability Ability => ability;
@@ -68,41 +67,6 @@ namespace Physalia.AbilityFramework
             return result;
         }
 
-        // TODO: Obsolete
-        public void Execute()
-        {
-            if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] You can not execute any unfinished ability instance!");
-                return;
-            }
-
-            if (!CanExecute(payload))
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
-                return;
-            }
-
-            graph.Reset(0);
-
-            IterateGraph();
-        }
-
-        // TODO: Obsolete
-        private void IterateGraph()
-        {
-            while (graph.MoveNext())
-            {
-                currentState = graph.Current.Run();
-                if (currentState != AbilityState.RUNNING)
-                {
-                    return;
-                }
-            }
-
-            currentState = AbilityState.DONE;
-        }
-
         internal void Push(FlowNode flowNode)
         {
             graph.Push(flowNode);
@@ -111,7 +75,6 @@ namespace Physalia.AbilityFramework
         public void Reset()
         {
             graph.Reset(0);
-            currentState = AbilityState.CLEAN;
             SetPayload(null);
         }
     }
