@@ -5,11 +5,43 @@ namespace Physalia.AbilityFramework
 {
     public class LifoQueueRunner
     {
+        internal struct StepResult
+        {
+            internal IAbilityFlow flow;
+            internal FlowNode node;
+            internal ExecutionType type;
+            internal ResultState state;
+
+            internal StepResult(IAbilityFlow flow, FlowNode node, ExecutionType type, ResultState state)
+            {
+                this.flow = flow;
+                this.node = node;
+                this.type = type;
+                this.state = state;
+            }
+        }
+
+        internal enum ExecutionType
+        {
+            NODE_EXECUTION,
+            NODE_RESUME,
+            FLOW_FINISH,
+        }
+
+        internal enum ResultState
+        {
+            SUCCESS, FAILED, ABORT, PAUSE
+        }
+
+        private enum RunningState
+        {
+            IDLE, RUNNING, PAUSE
+        }
+
         internal event Action<FlowNode> NodeExecuted;
 
         private readonly Stack<Queue<IAbilityFlow>> queueStack = new();
-
-        private AbilityState currentState = AbilityState.CLEAN;
+        private RunningState runningState = RunningState.IDLE;
 
         internal int CountOfQueue => queueStack.Count;
 
@@ -69,93 +101,146 @@ namespace Physalia.AbilityFramework
         {
             queueStack.Clear();
             queueStack.Push(new Queue<IAbilityFlow>());
-            currentState = AbilityState.CLEAN;
+            runningState = RunningState.IDLE;
         }
 
         public void Start()
         {
-            if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
+            if (runningState != RunningState.IDLE)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] You can not execute any unfinished ability instance!");
+                Logger.Error($"[{nameof(AbilityRunner)}] Failed to start! The runner is still running or waiting.");
                 return;
             }
 
-            IterateFlows();
+            while (Peek() != null)
+            {
+                StepResult result = ExecuteStep();
+                bool keepRunning = HandleStepResult(result);
+                if (!keepRunning)
+                {
+                    return;
+                }
+            }
+
+            runningState = RunningState.IDLE;
         }
 
         public void Resume(IResumeContext resumeContext)
         {
-            IAbilityFlow flow = Peek();
-            FlowNode node = flow.Current;
-
-            if (currentState != AbilityState.PAUSE)
+            if (runningState != RunningState.PAUSE)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! You can not resume any unpaused ability instance!");
+                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume! The runner is not in PAUSE state.");
                 return;
             }
+
+            StepResult result = ResumeStep(resumeContext);
+            bool keepRunning = HandleStepResult(result);
+            if (!keepRunning)
+            {
+                return;
+            }
+
+            while (Peek() != null)
+            {
+                result = ExecuteStep();
+                keepRunning = HandleStepResult(result);
+                if (!keepRunning)
+                {
+                    return;
+                }
+            }
+
+            runningState = RunningState.IDLE;
+        }
+
+        private StepResult ExecuteStep()
+        {
+            IAbilityFlow flow = Peek();
+            if (!flow.MoveNext())
+            {
+                // The graph is empty or has already reached the final node.
+                // We keep it until resolving all flows pushed, and dequeue it at here.
+                return new StepResult(flow, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS);
+            }
+
+            FlowNode node = flow.Current;
+            AbilityState state = node.Run();
+            if (state == AbilityState.ABORT)
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.ABORT);
+            }
+            else if (state == AbilityState.PAUSE)
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.PAUSE);
+            }
+            else
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.SUCCESS);
+            }
+        }
+
+        private StepResult ResumeStep(IResumeContext resumeContext)
+        {
+            IAbilityFlow flow = Peek();
+            FlowNode node = flow.Current;
 
             bool success = node.CheckNodeContext(resumeContext);
             if (!success)
             {
                 Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {node.GetType()}");
-                return;
+                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
             }
 
-            currentState = node.Resume(resumeContext);
-
-            if (node != null)
+            AbilityState state = node.Resume(resumeContext);
+            if (state == AbilityState.ABORT)
             {
-                NodeExecuted?.Invoke(node);
+                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.ABORT);
             }
-
-            if (currentState == AbilityState.ABORT)
+            else if (state == AbilityState.PAUSE)
             {
-                _ = DequeueFlow();
-                return;
+                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.PAUSE);
             }
-            else if (currentState == AbilityState.PAUSE)
+            else
             {
-                return;
+                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.SUCCESS);
             }
-
-            IterateFlows();
         }
 
-        private void IterateFlows()
+        private bool HandleStepResult(StepResult result)
         {
-            IAbilityFlow currentFlow = Peek();
-            while (currentFlow != null)
+            var keepRunning = true;
+
+            switch (result.type)
             {
-                if (!currentFlow.MoveNext())
-                {
-                    // The graph is empty or has already reached the final node.
-                    // We keep it until resolving all flows pushed, and dequeue it at here.
+                case ExecutionType.NODE_EXECUTION:
+                case ExecutionType.NODE_RESUME:
+                    if (result.state == ResultState.FAILED)
+                    {
+                        keepRunning = false;
+                        break;
+                    }
+
+                    if (result.node != null)
+                    {
+                        NodeExecuted?.Invoke(result.node);
+                    }
+
+                    if (result.state == ResultState.ABORT)
+                    {
+                        _ = DequeueFlow();
+                    }
+                    else if (result.state == ResultState.PAUSE)
+                    {
+                        keepRunning = false;
+                        runningState = RunningState.PAUSE;
+                    }
+                    break;
+                case ExecutionType.FLOW_FINISH:
                     _ = DequeueFlow();
-                    currentFlow = Peek();
-                    continue;
-                }
-
-                FlowNode node = currentFlow.Current;
-                currentState = node.Run();
-
-                if (node != null)
-                {
-                    NodeExecuted?.Invoke(node);
-                }
-
-                if (currentState == AbilityState.ABORT)
-                {
-                    _ = DequeueFlow();
-                }
-                else if (currentState == AbilityState.PAUSE)
-                {
-                    return;
-                }
-
-                currentFlow = Peek();
+                    break;
             }
 
-            currentState = AbilityState.DONE;
+            return keepRunning;
         }
     }
 }
