@@ -22,6 +22,7 @@ namespace Physalia.AbilityFramework
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
+            runner.abilitySystem = this;
         }
 
         internal StatOwner CreateOwner()
@@ -92,7 +93,7 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            runner.PushNewAbilityQueue();
+            runner.AddNewQueue();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
@@ -105,8 +106,7 @@ namespace Physalia.AbilityFramework
                     EnqueueAbilitiesForAllOwners(eventContext);
                 }
             }
-
-            runner.PopEmptyQueues();
+            runner.RemoveEmptyQueues();
         }
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
@@ -188,17 +188,17 @@ namespace Physalia.AbilityFramework
         {
             flow.Reset();
             flow.SetPayload(eventContext);
-            runner.Add(flow);
+            runner.EnqueueFlow(flow);
         }
 
         public void Run()
         {
-            runner.Run(this);
+            runner.Start();
         }
 
         public void Resume(IResumeContext resumeContext)
         {
-            runner.Resume(this, resumeContext);
+            runner.Resume(resumeContext);
         }
 
         public void RefreshStatsAndModifiers()

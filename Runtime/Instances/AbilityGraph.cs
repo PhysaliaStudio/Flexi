@@ -29,6 +29,37 @@ namespace Physalia.AbilityFramework
             }
         }
 
+        public bool HasNext()
+        {
+            if (currentNode == null)
+            {
+                if (isRunning)
+                {
+                    return false;
+                }
+
+                if (indexOfEntryNode < 0 || indexOfEntryNode >= EntryNodes.Count)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (currentNode.Next != null)
+            {
+                return true;
+            }
+            else if (nodeStack.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public bool MoveNext()
         {
             if (currentNode == null)

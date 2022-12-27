@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using static Physalia.AbilityFramework.LifoQueueRunner;
+using static Physalia.AbilityFramework.AbilityRunner;
 
 namespace Physalia.AbilityFramework.Tests
 {

@@ -1,6 +1,6 @@
 namespace Physalia.AbilityFramework
 {
-    public sealed class AbilityFlow
+    public sealed class AbilityFlow : IAbilityFlow
     {
         private readonly AbilitySystem system;
         private readonly Ability ability;
@@ -18,7 +18,7 @@ namespace Physalia.AbilityFramework
 
         public Actor Actor => actor;
         internal IEventContext Payload => payload;
-        public AbilityState CurrentState => currentState;
+        public FlowNode Current => graph.Current;
 
         internal AbilityFlow(AbilityGraph graph) : this(null, graph, null)
         {
@@ -45,6 +45,16 @@ namespace Physalia.AbilityFramework
         public void SetPayload(IEventContext payload)
         {
             this.payload = payload;
+        }
+
+        public bool HasNext()
+        {
+            return graph.HasNext();
+        }
+
+        public bool MoveNext()
+        {
+            return graph.MoveNext();
         }
 
         public bool CanExecute(IEventContext payload)
