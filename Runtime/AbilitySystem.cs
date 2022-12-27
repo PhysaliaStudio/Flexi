@@ -15,6 +15,7 @@ namespace Physalia.AbilityFramework
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
+        private readonly AbilityRunner statRefreshRunner = new SimpleQueueRunner();
 
         private readonly MacroLibrary macroLibrary = new();
 
@@ -23,6 +24,7 @@ namespace Physalia.AbilityFramework
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
+            statRefreshRunner.SetEventTriggerMode(AbilityRunner.EventTriggerMode.NEVER);
         }
 
         internal StatOwner CreateOwner()
@@ -222,10 +224,12 @@ namespace Physalia.AbilityFramework
                     {
                         abilityFlow.Reset();
                         abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        abilityFlow.Execute();
+                        statRefreshRunner.EnqueueFlow(abilityFlow);
                     }
                 }
             }
+
+            statRefreshRunner.Start();
         }
 
         internal void TriggerChoice(IChoiceContext context)
