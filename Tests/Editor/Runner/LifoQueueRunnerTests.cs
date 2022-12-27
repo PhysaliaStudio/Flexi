@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using static Physalia.AbilityFramework.LifoQueueRunner;
 
 namespace Physalia.AbilityFramework.Tests
 {
@@ -158,12 +159,20 @@ namespace Physalia.AbilityFramework.Tests
             runner.EnqueueFlow(flowA);
             runner.EnqueueFlow(flowB);
 
-            List<object> record = new List<object>();
-            runner.NodeExecuted += x => record.Add(x);
+            var record = new List<StepResult>();
+            runner.StepExecuted += x => record.Add(x);
 
             runner.Start();
 
-            var expected = new List<object> { flowA[0], flowA[1], flowB[0], flowB[1], flowB[2] };
+            var expected = new List<StepResult> {
+                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowB, flowB[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, flowB[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, flowB[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+            };
             TestUtilities.AreListEqual(expected, record);
         }
 
@@ -176,11 +185,13 @@ namespace Physalia.AbilityFramework.Tests
 
             runner.EnqueueFlow(flowA);
 
-            List<object> record = new List<object>();
-            runner.NodeExecuted += x =>
+            var record = new List<StepResult>();
+            runner.StepExecuted += x =>
             {
                 record.Add(x);
-                if (x == flowA[0])
+
+                // Normally you shouldn't do this!!
+                if (x.node == flowA[0])
                 {
                     runner.AddNewQueue();
                     runner.EnqueueFlow(flowB);
@@ -189,7 +200,14 @@ namespace Physalia.AbilityFramework.Tests
 
             runner.Start();
 
-            var expected = new List<object> { flowA[0], flowB[0], flowB[1], flowA[1] };
+            var expected = new List<StepResult> {
+                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, flowB[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, flowB[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowB, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+            };
             TestUtilities.AreListEqual(expected, record);
         }
 
@@ -202,12 +220,15 @@ namespace Physalia.AbilityFramework.Tests
 
             runner.EnqueueFlow(flowA);
 
-            List<object> record = new List<object>();
-            runner.NodeExecuted += x => record.Add(x);
+            var record = new List<StepResult>();
+            runner.StepExecuted += x => record.Add(x);
 
             runner.Start();
 
-            var expected = new List<object> { flowA[0], flowA[1] };
+            var expected = new List<StepResult> {
+                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
+            };
             TestUtilities.AreListEqual(expected, record);
         }
 
@@ -220,13 +241,48 @@ namespace Physalia.AbilityFramework.Tests
 
             runner.EnqueueFlow(flowA);
 
-            List<object> record = new List<object>();
-            runner.NodeExecuted += x => record.Add(x);
+            var record = new List<StepResult>();
+            runner.StepExecuted += x => record.Add(x);
 
             runner.Start();
             runner.Resume(null);
 
-            var expected = new List<object> { flowA[0], flowA[1], flowA[1], flowA[2] };
+            var expected = new List<StepResult> {
+                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+            };
+
+            TestUtilities.AreListEqual(expected, record);
+        }
+
+        [Test]
+        public void StartAndResume_FlowAWith3NodesAndPause2TimesAfterA1_A0A1A1A1A2()
+        {
+            var runner = new LifoQueueRunner();
+            var flowA = new FakeFlow(3);
+            flowA.SetPauseCount(1, 2);
+
+            runner.EnqueueFlow(flowA);
+
+            var record = new List<StepResult>();
+            runner.StepExecuted += x => record.Add(x);
+
+            runner.Start();
+            runner.Resume(null);
+            runner.Resume(null);
+
+            var expected = new List<StepResult> {
+                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.PAUSE),
+                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
+                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+            };
+
             TestUtilities.AreListEqual(expected, record);
         }
     }

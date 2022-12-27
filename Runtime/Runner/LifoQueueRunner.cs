@@ -38,7 +38,7 @@ namespace Physalia.AbilityFramework
             IDLE, RUNNING, PAUSE
         }
 
-        internal event Action<FlowNode> NodeExecuted;
+        internal event Action<StepResult> StepExecuted;
 
         private readonly Stack<Queue<IAbilityFlow>> queueStack = new();
         private RunningState runningState = RunningState.IDLE;
@@ -219,13 +219,7 @@ namespace Physalia.AbilityFramework
                         keepRunning = false;
                         break;
                     }
-
-                    if (result.node != null)
-                    {
-                        NodeExecuted?.Invoke(result.node);
-                    }
-
-                    if (result.state == ResultState.ABORT)
+                    else if (result.state == ResultState.ABORT)
                     {
                         _ = DequeueFlow();
                     }
@@ -239,6 +233,8 @@ namespace Physalia.AbilityFramework
                     _ = DequeueFlow();
                     break;
             }
+
+            StepExecuted?.Invoke(result);
 
             return keepRunning;
         }
