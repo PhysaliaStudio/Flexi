@@ -37,11 +37,24 @@ namespace Physalia.AbilityFramework
             IDLE, RUNNING, PAUSE
         }
 
+        internal enum EventTriggerMode
+        {
+            EACH_NODE,
+            EACH_FLOW,
+            NEVER,
+        }
+
         internal event Action<StepResult> StepExecuted;
 
         internal AbilitySystem abilitySystem;
 
+        private EventTriggerMode eventTriggerMode = EventTriggerMode.EACH_NODE;
         private RunningState runningState = RunningState.IDLE;
+
+        internal void SetEventTriggerMode(EventTriggerMode eventTriggerMode)
+        {
+            this.eventTriggerMode = eventTriggerMode;
+        }
 
         public abstract IAbilityFlow Peek();
         public abstract void EnqueueFlow(IAbilityFlow flow);
@@ -190,9 +203,39 @@ namespace Physalia.AbilityFramework
                     break;
             }
 
+            TriggerEvent(result);
             StepExecuted?.Invoke(result);
 
             return keepRunning;
+        }
+
+        private void TriggerEvent(StepResult result)
+        {
+            if (abilitySystem == null)
+            {
+                return;
+            }
+
+            switch (eventTriggerMode)
+            {
+                case EventTriggerMode.EACH_NODE:
+                    if (result.type != ExecutionType.NODE_EXECUTION && result.type != ExecutionType.NODE_RESUME)
+                    {
+                        return;
+                    }
+                    break;
+                case EventTriggerMode.EACH_FLOW:
+                    if (result.type != ExecutionType.FLOW_FINISH)
+                    {
+                        return;
+                    }
+                    break;
+                case EventTriggerMode.NEVER:
+                    return;
+            }
+
+            abilitySystem.TriggerCachedEvents();
+            abilitySystem.RefreshStatsAndModifiers();
         }
     }
 }
