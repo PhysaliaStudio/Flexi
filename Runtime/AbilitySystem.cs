@@ -15,6 +15,7 @@ namespace Physalia.AbilityFramework
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
+        private readonly AbilityRunner statRefreshRunner = new SimpleQueueRunner();
 
         private readonly MacroLibrary macroLibrary = new();
 
@@ -22,6 +23,8 @@ namespace Physalia.AbilityFramework
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
+            runner.abilitySystem = this;
+            statRefreshRunner.SetEventTriggerMode(AbilityRunner.EventTriggerMode.NEVER);
         }
 
         internal StatOwner CreateOwner()
@@ -92,7 +95,7 @@ namespace Physalia.AbilityFramework
                 return;
             }
 
-            runner.PushNewAbilityQueue();
+            runner.AddNewQueue();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
@@ -105,8 +108,7 @@ namespace Physalia.AbilityFramework
                     EnqueueAbilitiesForAllOwners(eventContext);
                 }
             }
-
-            runner.PopEmptyQueues();
+            runner.RemoveEmptyQueues();
         }
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
@@ -188,17 +190,17 @@ namespace Physalia.AbilityFramework
         {
             flow.Reset();
             flow.SetPayload(eventContext);
-            runner.Add(flow);
+            runner.EnqueueFlow(flow);
         }
 
         public void Run()
         {
-            runner.Run(this);
+            runner.Start();
         }
 
         public void Resume(IResumeContext resumeContext)
         {
-            runner.Resume(this, resumeContext);
+            runner.Resume(resumeContext);
         }
 
         public void RefreshStatsAndModifiers()
@@ -222,10 +224,12 @@ namespace Physalia.AbilityFramework
                     {
                         abilityFlow.Reset();
                         abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        abilityFlow.Execute();
+                        statRefreshRunner.EnqueueFlow(abilityFlow);
                     }
                 }
             }
+
+            statRefreshRunner.Start();
         }
 
         internal void TriggerChoice(IChoiceContext context)

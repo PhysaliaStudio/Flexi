@@ -17,7 +17,7 @@ namespace Physalia.AbilityFramework
 
             if (runner == null)
             {
-                runner = new DefaultAbilityRunner();
+                runner = new LifoQueueRunner();
             }
 
             Logger.Info($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");

@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Physalia.AbilityFramework
 {
-    public sealed class AbilityFlow
+    public sealed class AbilityFlow : IAbilityFlow
     {
         private readonly AbilitySystem system;
         private readonly Ability ability;
@@ -12,7 +10,6 @@ namespace Physalia.AbilityFramework
 
         private Actor actor;
         private IEventContext payload;
-        private AbilityState currentState = AbilityState.CLEAN;
 
         public AbilitySystem System => system;
         internal Ability Ability => ability;
@@ -20,7 +17,7 @@ namespace Physalia.AbilityFramework
 
         public Actor Actor => actor;
         internal IEventContext Payload => payload;
-        public AbilityState CurrentState => currentState;
+        public FlowNode Current => graph.Current;
 
         internal AbilityFlow(AbilityGraph graph) : this(null, graph, null)
         {
@@ -49,6 +46,16 @@ namespace Physalia.AbilityFramework
             this.payload = payload;
         }
 
+        public bool HasNext()
+        {
+            return graph.HasNext();
+        }
+
+        public bool MoveNext()
+        {
+            return graph.MoveNext();
+        }
+
         public bool CanExecute(IEventContext payload)
         {
             if (graph.EntryNodes.Count == 0)
@@ -60,63 +67,6 @@ namespace Physalia.AbilityFramework
             return result;
         }
 
-        public void Execute()
-        {
-            if (currentState != AbilityState.CLEAN && currentState != AbilityState.ABORT && currentState != AbilityState.DONE)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] You can not execute any unfinished ability instance!");
-                return;
-            }
-
-            if (!CanExecute(payload))
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] Cannot execute ability, because the payload doesn't match the condition. Normally you should call CanExecute() to check.");
-                return;
-            }
-
-            graph.Reset(0);
-
-            IterateGraph();
-        }
-
-        public void Resume(IResumeContext resumeContext)
-        {
-            if (currentState != AbilityState.PAUSE)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] You can not resume any unpaused ability instance!");
-                return;
-            }
-
-            bool success = graph.Current.CheckNodeContext(resumeContext);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilityFlow)}] The resume context is invalid, NodeType: {graph.Current.GetType()}");
-                return;
-            }
-
-            currentState = graph.Current.Resume(resumeContext);
-            if (currentState != AbilityState.RUNNING)
-            {
-                return;
-            }
-
-            IterateGraph();
-        }
-
-        private void IterateGraph()
-        {
-            while (graph.MoveNext())
-            {
-                currentState = graph.Current.Run();
-                if (currentState != AbilityState.RUNNING)
-                {
-                    return;
-                }
-            }
-
-            currentState = AbilityState.DONE;
-        }
-
         internal void Push(FlowNode flowNode)
         {
             graph.Push(flowNode);
@@ -125,7 +75,6 @@ namespace Physalia.AbilityFramework
         public void Reset()
         {
             graph.Reset(0);
-            currentState = AbilityState.CLEAN;
             SetPayload(null);
         }
     }
