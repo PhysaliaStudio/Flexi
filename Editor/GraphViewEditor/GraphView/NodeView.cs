@@ -107,7 +107,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             switch (node)
             {
                 default:
-                    title = GetNodePrettyName(node.GetType().Name);
+                    title = GetNodeName(node.GetType());
                     break;
                 case SubgraphNode subgraphNode:
                     title = subgraphNode.key;
@@ -209,14 +209,21 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             RefreshExpandedState();
         }
 
-        private static string GetNodePrettyName(string nodeName)
+        private static string GetNodeName(Type type)
         {
-            if (nodeName.EndsWith("Node"))
+            NodeCategory nodeCategory = type.GetCustomAttribute<NodeCategory>();
+            if (nodeCategory != null && !string.IsNullOrEmpty(nodeCategory.Name))
             {
-                return nodeName[0..^4];
+                return nodeCategory.Name;
             }
-
-            return nodeName;
+            else if (type.Name.EndsWith("Node"))
+            {
+                return type.Name[0..^4];
+            }
+            else
+            {
+                return type.Name;
+            }
         }
 
         private static string GetPortPrettyName(string portName)

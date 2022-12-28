@@ -108,9 +108,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
                 Type type = nodeTypes[i];
                 NodeCategory nodeCategory = type.GetCustomAttribute<NodeCategory>();
-                if (nodeCategory != null)
+                if (nodeCategory != null && !string.IsNullOrEmpty(nodeCategory.Menu))
                 {
-                    var path = $"{nodeCategory.Name}/{type.Name}";
+                    string nodeDisplayName = string.IsNullOrEmpty(nodeCategory.Name) ? type.Name : nodeCategory.Name;
+                    var path = $"{nodeCategory.Menu}/{nodeDisplayName}";
                     searchTree.Insert(path, type);
                 }
                 else
