@@ -279,8 +279,10 @@ namespace Physalia.AbilityFramework
 
             var linkedNodes = new HashSet<Node>();
 
-            foreach (Outport outport in node.Outports)
+            IReadOnlyList<Outport> outports = node.Outports;
+            for (var i = 0; i < outports.Count; i++)
             {
+                Outport outport = outports[i];
                 IReadOnlyList<Port> ports = outport.GetConnections();
                 foreach (Port port in ports)
                 {
@@ -306,8 +308,10 @@ namespace Physalia.AbilityFramework
                 }
             }
 
-            foreach (Inport inport in node.Inports)
+            IReadOnlyList<Inport> inports = node.Inports;
+            for (var i = 0; i < inports.Count; i++)
             {
+                Inport inport = inports[i];
                 IReadOnlyList<Port> ports = inport.GetConnections();
                 foreach (Outport port in ports)
                 {
