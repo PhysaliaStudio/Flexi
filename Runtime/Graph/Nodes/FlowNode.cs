@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Physalia.AbilityFramework
 {
     public abstract class FlowNode : Node
@@ -13,10 +15,14 @@ namespace Physalia.AbilityFramework
 
         private void EvaluateInports()
         {
-            foreach (Inport inport in Inports)
+            IReadOnlyList<Inport> inports = Inports;
+            for (var i = 0; i < inports.Count; i++)
             {
-                foreach (Outport outport in inport.GetConnections())
+                Inport inport = inports[i];
+                IReadOnlyList<Port> connections = inport.GetConnections();
+                for (var j = 0; j < connections.Count; j++)
                 {
+                    var outport = connections[j] as Outport;
                     if (outport.Node is ValueNode valueNode)
                     {
                         valueNode.Evaluate();

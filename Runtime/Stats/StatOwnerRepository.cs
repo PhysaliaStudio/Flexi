@@ -9,10 +9,10 @@ namespace Physalia.AbilityFramework
         private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, StatOwner> idToOwners = new();
-        private readonly HashSet<StatOwner> owners = new();
+        private readonly List<StatOwner> owners = new();
         private readonly Random random = new();
 
-        public IReadOnlyCollection<StatOwner> Owners => owners;
+        public IReadOnlyList<StatOwner> Owners => owners;
 
         public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm = null)
         {

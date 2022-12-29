@@ -53,8 +53,10 @@ namespace Physalia.AbilityFramework
                 }
 
                 // Copy inport values
-                foreach (Inport inport in Inports)
+                IReadOnlyList<Inport> inports = Inports;
+                for (var i = 0; i < inports.Count; i++)
                 {
+                    Inport inport = inports[i];
                     if (inport == previous)
                     {
                         continue;
@@ -72,8 +74,10 @@ namespace Physalia.AbilityFramework
                 state = State.EXITED;
 
                 // Copy outport values
-                foreach (Outport outport in Outports)
+                IReadOnlyList<Outport> outports = Outports;
+                for (var i = 0; i < outports.Count; i++)
                 {
+                    Outport outport = outports[i];
                     if (outport == next)
                     {
                         continue;

@@ -13,20 +13,22 @@ namespace Physalia.AbilityFramework
 
         // These internal ports will be set in NodeFactory
         [NonSerialized]
-        private readonly Dictionary<string, Port> ports = new();
+        private readonly Dictionary<string, Port> portTable = new();
         [NonSerialized]
-        private readonly Dictionary<string, Inport> inports = new();
+        private readonly Dictionary<string, Inport> inportTable = new();
         [NonSerialized]
-        private readonly Dictionary<string, Outport> outports = new();
+        private readonly Dictionary<string, Outport> outportTable = new();
 
+        private readonly List<Inport> inports = new();
+        private readonly List<Outport> outports = new();
         private readonly List<Inport> dynamicInports = new();
         private readonly List<Outport> dynamicOutports = new();
 
         internal AbilityFlow flow;
 
-        public IEnumerable<Port> Ports => ports.Values;
-        public IEnumerable<Inport> Inports => inports.Values;
-        public IEnumerable<Outport> Outports => outports.Values;
+        public IEnumerable<Port> Ports => portTable.Values;
+        public IReadOnlyList<Inport> Inports => inports;
+        public IReadOnlyList<Outport> Outports => outports;
         public IReadOnlyList<Inport> DynamicInports => dynamicInports;
         public IReadOnlyList<Outport> DynamicOutports => dynamicOutports;
 
@@ -38,8 +40,10 @@ namespace Physalia.AbilityFramework
 
         internal void AddInport(string name, Inport inport)
         {
-            ports.Add(name, inport);
-            inports.Add(name, inport);
+            portTable.Add(name, inport);
+            inportTable.Add(name, inport);
+
+            inports.Add(inport);
             if (inport.IsDynamic)
             {
                 dynamicInports.Add(inport);
@@ -51,8 +55,10 @@ namespace Physalia.AbilityFramework
             inport.DisconnectAll();
 
             string name = inport.Name;
-            ports.Remove(name);
-            inports.Remove(name);
+            portTable.Remove(name);
+            inportTable.Remove(name);
+
+            inports.Remove(inport);
             if (inport.IsDynamic)
             {
                 dynamicInports.Remove(inport);
@@ -61,8 +67,10 @@ namespace Physalia.AbilityFramework
 
         internal void AddOutport(string name, Outport outport)
         {
-            ports.Add(name, outport);
-            outports.Add(name, outport);
+            portTable.Add(name, outport);
+            outportTable.Add(name, outport);
+
+            outports.Add(outport);
             if (outport.IsDynamic)
             {
                 dynamicOutports.Add(outport);
@@ -74,8 +82,10 @@ namespace Physalia.AbilityFramework
             outport.DisconnectAll();
 
             string name = outport.Name;
-            ports.Remove(name);
-            outports.Remove(name);
+            portTable.Remove(name);
+            outportTable.Remove(name);
+
+            outports.Remove(outport);
             if (outport.IsDynamic)
             {
                 dynamicOutports.Remove(outport);
@@ -84,7 +94,7 @@ namespace Physalia.AbilityFramework
 
         public Port GetPort(string name)
         {
-            if (ports.TryGetValue(name, out Port port))
+            if (portTable.TryGetValue(name, out Port port))
             {
                 return port;
             }
@@ -94,7 +104,7 @@ namespace Physalia.AbilityFramework
 
         public Inport GetInport(string name)
         {
-            if (inports.TryGetValue(name, out Inport inport))
+            if (inportTable.TryGetValue(name, out Inport inport))
             {
                 return inport;
             }
@@ -104,7 +114,7 @@ namespace Physalia.AbilityFramework
 
         public Outport GetOutport(string name)
         {
-            if (outports.TryGetValue(name, out Outport outport))
+            if (outportTable.TryGetValue(name, out Outport outport))
             {
                 return outport;
             }
@@ -138,18 +148,18 @@ namespace Physalia.AbilityFramework
             }
 
             port.Name = newName;
-            ports.Remove(oldName);
-            ports.Add(newName, port);
+            portTable.Remove(oldName);
+            portTable.Add(newName, port);
 
             if (port is Inport inport)
             {
-                inports.Remove(oldName);
-                inports.Add(newName, inport);
+                inportTable.Remove(oldName);
+                inportTable.Add(newName, inport);
             }
             else if (port is Outport outport)
             {
-                outports.Remove(oldName);
-                outports.Add(newName, outport);
+                outportTable.Remove(oldName);
+                outportTable.Add(newName, outport);
             }
 
             return true;

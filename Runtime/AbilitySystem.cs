@@ -113,8 +113,10 @@ namespace Physalia.AbilityFramework
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
         {
-            foreach (StatOwner owner in ownerRepository.Owners)
+            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
+            for (var i = 0; i < owners.Count; i++)
             {
+                StatOwner owner = owners[i];
                 _ = TryEnqueueAbility(owner.Abilities, eventContext);
             }
         }
@@ -215,11 +217,13 @@ namespace Physalia.AbilityFramework
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
-            foreach (StatOwner owner in ownerRepository.Owners)
+            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
+            for (var i = 0; i < owners.Count; i++)
             {
-                for (var i = 0; i < owner.AbilityFlows.Count; i++)
+                StatOwner owner = owners[i];
+                for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {
-                    AbilityFlow abilityFlow = owner.AbilityFlows[i];
+                    AbilityFlow abilityFlow = owner.AbilityFlows[j];
                     if (abilityFlow.CanExecute(STAT_REFRESH_EVENT))
                     {
                         abilityFlow.Reset();
