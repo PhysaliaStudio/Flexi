@@ -18,7 +18,10 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         }
 
 #if !SHOW_TEST_NODES
-        private static readonly string TEST_ASSEMBLY_NAME = "Physalia.AbilityFramework.Editor.Tests";
+        private static readonly HashSet<string> TEST_ASSEMBLY_NAMES = new HashSet<string> {
+            "Physalia.AbilityFramework.Editor.Tests",
+            "Physalia.AbilityFramework.PerformanceTests",
+        };
 #endif
 
         private static readonly List<SearchTreeEntry> searchTreeEntries = new();
@@ -78,7 +81,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
             {
 #if !SHOW_TEST_NODES
                 // Hide the test node types
-                if (assembly.GetName().Name == TEST_ASSEMBLY_NAME)
+                if (TEST_ASSEMBLY_NAMES.Contains(assembly.GetName().Name))
                 {
                     continue;
                 }
