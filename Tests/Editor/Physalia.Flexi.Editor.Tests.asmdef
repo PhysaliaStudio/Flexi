@@ -1,8 +1,8 @@
 {
-    "name": "Physalia.AbilityFramework.Editor.Tests",
-    "rootNamespace": "Physalia.AbilityFramework.Tests",
+    "name": "Physalia.Flexi.Editor.Tests",
+    "rootNamespace": "Physalia.Flexi.Tests",
     "references": [
-        "Physalia.AbilityFramework"
+        "Physalia.Flexi"
     ],
     "includePlatforms": [
         "Editor"

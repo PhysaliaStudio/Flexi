@@ -1,6 +1,6 @@
 {
-    "name": "Physalia.AbilityFramework.GraphViewEditor",
-    "rootNamespace": "Physalia.AbilityFramework.GraphViewEditor",
+    "name": "Physalia.Flexi.Editor",
+    "rootNamespace": "Physalia.Flexi",
     "references": [
         "GUID:b4a7a0a0f6e8c8c4c99f40861c52733f"
     ],
