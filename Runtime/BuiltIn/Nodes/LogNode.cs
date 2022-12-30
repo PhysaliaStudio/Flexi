@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [NodeCategory("Built-in/Common")]
     public class LogNode : ProcessNode

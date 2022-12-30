@@ -1,6 +1,6 @@
 using System;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class NodeCategory : Attribute

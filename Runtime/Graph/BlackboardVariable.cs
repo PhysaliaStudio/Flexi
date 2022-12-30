@@ -1,6 +1,6 @@
 using System;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [Serializable]
     public class BlackboardVariable

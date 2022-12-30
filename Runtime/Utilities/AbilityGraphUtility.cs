@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     internal static class AbilityGraphUtility
     {

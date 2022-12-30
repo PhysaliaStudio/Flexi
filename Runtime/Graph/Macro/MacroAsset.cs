@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [CreateAssetMenu(fileName = "NewMacroAsset", menuName = "Flexi/Macro Asset", order = 152)]
     public sealed class MacroAsset : GraphAsset

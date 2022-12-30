@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     // Note: For handling missing clear callback method
     // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157

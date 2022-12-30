@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [CreateAssetMenu(fileName = "NewStatList", menuName = "Flexi/Stat List Asset", order = 150)]
     public class StatDefinitionListAsset : ScriptableObject

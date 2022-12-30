@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using PortView = UnityEditor.Experimental.GraphView.Port;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {

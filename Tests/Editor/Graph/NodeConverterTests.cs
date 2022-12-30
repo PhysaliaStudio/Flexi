@@ -1,11 +1,10 @@
-using System;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     public class NodeConverterTests
     {
@@ -28,7 +27,7 @@ namespace Physalia.AbilityFramework.Tests
             };
             var json = JsonConvert.SerializeObject(node);
 
-            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0},\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\",\"value\":42}";
+            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}";
             Assert.AreEqual(expected, json);
         }
 
@@ -43,7 +42,7 @@ namespace Physalia.AbilityFramework.Tests
             };
             var json = JsonConvert.SerializeObject(node);
 
-            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0},\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\",\"value\":0}";
+            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":0}";
             Assert.AreEqual(expected, json);
         }
 
@@ -51,7 +50,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeCustomNode_Normal()
         {
             Node node = JsonConvert.DeserializeObject<Node>(
-                "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\",\"value\":42}");
+                "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}");
 
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(1, node.id);
@@ -67,7 +66,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeCustomNode_MissingIdField()
         {
             Node node = JsonConvert.DeserializeObject<Node>(
-                "{\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\",\"value\":42}");
+                "{\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}");
 
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(0, node.id);
@@ -79,7 +78,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeCustomNode_MissingPositionField()
         {
             Node node = JsonConvert.DeserializeObject<Node>(
-                "{\"_id\":1,\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\",\"value\":42}");
+                "{\"_id\":1,\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}");
 
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(1, node.id);
@@ -91,7 +90,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeCustomNode_MissingDataField()
         {
             Node node = JsonConvert.DeserializeObject<Node>(
-                "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.AbilityFramework.Tests.NodeConverterTests+TestNode\"}");
+                "{\"_id\":1,\"_position\":{\"x\":200,\"y\":100},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\"}");
 
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(1, node.id);

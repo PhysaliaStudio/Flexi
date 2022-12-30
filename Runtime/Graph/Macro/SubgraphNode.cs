@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
     public sealed class SubgraphNode : ProcessNode

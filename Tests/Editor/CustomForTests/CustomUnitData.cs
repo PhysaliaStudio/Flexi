@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     public class CustomUnitData
     {

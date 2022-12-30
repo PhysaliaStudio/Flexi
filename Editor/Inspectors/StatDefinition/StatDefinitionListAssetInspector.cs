@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [CustomEditor(typeof(StatDefinitionListAsset))]
     public class StatDefinitionListAssetInspector : Editor

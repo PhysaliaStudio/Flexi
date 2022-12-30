@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     /// <remarks>
     /// Largely refer from TextAssetInspector.

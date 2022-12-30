@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 using PortView = UnityEditor.Experimental.GraphView.Port;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     public class AbilityGraphView : GraphView
     {

@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public class DefaultModifierAlgorithm : IModifierAlgorithm
     {
