@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [NodeCategory("Built-in/Comparison")]
     public class GreaterNode : ValueNode

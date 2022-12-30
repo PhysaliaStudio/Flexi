@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     internal static class MacroLibraryCache
     {

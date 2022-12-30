@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     /// <remarks>
     /// This node is mainly for functional tests.

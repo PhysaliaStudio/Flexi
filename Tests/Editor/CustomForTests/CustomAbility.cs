@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     public static class CustomAbility
     {

@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework.PerformanceTests
+namespace Physalia.Flexi.PerformanceTests
 {
     [NodeCategory("PerformanceTests")]
     public class CustomDoSomethingNode : ProcessNode

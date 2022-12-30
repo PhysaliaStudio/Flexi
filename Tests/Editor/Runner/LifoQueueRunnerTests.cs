@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using static Physalia.AbilityFramework.AbilityRunner;
+using static Physalia.Flexi.AbilityRunner;
 
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     public class LifoQueueRunnerTests
     {

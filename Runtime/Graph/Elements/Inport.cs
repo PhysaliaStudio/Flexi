@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public abstract class Inport : Port
     {

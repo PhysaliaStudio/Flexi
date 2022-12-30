@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: []
   graphJsons:
-  - '{"_type":"Physalia.AbilityFramework.AbilityGraph","variables":[],"nodes":[{"_id":829185,"_position":{"x":101.0,"y":122.0},"_type":"Physalia.AbilityFramework.Tests.CustomDamageEventNode"},{"_id":514075,"_position":{"x":385.0,"y":166.0},"_type":"Physalia.AbilityFramework.Tests.CustomAttackDoubleNode"},{"_id":619583,"_position":{"x":187.0,"y":267.0},"_type":"Physalia.AbilityFramework.ActorNode"}],"edges":[{"id1":829185,"port1":"next","id2":514075,"port2":"previous"},{"id1":619583,"port1":"actor","id2":514075,"port2":"targetsPort"}]}'
+  - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":829185,"_position":{"x":101.0,"y":122.0},"_type":"Physalia.Flexi.Tests.CustomDamageEventNode"},{"_id":514075,"_position":{"x":385.0,"y":166.0},"_type":"Physalia.Flexi.Tests.CustomAttackDoubleNode"},{"_id":619583,"_position":{"x":187.0,"y":267.0},"_type":"Physalia.Flexi.ActorNode"}],"edges":[{"id1":829185,"port1":"next","id2":514075,"port2":"previous"},{"id1":619583,"port1":"actor","id2":514075,"port2":"targetsPort"}]}'

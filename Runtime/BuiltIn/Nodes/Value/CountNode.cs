@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [NodeCategory("Built-in/Value")]
     public class CountNode : ValueNode

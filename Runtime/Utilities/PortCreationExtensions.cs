@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     internal static class PortCreationExtensions
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     internal static class CustomStats
     {

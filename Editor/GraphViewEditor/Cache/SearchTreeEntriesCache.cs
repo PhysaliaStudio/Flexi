@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     internal static class SearchTreeEntriesCache
     {
@@ -19,8 +19,8 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
 #if !SHOW_TEST_NODES
         private static readonly HashSet<string> TEST_ASSEMBLY_NAMES = new HashSet<string> {
-            "Physalia.AbilityFramework.Editor.Tests",
-            "Physalia.AbilityFramework.PerformanceTests",
+            "Physalia.Flexi.Editor.Tests",
+            "Physalia.Flexi.PerformanceTests",
         };
 #endif
 

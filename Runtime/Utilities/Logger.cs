@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public static class Logger
     {

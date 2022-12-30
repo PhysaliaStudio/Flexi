@@ -3,7 +3,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public static class StatDefinitionCodeGenerator
     {

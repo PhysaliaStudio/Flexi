@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     public class GraphConverterTests
     {
@@ -18,7 +18,7 @@ namespace Physalia.AbilityFramework.Tests
             Graph graph = new Graph();
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"nodes\":[]," +
                 "\"edges\":[]}";
 
@@ -50,12 +50,12 @@ namespace Physalia.AbilityFramework.Tests
             logNode.id = 5;
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageNode\"}," +
-                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+OwnerFilterNode\"}," +
-                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.LogNode\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.Tests.CustomDamageNode\"}," +
+                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.Tests.GraphConverterTests+OwnerFilterNode\"}," +
+                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
+                "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":3,\"port1\":\"owners\",\"id2\":2,\"port2\":\"targets\"}," +
@@ -69,12 +69,12 @@ namespace Physalia.AbilityFramework.Tests
         public void Deserialize_Normal()
         {
             var json =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.CustomDamageNode\"}," +
-                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.Tests.GraphConverterTests+OwnerFilterNode\"}," +
-                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.LogNode\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.Tests.CustomDamageNode\"}," +
+                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.Tests.GraphConverterTests+OwnerFilterNode\"}," +
+                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
+                "{\"_id\":5,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
                 "{\"id1\":2,\"port1\":\"next\",\"id2\":5,\"port2\":\"previous\"}," +
                 "{\"id1\":3,\"port1\":\"owners\",\"id2\":2,\"port2\":\"targets\"}," +
@@ -112,10 +112,10 @@ namespace Physalia.AbilityFramework.Tests
         public void Deserialize_WithMissingPort()
         {
             var json =
-                "{\"_type\":\"Physalia.AbilityFramework.AbilityGraph\"," +
-                "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.AbilityFramework.StartNode\"}," +
-                "{\"_id\":2,\"_type\":\"Physalia.AbilityFramework.LogNode\"}," +
-                "{\"_id\":3,\"_type\":\"Physalia.AbilityFramework.StringNode\"}]," +
+                "{\"_type\":\"Physalia.Flexi.AbilityGraph\"," +
+                "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":2,\"_type\":\"Physalia.Flexi.LogNode\"}," +
+                "{\"_id\":3,\"_type\":\"Physalia.Flexi.StringNode\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":2,\"port2\":\"previous\"}," +
                 "{\"id1\":3,\"port1\":\"value\",\"id2\":2,\"port2\":\"text\"}]}";
 
@@ -123,11 +123,11 @@ namespace Physalia.AbilityFramework.Tests
 
             Assert.AreEqual(3, graph.Nodes.Count);
             Assert.AreEqual(true, graph.Nodes[0] is StartNode);
-            Assert.AreEqual(true, graph.Nodes[1] is AbilityFramework.LogNode);
+            Assert.AreEqual(true, graph.Nodes[1] is Flexi.LogNode);
             Assert.AreEqual(true, graph.Nodes[2] is StringNode);
 
             var startNode = graph.Nodes[0] as StartNode;
-            var logNode = graph.Nodes[1] as AbilityFramework.LogNode;
+            var logNode = graph.Nodes[1] as Flexi.LogNode;
             var stringNode = graph.Nodes[2] as StringNode;
 
             Assert.AreEqual(1, graph.EntryNodes.Count);
@@ -148,7 +148,7 @@ namespace Physalia.AbilityFramework.Tests
             graph.AddSubgraphInOutNodes();
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"nodes\":[]," +
@@ -162,7 +162,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeMacro_Empty()
         {
             var json =
-               "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+               "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[]}," +
                 "\"nodes\":[]," +
@@ -188,7 +188,7 @@ namespace Physalia.AbilityFramework.Tests
             graph.GraphOutputNode.CreateInport<string>("test2", true);
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
                 "\"nodes\":[]," +
@@ -202,7 +202,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeMacro_WithCustomPorts()
         {
             var json =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":1.0,\"y\":2.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":8.0,\"y\":4.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.String\"}]}," +
                 "\"nodes\":[]," +
@@ -240,7 +240,7 @@ namespace Physalia.AbilityFramework.Tests
             graph.GraphInputNode.GetOutport("test1").Connect(graph.GraphOutputNode.GetInport("test2"));
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
                 "\"nodes\":[]," +
@@ -255,7 +255,7 @@ namespace Physalia.AbilityFramework.Tests
         public void DeserializeMacro_WithEdges()
         {
             var json =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
                 "\"nodes\":[]," +
@@ -281,8 +281,8 @@ namespace Physalia.AbilityFramework.Tests
             subgraphNode.id = 1;
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -293,8 +293,8 @@ namespace Physalia.AbilityFramework.Tests
         public void Deserialize_WithSubgraphNode()
         {
             var json =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             Graph graph = JsonConvert.DeserializeObject<Graph>(json);
@@ -308,7 +308,7 @@ namespace Physalia.AbilityFramework.Tests
         public void Serialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
         {
             var macroJson =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
                 "\"nodes\":[]," +
@@ -328,9 +328,9 @@ namespace Physalia.AbilityFramework.Tests
             subgraphNode.id = 2;
 
             var expected =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -341,12 +341,12 @@ namespace Physalia.AbilityFramework.Tests
         public void Deserialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
         {
             var graphJson =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.AbilityFramework.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
             var macroJson =
-                "{\"_type\":\"Physalia.AbilityFramework.Graph\"," +
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"$input\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test1\",\"type\":\"System.Int32\"}]}," +
                 "\"$output\":{\"position\":{\"x\":0.0,\"y\":0.0},\"portDatas\":[{\"name\":\"test2\",\"type\":\"System.Int32\"}]}," +
                 "\"nodes\":[]," +

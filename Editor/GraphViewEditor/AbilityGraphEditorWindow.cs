@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     // Note: For handling missing clear callback method
     // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
@@ -23,7 +23,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
 
     public class AbilityGraphEditorWindow : EditorWindow
     {
-        private static readonly string WINDOW_TITLE = "Ability Graph Editor";
+        private static readonly string WINDOW_TITLE = "Flexi Ability Editor";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
         // Since we need to use names to find the correct VisualTreeAsset to replace,
@@ -67,7 +67,7 @@ namespace Physalia.AbilityFramework.GraphViewEditor
         private BlackboardInspector blackboardInspector;
         private bool isDirty;
 
-        [MenuItem("Tools/Physalia/Ability Graph Editor (GraphView) &1")]
+        [MenuItem("Tools/Flexi/Ability Editor &1")]
         private static void Open()
         {
             AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);

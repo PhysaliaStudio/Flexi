@@ -1,7 +1,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     public class NodeInspector : VisualElement
     {

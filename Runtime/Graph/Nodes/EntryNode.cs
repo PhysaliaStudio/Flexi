@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public abstract class EntryNode : FlowNode
     {

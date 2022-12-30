@@ -2,7 +2,7 @@ using System;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
-namespace Physalia.AbilityFramework.GraphViewEditor
+namespace Physalia.Flexi.GraphViewEditor
 {
     public interface IVariableField
     {

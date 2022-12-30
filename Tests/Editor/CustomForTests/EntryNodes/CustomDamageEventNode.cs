@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework.Tests
+namespace Physalia.Flexi.Tests
 {
     [NodeCategory("Built-in/[Test Custom]")]
     public class CustomDamageEventNode : EntryNode

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [JsonConverter(typeof(GraphConverter))]
     public class Graph

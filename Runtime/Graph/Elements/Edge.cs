@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     /// <remarks>
     /// This class is only for data saving, temporary created when (de)serialization.

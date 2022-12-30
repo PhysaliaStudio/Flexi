@@ -1,38 +1,41 @@
-//using UnityEditor;
-//using UnityEngine;
+using UnityEditor;
 
-//namespace Physalia.AbilityFramework.GraphViewEditor
-//{
-//    public static class AssetVersionConverter
-//    {
-//        [MenuItem("Tools/Physalia/Convert Graph Assets Version")]
-//        private static void ConvertFromSelectedObjects()
-//        {
-//            var objects = Selection.objects;
-//            for (var i = 0; i < objects.Length; i++)
-//            {
-//                if (objects[i] is AbilityGraphAsset graphAsset && objects[i] is not MacroGraphAsset)
-//                {
-//                    ConvertFromGraphAsset(graphAsset);
-//                }
-//            }
-//            AssetDatabase.SaveAssets();
-//            AssetDatabase.Refresh();
-//        }
+namespace Physalia.Flexi.GraphViewEditor
+{
+    public static class AssetVersionConverter
+    {
+        [MenuItem("Tools/Flexi/Upgrade Assets Version")]
+        private static void ConvertFromSelectedObjects()
+        {
+            var objects = Selection.objects;
+            for (var i = 0; i < objects.Length; i++)
+            {
+                if (objects[i] is AbilityAsset abilityAsset)
+                {
+                    UpgradeAbilityAsset(abilityAsset);
+                }
+                else if (objects[i] is MacroAsset macroAsset)
+                {
+                    UpgradeMacroAsset(macroAsset);
+                }
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
 
-//        private static void ConvertFromGraphAsset(AbilityGraphAsset graphAsset)
-//        {
-//            AbilityGraph graph = AbilityGraphUtility.Deserialize(graphAsset.name, graphAsset.Text);
-//            AbilityAsset abilityAsset = ScriptableObject.CreateInstance<AbilityAsset>();
-//            abilityAsset.AddGraphJson(graphAsset.Text);
-//            for (var i = 0; i < graph.BlackboardVariables.Count; i++)
-//            {
-//                abilityAsset.AddBlackboardVariable(graph.BlackboardVariables[i]);
-//            }
+        private static void UpgradeAbilityAsset(AbilityAsset abilityAsset)
+        {
+            for (var i = 0; i < abilityAsset.GraphJsons.Count; i++)
+            {
+                abilityAsset.GraphJsons[i] = abilityAsset.GraphJsons[i].Replace("Physalia.AbilityFramework", "Physalia.Flexi");
+            }
+            EditorUtility.SetDirty(abilityAsset);
+        }
 
-//            string assetPath = AssetDatabase.GetAssetPath(graphAsset);
-//            AssetDatabase.DeleteAsset(assetPath);
-//            AssetDatabase.CreateAsset(abilityAsset, assetPath);
-//        }
-//    }
-//}
+        private static void UpgradeMacroAsset(MacroAsset macroAsset)
+        {
+            macroAsset.Text = macroAsset.Text.Replace("Physalia.AbilityFramework", "Physalia.Flexi");
+            EditorUtility.SetDirty(macroAsset);
+        }
+    }
+}

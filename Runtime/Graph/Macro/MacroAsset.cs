@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
-    [CreateAssetMenu(fileName = "NewMacroAsset", menuName = "Ability System/Macro Asset", order = 152)]
+    [CreateAssetMenu(fileName = "NewMacroAsset", menuName = "Flexi/Macro Asset", order = 152)]
     public sealed class MacroAsset : GraphAsset
     {
         [SerializeField]

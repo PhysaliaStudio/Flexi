@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     public class AbilitySystemBuilder
     {

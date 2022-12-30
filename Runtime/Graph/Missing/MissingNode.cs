@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
     internal sealed class MissingNode : Node, IIsMissing

@@ -1,4 +1,4 @@
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     internal sealed class StatRefreshEvent : IEventContext
     {

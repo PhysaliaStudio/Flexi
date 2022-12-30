@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.AbilityFramework
+namespace Physalia.Flexi
 {
     [NodeCategory("Built-in/Stats")]
     public class ConditionalModifierNode : ProcessNode
