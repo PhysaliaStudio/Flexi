@@ -31,7 +31,6 @@ namespace Physalia.Flexi.GraphViewEditor
         private static VisualElement CreateIntegerField(string label, Variable<int> variable, AbilityGraphEditorWindow window)
         {
             var field = new IntegerField(label);
-            field.labelElement.style.minWidth = 50f;
             field.RegisterValueChangedCallback(evt =>
             {
                 window.SetDirty(true);
@@ -45,7 +44,6 @@ namespace Physalia.Flexi.GraphViewEditor
         private static VisualElement CreateTextField(string label, Variable<string> variable, AbilityGraphEditorWindow window)
         {
             var field = new TextField(label);
-            field.labelElement.style.minWidth = 50f;
             field.RegisterValueChangedCallback(evt =>
             {
                 window.SetDirty(true);
@@ -59,7 +57,6 @@ namespace Physalia.Flexi.GraphViewEditor
         private static VisualElement CreateEnumField(string label, Variable variable, AbilityGraphEditorWindow window)
         {
             var field = new EnumField(label, variable.Value as Enum);
-            field.labelElement.style.minWidth = 50f;
             field.RegisterValueChangedCallback(evt =>
             {
                 window.SetDirty(true);

@@ -2,6 +2,10 @@
   min-width: 75px;
 }
 
+.node .unity-base-field__label {
+  min-width: 50px;
+}
+
 .entry-node #title {
   background-color: rgba(140, 31, 36, 0.8);
 }
