@@ -190,18 +190,24 @@ namespace Physalia.Flexi.GraphViewEditor
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
-                if (field.FieldType.IsSubclassOf(typeof(Variable)))
-                {
-                    Type genericType = field.FieldType.GetGenericArguments()[0];
-                    CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(genericType);
-                    if (creationMethod == null)
-                    {
-                        continue;
-                    }
+                Type type = field.FieldType;
 
-                    var variable = field.GetValue(node) as Variable;
-                    IVariableField variableField = creationMethod.Invoke(field.Name, variable, window);
-                    extensionContainer.Add(variableField.VisualElement);
+                if (type.InstanceOfGenericType(typeof(Variable<>)))
+                {
+                    Type valueType = type.GetGenericArguments()[0];
+                    CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(valueType);
+                    if (creationMethod != null)
+                    {
+                        var variable = field.GetValue(node) as Variable;
+                        IVariableField variableField = creationMethod.Invoke(field.Name, variable, window);
+                        extensionContainer.Add(variableField.VisualElement);
+                    }
+                    else  // Other object types
+                    {
+                        var variable = field.GetValue(node) as Variable;
+                        VisualElement variableField = VariableFieldTypeCache.CreateVariableField(field.Name, variable, window);
+                        extensionContainer.Add(variableField);
+                    }
                 }
             }
 

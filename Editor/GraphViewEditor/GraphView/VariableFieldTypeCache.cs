@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Physalia.Flexi.GraphViewEditor
 {
@@ -74,6 +77,39 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return null;
+        }
+
+        public static VisualElement CreateVariableField(string label, Variable variable, AbilityGraphEditorWindow window)
+        {
+            Type variableType = variable.GetType();
+            Type valueType = variableType.GetGenericArguments()[0];
+            Type scriptableObjectType = typeof(VariableObject<>).MakeGenericType(valueType);
+            Type usableType = GeneratedClassCache.GetClassForScriptableObject(scriptableObjectType);
+
+            var variableObject = ScriptableObject.CreateInstance(usableType) as VariableObject;
+            variableObject.Variable = variable;
+
+            var serializedObject = new SerializedObject(variableObject);
+            SerializedProperty property = serializedObject.FindProperty("variable.value");
+
+            // Bug: The ListView (for List/Array types) in PropertyField is broken in 2021.3, due to the drag handling simutaneously on NodeView and ListView.
+            // But it's work perfectly with IMGUI version...
+            //var propertyField = new PropertyField();  // Bug: Failed to use the constructor to directly create the child fields
+            //propertyField.BindProperty(property);
+            //propertyField.label = label;
+            //return propertyField;
+
+            var container = new IMGUIContainer(() =>
+            {
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.PropertyField(property, new GUIContent(label), GUILayout.Width(300f));
+                if (EditorGUI.EndChangeCheck())
+                {
+                    property.serializedObject.ApplyModifiedProperties();
+                    window.SetDirty(true);
+                }
+            });
+            return container;
         }
     }
 }
