@@ -191,23 +191,11 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 FieldInfo field = fields[i];
                 Type type = field.FieldType;
-
                 if (type.InstanceOfGenericType(typeof(Variable<>)))
                 {
-                    Type valueType = type.GetGenericArguments()[0];
-                    CreateVariableField creationMethod = VariableFieldTypeCache.GetCreationMethod(valueType);
-                    if (creationMethod != null)
-                    {
-                        var variable = field.GetValue(node) as Variable;
-                        IVariableField variableField = creationMethod.Invoke(field.Name, variable, window);
-                        extensionContainer.Add(variableField.VisualElement);
-                    }
-                    else  // Other object types
-                    {
-                        var variable = field.GetValue(node) as Variable;
-                        VisualElement variableField = VariableFieldTypeCache.CreateVariableField(field.Name, variable, window);
-                        extensionContainer.Add(variableField);
-                    }
+                    var variable = field.GetValue(node) as Variable;
+                    VisualElement variableField = VariableFieldFactory.Create(field.Name, variable, window);
+                    extensionContainer.Add(variableField);
                 }
             }
 
