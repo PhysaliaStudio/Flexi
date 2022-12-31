@@ -22,15 +22,22 @@ namespace Physalia.Flexi.GraphViewEditor
                         return CreateVariableFieldWithProperty(label, variable, window);
                     }
                 case Variable<int> intVariable:
-                    return CreateIntegerField(label, intVariable, window);
+                    {
+                        var field = new IntegerField(label);
+                        SetUpField(field, intVariable, window);
+                        return field;
+                    }
                 case Variable<string> stringVariable:
-                    return CreateTextField(label, stringVariable, window);
+                    {
+                        var field = new TextField(label);
+                        SetUpField(field, stringVariable, window);
+                        return field;
+                    }
             }
         }
 
-        private static VisualElement CreateIntegerField(string label, Variable<int> variable, AbilityGraphEditorWindow window)
+        private static void SetUpField<T>(BaseField<T> field, Variable<T> variable, AbilityGraphEditorWindow window)
         {
-            var field = new IntegerField(label);
             field.RegisterValueChangedCallback(evt =>
             {
                 window.SetDirty(true);
@@ -38,20 +45,6 @@ namespace Physalia.Flexi.GraphViewEditor
             });
 
             field.SetValueWithoutNotify(variable.Value);
-            return field;
-        }
-
-        private static VisualElement CreateTextField(string label, Variable<string> variable, AbilityGraphEditorWindow window)
-        {
-            var field = new TextField(label);
-            field.RegisterValueChangedCallback(evt =>
-            {
-                window.SetDirty(true);
-                variable.Value = evt.newValue;
-            });
-
-            field.SetValueWithoutNotify(variable.Value);
-            return field;
         }
 
         private static VisualElement CreateEnumField(string label, Variable variable, AbilityGraphEditorWindow window)
