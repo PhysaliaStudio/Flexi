@@ -1,4 +1,7 @@
 using System;
+#if UNITY_EDITOR
+using UnityEngine;
+#endif
 
 namespace Physalia.Flexi
 {
@@ -22,8 +25,12 @@ namespace Physalia.Flexi
         protected abstract void SetValueBoxed(object value);
     }
 
+    [Serializable]
     public sealed class Variable<T> : Variable
     {
+#if UNITY_EDITOR
+        [SerializeField]
+#endif
         private T value;
 
         public override Type ValueType => typeof(T);
