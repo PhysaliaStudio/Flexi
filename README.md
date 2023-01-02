@@ -1,6 +1,6 @@
 # Flexi - Ability System Framework for Unity
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/PhysaliaStudio/Flexi)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PhysaliaStudio/Flexi?sort=semver)
 ![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
 
 -   **This repository is for source reference and demo**
