@@ -1,5 +1,8 @@
 # Flexi - Ability System Framework for Unity
 
+![GitHub package.json version](https://img.shields.io/github/package-json/v/PhysaliaStudio/Flexi)
+![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
+
 -   **This repository is for source reference and demo**
 -   **This project is still work-in-progress**  
     :green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square::white_large_square::white_large_square: 70%
