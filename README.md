@@ -29,6 +29,8 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 - **Blackboard**: Seperate values from graphs and inject from other sources
 - **Non-singleton approach**: You can have multiple and different systems simutaneously
 
+![Flexi Editor](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/flexi-editor.gif)
+
 ## Limitations
 
 - Not support DOTS (and not in roadmap for now)
