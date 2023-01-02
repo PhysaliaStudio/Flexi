@@ -34,6 +34,15 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 
 ![Flexi Editor](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/flexi-editor.gif)
 
+## Resources
+
+- [Wiki Home](https://github.com/PhysaliaStudio/Flexi/wiki)
+- [Installation](https://github.com/PhysaliaStudio/Flexi/wiki/Installation)
+- Getting Started
+  - [1. Build your environment](https://github.com/PhysaliaStudio/Flexi/wiki/1.-Build-your-environment)
+  - [2. Runtime Usage](https://github.com/PhysaliaStudio/Flexi/wiki/2.-Runtime-Usage)
+  - [API Summary](https://github.com/PhysaliaStudio/Flexi/wiki/API-Summary)
+
 ## Limitations
 
 - Not support DOTS (and not in roadmap for now)
