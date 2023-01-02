@@ -45,6 +45,7 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 
 ## Limitations
 
+- (v0.7) Not natively support real-time genre for now
 - Not support DOTS (and not in roadmap for now)
 - It's a tool for programmers, and recommended to have experienced programming skill
 
