@@ -1,171 +1,188 @@
-## Quickstart
+# Flexi - Ability System Framework for Unity
 
-### Step 1: Create your stat list
+-   **This repository is for source reference and demo**
+-   **This project is still work-in-progress**  
+    :green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square::white_large_square::white_large_square: 70%
 
-We don't know what kind of stats do you need. Maybe you don't need "Attack". Maybe you need "Cost". Maybe you need another hundruds kinds of stats like POE.
+-----
 
-So the first thing is to define them!  
-`Create -> Physalia -> Ability System -> Stat List Asset`
+## Introduction
 
-Then you can click the "Generate Code" button the create the script.
+Flexi is an ***ability system framework*** for Unity.
 
-### Step 2: Define your custom nodes
+While Flexi has done the general low-level logic:
 
-**WIP**
+- Programmers can directly jump into **creating the _gameplay ability system_**.
+- Programmers can ***customize*** their task nodes and dicide how they work with the game.
+- Then designers can use the ***built-in editor*** to edit ability data.
+- The game finally runs abilities with the ***built-in runner***.
 
-### Step 3: Create your ability graphs
+P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://docs.unrealengine.com/5.1/en-US/gameplay-ability-system-for-unreal-engine/)**, but Flexi is created with different concept.
 
-**WIP**
+## Features
 
-### Step 4: Build the ability system and load your graphs in your codes
+- **Customizable**: Focus on your gameplay with user-defined stats, nodes, logics, events, etc.
+- **Actor**: Base class to hold the stats, abilities and modifiers
+- **Built-in ability runners**: Start from easy and not make your hands dirty
+- **Node-based ability editor**: Built with GraphView
+- **Macro**: Reuse your partial graphs
+- **Blackboard**: Seperate values from graphs and inject from other sources
+- **Non-singleton approach**: You can have multiple and different systems simutaneously
 
-```csharp
-// Build the AbilitySystem
-var builder = new AbilitySystemBuilder();
-builder.SetStatDefinitions(statListAsset);
-AbilitySystem abilitySystem = builder.Build();
+## Limitations
 
-// Load your graphs into the system
-abilitySystem.LoadAbilityGraph(987001, yourGraphAsset1);
-abilitySystem.LoadAbilityGraph(987002, yourGraphAsset2);
-```
+- Not support DOTS (and not in roadmap for now)
+- It's a tool for programmers, and recommended to have experienced programming skill
 
-### Step 5: Define your in-game actors
+## TODO
 
-Actor is an container object to hold the stats, abilities and modifiers.  
-For example, units have health and attack, and cards have mana cost and damage. So Unit and Card should derived from Actor.
+- Support real-time genre
+- Support undo/redo for the editor
+- Support AOT
+- Better implementation for Status & Aura
+- Enable/Disable abilities
+- Add Examples: Need to show how to implement each common machanic, to lower the learning curve.
+
+## Installation
+
+-   **Using Git URL (`manifest.json`)**
+
+    - This method is sufficient for reference and learning, but not good for production.
+    - Note that you need to have Git installed in your system.
+    - Note that embedded Git, like Fork or SourceTree use as default, is not considered in the system.
+    
+    ```
+    {
+      "dependencies": {
+        "studio.physalia.flexi": "https://github.com/PhysaliaStudio/Flexi.git#0.7.0"
+      }
+    }
+    ```
+
+## API Quickstart
+
+### Customize Actors
+
+Define your ability owner by deriving from `Actor`, ex. units, cards, etc.
+
+**Example**
 
 ```csharp
 public class Unit : Actor
 {
     private readonly UnitData unitData;
 
-    public Unit(UnitData unitData, StatOwner owner) : base(owner)
+    public Unit(UnitData unitData, AbilitySystem abilitySystem) : base(abilitySystem)
     {
         this.unitData = unitData;
     }
 }
 
-public class Card : Actor
-{
-    private readonly CardData cardData;
+// Specify stats and starting values you need
+unit.AddStat(StatId.HEALTH, 100);
+unit.AddStat(StatId.ATTACK, 10);
 
-    public Card(CardData cardData, StatOwner owner) : base(owner)
+// Create ability instances
+Ability ability = unit.AppendAbility(abilityAsset);
+```
+
+### Customize Contexts
+
+**Contexts** are for telling your system **"what happened in detail?"**.  
+They should be custom data classes and it's you to decide how to handle these contexts.
+
+There are 3 kinds of contexts as **marker interfaces**:
+
+- `IEventContext`: For (1) starting running the ability queue, or (2) notifing game event happened.
+- `IChoiceContext`: For notify a choice happened and pause.
+- `IResumeContext`: For resume from the paused state, and normally respond to the choice.
+
+**Example**
+
+```csharp
+public class DamageEvent : IEventContext
+{
+    attacker = attacker,
+    targets = new List<Unit>(targets),
+    amount = value,
+}
+```
+
+### Customize Nodes
+
+**Example**
+
+```csharp
+[NodeCategory("Card Game Sample")]
+public class DamageNode : ProcessNode
+{
+    public Inport<Unit> attackerPort;
+    public Inport<IReadOnlyList<Unit>> targetsPort;
+    public Inport<int> valuePort;
+
+    protected override AbilityState DoLogic()
     {
-        this.cardData = cardData;
+        var attacker = attackerPort.GetValue();
+        var targets = targetsPort.GetValue();
+        if (targets.Count == 0)
+        {
+            return AbilityState.RUNNING;
+        }
+
+        var value = valuePort.GetValue();
+        for (var i = 0; i < targets.Count; i++)
+        {
+            targets[i].ModifyStat(StatId.HEALTH, -value);
+        }
+
+        EnqueueEvent(new DamageEvent
+        {
+            attacker = attacker,
+            targets = new List<Unit>(targets),
+            amount = value,
+        });
+
+        return AbilityState.RUNNING;
     }
 }
 ```
 
-### Step 6: Create your actors
+### Run Abilities
+
+Run your abilities with the following API:
+
+- `bool AbilitySystem.TryEnqueueAndRunAbility(ability/ies, eventContext)`
+- `bool AbilitySystem.TryEnqueueAbility(ability/ies, eventContext)` + `void AbilitySystem.Run()`
+
+**Example**
 
 ```csharp
-private Unit CreateUnit(UnitData unitData)
-{
-    // Request a StatOwner from the system
-    StatOwner owner = abilitySystem.CreateOwner();
+bool success = abilitySystem.TryEnqueueAndRunAbility(unit.Abilitiees, eventContext);
+```
+
+### Handle Context Events
+
+There are some events you should register or implement.
+
+-   `event Action<IEventContext> EventOccurred`  
+    Triggered from your custom nodes, this event is for presenting what happened.
     
-    // Set the stats and their start values.
-    // Things might be complex when there are some special condition in your design.
-    // So it should better define them here.
-    owner.AddStat(StatId.HEALTH, unitData.Health);
-    owner.AddStat(StatId.ATTACK, unitData.Attack);
-
-    // Normally in RPG, units have skills and statuses at start.
-    // Append them with the ability system.
-    IReadOnlyList<int> startStatusIds = unitData.StartStatusIds;
-    for (var i = 0; i < startStatusIds.Count; i++)
+-   `event Action<IChoiceContext> ChoiceOccurred`  
+    Triggered from your custom nodes, this event is for presenting a choice.
+    
+-   `Action<IEventContext> EventResolveMethod`  
+    This is not an event but a pure delegate. Cached event contexts will be resolved at specific timing. You should decide how to chain more abilities by custom iteration.
+    
+    **Example**
+    
+    ```
+    // Iterate each unit to chain more abilities
+    private void ResolveEvent(IEventContext context)
     {
-        // This will create an AbilityInstance and append to the StatOwner
-        abilitySystem.AppendAbility(owner, startStatusIds[i]);
+        abilitySystem.TryEnqueueAbility(heroUnit.Abilities, context);
+        for (var i = 0; i < enemyUnits.Count; i++)
+        {
+            abilitySystem.TryEnqueueAbility(enemyUnits[i].Abilities, context);
+        }
     }
-
-    Unit unit = new Unit(unitData, owner);
-    return unit;
-}
-```
-
-### Step 7: Use the abilities
-
-```csharp
-// Create your custom payload data for start your ability
-var context = new PlayCardNode.Context
-{
-    game = this,
-    player = player,
-    owner = heroUnit,
-    card = card,
-    random = generalRandom,
-};
-
-AbilityInstance ability = card.Abilities[0];  // Find saved ability instances from your actors
-if (ability.CanExecute(context))  // Check if it's valid to start with the context
-{
-    abilitySystem.EnqueueAbility(ability, context);
-    abilitySystem.Run();
-}
-```
-
-### Step 8: Receive your custom events from nodes
-
-IEventContext is an interface for customizing user defined events when something happened when running abilities.
-There are 2 aspects to using the events:
-1. Trigger more abilities, which has already handled in the system.
-2. Represent what happened to players, and of course this should be implemented by the user. You can register the event.
-
-```csharp
-public void Initialize()
-{
-    abilitySystem.EventReceived += OnEventReceived;
-}
-
-private void OnEventReceived(IEventContext eventContext)
-{
-    // Normally here is for handling the representations for each events
-    // ex. DamageEvent, DeathEvent, DrawCardEvent...etc.
-}
-```
-
-## Stat
-
-A stat have these properties:
-* OriginalBase: This is the start value, and will never change.
-* CurrentBase: This equals the start value at the start, but can be edit.
-* CurrentValue: This is a readonly property, which might be modified by CurrentBase and other modifiers.
-
-```csharp
-actor.GetStat(StatId.ATTACK).OriginalBase;
-actor.GetStat(StatId.ATTACK).CurrentBase;
-actor.GetStat(StatId.ATTACK).CurrentValue;
-```
-
-If we need to modify or set the stat values. Use `Actor.SetStat()` or `Actor.ModifyStat()`.
-
-```csharp
-actor.SetStat(StatId.ATTACK, 10);  // Set the attack to 10. Note this is just the base value.
-actor.ModifyStat(StatId.ATTACK, 5);  // Add 5 to the attack, so the attack base value becomes 15.
-```
-
-## AbilityInstance
-
-
-## StatModifier and StatModierInstance
-
-Don't take mistake modifiers for statuses.  
-Normally a status contains both ability effects and modifiers.
-
-A StatModifierItem represents a change data to a specific stat.
-A StatModifier represents a collection data of StatModifierItems.
-A StatModierInstance represents an instance of a StatModifier.
-
-Modifiers should be defined in the data of abilities, statuses, items, etc., and it always need to reach some conditions to get the modifiers.
-
-```csharp
-StatModifer modifier;
-var modierInstance = new StatModierInstance(modifier);
-
-// Modifier related methods
-actor.AppendModifier(modierInstance);
-actor.RemoveModifier(modierInstance);
-actor.ClearAllModifiers();
-```
+    ```
