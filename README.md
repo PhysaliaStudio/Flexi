@@ -32,7 +32,7 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 - **Blackboard**: Seperate values from graphs and inject from other sources
 - **Non-singleton approach**: You can have multiple and different systems simutaneously
 
-![Flexi Editor](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/flexi-editor.gif)
+![Flexi Editor](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/flexi-editor.gif)![Card Game Sample 1](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/card-game-samples-1.gif)
 
 ## Resources
 
