@@ -92,9 +92,7 @@ public static class {className}
                 className = PathToFileName(statDefinitionListAsset.scriptAssetPath);
             }
 
-            string folderPath = !string.IsNullOrEmpty(statDefinitionListAsset.scriptAssetPath) ?
-                AssetPathToFolderPath(statDefinitionListAsset.scriptAssetPath) : "Assets/";
-
+            string folderPath = GetStartFolderPathFromAsset(statDefinitionListAsset);
             var assetPath = EditorUtility.SaveFilePanelInProject("Save StatId cs file", className, "cs",
                 "Please enter a file name to save the script to", folderPath);
             return assetPath;
@@ -109,9 +107,21 @@ public static class {className}
             return className;
         }
 
-        private static string AssetPathToFolderPath(string assetPath)
+        private static string GetStartFolderPathFromAsset(StatDefinitionListAsset asset)
         {
-            var fileInfo = new FileInfo(assetPath);
+            string scriptAssetPath = asset.scriptAssetPath;
+            if (string.IsNullOrEmpty(scriptAssetPath))
+            {
+                return "Assets/";
+            }
+
+            // If there is path but the file doesn't exist, it's because file movement or similar reasons.
+            var fileInfo = new FileInfo(scriptAssetPath);
+            if (!fileInfo.Exists)
+            {
+                return "Assets/";
+            }
+
             string folderPath = fileInfo.Directory.FullName.Replace('\\', '/');
             return folderPath;
         }
