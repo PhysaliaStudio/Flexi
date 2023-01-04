@@ -13,7 +13,9 @@ namespace Physalia.Flexi.GraphDataFixer
         private VisualTreeAsset itemAsset;
 
         private Button validateButton;
+        private Button fixButton;
         private VisualElement scrollView;
+        private readonly List<GraphDataFixerItem> items = new();
 
         private ValidationResult result;
 
@@ -37,10 +39,16 @@ namespace Physalia.Flexi.GraphDataFixer
             validateButton = rootVisualElement.Q<Button>("validate-button");
             validateButton.clicked += ValidateSelectedAssets;
 
+            fixButton = rootVisualElement.Q<Button>("fix-button");
+            fixButton.clicked += Fix;
+
             Button clearButton = rootVisualElement.Q<Button>("clear-button");
             clearButton.clicked += Clear;
 
             scrollView = rootVisualElement.Q<ScrollView>();
+
+            validateButton.SetEnabled(true);
+            fixButton.SetEnabled(false);
         }
 
         private void ValidateSelectedAssets()
@@ -56,9 +64,24 @@ namespace Physalia.Flexi.GraphDataFixer
                 }
             }
 
+            ValidateGraphAssets(graphAssets);
+        }
+
+        private void ValidateGraphAssets(List<GraphAsset> graphAssets)
+        {
             result = GraphDataFixer.ValidateGraphAssets(graphAssets);
-            validateButton.SetEnabled(false);
             ListInvalidTypeNames(result);
+
+            if (result.invalidTypeNames.Count > 0)
+            {
+                validateButton.SetEnabled(false);
+                fixButton.SetEnabled(true);
+            }
+            else
+            {
+                validateButton.SetEnabled(true);
+                fixButton.SetEnabled(false);
+            }
         }
 
         private void ListInvalidTypeNames(ValidationResult result)
@@ -69,14 +92,58 @@ namespace Physalia.Flexi.GraphDataFixer
                 item.CreateGUI();
                 item.SetOriginal(result.invalidTypeNames[i]);
                 scrollView.Add(item);
+                items.Add(item);
             }
+        }
+
+        private void Fix()
+        {
+            if (result == null)
+            {
+                return;
+            }
+
+            List<GraphAsset> invalidAssets = result.invalidAssets;
+            Dictionary<string, string> fixTable = BuildFixTable();
+            GraphDataFixer.FixGraphAssets(result.invalidAssets, fixTable);
+
+            for (var i = 0; i < invalidAssets.Count; i++)
+            {
+                EditorUtility.SetDirty(invalidAssets[i]);
+            }
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            Clear();
+            ValidateGraphAssets(invalidAssets);
+        }
+
+        private Dictionary<string, string> BuildFixTable()
+        {
+            var table = new Dictionary<string, string>();
+            for (var i = 0; i < items.Count; i++)
+            {
+                GraphDataFixerItem item = items[i];
+                string origianl = item.GetOriginal();
+                string modified = item.GetModified();
+                if (string.IsNullOrEmpty(modified))
+                {
+                    continue;
+                }
+
+                table.Add(origianl, modified);
+            }
+
+            return table;
         }
 
         private void Clear()
         {
             result = null;
             validateButton.SetEnabled(true);
+            fixButton.SetEnabled(false);
             scrollView.Clear();
+            items.Clear();
         }
     }
 }

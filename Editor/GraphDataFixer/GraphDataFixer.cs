@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Physalia.Flexi.GraphDataFixer
@@ -76,6 +77,58 @@ namespace Physalia.Flexi.GraphDataFixer
             }
 
             return !hasAnyNodeParsedFailed && !hasAnyInvalidType;
+        }
+
+        internal static void FixGraphAssets(List<GraphAsset> assets, Dictionary<string, string> fixTable)
+        {
+            for (var i = 0; i < assets.Count; i++)
+            {
+                if (assets[i] is MacroAsset macroAsset)
+                {
+                    macroAsset.Text = Fix(macroAsset.Text, fixTable);
+                }
+                else if (assets[i] is AbilityAsset abilityAsset)
+                {
+                    abilityAsset.GraphJsons[0] = Fix(abilityAsset.GraphJsons[0], fixTable);
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+
+        private static string Fix(string graphJson, Dictionary<string, string> fixTable)
+        {
+            JObject jObject = JObject.Parse(graphJson);
+            JArray nodes = (JArray)jObject["nodes"];
+            if (nodes == null)
+            {
+                return graphJson;
+            }
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                JToken typeToken = nodes[i]["_type"];
+                if (typeToken == null)  // The '_type' field doesn't exist, which would not probably happened.
+                {
+                    continue;
+                }
+
+                string typeName = typeToken.ToString();
+                Type type = ReflectionUtilities.GetTypeByName(typeName);
+                if (type == null)
+                {
+                    bool success = fixTable.TryGetValue(typeName, out string newName);
+                    if (success)
+                    {
+                        typeToken.Replace(newName);
+                    }
+                }
+            }
+
+            string result = jObject.ToString(Formatting.None);
+            return result;
         }
     }
 }
