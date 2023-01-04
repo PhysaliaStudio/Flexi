@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="height: 100%; width: 100%;">
+        <ui:TextField picking-mode="Ignore" text="How to use:&#10;1. Select the AbilityAssets you need to validate or fix.&#10;2. Press &apos;Validate&apos; button and the missing node types are listed.&#10;3. Fill the correct type for each missing type.&#10;4. Press &apos;Fix&apos; button." readonly="true" multiline="true" name="Instruction" style="width: 100%; height: 80px;" />
+        <ui:VisualElement name="step1" style="height: 100px; align-items: center; justify-content: center; width: 100%;">
+            <ui:Button text="Validate" name="validate-button" style="width: 150px; height: 30px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="step2" style="height: 100%; width: 100%;">
+            <ui:ScrollView style="width: 100%; height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="step3" style="height: 100px; align-items: center; justify-content: space-around; padding-left: 0; padding-right: 0; padding-top: 5px; padding-bottom: 5px; width: 100%;">
+            <ui:Button text="Fix" name="fix-button" style="width: 150px; height: 30px;" />
+            <ui:Button text="Clear" name="clear-button" style="width: 100px; height: 20px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
