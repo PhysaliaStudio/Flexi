@@ -40,7 +40,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
 
         [SerializeField]
-        private VisualTreeAsset uiAsset = null;
+        private VisualTreeAsset uiAsset;
         [SerializeField]
         private StyleSheet uiStyleSheet;
 
@@ -100,7 +100,7 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             if (uiAsset == null)
             {
-                Logger.Error($"[{nameof(AbilityGraphEditorWindow)}] Missing UIAsset, set the corrent reference in {nameof(AbilityGraphEditorWindow)} ScriptAsset might fix this");
+                Logger.Error($"[{nameof(AbilityGraphEditorWindow)}] Missing UIAsset! Set the correct UIAsset in {nameof(AbilityGraphEditorWindow)} ScriptAsset might fix this.");
                 return;
             }
 
