@@ -8,17 +8,13 @@ namespace Physalia.Flexi
 {
     public class NodeConverter : JsonConverter<Node>
     {
-        private const string ID_KEY = "_id";
-        private const string POSITION_KEY = "_position";
-        private const string TYPE_KEY = "_type";
-
         public override Node ReadJson(JsonReader reader, Type objectType, Node existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject jsonObject = JObject.Load(reader);
             Node node = CreateNodeInstance(jsonObject);
 
             // ID
-            JToken idToken = jsonObject[ID_KEY];
+            JToken idToken = jsonObject[TokenKeys.NODE_ID];
             if (idToken == null)
             {
                 node.id = 0;
@@ -29,7 +25,7 @@ namespace Physalia.Flexi
             }
 
             // Position
-            JToken positionToken = jsonObject[POSITION_KEY];
+            JToken positionToken = jsonObject[TokenKeys.NODE_POSITION];
             if (positionToken == null)
             {
                 node.position = new Vector2(0f, 0f);
@@ -95,7 +91,7 @@ namespace Physalia.Flexi
 
         private static Node CreateNodeInstance(JObject jsonObject)
         {
-            JToken typeToken = jsonObject[TYPE_KEY];
+            JToken typeToken = jsonObject[TokenKeys.NODE_TYPE];
             if (typeToken == null)
             {
                 Logger.Error($"[{nameof(NodeConverter)}] Deserialize failed: Missing the type field");
@@ -124,11 +120,11 @@ namespace Physalia.Flexi
             writer.WriteStartObject();
 
             // ID
-            writer.WritePropertyName(ID_KEY);
+            writer.WritePropertyName(TokenKeys.NODE_ID);
             writer.WriteValue(value.id);
 
             // Position
-            writer.WritePropertyName(POSITION_KEY);
+            writer.WritePropertyName(TokenKeys.NODE_POSITION);
             writer.WriteStartObject();
             writer.WritePropertyName(nameof(value.position.x));
             writer.WriteValue(value.position.x);
@@ -137,7 +133,7 @@ namespace Physalia.Flexi
             writer.WriteEndObject();
 
             // Node Type
-            writer.WritePropertyName(TYPE_KEY);
+            writer.WritePropertyName(TokenKeys.NODE_TYPE);
             Type nodeType = value.GetType();
             writer.WriteValue(nodeType.FullName);
 

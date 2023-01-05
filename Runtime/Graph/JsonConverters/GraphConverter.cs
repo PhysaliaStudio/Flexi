@@ -7,12 +7,6 @@ namespace Physalia.Flexi
 {
     internal class GraphConverter : JsonConverter<Graph>
     {
-        private const string TYPE_KEY = "_type";
-        private const string INPUT_KEY = "$input";
-        private const string OUTPUT_KEY = "$output";
-        private const string NODES_KEY = "nodes";
-        private const string EDGES_KEY = "edges";
-
         public override Graph ReadJson(JsonReader reader, Type objectType, Graph existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
             JObject jsonObject = JObject.Load(reader);
@@ -23,7 +17,7 @@ namespace Physalia.Flexi
             ReadOutputToken(graph, jsonObject);
 
             // Nodes
-            JToken nodesToken = jsonObject[NODES_KEY];
+            JToken nodesToken = jsonObject[TokenKeys.GRAPH_NODES];
             if (nodesToken == null)
             {
                 return graph;
@@ -33,7 +27,7 @@ namespace Physalia.Flexi
             graph.AddNodes(nodes);
 
             // Edges
-            JToken edgesToken = jsonObject[EDGES_KEY];
+            JToken edgesToken = jsonObject[TokenKeys.GRAPH_EDGES];
             if (edgesToken != null)
             {
                 // Rule: The port1 must be Outport, and the port2 must be Inport
@@ -72,7 +66,7 @@ namespace Physalia.Flexi
 
         private static void ReadInputToken(Graph graph, JObject jsonObject)
         {
-            JToken token = jsonObject[INPUT_KEY];
+            JToken token = jsonObject[TokenKeys.GRAPH_INPUT];
             if (token == null)
             {
                 return;
@@ -102,7 +96,7 @@ namespace Physalia.Flexi
 
         private static void ReadOutputToken(Graph graph, JObject jsonObject)
         {
-            JToken token = jsonObject[OUTPUT_KEY];
+            JToken token = jsonObject[TokenKeys.GRAPH_OUTPUT];
             if (token == null)
             {
                 return;
@@ -132,7 +126,7 @@ namespace Physalia.Flexi
 
         private static Graph CreateGraphInstance(JObject jsonObject)
         {
-            JToken typeToken = jsonObject[TYPE_KEY];
+            JToken typeToken = jsonObject[TokenKeys.GRAPH_TYPE];
             if (typeToken == null)
             {
                 Logger.Warn($"[{nameof(GraphConverter)}] Missing the type field! Will create Graph instead.");
@@ -161,7 +155,7 @@ namespace Physalia.Flexi
             writer.WriteStartObject();
 
             // Type
-            writer.WritePropertyName(TYPE_KEY);
+            writer.WritePropertyName(TokenKeys.GRAPH_TYPE);
             Type graphType = value.GetType();
             writer.WriteValue(graphType.FullName);
 
@@ -170,7 +164,7 @@ namespace Physalia.Flexi
             WriteOutputToken(writer, value, serializer);
 
             // Nodes
-            writer.WritePropertyName(NODES_KEY);
+            writer.WritePropertyName(TokenKeys.GRAPH_NODES);
             writer.WriteStartArray();
 
             for (var i = 0; i < value.Nodes.Count; i++)
@@ -190,7 +184,7 @@ namespace Physalia.Flexi
             }
 
             // Edges
-            writer.WritePropertyName(EDGES_KEY);
+            writer.WritePropertyName(TokenKeys.GRAPH_EDGES);
             writer.WriteStartArray();
 
             for (var i = 0; i < edges.Count; i++)
@@ -211,7 +205,7 @@ namespace Physalia.Flexi
                 return;
             }
 
-            writer.WritePropertyName(INPUT_KEY);
+            writer.WritePropertyName(TokenKeys.GRAPH_INPUT);
 
             writer.WriteStartObject();
 
@@ -246,7 +240,7 @@ namespace Physalia.Flexi
                 return;
             }
 
-            writer.WritePropertyName(OUTPUT_KEY);
+            writer.WritePropertyName(TokenKeys.GRAPH_OUTPUT);
 
             writer.WriteStartObject();
 

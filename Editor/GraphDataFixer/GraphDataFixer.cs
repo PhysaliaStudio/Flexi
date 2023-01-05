@@ -46,7 +46,7 @@ namespace Physalia.Flexi.GraphDataFixer
         private static bool Validate(string graphJson, ref ValidationResult result)
         {
             JObject jObject = JObject.Parse(graphJson);
-            JArray nodes = (JArray)jObject["nodes"];
+            JArray nodes = (JArray)jObject[TokenKeys.GRAPH_NODES];
             if (nodes == null)
             {
                 return false;
@@ -57,7 +57,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
             for (var i = 0; i < nodes.Count; i++)
             {
-                JToken typeToken = nodes[i]["_type"];
+                JToken typeToken = nodes[i][TokenKeys.NODE_TYPE];
                 if (typeToken == null)  // The '_type' field doesn't exist, which would not probably happened.
                 {
                     hasAnyNodeParsedFailed = true;
@@ -101,7 +101,7 @@ namespace Physalia.Flexi.GraphDataFixer
         private static string Fix(string graphJson, Dictionary<string, string> fixTable)
         {
             JObject jObject = JObject.Parse(graphJson);
-            JArray nodes = (JArray)jObject["nodes"];
+            JArray nodes = (JArray)jObject[TokenKeys.GRAPH_NODES];
             if (nodes == null)
             {
                 return graphJson;
@@ -109,7 +109,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
             for (var i = 0; i < nodes.Count; i++)
             {
-                JToken typeToken = nodes[i]["_type"];
+                JToken typeToken = nodes[i][TokenKeys.NODE_TYPE];
                 if (typeToken == null)  // The '_type' field doesn't exist, which would not probably happened.
                 {
                     continue;
