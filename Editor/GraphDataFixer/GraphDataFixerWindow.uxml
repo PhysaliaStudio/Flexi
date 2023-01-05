@@ -15,7 +15,12 @@
                 <ui:Button text="Replace" name="replace-button" style="width: 100px; height: 20px; margin-top: 5px; margin-bottom: 5px;" />
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:VisualElement name="step2" style="height: 100%; width: 100%;">
+        <ui:VisualElement name="scroll-view-area" style="height: 100%; width: 100%;">
+            <ui:VisualElement style="flex-direction: row; height: 24px; margin-bottom: 2px; margin-top: 2px; padding-right: 13px;">
+                <ui:Label text="Invalid Type Names" style="flex-grow: 1; width: 40%; -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgb(46, 114, 132);" />
+                <ui:VisualElement style="width: 100px;" />
+                <ui:Label text="Modified Names" style="flex-grow: 1; width: 40%; -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgb(46, 114, 132);" />
+            </ui:VisualElement>
             <ui:ScrollView style="width: 100%; height: 100%;" />
         </ui:VisualElement>
         <ui:VisualElement name="step3" style="height: 100px; align-items: center; justify-content: space-around; padding-left: 0; padding-right: 0; padding-top: 5px; padding-bottom: 5px; width: 100%;">

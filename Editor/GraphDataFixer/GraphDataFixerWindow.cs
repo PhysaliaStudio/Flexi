@@ -15,8 +15,7 @@ namespace Physalia.Flexi.GraphDataFixer
         private Button validateButton;
         private Button fixButton;
         private ReplacementArea replacementArea;
-        private VisualElement scrollView;
-        private readonly List<GraphDataFixerItem> items = new();
+        private ScrollViewArea scrollViewArea;
 
         private ValidationResult result;
 
@@ -50,7 +49,8 @@ namespace Physalia.Flexi.GraphDataFixer
             replacementArea = new ReplacementArea(replacementAreaElement);
             replacementArea.replaceClicked += ReplaceTypeNames;
 
-            scrollView = rootVisualElement.Q<ScrollView>();
+            VisualElement scrollViewAreaElement = rootVisualElement.Q<VisualElement>("scroll-view-area");
+            scrollViewArea = new ScrollViewArea(itemAsset, scrollViewAreaElement);
 
             Clear();
         }
@@ -74,13 +74,14 @@ namespace Physalia.Flexi.GraphDataFixer
         private void ValidateGraphAssets(List<GraphAsset> graphAssets)
         {
             result = GraphDataFixer.ValidateGraphAssets(graphAssets);
-            ListInvalidTypeNames(result);
+            scrollViewArea.ListInvalidTypeNames(result.invalidTypeNames);
 
             if (result.invalidTypeNames.Count > 0)
             {
                 validateButton.SetEnabled(false);
                 fixButton.SetEnabled(true);
                 replacementArea.Show();
+                scrollViewArea.Show();
             }
             else
             {
@@ -89,23 +90,12 @@ namespace Physalia.Flexi.GraphDataFixer
             }
         }
 
-        private void ListInvalidTypeNames(ValidationResult result)
-        {
-            for (var i = 0; i < result.invalidTypeNames.Count; i++)
-            {
-                GraphDataFixerItem item = new GraphDataFixerItem(itemAsset);
-                item.CreateGUI();
-                item.SetOriginal(result.invalidTypeNames[i]);
-                scrollView.Add(item);
-                items.Add(item);
-            }
-        }
-
         private void ReplaceTypeNames()
         {
             string original = replacementArea.GetOriginal();
             string modified = replacementArea.GetModified();
 
+            IReadOnlyList<GraphDataFixerItem> items = scrollViewArea.Items;
             for (var i = 0; i < items.Count; i++)
             {
                 GraphDataFixerItem item = items[i];
@@ -139,6 +129,7 @@ namespace Physalia.Flexi.GraphDataFixer
         private Dictionary<string, string> BuildFixTable()
         {
             var table = new Dictionary<string, string>();
+            IReadOnlyList<GraphDataFixerItem> items = scrollViewArea.Items;
             for (var i = 0; i < items.Count; i++)
             {
                 GraphDataFixerItem item = items[i];
@@ -161,8 +152,8 @@ namespace Physalia.Flexi.GraphDataFixer
             validateButton.SetEnabled(true);
             fixButton.SetEnabled(false);
             replacementArea.Hide();
-            scrollView.Clear();
-            items.Clear();
+            scrollViewArea.Clear();
+            scrollViewArea.Hide();
         }
     }
 }
