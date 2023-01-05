@@ -33,7 +33,7 @@ namespace Physalia.Flexi.GraphDataFixer
                     continue;
                 }
 
-                bool success = Validate(graphJson, ref result);
+                bool success = Validate(graphJson, result);
                 if (!success)
                 {
                     result.invalidAssets.Add(assets[i]);
@@ -43,27 +43,17 @@ namespace Physalia.Flexi.GraphDataFixer
             return result;
         }
 
-        private static bool Validate(string graphJson, ref ValidationResult result)
+        private static bool Validate(string graphJson, ValidationResult result)
         {
             JObject jObject = JObject.Parse(graphJson);
-            JArray nodes = (JArray)jObject[TokenKeys.GRAPH_NODES];
-            if (nodes == null)
-            {
-                return false;
-            }
-
-            var hasAnyNodeParsedFailed = false;
             var hasAnyInvalidType = false;
 
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                JToken typeToken = nodes[i][TokenKeys.NODE_TYPE];
-                if (typeToken == null)  // The '_type' field doesn't exist, which would not probably happened.
-                {
-                    hasAnyNodeParsedFailed = true;
-                    continue;
-                }
+            IterateNodes(jObject, RecordInvalidType);
 
+            return !hasAnyInvalidType;
+
+            void RecordInvalidType(JToken typeToken)
+            {
                 string typeName = typeToken.ToString();
                 Type type = ReflectionUtilities.GetTypeByName(typeName);
                 if (type == null)
@@ -75,8 +65,6 @@ namespace Physalia.Flexi.GraphDataFixer
                     }
                 }
             }
-
-            return !hasAnyNodeParsedFailed && !hasAnyInvalidType;
         }
 
         internal static void FixGraphAssets(List<GraphAsset> assets, Dictionary<string, string> fixTable)
@@ -101,20 +89,13 @@ namespace Physalia.Flexi.GraphDataFixer
         private static string Fix(string graphJson, Dictionary<string, string> fixTable)
         {
             JObject jObject = JObject.Parse(graphJson);
-            JArray nodes = (JArray)jObject[TokenKeys.GRAPH_NODES];
-            if (nodes == null)
-            {
-                return graphJson;
-            }
+            IterateNodes(jObject, FixInvalidType);
 
-            for (var i = 0; i < nodes.Count; i++)
-            {
-                JToken typeToken = nodes[i][TokenKeys.NODE_TYPE];
-                if (typeToken == null)  // The '_type' field doesn't exist, which would not probably happened.
-                {
-                    continue;
-                }
+            string result = jObject.ToString(Formatting.None);
+            return result;
 
+            void FixInvalidType(JToken typeToken)
+            {
                 string typeName = typeToken.ToString();
                 Type type = ReflectionUtilities.GetTypeByName(typeName);
                 if (type == null)
@@ -126,9 +107,26 @@ namespace Physalia.Flexi.GraphDataFixer
                     }
                 }
             }
+        }
 
-            string result = jObject.ToString(Formatting.None);
-            return result;
+        private static void IterateNodes(JObject jObject, Action<JToken> actionForTypeToken)
+        {
+            JArray nodes = (JArray)jObject[TokenKeys.GRAPH_NODES];
+            if (nodes == null)
+            {
+                return;
+            }
+
+            for (var i = 0; i < nodes.Count; i++)
+            {
+                JToken typeToken = nodes[i][TokenKeys.NODE_TYPE];
+                if (typeToken == null)  // The type field doesn't exist, which would not probably happened.
+                {
+                    continue;
+                }
+
+                actionForTypeToken?.Invoke(typeToken);
+            }
         }
     }
 }
