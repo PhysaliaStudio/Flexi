@@ -48,6 +48,8 @@ namespace Physalia.Flexi.GraphDataFixer
             JObject jObject = JObject.Parse(graphJson);
             var hasAnyInvalidType = false;
 
+            IterateInputPorts(jObject, RecordInvalidType);
+            IterateOutputPorts(jObject, RecordInvalidType);
             IterateNodes(jObject, RecordInvalidType);
 
             return !hasAnyInvalidType;
@@ -89,6 +91,8 @@ namespace Physalia.Flexi.GraphDataFixer
         private static string Fix(string graphJson, Dictionary<string, string> fixTable)
         {
             JObject jObject = JObject.Parse(graphJson);
+            IterateInputPorts(jObject, FixInvalidType);
+            IterateOutputPorts(jObject, FixInvalidType);
             IterateNodes(jObject, FixInvalidType);
 
             string result = jObject.ToString(Formatting.None);
@@ -106,6 +110,58 @@ namespace Physalia.Flexi.GraphDataFixer
                         typeToken.Replace(newName);
                     }
                 }
+            }
+        }
+
+        private static void IterateInputPorts(JObject jObject, Action<JToken> actionForTypeToken)
+        {
+            JToken input = jObject[TokenKeys.GRAPH_INPUT];
+            if (input == null)
+            {
+                return;
+            }
+
+            JArray portDatas = (JArray)input[nameof(GraphInputData.portDatas)];
+            if (portDatas == null)  // The ports field doesn't exist, which would not probably happened.
+            {
+                return;
+            }
+
+            for (var i = 0; i < portDatas.Count; i++)
+            {
+                JToken typeToken = portDatas[i][nameof(PortData.type)];
+                if (typeToken == null)  // The type field doesn't exist, which would not probably happened.
+                {
+                    continue;
+                }
+
+                actionForTypeToken?.Invoke(typeToken);
+            }
+        }
+
+        private static void IterateOutputPorts(JObject jObject, Action<JToken> actionForTypeToken)
+        {
+            JToken output = jObject[TokenKeys.GRAPH_OUTPUT];
+            if (output == null)
+            {
+                return;
+            }
+
+            JArray portDatas = (JArray)output[nameof(GraphInputData.portDatas)];
+            if (portDatas == null)  // The ports field doesn't exist, which would not probably happened.
+            {
+                return;
+            }
+
+            for (var i = 0; i < portDatas.Count; i++)
+            {
+                JToken typeToken = portDatas[i][nameof(PortData.type)];
+                if (typeToken == null)  // The type field doesn't exist, which would not probably happened.
+                {
+                    continue;
+                }
+
+                actionForTypeToken?.Invoke(typeToken);
             }
         }
 
