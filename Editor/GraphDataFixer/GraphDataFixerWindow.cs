@@ -12,6 +12,8 @@ namespace Physalia.Flexi.GraphDataFixer
         [SerializeField]
         private VisualTreeAsset itemAsset;
 
+        private Notification notification;
+
         private Button validateButton;
         private Button fixButton;
         private ReplacementArea replacementArea;
@@ -24,6 +26,12 @@ namespace Physalia.Flexi.GraphDataFixer
         {
             GraphDataFixerWindow window = GetWindow<GraphDataFixerWindow>("GraphData Fixer");
             window.Show();
+        }
+
+        private void OnEnable()
+        {
+            notification = new Notification(this);
+            notification.LoadResources();
         }
 
         private void CreateGUI()
@@ -68,11 +76,22 @@ namespace Physalia.Flexi.GraphDataFixer
                 }
             }
 
+            if (graphAssets.Count == 0)
+            {
+                notification.NotifyNoneSelected();
+                return;
+            }
+
             ValidateGraphAssets(graphAssets);
         }
 
         private void ValidateGraphAssets(List<GraphAsset> graphAssets)
         {
+            if (graphAssets.Count == 0)
+            {
+                return;
+            }
+
             result = GraphDataFixer.ValidateGraphAssets(graphAssets);
             scrollViewArea.ListInvalidTypeNames(result.invalidTypeNames);
 
@@ -87,6 +106,7 @@ namespace Physalia.Flexi.GraphDataFixer
             {
                 validateButton.SetEnabled(true);
                 fixButton.SetEnabled(false);
+                notification.NotifyPass();
             }
         }
 
