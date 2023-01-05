@@ -26,6 +26,11 @@ namespace Physalia.Flexi.GraphDataFixer
             originalField.SetValueWithoutNotify(original);
         }
 
+        public void SetModified(string modified)
+        {
+            modifiedField.SetValueWithoutNotify(modified);
+        }
+
         public string GetOriginal()
         {
             return originalField.value;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.UIElements;
 
 namespace Physalia.Flexi.GraphDataFixer
@@ -15,6 +16,9 @@ namespace Physalia.Flexi.GraphDataFixer
             this.rootElement = rootElement;
             originalField = rootElement.Q<TextField>("original");
             modifiedField = rootElement.Q<TextField>("modified");
+
+            Button replaceButton = rootElement.Q<Button>("replace-button");
+            replaceButton.clicked += () => replaceClicked?.Invoke();
         }
 
         internal void Show()

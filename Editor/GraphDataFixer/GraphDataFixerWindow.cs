@@ -48,6 +48,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
             VisualElement replacementAreaElement = rootVisualElement.Q<VisualElement>("quick-replacement-area");
             replacementArea = new ReplacementArea(replacementAreaElement);
+            replacementArea.replaceClicked += ReplaceTypeNames;
 
             scrollView = rootVisualElement.Q<ScrollView>();
 
@@ -97,6 +98,19 @@ namespace Physalia.Flexi.GraphDataFixer
                 item.SetOriginal(result.invalidTypeNames[i]);
                 scrollView.Add(item);
                 items.Add(item);
+            }
+        }
+
+        private void ReplaceTypeNames()
+        {
+            string original = replacementArea.GetOriginal();
+            string modified = replacementArea.GetModified();
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                GraphDataFixerItem item = items[i];
+                string newTypeName = item.GetOriginal().Replace(original, modified);
+                item.SetModified(newTypeName);
             }
         }
 
