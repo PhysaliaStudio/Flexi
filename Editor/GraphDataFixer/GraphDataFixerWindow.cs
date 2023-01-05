@@ -14,6 +14,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
         private Button validateButton;
         private Button fixButton;
+        private ReplacementArea replacementArea;
         private VisualElement scrollView;
         private readonly List<GraphDataFixerItem> items = new();
 
@@ -45,10 +46,12 @@ namespace Physalia.Flexi.GraphDataFixer
             Button clearButton = rootVisualElement.Q<Button>("clear-button");
             clearButton.clicked += Clear;
 
+            VisualElement replacementAreaElement = rootVisualElement.Q<VisualElement>("quick-replacement-area");
+            replacementArea = new ReplacementArea(replacementAreaElement);
+
             scrollView = rootVisualElement.Q<ScrollView>();
 
-            validateButton.SetEnabled(true);
-            fixButton.SetEnabled(false);
+            Clear();
         }
 
         private void ValidateSelectedAssets()
@@ -76,6 +79,7 @@ namespace Physalia.Flexi.GraphDataFixer
             {
                 validateButton.SetEnabled(false);
                 fixButton.SetEnabled(true);
+                replacementArea.Show();
             }
             else
             {
@@ -142,6 +146,7 @@ namespace Physalia.Flexi.GraphDataFixer
             result = null;
             validateButton.SetEnabled(true);
             fixButton.SetEnabled(false);
+            replacementArea.Hide();
             scrollView.Clear();
             items.Clear();
         }
