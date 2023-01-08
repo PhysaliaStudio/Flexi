@@ -155,6 +155,11 @@ namespace Physalia.Flexi
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.IsRunning())
+                {
+                    continue;
+                }
+
                 if (abilityFlow.CanExecute(eventContext))
                 {
                     hasAnyEnqueued = true;
@@ -175,6 +180,11 @@ namespace Physalia.Flexi
                 for (var j = 0; j < ability.Flows.Count; j++)
                 {
                     AbilityFlow abilityFlow = ability.Flows[j];
+                    if (abilityFlow.IsRunning())
+                    {
+                        continue;
+                    }
+
                     if (abilityFlow.CanExecute(eventContext))
                     {
                         // Move to next ability
