@@ -67,6 +67,17 @@ namespace Physalia.Flexi
             return result;
         }
 
+        internal bool CanStatRefresh()
+        {
+            if (graph.EntryNodes.Count == 0)
+            {
+                return false;
+            }
+
+            bool result = graph.EntryNodes[0] is StatRefreshEventNode;
+            return result;
+        }
+
         internal void Push(FlowNode flowNode)
         {
             graph.Push(flowNode);

@@ -224,7 +224,7 @@ namespace Physalia.Flexi
                 for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {
                     AbilityFlow abilityFlow = owner.AbilityFlows[j];
-                    if (abilityFlow.CanExecute(STAT_REFRESH_EVENT))
+                    if (abilityFlow.CanStatRefresh())
                     {
                         abilityFlow.Reset();
                         abilityFlow.SetPayload(STAT_REFRESH_EVENT);

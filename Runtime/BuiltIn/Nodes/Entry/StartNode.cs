@@ -5,7 +5,7 @@ namespace Physalia.Flexi
     {
         public override bool CanExecute(IEventContext payloadObj)
         {
-            return payloadObj is not StatRefreshEvent;
+            return true;
         }
     }
 }
