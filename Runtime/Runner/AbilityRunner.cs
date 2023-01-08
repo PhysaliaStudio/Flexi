@@ -24,6 +24,7 @@ namespace Physalia.Flexi
         {
             NODE_EXECUTION,
             NODE_RESUME,
+            NODE_TICK,
             FLOW_FINISH,
         }
 
@@ -116,6 +117,39 @@ namespace Physalia.Flexi
             runningState = RunningState.IDLE;
         }
 
+        public void Tick()
+        {
+            if (Peek() == null)
+            {
+                return;
+            }
+
+            if (runningState != RunningState.PAUSE)
+            {
+                Logger.Error($"[{nameof(AbilityRunner)}] Failed to tick! The runner is not in PAUSE state.");
+                return;
+            }
+
+            StepResult result = TickStep();
+            bool keepRunning = HandleStepResult(result);
+            if (!keepRunning)
+            {
+                return;
+            }
+
+            while (Peek() != null)
+            {
+                result = ExecuteStep();
+                keepRunning = HandleStepResult(result);
+                if (!keepRunning)
+                {
+                    return;
+                }
+            }
+
+            runningState = RunningState.IDLE;
+        }
+
         private StepResult ExecuteStep()
         {
             IAbilityFlow flow = Peek();
@@ -169,6 +203,26 @@ namespace Physalia.Flexi
             }
         }
 
+        private StepResult TickStep()
+        {
+            IAbilityFlow flow = Peek();
+            FlowNode node = flow.Current;
+
+            AbilityState state = node.Tick();
+            if (state == AbilityState.ABORT)
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.ABORT);
+            }
+            else if (state == AbilityState.PAUSE)
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.PAUSE);
+            }
+            else
+            {
+                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.SUCCESS);
+            }
+        }
+
         private bool HandleStepResult(StepResult result)
         {
             var keepRunning = true;
@@ -177,6 +231,7 @@ namespace Physalia.Flexi
             {
                 case ExecutionType.NODE_EXECUTION:
                 case ExecutionType.NODE_RESUME:
+                case ExecutionType.NODE_TICK:
                     if (result.state == ResultState.FAILED)
                     {
                         keepRunning = false;

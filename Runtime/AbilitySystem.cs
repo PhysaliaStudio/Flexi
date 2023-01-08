@@ -205,6 +205,11 @@ namespace Physalia.Flexi
             runner.Resume(resumeContext);
         }
 
+        public void Tick()
+        {
+            runner.Tick();
+        }
+
         public void RefreshStatsAndModifiers()
         {
             ownerRepository.RefreshStatsForAllOwners();
