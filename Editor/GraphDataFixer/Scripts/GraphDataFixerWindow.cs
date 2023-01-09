@@ -36,7 +36,8 @@ namespace Physalia.Flexi.GraphDataFixer
 
         private void CreateGUI()
         {
-            if (uiAsset == null)
+            bool checkResult = CheckUiAssets();
+            if (!checkResult)
             {
                 Logger.Error($"[{nameof(GraphDataFixerWindow)}] Missing UIAsset! Set the correct UIAsset in {nameof(GraphDataFixerWindow)} ScriptAsset might fix this.");
                 return;
@@ -61,6 +62,31 @@ namespace Physalia.Flexi.GraphDataFixer
             scrollViewArea = new ScrollViewArea(itemAsset, scrollViewAreaElement);
 
             Clear();
+        }
+
+        private bool CheckUiAssets()
+        {
+            string folderPath = "Packages/studio.physalia.flexi/Editor/GraphDataFixer/EditorResources/";
+
+            if (uiAsset == null)
+            {
+                uiAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "GraphDataFixerWindow.uxml");
+                if (uiAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            if (itemAsset == null)
+            {
+                itemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "GraphDataFixerItem.uxml");
+                if (itemAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void ValidateSelectedAssets()

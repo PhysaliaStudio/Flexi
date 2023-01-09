@@ -98,7 +98,8 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void CreateGUI()
         {
-            if (uiAsset == null)
+            bool checkResult = CheckUiAssets();
+            if (!checkResult)
             {
                 Logger.Error($"[{nameof(AbilityGraphEditorWindow)}] Missing UIAsset! Set the correct UIAsset in {nameof(AbilityGraphEditorWindow)} ScriptAsset might fix this.");
                 return;
@@ -154,6 +155,67 @@ namespace Physalia.Flexi.GraphViewEditor
                 objectField.SetValueWithoutNotify(currentAsset);
                 LoadFile(currentAsset);
             }
+        }
+
+        private bool CheckUiAssets()
+        {
+            string folderPath = "Packages/studio.physalia.flexi/Editor/GraphViewEditor/UiAssets/";
+
+            if (uiAsset == null)
+            {
+                uiAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "AbilityGraphEditorWindow.uxml");
+                if (uiAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            if (uiStyleSheet == null)
+            {
+                uiStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(folderPath + "AbilityGraphEditorWindow.uss");
+                if (uiStyleSheet == null)
+                {
+                    return false;
+                }
+            }
+
+            if (nodeInspectorAsset == null)
+            {
+                nodeInspectorAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "NodeInspector.uxml");
+                if (nodeInspectorAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            if (portListViewItemAsset == null)
+            {
+                portListViewItemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "PortListViewItem.uxml");
+                if (portListViewItemAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            if (blackboardInspectorAsset == null)
+            {
+                blackboardInspectorAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "BlackboardInspector.uxml");
+                if (blackboardInspectorAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            if (blackboardItemAsset == null)
+            {
+                blackboardItemAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "BlackboardItem.uxml");
+                if (blackboardItemAsset == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void SetUpNodeInspector()
