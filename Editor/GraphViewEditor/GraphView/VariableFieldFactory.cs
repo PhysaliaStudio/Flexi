@@ -27,6 +27,12 @@ namespace Physalia.Flexi.GraphViewEditor
                         SetUpField(field, stringVariable, window);
                         return field;
                     }
+                case Variable<bool> boolVariable:
+                    {
+                        var field = new Toggle(label);
+                        SetUpField(field, boolVariable, window);
+                        return field;
+                    }
                 case Variable<int> intVariable:
                     {
                         var field = new IntegerField(label);

@@ -13,18 +13,17 @@ namespace Physalia.Flexi
         public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
-        private readonly AbilityRunner runner;
+        private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
-        private readonly AbilityRunner statRefreshRunner = new SimpleQueueRunner();
+        private readonly StatRefreshRunner statRefreshRunner = new();
 
         private readonly MacroLibrary macroLibrary = new();
 
-        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
-            statRefreshRunner.SetEventTriggerMode(AbilityRunner.EventTriggerMode.NEVER);
         }
 
         internal StatOwner CreateOwner()
@@ -95,7 +94,6 @@ namespace Physalia.Flexi
                 return;
             }
 
-            runner.AddNewQueue();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
@@ -108,7 +106,6 @@ namespace Physalia.Flexi
                     EnqueueAbilitiesForAllOwners(eventContext);
                 }
             }
-            runner.RemoveEmptyQueues();
         }
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
@@ -155,6 +152,11 @@ namespace Physalia.Flexi
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
+                if (abilityFlow.IsRunning())
+                {
+                    continue;
+                }
+
                 if (abilityFlow.CanExecute(eventContext))
                 {
                     hasAnyEnqueued = true;
@@ -175,6 +177,11 @@ namespace Physalia.Flexi
                 for (var j = 0; j < ability.Flows.Count; j++)
                 {
                     AbilityFlow abilityFlow = ability.Flows[j];
+                    if (abilityFlow.IsRunning())
+                    {
+                        continue;
+                    }
+
                     if (abilityFlow.CanExecute(eventContext))
                     {
                         // Move to next ability
@@ -192,7 +199,7 @@ namespace Physalia.Flexi
         {
             flow.Reset();
             flow.SetPayload(eventContext);
-            runner.EnqueueFlow(flow);
+            runner.AddFlow(flow);
         }
 
         public void Run()
@@ -203,6 +210,11 @@ namespace Physalia.Flexi
         public void Resume(IResumeContext resumeContext)
         {
             runner.Resume(resumeContext);
+        }
+
+        public void Tick()
+        {
+            runner.Tick();
         }
 
         public void RefreshStatsAndModifiers()
@@ -228,7 +240,7 @@ namespace Physalia.Flexi
                     {
                         abilityFlow.Reset();
                         abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        statRefreshRunner.EnqueueFlow(abilityFlow);
+                        statRefreshRunner.AddFlow(abilityFlow);
                     }
                 }
             }

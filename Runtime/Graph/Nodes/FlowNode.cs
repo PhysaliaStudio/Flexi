@@ -46,6 +46,11 @@ namespace Physalia.Flexi
             return AbilityState.RUNNING;
         }
 
+        protected internal virtual AbilityState Tick()
+        {
+            return AbilityState.PAUSE;
+        }
+
         protected void PushSelf()
         {
             Flow?.Push(this);

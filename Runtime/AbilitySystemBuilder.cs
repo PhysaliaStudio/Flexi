@@ -5,7 +5,7 @@ namespace Physalia.Flexi
     public class AbilitySystemBuilder
     {
         private StatDefinitionListAsset asset;
-        private AbilityRunner runner;
+        private AbilityFlowRunner runner;
 
         public AbilitySystem Build()
         {
@@ -30,7 +30,7 @@ namespace Physalia.Flexi
             this.asset = asset;
         }
 
-        public void SetRunner(AbilityRunner runner)
+        public void SetRunner(AbilityFlowRunner runner)
         {
             this.runner = runner;
         }

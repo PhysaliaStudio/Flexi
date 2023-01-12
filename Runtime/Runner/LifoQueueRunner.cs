@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public sealed class LifoQueueRunner : AbilityRunner
+    public sealed class LifoQueueRunner : TurnBaseRunner
     {
         private readonly Stack<Queue<IAbilityFlow>> queueStack = new();
 
@@ -25,7 +25,7 @@ namespace Physalia.Flexi
             return null;
         }
 
-        public override void EnqueueFlow(IAbilityFlow flow)
+        public override void AddFlow(IAbilityFlow flow)
         {
             Queue<IAbilityFlow> topmostQueue = queueStack.Peek();
             topmostQueue.Enqueue(flow);
@@ -48,7 +48,7 @@ namespace Physalia.Flexi
             return null;
         }
 
-        public override void AddNewQueue()
+        internal void AddNewQueue()
         {
             Queue<IAbilityFlow> queue = queueStack.Peek();
             if (queue.Count == 0)
@@ -60,12 +60,22 @@ namespace Physalia.Flexi
             queueStack.Push(new Queue<IAbilityFlow>());
         }
 
-        public override void RemoveEmptyQueues()
+        internal void RemoveEmptyQueues()
         {
             while (queueStack.Count > 1 && queueStack.Peek().Count == 0)
             {
                 _ = queueStack.Pop();
             }
+        }
+
+        public override void BeforeTriggerEvents()
+        {
+            AddNewQueue();
+        }
+
+        public override void AfterTriggerEvents()
+        {
+            RemoveEmptyQueues();
         }
 
         public override void Clear()

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using static Physalia.Flexi.AbilityRunner;
+using static Physalia.Flexi.AbilityFlowStepper;
 
 namespace Physalia.Flexi.Tests
 {
@@ -23,42 +23,42 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void EnqueueFlow_FlowA_PeekReturnsFlowA()
+        public void AddFlow_FlowA_PeekReturnsFlowA()
         {
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             Assert.AreEqual(flowA, runner.Peek());
         }
 
         [Test]
-        public void EnqueueFlow_FlowAThenFlowB_PeekReturnsFlowA()
+        public void AddFlow_FlowAThenFlowB_PeekReturnsFlowA()
         {
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var flowB = new FakeFlow();
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowB);
 
             Assert.AreEqual(flowA, runner.Peek());
         }
 
         [Test]
-        public void EnqueueFlow_FlowAThenAddNewQueueThenFlowB_PeekReturnsFlowB()
+        public void AddFlow_FlowAThenAddNewQueueThenFlowB_PeekReturnsFlowB()
         {
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             runner.AddNewQueue();
 
             var flowB = new FakeFlow();
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowB);
 
             Assert.AreEqual(flowB, runner.Peek());
         }
@@ -76,7 +76,7 @@ namespace Physalia.Flexi.Tests
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             Assert.AreEqual(flowA, runner.DequeueFlow());
         }
@@ -87,10 +87,10 @@ namespace Physalia.Flexi.Tests
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var flowB = new FakeFlow();
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowB);
 
             Assert.AreEqual(flowA, runner.DequeueFlow());
         }
@@ -101,12 +101,12 @@ namespace Physalia.Flexi.Tests
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             runner.AddNewQueue();
 
             var flowB = new FakeFlow();
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowB);
 
             Assert.AreEqual(flowB, runner.DequeueFlow());
             Assert.AreEqual(1, runner.CountOfQueue);
@@ -125,7 +125,7 @@ namespace Physalia.Flexi.Tests
         public void AddNewQueue_TheTopQueueIsNotEmpty_CountOfQueueReturns2()
         {
             var runner = new LifoQueueRunner();
-            runner.EnqueueFlow(new FakeFlow());
+            runner.AddFlow(new FakeFlow());
             runner.AddNewQueue();
             Assert.AreEqual(2, runner.CountOfQueue);
         }
@@ -136,12 +136,12 @@ namespace Physalia.Flexi.Tests
             var runner = new LifoQueueRunner();
 
             var flowA = new FakeFlow();
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             runner.AddNewQueue();
 
             var flowB = new FakeFlow();
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowB);
 
             runner.Clear();
 
@@ -156,8 +156,8 @@ namespace Physalia.Flexi.Tests
             var flowA = new FakeFlow(2);
             var flowB = new FakeFlow(3);
 
-            runner.EnqueueFlow(flowA);
-            runner.EnqueueFlow(flowB);
+            runner.AddFlow(flowA);
+            runner.AddFlow(flowB);
 
             var record = new List<StepResult>();
             runner.StepExecuted += x => record.Add(x);
@@ -177,13 +177,13 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void Start_FlowAWith2NodesAndEnqueueFlowBWith2NodesAfterA0_A0B0B1A1()
+        public void Start_FlowAWith2NodesAndAddFlowBWith2NodesAfterA0_A0B0B1A1()
         {
             var runner = new LifoQueueRunner();
             var flowA = new FakeFlow(2);
             var flowB = new FakeFlow(2);
 
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var record = new List<StepResult>();
             runner.StepExecuted += x =>
@@ -194,7 +194,7 @@ namespace Physalia.Flexi.Tests
                 if (x.node == flowA[0])
                 {
                     runner.AddNewQueue();
-                    runner.EnqueueFlow(flowB);
+                    runner.AddFlow(flowB);
                 }
             };
 
@@ -218,7 +218,7 @@ namespace Physalia.Flexi.Tests
             var flowA = new FakeFlow(3);
             flowA.SetPauseCount(1, 1);
 
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var record = new List<StepResult>();
             runner.StepExecuted += x => record.Add(x);
@@ -239,7 +239,7 @@ namespace Physalia.Flexi.Tests
             var flowA = new FakeFlow(3);
             flowA.SetPauseCount(1, 1);
 
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var record = new List<StepResult>();
             runner.StepExecuted += x => record.Add(x);
@@ -265,7 +265,7 @@ namespace Physalia.Flexi.Tests
             var flowA = new FakeFlow(3);
             flowA.SetPauseCount(1, 2);
 
-            runner.EnqueueFlow(flowA);
+            runner.AddFlow(flowA);
 
             var record = new List<StepResult>();
             runner.StepExecuted += x => record.Add(x);
