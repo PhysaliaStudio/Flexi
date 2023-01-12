@@ -44,6 +44,10 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
   - [1. Build your environment](https://github.com/PhysaliaStudio/Flexi/wiki/1.-Build-your-environment)
   - [2. Runtime Usage](https://github.com/PhysaliaStudio/Flexi/wiki/2.-Runtime-Usage)
   - [API Summary](https://github.com/PhysaliaStudio/Flexi/wiki/API-Summary)
+- References
+  - [tranek/GASDocumentation](https://github.com/tranek/GASDocumentation)
+  - [Exploring the Gameplay Ability System (GAS) with an Action RPG](https://www.youtube.com/watch?v=tc542u36JR0)
+  - [Networking Scripted Weapons and Abilities in Overwatch](https://www.youtube.com/watch?v=ScyZjcjTlA4)
 
 ## Limitations
 
