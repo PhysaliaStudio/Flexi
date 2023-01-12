@@ -1,38 +1,10 @@
 using System;
+using static Physalia.Flexi.AbilityFlowStepper;
 
 namespace Physalia.Flexi
 {
     public abstract class AbilityFlowRunner
     {
-        internal struct StepResult
-        {
-            internal IAbilityFlow flow;
-            internal FlowNode node;
-            internal ExecutionType type;
-            internal ResultState state;
-
-            internal StepResult(IAbilityFlow flow, FlowNode node, ExecutionType type, ResultState state)
-            {
-                this.flow = flow;
-                this.node = node;
-                this.type = type;
-                this.state = state;
-            }
-        }
-
-        internal enum ExecutionType
-        {
-            NODE_EXECUTION,
-            NODE_RESUME,
-            NODE_TICK,
-            FLOW_FINISH,
-        }
-
-        internal enum ResultState
-        {
-            SUCCESS, FAILED, ABORT, PAUSE
-        }
-
         private enum RunningState
         {
             IDLE, RUNNING, PAUSE
@@ -76,14 +48,17 @@ namespace Physalia.Flexi
                 return;
             }
 
-            while (Peek() != null)
+            IAbilityFlow flow = Peek();
+            while (flow != null)
             {
-                StepResult result = ExecuteStep();
+                StepResult result = ExecuteStep(flow);
                 bool keepRunning = HandleStepResult(result);
                 if (!keepRunning)
                 {
                     return;
                 }
+
+                flow = Peek();
             }
 
             runningState = RunningState.IDLE;
@@ -97,21 +72,25 @@ namespace Physalia.Flexi
                 return;
             }
 
-            StepResult result = ResumeStep(resumeContext);
+            IAbilityFlow flow = Peek();
+            StepResult result = ResumeStep(flow, resumeContext);
             bool keepRunning = HandleStepResult(result);
             if (!keepRunning)
             {
                 return;
             }
 
-            while (Peek() != null)
+            flow = Peek();
+            while (flow != null)
             {
-                result = ExecuteStep();
+                result = ExecuteStep(flow);
                 keepRunning = HandleStepResult(result);
                 if (!keepRunning)
                 {
                     return;
                 }
+
+                flow = Peek();
             }
 
             runningState = RunningState.IDLE;
@@ -119,7 +98,8 @@ namespace Physalia.Flexi
 
         public void Tick()
         {
-            if (Peek() == null)
+            IAbilityFlow flow = Peek();
+            if (flow == null)
             {
                 return;
             }
@@ -130,97 +110,27 @@ namespace Physalia.Flexi
                 return;
             }
 
-            StepResult result = TickStep();
+            StepResult result = TickStep(flow);
             bool keepRunning = HandleStepResult(result);
             if (!keepRunning)
             {
                 return;
             }
 
-            while (Peek() != null)
+            flow = Peek();
+            while (flow != null)
             {
-                result = ExecuteStep();
+                result = ExecuteStep(flow);
                 keepRunning = HandleStepResult(result);
                 if (!keepRunning)
                 {
                     return;
                 }
+
+                flow = Peek();
             }
 
             runningState = RunningState.IDLE;
-        }
-
-        private StepResult ExecuteStep()
-        {
-            IAbilityFlow flow = Peek();
-            if (!flow.MoveNext())
-            {
-                // The graph is empty or has already reached the final node.
-                // We keep it until resolving all flows pushed, and dequeue it at here.
-                return new StepResult(flow, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS);
-            }
-
-            FlowNode node = flow.Current;
-            AbilityState state = node.Run();
-            if (state == AbilityState.ABORT)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.ABORT);
-            }
-            else if (state == AbilityState.PAUSE)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.PAUSE);
-            }
-            else
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.SUCCESS);
-            }
-        }
-
-        private StepResult ResumeStep(IResumeContext resumeContext)
-        {
-            IAbilityFlow flow = Peek();
-            FlowNode node = flow.Current;
-
-            bool success = node.CheckNodeContext(resumeContext);
-            if (!success)
-            {
-                Logger.Error($"[{nameof(AbilityFlowRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {node.GetType()}");
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
-            }
-
-            AbilityState state = node.Resume(resumeContext);
-            if (state == AbilityState.ABORT)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.ABORT);
-            }
-            else if (state == AbilityState.PAUSE)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.PAUSE);
-            }
-            else
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.SUCCESS);
-            }
-        }
-
-        private StepResult TickStep()
-        {
-            IAbilityFlow flow = Peek();
-            FlowNode node = flow.Current;
-
-            AbilityState state = node.Tick();
-            if (state == AbilityState.ABORT)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.ABORT);
-            }
-            else if (state == AbilityState.PAUSE)
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.PAUSE);
-            }
-            else
-            {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.SUCCESS);
-            }
         }
 
         private bool HandleStepResult(StepResult result)

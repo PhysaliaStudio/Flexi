@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using static Physalia.Flexi.AbilityFlowRunner;
+using static Physalia.Flexi.AbilityFlowStepper;
 
 namespace Physalia.Flexi.Tests
 {
