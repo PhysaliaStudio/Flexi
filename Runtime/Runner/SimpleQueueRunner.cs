@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public sealed class SimpleQueueRunner : AbilityRunner
+    public sealed class SimpleQueueRunner : AbilityFlowRunner
     {
         private readonly Queue<IAbilityFlow> queue = new();
 

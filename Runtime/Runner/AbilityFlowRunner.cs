@@ -2,7 +2,7 @@ using System;
 
 namespace Physalia.Flexi
 {
-    public abstract class AbilityRunner
+    public abstract class AbilityFlowRunner
     {
         internal struct StepResult
         {
@@ -72,7 +72,7 @@ namespace Physalia.Flexi
         {
             if (runningState != RunningState.IDLE)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] Failed to start! The runner is still running or waiting.");
+                Logger.Error($"[{nameof(AbilityFlowRunner)}] Failed to start! The runner is still running or waiting.");
                 return;
             }
 
@@ -93,7 +93,7 @@ namespace Physalia.Flexi
         {
             if (runningState != RunningState.PAUSE)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume! The runner is not in PAUSE state.");
+                Logger.Error($"[{nameof(AbilityFlowRunner)}] Failed to resume! The runner is not in PAUSE state.");
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace Physalia.Flexi
 
             if (runningState != RunningState.PAUSE)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] Failed to tick! The runner is not in PAUSE state.");
+                Logger.Error($"[{nameof(AbilityFlowRunner)}] Failed to tick! The runner is not in PAUSE state.");
                 return;
             }
 
@@ -184,7 +184,7 @@ namespace Physalia.Flexi
             bool success = node.CheckNodeContext(resumeContext);
             if (!success)
             {
-                Logger.Error($"[{nameof(AbilityRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {node.GetType()}");
+                Logger.Error($"[{nameof(AbilityFlowRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {node.GetType()}");
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
             }
 

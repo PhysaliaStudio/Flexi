@@ -13,18 +13,18 @@ namespace Physalia.Flexi
         public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
-        private readonly AbilityRunner runner;
+        private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
-        private readonly AbilityRunner statRefreshRunner = new SimpleQueueRunner();
+        private readonly AbilityFlowRunner statRefreshRunner = new SimpleQueueRunner();
 
         private readonly MacroLibrary macroLibrary = new();
 
-        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityRunner runner)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
-            statRefreshRunner.SetEventTriggerMode(AbilityRunner.EventTriggerMode.NEVER);
+            statRefreshRunner.SetEventTriggerMode(AbilityFlowRunner.EventTriggerMode.NEVER);
         }
 
         internal StatOwner CreateOwner()
