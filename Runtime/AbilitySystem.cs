@@ -15,7 +15,7 @@ namespace Physalia.Flexi
         private readonly StatOwnerRepository ownerRepository;
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
-        private readonly AbilityFlowRunner statRefreshRunner = new SimpleQueueRunner();
+        private readonly StatRefreshRunner statRefreshRunner = new();
 
         private readonly MacroLibrary macroLibrary = new();
 
@@ -24,7 +24,6 @@ namespace Physalia.Flexi
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
-            statRefreshRunner.SetEventTriggerMode(AbilityFlowRunner.EventTriggerMode.NEVER);
         }
 
         internal StatOwner CreateOwner()
@@ -95,7 +94,6 @@ namespace Physalia.Flexi
                 return;
             }
 
-            runner.AddNewQueue();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
@@ -108,7 +106,6 @@ namespace Physalia.Flexi
                     EnqueueAbilitiesForAllOwners(eventContext);
                 }
             }
-            runner.RemoveEmptyQueues();
         }
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
@@ -202,7 +199,7 @@ namespace Physalia.Flexi
         {
             flow.Reset();
             flow.SetPayload(eventContext);
-            runner.EnqueueFlow(flow);
+            runner.AddFlow(flow);
         }
 
         public void Run()
@@ -243,7 +240,7 @@ namespace Physalia.Flexi
                     {
                         abilityFlow.Reset();
                         abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        statRefreshRunner.EnqueueFlow(abilityFlow);
+                        statRefreshRunner.AddFlow(abilityFlow);
                     }
                 }
             }
