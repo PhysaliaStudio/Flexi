@@ -1,0 +1,19 @@
+{
+    "name": "Physalia.Flexi.Editor.LinkProcessor",
+    "rootNamespace": "Physalia.Flexi",
+    "references": [
+        "GUID:b4a7a0a0f6e8c8c4c99f40861c52733f",
+        "GUID:a05be25d9b0812045ac70eb7f4140953"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
