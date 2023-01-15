@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Physalia.Flexi.GraphViewEditor
+namespace Physalia.Flexi
 {
     public static class Utility
     {
