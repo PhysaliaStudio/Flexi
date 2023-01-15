@@ -142,10 +142,11 @@ public static class {className}
             return name;
         }
 
-        private static void CreateScriptAsset(string text, string path)
+        private static void CreateScriptAsset(string text, string assetPath)
         {
-            var root = new DirectoryInfo(Application.dataPath).Parent;
-            string fullPath = Path.Combine(root.FullName, path).Replace('/', '\\');
+            string fullPath = Utility.AssetPathToFullPath(assetPath);
+
+            // Note: Brackets are necessary since we need to close the stream before refreshing AssetDatabase
             using (var sw = new StreamWriter(fullPath))
             {
                 sw.Write(text);
