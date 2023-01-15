@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -7,6 +8,13 @@ namespace Physalia.Flexi
 {
     public static class Utility
     {
+        public static string AssetPathToFullPath(string assetPath)
+        {
+            DirectoryInfo root = new DirectoryInfo(Application.dataPath).Parent;
+            string fullPath = Path.Combine(root.FullName, assetPath).Replace('/', '\\');
+            return fullPath;
+        }
+
         public static bool OpenScriptOfType(Type type)
         {
             MonoScript monoScript = GetMonoScriptFromType(type);

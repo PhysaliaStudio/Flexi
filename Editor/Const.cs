@@ -1,0 +1,11 @@
+namespace Physalia.Flexi
+{
+    public static class Const
+    {
+        public const string MenuFolder = "Tools/Flexi/";
+
+        public const string AssemblyNameMain = "Physalia.Flexi";
+        public const string AssemblyNameEditorTests = "Physalia.Flexi.Editor.Tests";
+        public const string AssemblyNamePerformanceTests = "Physalia.Flexi.PerformanceTests";
+    }
+}
