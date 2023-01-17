@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    public static class Const
+    public static class EditorConst
     {
         public const string MenuFolder = "Tools/Flexi/";
 
