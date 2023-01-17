@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Tests
 {
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class CustomUnitNode : ValueNode
     {
         public Inport<CustomUnit> customUnitPort;

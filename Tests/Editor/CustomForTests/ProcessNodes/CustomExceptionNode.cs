@@ -2,6 +2,7 @@ using System;
 
 namespace Physalia.Flexi.Tests
 {
+    [NodeCategoryForTests]
     public class CustomExceptionNode : ProcessNode
     {
         protected override AbilityState DoLogic()

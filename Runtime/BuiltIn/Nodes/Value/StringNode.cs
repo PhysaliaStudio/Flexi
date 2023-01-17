@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Value")]
+    [NodeCategory(BuiltInCategory.Value)]
     public class StringNode : ValueNode
     {
         public Outport<string> output;

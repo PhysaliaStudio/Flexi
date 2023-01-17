@@ -1,13 +1,13 @@
 namespace Physalia.Flexi.Tests
 {
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class TestNode : Node
     {
         public Inport<int> input;
         public Outport<int> output;
     }
 
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class TestProcessNode : ProcessNode
     {
         public Inport<int> input;

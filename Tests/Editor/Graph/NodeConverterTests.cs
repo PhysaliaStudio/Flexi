@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Tests
 {
     public class NodeConverterTests
     {
-        [NodeCategory("Built-in/[Test Custom]")]
+        [NodeCategoryForTests]
         public class TestNode : Node
         {
             public Inport<string> input;

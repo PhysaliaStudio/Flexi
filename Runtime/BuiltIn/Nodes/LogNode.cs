@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Common")]
+    [NodeCategory(BuiltInCategory.Common)]
     public class LogNode : ProcessNode
     {
         public Inport<string> text;

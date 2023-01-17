@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Logical")]
+    [NodeCategory(BuiltInCategory.Logical)]
     public class XorNode : ValueNode
     {
         public Inport<bool> a;

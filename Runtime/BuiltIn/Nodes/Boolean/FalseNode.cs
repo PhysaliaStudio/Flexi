@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Logical")]
+    [NodeCategory(BuiltInCategory.Logical)]
     public class FalseNode : ValueNode
     {
         public Outport<bool> value;

@@ -11,12 +11,12 @@ namespace Physalia.Flexi
     {
         private static readonly HashSet<string> SkippedAssemblyNames = new()
         {
-            Const.AssemblyNameMain,
-            Const.AssemblyNameEditorTests,
-            Const.AssemblyNamePerformanceTests,
+            EditorConst.AssemblyNameMain,
+            EditorConst.AssemblyNameEditorTests,
+            EditorConst.AssemblyNamePerformanceTests,
         };
 
-        [MenuItem(Const.MenuFolder + "Generate link.xml")]
+        [MenuItem(EditorConst.MenuFolder + "Generate link.xml")]
         private static void Generate()
         {
             string assetPath = ShowSaveFilePanel();

@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Tests
 {
     public class GraphConverterTests
     {
-        [NodeCategory("Built-in/[Test Custom]")]
+        [NodeCategoryForTests]
         public class OwnerFilterNode : Node
         {
             public Outport<StatOwner> owners;

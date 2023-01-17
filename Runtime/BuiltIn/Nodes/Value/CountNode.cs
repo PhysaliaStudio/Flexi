@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Value")]
+    [NodeCategory(BuiltInCategory.Value)]
     public class CountNode : ValueNode
     {
         public Inport<ICollection> collectionPort;

@@ -5,7 +5,7 @@ namespace Physalia.Flexi
         // Empty Content
     }
 
-    [NodeCategory("Built-in/Entry")]
+    [NodeCategory(BuiltInCategory.Entry)]
     public class StatRefreshEventNode : EntryNode
     {
         public override bool CanExecute(IEventContext payloadObj)
