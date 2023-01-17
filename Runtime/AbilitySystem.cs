@@ -87,13 +87,14 @@ namespace Physalia.Flexi
             EventOccurred?.Invoke(eventContext);
         }
 
-        internal void TriggerCachedEvents()
+        internal void TriggerCachedEvents(AbilityFlowRunner runner)
         {
             if (eventQueue.Count == 0)
             {
                 return;
             }
 
+            runner.BeforeTriggerEvents();
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
@@ -106,6 +107,7 @@ namespace Physalia.Flexi
                     EnqueueAbilitiesForAllOwners(eventContext);
                 }
             }
+            runner.AfterTriggerEvents();
         }
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)

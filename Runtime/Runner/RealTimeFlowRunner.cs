@@ -184,7 +184,7 @@ namespace Physalia.Flexi
                     return;
             }
 
-            abilitySystem.TriggerCachedEvents();
+            abilitySystem.TriggerCachedEvents(this);
             abilitySystem.RefreshStatsAndModifiers();
         }
 
