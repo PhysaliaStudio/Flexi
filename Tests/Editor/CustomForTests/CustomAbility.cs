@@ -4,6 +4,14 @@ namespace Physalia.Flexi.Tests
 {
     public static class CustomAbility
     {
+        public static AbilityAsset THROW_EXCEPTION
+        {
+            get
+            {
+                return LoadAbilityAsset("ThrowException");
+            }
+        }
+
         public static AbilityAsset HELLO_WORLD
         {
             get
