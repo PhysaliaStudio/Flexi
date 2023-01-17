@@ -34,6 +34,16 @@ namespace Physalia.Flexi
         public abstract void Resume(IResumeContext resumeContext);
         public abstract void Tick();
 
+        public virtual void BeforeTriggerEvents()
+        {
+
+        }
+
+        public virtual void AfterTriggerEvents()
+        {
+
+        }
+
         public virtual void Clear()
         {
 

@@ -167,21 +167,8 @@ namespace Physalia.Flexi
                     return;
             }
 
-            BeforeTriggerEvents();
-            abilitySystem.TriggerCachedEvents();
-            AfterTriggerEvents();
-
+            abilitySystem.TriggerCachedEvents(this);
             abilitySystem.RefreshStatsAndModifiers();
-        }
-
-        public virtual void BeforeTriggerEvents()
-        {
-
-        }
-
-        public virtual void AfterTriggerEvents()
-        {
-
         }
 
         public override void Clear()
