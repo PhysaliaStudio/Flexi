@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Entry")]
+    [NodeCategory(BuiltInCategory.Entry)]
     public sealed class StartNode : EntryNode
     {
         public override bool CanExecute(IEventContext payloadObj)

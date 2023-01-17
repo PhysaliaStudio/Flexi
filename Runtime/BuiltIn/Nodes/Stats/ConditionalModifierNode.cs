@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Stats")]
+    [NodeCategory(BuiltInCategory.Stats)]
     public class ConditionalModifierNode : ProcessNode
     {
         public Inport<IReadOnlyList<Actor>> actorsPort;

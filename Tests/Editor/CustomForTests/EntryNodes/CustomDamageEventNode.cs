@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Tests
 {
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class CustomDamageEventNode : EntryNode
     {
         public Outport<CustomUnit> instigatorPort;

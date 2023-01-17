@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Common")]
+    [NodeCategory(BuiltInCategory.Common)]
     public class BlackboardNode : ValueNode
     {
         public Outport<int> value;

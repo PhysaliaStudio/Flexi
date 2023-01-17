@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Tests
 {
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class CustomNormalAttackEntryNode : EntryNode
     {
         public Outport<CustomUnit> attackerPort;

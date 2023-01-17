@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Common")]
+    [NodeCategory(BuiltInCategory.Common)]
     public sealed class RelayNode : ProcessNode
     {
 

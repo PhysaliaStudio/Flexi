@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    [NodeCategory("Built-in/Comparison")]
+    [NodeCategory(BuiltInCategory.Comparison)]
     public class NotEqualNode : ValueNode
     {
         public Inport<int> a;

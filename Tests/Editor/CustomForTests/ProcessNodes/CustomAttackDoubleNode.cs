@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    [NodeCategory("Built-in/[Test Custom]")]
+    [NodeCategoryForTests]
     public class CustomAttackDoubleNode : ProcessNode
     {
         public Inport<List<Actor>> targetsPort;
