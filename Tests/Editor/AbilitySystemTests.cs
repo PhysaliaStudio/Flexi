@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -412,6 +413,22 @@ namespace Physalia.Flexi.Tests
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "end");
+        }
+
+        [Test]
+        public void ExecuteAbilitiy_ThrowException_ShouldAbortImmediately()
+        {
+            Ability throwException = abilitySystem.InstantiateAbility(CustomAbility.THROW_EXCEPTION);
+            Ability helloWorld = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD);
+
+            _ = abilitySystem.TryEnqueueAbility(throwException, null);
+            _ = abilitySystem.TryEnqueueAbility(helloWorld, null);
+            abilitySystem.Run();
+
+            LogAssert.Expect(LogType.Exception, "Exception: This is for testing");
+            LogAssert.Expect(LogType.Log, "Hello");
+            LogAssert.Expect(LogType.Log, "World!");
+            LogAssert.NoUnexpectedReceived();
         }
     }
 }
