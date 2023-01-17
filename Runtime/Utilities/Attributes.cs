@@ -3,7 +3,7 @@ using System;
 namespace Physalia.Flexi
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class NodeCategory : Attribute
+    public class NodeCategory : Attribute
     {
         private readonly string menu;
         private readonly string name;
