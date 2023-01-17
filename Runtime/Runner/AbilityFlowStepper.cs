@@ -1,3 +1,5 @@
+using System;
+
 namespace Physalia.Flexi
 {
     public static class AbilityFlowStepper
@@ -41,7 +43,18 @@ namespace Physalia.Flexi
             }
 
             FlowNode node = flow.Current;
-            AbilityState state = node.Run();
+
+            AbilityState state;
+            try
+            {
+                state = node.Run();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                state = AbilityState.ABORT;
+            }
+
             if (state == AbilityState.ABORT)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.ABORT);
@@ -66,7 +79,17 @@ namespace Physalia.Flexi
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
             }
 
-            AbilityState state = node.Resume(resumeContext);
+            AbilityState state;
+            try
+            {
+                state = node.Resume(resumeContext);
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                state = AbilityState.ABORT;
+            }
+
             if (state == AbilityState.ABORT)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.ABORT);
@@ -85,7 +108,17 @@ namespace Physalia.Flexi
         {
             FlowNode node = flow.Current;
 
-            AbilityState state = node.Tick();
+            AbilityState state;
+            try
+            {
+                state = node.Tick();
+            }
+            catch (Exception ex)
+            {
+                Logger.Fatal(ex);
+                state = AbilityState.ABORT;
+            }
+
             if (state == AbilityState.ABORT)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.ABORT);
