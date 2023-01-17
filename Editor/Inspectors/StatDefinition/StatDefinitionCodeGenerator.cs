@@ -40,7 +40,7 @@ namespace Physalia.Flexi
                     sb.Append(tab);
                 }
 
-                sb.Append($"public static readonly int {constantName} = {statDefinition.Id};");
+                sb.Append($"public const int {constantName} = {statDefinition.Id};");
                 if (i != statDefinitionListAsset.stats.Count - 1)
                 {
                     sb.AppendLine();
