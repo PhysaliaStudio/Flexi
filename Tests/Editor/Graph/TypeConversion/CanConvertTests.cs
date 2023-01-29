@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Physalia.Flexi.Tests
 {
-    public class PortCastTests
+    public class CanConvertTests
     {
         [Test]
         public void AnyToMissing_ReturnsFalse()

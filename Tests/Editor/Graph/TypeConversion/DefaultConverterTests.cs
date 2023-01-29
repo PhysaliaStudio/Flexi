@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace Physalia.Flexi.Tests
 {
-    public class PortConverterTests
+    public class DefaultConverterTests
     {
         public class TestA { }
 
