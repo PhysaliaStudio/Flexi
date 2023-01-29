@@ -16,7 +16,7 @@ namespace Physalia.Flexi
             return false;
         }
 
-        internal override Func<object> GetValueConverter(Type toType)
+        internal override Func<TTo> GetValueConverter<TTo>()
         {
             return null;
         }

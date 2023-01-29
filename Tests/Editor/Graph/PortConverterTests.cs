@@ -15,14 +15,14 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleToSingle_DifferentType_ReturnsNull()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(TestB));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, TestB>();
             Assert.AreEqual(null, converter);
         }
 
         [Test]
         public void SingleToSingle_DifferentTypeButAssignableTo_ReturnsUsable()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(TestA));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, TestA>();
             var value = new TestA1();
             var result = converter.Invoke(value) as TestA;
 
@@ -32,7 +32,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleToList_MatchGenericType_ReturnsTrue()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestA1>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, IList<TestA1>>();
             var value = new TestA1();
             var result = converter.Invoke(value) as IList<TestA1>;
 
@@ -42,7 +42,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleToList_MatchGenericTypeButInputIsNull_ListCountReturns0()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestA1>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, IList<TestA1>>();
             var result = converter.Invoke(null) as IList<TestA1>;
             Assert.AreEqual(0, result.Count);
         }
@@ -50,14 +50,14 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleToList_NotMatchGenericType_ReturnsNull()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestB>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, IList<TestB>>();
             Assert.AreEqual(null, converter);
         }
 
         [Test]
         public void SingleToList_NotMatchGenericTypeButAssignableTo_ReturnsUsable()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(TestA1), typeof(IList<TestA>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<TestA1, IList<TestA>>();
             var value = new TestA1();
             var result = converter.Invoke(value) as IList<TestA>;
 
@@ -67,7 +67,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ListToList_MatchGenericType_ReturnsTrue()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(IList<TestA1>), typeof(IList<TestA1>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<IList<TestA1>, IList<TestA1>>();
             var value = new List<TestA1> { new TestA1(), new TestA1() };
             var result = converter.Invoke(value) as IList<TestA1>;
 
@@ -81,14 +81,14 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ListToList_NotMatchGenericType_ReturnsNull()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(IList<TestA1>), typeof(IList<TestB>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<IList<TestA1>, IList<TestB>>();
             Assert.AreEqual(null, converter);
         }
 
         [Test]
         public void ListToList_NotMatchGenericTypeButAssignableTo_ReturnsUsable()
         {
-            Func<object, object> converter = Port.GetConverter(typeof(IList<TestA1>), typeof(IList<TestA>));
+            Func<object, object> converter = ConversionUtility.CreateConverterByDefault<IList<TestA1>, IList<TestA>>();
             var value = new List<TestA1> { new TestA1(), new TestA1() };
             var result = converter.Invoke(value) as IList<TestA>;
 

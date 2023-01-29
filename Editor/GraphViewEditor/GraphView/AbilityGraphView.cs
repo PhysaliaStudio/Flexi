@@ -158,11 +158,11 @@ namespace Physalia.Flexi.GraphViewEditor
                 bool canCast;
                 if (startAnchor.direction == Direction.Output)
                 {
-                    canCast = Port.CanPortCast(startAnchor.portType, portView.portType);
+                    canCast = ConversionUtility.CanConvert(startAnchor.portType, portView.portType);
                 }
                 else
                 {
-                    canCast = Port.CanPortCast(portView.portType, startAnchor.portType);
+                    canCast = ConversionUtility.CanConvert(portView.portType, startAnchor.portType);
                 }
 
                 if (canCast)
