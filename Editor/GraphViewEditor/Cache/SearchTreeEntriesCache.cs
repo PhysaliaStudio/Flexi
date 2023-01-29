@@ -115,11 +115,11 @@ namespace Physalia.Flexi.GraphViewEditor
                 {
                     string nodeDisplayName = string.IsNullOrEmpty(nodeCategory.Name) ? type.Name : nodeCategory.Name;
                     var path = $"{nodeCategory.Menu}/{nodeDisplayName}";
-                    searchTree.Insert(path, type);
+                    searchTree.Insert(path, type, nodeCategory.Order);
                 }
                 else
                 {
-                    searchTree.Insert(type.Name, type);
+                    searchTree.Insert(type.Name, type, 0);
                 }
             }
 
