@@ -8,6 +8,16 @@ namespace Physalia.Flexi
     {
         private static readonly ConversionHandler handler = new();
 
+        static ConversionUtility()
+        {
+            List<Type> types = ReflectionUtilities.GetAllDerivedTypes<ConversionSchema>();
+            for (var i = 0; i < types.Count; i++)
+            {
+                var schema = Activator.CreateInstance(types[i]) as ConversionSchema;
+                schema.Handle(handler);
+            }
+        }
+
         public static void Handle<TFrom, TTo>(Func<TFrom, TTo> converter)
         {
             handler.Handle(converter);
@@ -28,6 +38,18 @@ namespace Physalia.Flexi
 
             result = CanConvertByDefault(fromType, toType);
             return result;
+        }
+
+        public static TTo Convert<TFrom, TTo>(TFrom value)
+        {
+            Func<TFrom, TTo> converter = GetConverter<TFrom, TTo>();
+            if (converter != null)
+            {
+                TTo result = converter(value);
+                return result;
+            }
+
+            return default;
         }
 
         public static Func<TFrom, TTo> GetConverter<TFrom, TTo>()

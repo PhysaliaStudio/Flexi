@@ -3,7 +3,12 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    internal class ConversionHandler
+    public interface IConversionHandler
+    {
+        void Handle<TFrom, TTo>(Func<TFrom, TTo> converter);
+    }
+
+    internal class ConversionHandler : IConversionHandler
     {
         private struct ConversionQuery : IEquatable<ConversionQuery>
         {
