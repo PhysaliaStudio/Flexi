@@ -5,6 +5,7 @@ namespace Physalia.Flexi.Tests
 {
     public class ConversionUtilityTests
     {
+        #region Built-in types
         [Test]
         public void Convert_FromByte()
         {
@@ -180,7 +181,9 @@ namespace Physalia.Flexi.Tests
             TestUtilities.AreApproximatelyEqual(3.3d, ConversionUtility.Convert<decimal, double>(3.3m));
             //TestUtilities.AreApproximatelyEqual(3.3m, ConversionUtility.Convert<decimal, decimal>(3.3m));
         }
+        #endregion
 
+        #region Unity vector types
         [Test]
         public void Convert_FromVector2()
         {
@@ -226,5 +229,6 @@ namespace Physalia.Flexi.Tests
             TestUtilities.AreApproximatelyEqual(new Vector2Int(3, 7), ConversionUtility.Convert<Vector3Int, Vector2Int>(new Vector3Int(3, 7, 9)));
             //TestUtilities.AreApproximatelyEqual(new Vector3Int(3, 7, 9), ConversionUtility.Convert<Vector3Int, Vector3Int>(new Vector3Int(3, 7, 9)));
         }
+        #endregion
     }
 }
