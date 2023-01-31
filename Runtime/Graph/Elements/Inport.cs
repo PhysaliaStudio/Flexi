@@ -38,7 +38,7 @@ namespace Physalia.Flexi
             return outports;
         }
 
-        internal abstract Func<object> GetValueConverter(Type toType);
+        internal abstract Func<TTo> GetValueConverter<TTo>();
     }
 
     public sealed class Inport<T> : Inport
@@ -69,27 +69,21 @@ namespace Physalia.Flexi
                 return value;
             }
 
-            var convertFunc = outport.GetValueConverter(typeof(T));
+            var convertFunc = outport.GetValueConverter<T>();
             if (convertFunc != null)
             {
-                return (T)convertFunc.Invoke();
+                return convertFunc.Invoke();
             }
 
             return default;
         }
 
-        internal override Func<object> GetValueConverter(Type toType)
+        internal override Func<TTo> GetValueConverter<TTo>()
         {
-            T value = GetValue();
-
-            if (toType.IsAssignableFrom(ValueType))
-            {
-                return () => value;
-            }
-
-            var converter = GetConverter(ValueType, toType);
+            Func<T, TTo> converter = ConversionUtility.GetConverter<T, TTo>();
             if (converter != null)
             {
+                T value = GetValue();
                 return () => converter(value);
             }
 

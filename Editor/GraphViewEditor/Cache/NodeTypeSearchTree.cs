@@ -12,6 +12,7 @@ namespace Physalia.Flexi.GraphViewEditor
             private readonly Node parent;
             private readonly string text;
             private readonly Type type;
+            private readonly int order;
             private readonly int level;
 
             private readonly List<Node> children = new();
@@ -19,15 +20,17 @@ namespace Physalia.Flexi.GraphViewEditor
             public Node Parent => parent;
             public string Text => text;
             public Type Type => type;
+            public int Order => order;
             public int Level => level;
             public bool IsLeaf => children.Count == 0;
             public int ChildrenCount => children.Count;
 
-            public Node(Node parent, string text, Type type)
+            public Node(Node parent, string text, Type type, int order)
             {
                 this.parent = parent;
                 this.text = text;
                 this.type = type;
+                this.order = order;
                 level = parent != null ? parent.Level + 1 : 0;
             }
 
@@ -36,19 +39,31 @@ namespace Physalia.Flexi.GraphViewEditor
                 return children[index];
             }
 
-            public Node InsertOrGetChild(string text, Type type)
+            public Node InsertOrGetChild(string text, Type type, int order)
             {
                 for (var i = 0; i < children.Count; i++)
                 {
-                    int compare = text.CompareTo(children[i].Text);
+                    int compare = order.CompareTo(children[i].order);
                     if (compare == 0)
                     {
-                        return children[i];
+                        // Same order. Compare the name.
+                        compare = text.CompareTo(children[i].text);
+                        if (compare == 0)
+                        {
+                            return children[i];
+                        }
+                        else if (compare < 0)
+                        {
+                            // The new child should be created before this child
+                            var child = new Node(this, text, type, order);
+                            children.Insert(i, child);
+                            return child;
+                        }
                     }
                     else if (compare < 0)
                     {
                         // The new child should be created before this child
-                        var child = new Node(this, text, type);
+                        var child = new Node(this, text, type, order);
                         children.Insert(i, child);
                         return child;
                     }
@@ -56,7 +71,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
                 {
                     // The new child should be created at the last
-                    var child = new Node(this, text, type);
+                    var child = new Node(this, text, type, order);
                     children.Add(child);
                     return child;
                 }
@@ -66,11 +81,23 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 for (var i = 0; i < children.Count; i++)
                 {
-                    int compare = text.CompareTo(children[i].Text);
-                    if (compare < 0)
+                    int compare = order.CompareTo(children[i].order);
+                    if (compare == 0)
+                    {
+                        // Same order. Compare the name.
+                        compare = text.CompareTo(children[i].text);
+                        if (compare < 0)
+                        {
+                            // The new child should be created before this child
+                            var child = new Node(this, text, type, order);
+                            children.Insert(i, child);
+                            return child;
+                        }
+                    }
+                    else if (compare < 0)
                     {
                         // The new child should be created before this child
-                        var child = new Node(this, text, type);
+                        var child = new Node(this, text, type, order);
                         children.Insert(i, child);
                         return child;
                     }
@@ -78,7 +105,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
                 {
                     // The new child should be created at the last
-                    var child = new Node(this, text, type);
+                    var child = new Node(this, text, type, order);
                     children.Add(child);
                     return child;
                 }
@@ -140,9 +167,9 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
-        private readonly Node root = new(null, "", null);
+        private readonly Node root = new(null, "", null, 0);
 
-        public void Insert(string path, Type type)
+        public void Insert(string path, Type type, int order)
         {
             string[] texts = path.Split('/');
 
@@ -151,11 +178,11 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 if (i != texts.Length - 1)
                 {
-                    current = current.InsertOrGetChild(texts[i], null);
+                    current = current.InsertOrGetChild(texts[i], null, 0);
                 }
                 else
                 {
-                    Node leaf = current.InsertOrGetChild(texts[i], type);
+                    Node leaf = current.InsertOrGetChild(texts[i], type, order);
                     if (leaf.Type != type)  // Leaves conflict
                     {
                         Debug.LogWarning($"[{nameof(NodeSearchWindowProvider)}] Path conflict! \"{leaf.Type.FullName}\" and \"{type.FullName}\" use the same path: \"{path}\"");

@@ -18,6 +18,25 @@ namespace Physalia.Flexi
             return assembliesCache;
         }
 
+        public static List<Type> GetAllDerivedTypes<T>()
+        {
+            Type baseType = typeof(T);
+
+            var derivedTypes = new List<Type>();
+            foreach (Assembly assembly in GetAssemblies())
+            {
+                foreach (Type type in assembly.GetTypes())
+                {
+                    if (type.IsClass && !type.IsAbstract && type.IsSubclassOf(baseType))
+                    {
+                        derivedTypes.Add(type);
+                    }
+                }
+            }
+
+            return derivedTypes;
+        }
+
         public static Type GetTypeByName(string typeName)
         {
             foreach (Assembly assembly in GetAssemblies())

@@ -7,14 +7,32 @@ namespace Physalia.Flexi
     {
         private readonly string menu;
         private readonly string name;
+        private readonly int order;
 
         public string Menu => menu;
         public string Name => name;
+        public int Order => order;
 
-        public NodeCategory(string menu, string name = null)
+        public NodeCategory(string menu) : this(menu, null, 0)
+        {
+
+        }
+
+        public NodeCategory(string menu, string name) : this(menu, name, 0)
+        {
+
+        }
+
+        public NodeCategory(string menu, int order) : this(menu, null, order)
+        {
+
+        }
+
+        public NodeCategory(string menu, string name, int order)
         {
             this.menu = menu.Trim('/');
             this.name = name;
+            this.order = order;
         }
     }
 
