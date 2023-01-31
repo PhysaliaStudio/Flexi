@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -230,5 +231,26 @@ namespace Physalia.Flexi.Tests
             //TestUtilities.AreApproximatelyEqual(new Vector3Int(3, 7, 9), ConversionUtility.Convert<Vector3Int, Vector3Int>(new Vector3Int(3, 7, 9)));
         }
         #endregion
+
+        [Test]
+        public void Convert_Special_IntToListOfInt()
+        {
+            List<int> result = ConversionUtility.Convert<int, List<int>>(42);
+            TestUtilities.AreListEqual(new List<int> { 42 }, result);
+        }
+
+        [Test]
+        public void Convert_Special_FloatToListOfInt()
+        {
+            List<int> result = ConversionUtility.Convert<float, List<int>>(3.3f);
+            TestUtilities.AreListEqual(new List<int> { 3 }, result);
+        }
+
+        [Test]
+        public void Convert_Special_ListOfFloatToListOfInt()
+        {
+            List<int> result = ConversionUtility.Convert<List<float>, List<int>>(new List<float> { 3.3f, 5.5f });
+            TestUtilities.AreListEqual(new List<int> { 3, 5 }, result);
+        }
     }
 }
