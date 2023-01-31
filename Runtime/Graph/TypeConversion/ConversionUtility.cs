@@ -52,6 +52,18 @@ namespace Physalia.Flexi
             return default;
         }
 
+        public static object ConvertBoxed(object value, Type toType)
+        {
+            Func<object, object> converter = GetConverterBoxed(value.GetType(), toType);
+            if (converter != null)
+            {
+                object result = converter(value);
+                return result;
+            }
+
+            return default;
+        }
+
         public static Func<TFrom, TTo> GetConverter<TFrom, TTo>()
         {
             Func<TFrom, TTo> converter = handler.GetConverter<TFrom, TTo>();
@@ -65,6 +77,24 @@ namespace Physalia.Flexi
             if (dufaultConverter != null)
             {
                 return (value) => (TTo)dufaultConverter(value);
+            }
+
+            return null;
+        }
+
+        public static Func<object, object> GetConverterBoxed(Type fromType, Type toType)
+        {
+            Func<object, object> converter = handler.GetConverterBoxed(fromType, toType);
+            if (converter != null)
+            {
+                return converter;
+            }
+
+            // TODO: Prevent (un)boxing for value types
+            Func<object, object> dufaultConverter = CreateConverterByDefault(fromType, toType);
+            if (dufaultConverter != null)
+            {
+                return (value) => dufaultConverter(value);
             }
 
             return null;
@@ -128,9 +158,12 @@ namespace Physalia.Flexi
         /// <returns>A function that can convert provided first arg value from type to type</returns>
         internal static Func<object, object> CreateConverterByDefault<TFrom, TTo>()
         {
-            Type fromType = typeof(TFrom);
-            Type toType = typeof(TTo);
+            return CreateConverterByDefault(typeof(TFrom), typeof(TTo));
+        }
 
+        /// <returns>A function that can convert provided first arg value from type to type</returns>
+        internal static Func<object, object> CreateConverterByDefault(Type fromType, Type toType)
+        {
             // Normal assignment. Note that IList can be assigned from List.
             if (toType.IsAssignableFrom(fromType))
             {
@@ -162,7 +195,7 @@ namespace Physalia.Flexi
                     return null;
                 }
 
-                if (!toTypeArguments[0].IsAssignableFrom(fromType))
+                if (!CanConvert(fromType, toTypeArguments[0]))
                 {
                     return null;
                 }
@@ -173,7 +206,8 @@ namespace Physalia.Flexi
                     var list = Activator.CreateInstance(genericListType) as IList;
                     if (value != null)
                     {
-                        list.Add(value);
+                        object newValue = ConvertBoxed(value, toTypeArguments[0]);
+                        list.Add(newValue);
                     }
                     return list;
                 };
@@ -194,7 +228,7 @@ namespace Physalia.Flexi
                     return null;
                 }
 
-                if (!toTypeArguments[0].IsAssignableFrom(fromTypeArguments[0]))
+                if (!CanConvert(fromTypeArguments[0], toTypeArguments[0]))
                 {
                     return null;
                 }
@@ -206,7 +240,8 @@ namespace Physalia.Flexi
                     var toList = Activator.CreateInstance(genericListType) as IList;
                     for (var i = 0; i < fromList.Count; i++)
                     {
-                        toList.Add(fromList[i]);
+                        object newValue = ConvertBoxed(fromList[i], toTypeArguments[0]);
+                        toList.Add(newValue);
                     }
                     return toList;
                 };

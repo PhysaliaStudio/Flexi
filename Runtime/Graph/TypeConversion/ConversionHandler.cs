@@ -43,6 +43,7 @@ namespace Physalia.Flexi
         }
 
         private readonly Dictionary<ConversionQuery, object> converterTable = new();
+        private readonly Dictionary<ConversionQuery, Func<object, object>> converterBoxedTable = new();
 
         public void Handle<TFrom, TTo>(Func<TFrom, TTo> converter)
         {
@@ -51,7 +52,11 @@ namespace Physalia.Flexi
             if (!success)
             {
                 Logger.Error($"[{nameof(ConversionHandler)}] Converter has already exists! ({typeof(TFrom).Name} => {typeof(TTo).Name})");
+                return;
             }
+
+            object converterBoxed(object value) => converter((TFrom)value);
+            converterBoxedTable.Add(query, converterBoxed);
         }
 
         public bool CanConvert<TFrom, TTo>()
@@ -73,6 +78,18 @@ namespace Physalia.Flexi
             if (success)
             {
                 return converter as Func<TFrom, TTo>;
+            }
+
+            return null;
+        }
+
+        public Func<object, object> GetConverterBoxed(Type fromType, Type toType)
+        {
+            var query = new ConversionQuery(fromType, toType);
+            bool success = converterBoxedTable.TryGetValue(query, out Func<object, object> converterBoxed);
+            if (success)
+            {
+                return converterBoxed;
             }
 
             return null;
