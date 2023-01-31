@@ -17,6 +17,23 @@ namespace Physalia.Flexi.Tests
 
         internal static void AreListEqual(IList expected, IList actual)
         {
+            if (expected == actual)
+            {
+                return;
+            }
+
+            if (expected != null && actual == null)
+            {
+                Assert.Fail($"Expected: List with {expected.Count} elements\n But was: null");
+                return;
+            }
+
+            if (expected == null && actual != null)
+            {
+                Assert.Fail($"Expected: null\n But was: List with {actual.Count} elements");
+                return;
+            }
+
             Assert.AreEqual(expected.Count, actual.Count);
             for (var i = 0; i < expected.Count; i++)
             {
