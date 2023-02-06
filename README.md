@@ -57,7 +57,6 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 ## TODO
 
 - Support undo/redo for the editor
-- Support AOT
 - Better implementation for Status & Aura
 - Enable/Disable abilities
 - Add Examples: Need to show how to implement each common machanic, to lower the learning curve.
