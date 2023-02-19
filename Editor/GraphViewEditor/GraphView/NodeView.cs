@@ -30,8 +30,10 @@ namespace Physalia.Flexi.GraphViewEditor
 
         public Node Node => node;
 
-        public NodeView(Node node, AbilityGraphEditorWindow window, AbilityGraphView graphView) : base()
+        public NodeView(Node node, AbilityGraphEditorWindow window, AbilityGraphView graphView) : base(EditorConst.PackagePath + "Editor/GraphViewEditor/UiAssets/Node.uxml")
         {
+            UseDefaultStyling();
+
             this.node = node;
             this.window = window;
             this.graphView = graphView;
