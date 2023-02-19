@@ -17,8 +17,8 @@ namespace Physalia.Flexi.GraphViewEditor
         private const string USS_CLASS_MACRO_NODE = "macro-node";
         private const string USS_CLASS_MISSING_NODE = "missing-node";
 
-        private const string USS_CLASS_INTEGER_NODE = "integer-node";
-        private const string USS_CLASS_STRING_NODE = "string-node";
+        private const string USS_CLASS_COMMON_VALUE_NODE = "common-value-node";
+        private const string USS_CLASS_OTHER_NODE = "other-node";
 
         private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f);
 
@@ -63,6 +63,9 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             switch (node)
             {
+                default:
+                    AddToClassList(USS_CLASS_OTHER_NODE);
+                    break;
                 case EntryNode:
                     AddToClassList(USS_CLASS_ENTRY_NODE);
                     break;
@@ -74,8 +77,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 case ProcessNode:
                     AddToClassList(USS_CLASS_PROCESS_NODE);
                     break;
-                case IfElseNode:
-                case ForLoopNode:
+                case FlowNode:
                     AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);
                     break;
                 case MissingNode missingNode:
@@ -83,11 +85,7 @@ namespace Physalia.Flexi.GraphViewEditor
                     AddToClassList(USS_CLASS_MISSING_NODE);
                     break;
                 case IntegerNode:
-                    AddToClassList(USS_CLASS_INTEGER_NODE);
-                    break;
                 case StringNode:
-                    AddToClassList(USS_CLASS_STRING_NODE);
-                    break;
                 case TrueNode:
                 case FalseNode:
                 case EqualNode:
@@ -100,7 +98,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 case OrNode:
                 case XorNode:
                 case NotNode:
-                    AddToClassList(USS_CLASS_CONSTANT_NODE);
+                    AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
                     break;
             }
 

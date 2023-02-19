@@ -7,37 +7,59 @@
 }
 
 .entry-node #title {
-  background-color: rgba(140, 31, 36, 0.8);
+  background-color: rgba(252, 101, 198, 0.8);
+}
+
+.entry-node #title-label {
+  color: rgb(22, 25, 36);
+  -unity-font-style: bold;
 }
 
 .flow-control-node #title {
-  background-color: rgba(73, 114, 140, 0.8);
+  background-color: rgba(48, 134, 255, 0.8);
+}
+
+.flow-control-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
 }
 
 .process-node #title {
-  background-color: rgba(73, 114, 140, 0.8);
+  background-color: rgba(48, 134, 255, 0.8);
 }
 
-.constant-node #title {
-  background-color: rgba(104, 54, 175, 0.8);
-}
-
-.constant-node #title-label {
-  font-size: 24px;
+.process-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
 }
 
 .macro-node #title {
-  background-color: rgba(74, 140, 76, 0.8);
+  background-color: rgba(170, 233, 103, 0.71);
+}
+
+.macro-node #title-label {
+  color: rgb(22, 25, 36);
+  -unity-font-style: bold;
+}
+
+.common-value-node #title {
+  background-color: rgba(63, 63, 63, 0.8);
+}
+
+.common-value-node #title-label {
+  color: rgb(193, 193, 193);
+  -unity-font-style: bold;
+}
+
+.other-node #title {
+  background-color: rgba(102, 102, 102, 0.8);
+}
+
+.other-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
 }
 
 .missing-node #title {
   background-color: rgba(255, 0, 0, 0.8);
-}
-
-.integer-node #title {
-  background-color: rgba(112, 77, 162, 0.8);
-}
-
-.string-node #title {
-  background-color: rgba(166, 140, 65, 0.8);
 }
