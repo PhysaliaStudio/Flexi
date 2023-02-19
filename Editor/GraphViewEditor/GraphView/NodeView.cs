@@ -18,6 +18,8 @@ namespace Physalia.Flexi.GraphViewEditor
         private const string USS_CLASS_MISSING_NODE = "missing-node";
 
         private const string USS_CLASS_COMMON_VALUE_NODE = "common-value-node";
+        private const string USS_CLASS_STRING_NODE = "string-node";
+        private const string USS_CLASS_INTEGER_NODE = "integer-node";
         private const string USS_CLASS_OTHER_NODE = "other-node";
 
         private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f);
@@ -66,7 +68,7 @@ namespace Physalia.Flexi.GraphViewEditor
             switch (node)
             {
                 default:
-                    AddToClassList(USS_CLASS_OTHER_NODE);
+                    HandleOtherNodeStyles(node);
                     break;
                 case EntryNode:
                     AddToClassList(USS_CLASS_ENTRY_NODE);
@@ -85,22 +87,6 @@ namespace Physalia.Flexi.GraphViewEditor
                 case MissingNode missingNode:
                     title = missingNode.TypeName;
                     AddToClassList(USS_CLASS_MISSING_NODE);
-                    break;
-                case IntegerNode:
-                case StringNode:
-                case TrueNode:
-                case FalseNode:
-                case EqualNode:
-                case NotEqualNode:
-                case LessNode:
-                case GreaterNode:
-                case LessOrEqualNode:
-                case GreaterOrEqualNode:
-                case AndNode:
-                case OrNode:
-                case XorNode:
-                case NotNode:
-                    AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
                     break;
             }
 
@@ -147,6 +133,38 @@ namespace Physalia.Flexi.GraphViewEditor
                     break;
                 case NotNode:
                     title = "NOT";
+                    break;
+            }
+        }
+
+        private void HandleOtherNodeStyles(Node node)
+        {
+            switch (node)
+            {
+                default:
+                    AddToClassList(USS_CLASS_OTHER_NODE);
+                    break;
+                case IntegerNode:
+                    AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
+                    AddToClassList(USS_CLASS_INTEGER_NODE);
+                    break;
+                case StringNode:
+                    AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
+                    AddToClassList(USS_CLASS_STRING_NODE);
+                    break;
+                case TrueNode:
+                case FalseNode:
+                case EqualNode:
+                case NotEqualNode:
+                case LessNode:
+                case GreaterNode:
+                case LessOrEqualNode:
+                case GreaterOrEqualNode:
+                case AndNode:
+                case OrNode:
+                case XorNode:
+                case NotNode:
+                    AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
                     break;
             }
         }

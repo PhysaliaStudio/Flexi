@@ -71,6 +71,18 @@
   display: flex;
 }
 
+.common-value-node #title-icon {
+  background-image: url("../Icons/CommonValueIcon.png");
+}
+
+.integer-node #title-icon {
+  background-image: url("../Icons/IntegerIcon.png");
+}
+
+.string-node #title-icon {
+  background-image: url("../Icons/StringIcon.png");
+}
+
 .other-node #title {
   background-color: rgba(102, 102, 102, 0.8);
 }
