@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// An AbilityAsset preserves an ability data. This asset is only used for Unity serialization.
+    /// It can create <see cref="AbilityData"/> for runtime usage.
+    /// </summary>
     [CreateAssetMenu(fileName = "NewAbilityAsset", menuName = "Flexi/Ability Asset", order = 151)]
     public sealed class AbilityAsset : GraphAsset
     {

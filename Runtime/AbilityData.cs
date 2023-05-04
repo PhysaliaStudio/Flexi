@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// An AbilityData preserves an ability data.
+    /// </summary>
     [Serializable]
     public class AbilityData
     {

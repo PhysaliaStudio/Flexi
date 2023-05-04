@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// Actor is a wrapper class of <see cref="StatOwner"/>, which is used for inheritance.
+    /// </summary>
     public abstract class Actor
     {
         private readonly AbilitySystem abilitySystem;

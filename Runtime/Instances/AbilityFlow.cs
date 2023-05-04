@@ -1,5 +1,9 @@
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// AbilityFlow is a wrapper class of <see cref="AbilityGraph"/> for handling higher level logic,
+    /// created and contained by <see cref="Flexi.Ability"/>.
+    /// </summary>
     public sealed class AbilityFlow : IAbilityFlow
     {
         private readonly AbilitySystem system;

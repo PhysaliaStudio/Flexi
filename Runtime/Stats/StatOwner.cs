@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// StatOwner is a container of stats and abilities.
+    /// </summary>
     public class StatOwner
     {
         private readonly int id;

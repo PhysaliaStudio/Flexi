@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// AbilityGraph is a graph that iterate the ability.
+    /// </summary>
     public class AbilityGraph : Graph
     {
         private FlowNode currentNode;

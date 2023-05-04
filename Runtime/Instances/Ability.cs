@@ -2,6 +2,10 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    /// <summary>
+    /// Ability is an instance of <see cref="AbilityData"/>, which is created by <see cref="AbilitySystem"/>,
+    /// and is a container of <see cref="AbilityFlow"/> and <see cref="BlackboardVariable"/>.
+    /// </summary>
     public class Ability
     {
         private readonly AbilitySystem abilitySystem;
