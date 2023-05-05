@@ -6,6 +6,10 @@
   min-width: 50px;
 }
 
+.node #extension {
+  background-color: rgba(43, 43, 43, 0.8);
+}
+
 .entry-node #title {
   background-color: rgba(252, 101, 198, 0.8);
 }
