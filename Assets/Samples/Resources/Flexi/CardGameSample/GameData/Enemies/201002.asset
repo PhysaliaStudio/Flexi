@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd614bfc870a3954189cdbcdd9c8899a, type: 3}
+  m_Name: 201002
+  m_EditorClassIdentifier: 
+  id: 201002
+  enemyName: Tank
+  avatarPrefab: {fileID: -2384408199406036758, guid: 3ead1ba14688dd443bc0c26ec31a7856, type: 3}
+  unitType: 0
+  health: 15
+  attack: 0
+  startStatusIds: 29230000

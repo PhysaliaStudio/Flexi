@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="node-border" picking-mode="Ignore">
+        <ui:VisualElement name="title" picking-mode="Ignore">
+            <ui:VisualElement name="title-icon-container" style="justify-content: space-around; min-width: 0; min-height: 0;">
+                <ui:VisualElement name="title-icon" style="width: 16px; height: 16px; margin-left: 6px;" />
+            </ui:VisualElement>
+            <ui:Label name="title-label" style="flex-grow: 1;" />
+            <ui:VisualElement name="title-button-container" picking-mode="Ignore">
+                <ui:VisualElement name="collapse-button">
+                    <ui:VisualElement name="icon" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="contents" picking-mode="Ignore">
+            <ui:VisualElement name="divider" class="horizontal" />
+            <ui:VisualElement name="top" picking-mode="Ignore">
+                <ui:VisualElement name="input" picking-mode="Ignore" />
+                <ui:VisualElement name="divider" class="vertical" />
+                <ui:VisualElement name="output" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="collapsible-area" picking-mode="Ignore">
+                <ui:VisualElement name="divider" class="horizontal" />
+                <ui:VisualElement name="extension" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="selection-border" picking-mode="Ignore" />
+</ui:UXML>

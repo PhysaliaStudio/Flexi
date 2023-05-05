@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f4e526f6c4d2a49979457203108d7a, type: 3}
+  m_Name: HelloWorld_MacroCaller
+  m_EditorClassIdentifier: 
+  blackboard: []
+  graphJsons:
+  - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":739212,"_position":{"x":88.0,"y":111.0},"_type":"Physalia.Flexi.StartNode"},{"_id":621192,"_position":{"x":290.0,"y":111.0},"_type":"Physalia.Flexi.SubgraphNode","key":"HelloWorld_Macro"},{"_id":173254,"_position":{"x":498.0,"y":111.0},"_type":"Physalia.Flexi.LogNode"},{"_id":336900,"_position":{"x":100.0,"y":212.0},"_type":"Physalia.Flexi.StringNode","text":"Hello
+    World!"}],"edges":[{"id1":739212,"port1":"next","id2":621192,"port2":"previous"},{"id1":621192,"port1":"next","id2":173254,"port2":"previous"},{"id1":621192,"port1":"strOut","id2":173254,"port2":"text"},{"id1":336900,"port1":"output","id2":621192,"port2":"strIn"}]}'

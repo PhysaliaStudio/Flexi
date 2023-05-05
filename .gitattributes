@@ -1,0 +1,98 @@
+# Treat everything not text if not specified
+# Avoid autocrlf messing up things like .asset and ProjectSettings
+* -text
+
+# meta files end with LF in any platform
+*.meta eol=lf
+
+# Code
+*.cs text=auto
+
+# Shader
+*.cginc text=auto
+*.shader text=auto
+
+# Gradle
+*.gradle text=auto
+
+# Text
+# https://docs.unity3d.com/Manual/class-TextAsset.html
+*.txt text=auto
+*.html text=auto
+*.htm text=auto
+*.xml text=auto
+*.bytes text=auto
+*.json text=auto
+*.csv text=auto
+*.yaml text=auto
+*.fnt text=auto
+
+# Texture
+# https://docs.unity3d.com/Manual/ImportingTextures.html#Formats
+*.bmp filter=lfs diff=lfs merge=lfs
+*.exr filter=lfs diff=lfs merge=lfs
+*.gif filter=lfs diff=lfs merge=lfs
+*.hdr filter=lfs diff=lfs merge=lfs
+*.iff filter=lfs diff=lfs merge=lfs
+*.jpg filter=lfs diff=lfs merge=lfs
+*.pict filter=lfs diff=lfs merge=lfs
+*.png filter=lfs diff=lfs merge=lfs
+*.psd filter=lfs diff=lfs merge=lfs
+*.tga filter=lfs diff=lfs merge=lfs
+*.tiff filter=lfs diff=lfs merge=lfs
+
+# Audio
+# https://docs.unity3d.com/Manual/AudioFiles.html
+*.mp3 filter=lfs diff=lfs merge=lfs
+*.ogg filter=lfs diff=lfs merge=lfs
+*.wav filter=lfs diff=lfs merge=lfs
+*.aiff filter=lfs diff=lfs merge=lfs
+*.aif filter=lfs diff=lfs merge=lfs
+*.mod filter=lfs diff=lfs merge=lfs
+*.it filter=lfs diff=lfs merge=lfs
+*.s3m filter=lfs diff=lfs merge=lfs
+*.xm filter=lfs diff=lfs merge=lfs
+
+# Model
+# https://docs.unity3d.com/Manual/3D-formats.html
+*.fbx filter=lfs diff=lfs merge=lfs
+*.dae filter=lfs diff=lfs merge=lfs
+*.3ds filter=lfs diff=lfs merge=lfs
+*.dxf filter=lfs diff=lfs merge=lfs
+*.obj filter=lfs diff=lfs merge=lfs
+
+# Animation
+*.anim filter=lfs diff=lfs merge=lfs
+*.skel.bytes filter=lfs diff=lfs merge=lfs
+
+# Font
+# https://docs.unity3d.com/Manual/class-Font.html
+*.ttf filter=lfs diff=lfs merge=lfs
+*.otf filter=lfs diff=lfs merge=lfs
+
+# Video
+# https://docs.unity3d.com/Manual/VideoSources-FileCompatibility.html
+*.mp4 filter=lfs diff=lfs merge=lfs
+*.mov filter=lfs diff=lfs merge=lfs
+
+# Plugin
+# https://docs.unity3d.com/Manual/PluginInspector.html
+*.dll filter=lfs diff=lfs merge=lfs
+*.so filter=lfs diff=lfs merge=lfs
+*.jar filter=lfs diff=lfs merge=lfs
+*.aar filter=lfs diff=lfs merge=lfs
+*.cpp text=auto
+*.cc text=auto
+*.c text=auto
+*.h text=auto
+*.a filter=lfs diff=lfs merge=lfs
+*.m eol=lf
+*.mm eol=lf
+
+# Executable
+*.exe filter=lfs diff=lfs merge=lfs
+
+# Other
+*.pdf filter=lfs diff=lfs merge=lfs
+*.zip filter=lfs diff=lfs merge=lfs
+*.unitypackage filter=lfs diff=lfs merge=lfs

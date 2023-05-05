@@ -1,0 +1,109 @@
+#node-inspector-parent .unity-base-field__label {
+  min-width: 75px;
+}
+
+.node .unity-base-field__label {
+  min-width: 50px;
+}
+
+.node #extension {
+  background-color: rgba(43, 43, 43, 0.8);
+}
+
+.entry-node #title {
+  background-color: rgba(252, 101, 198, 0.8);
+}
+
+.entry-node #title-label {
+  color: rgb(22, 25, 36);
+  -unity-font-style: bold;
+}
+
+.entry-node #title-icon-container {
+  display: none;
+}
+
+.flow-control-node #title {
+  background-color: rgba(48, 134, 255, 0.8);
+}
+
+.flow-control-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
+}
+
+.flow-control-node #title-icon-container {
+  display: none;
+}
+
+.process-node #title {
+  background-color: rgba(48, 134, 255, 0.8);
+}
+
+.process-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
+}
+
+.process-node #title-icon-container {
+  display: none;
+}
+
+.macro-node #title {
+  background-color: rgba(170, 233, 103, 0.71);
+}
+
+.macro-node #title-label {
+  color: rgb(22, 25, 36);
+  -unity-font-style: bold;
+}
+
+.macro-node #title-icon-container {
+  display: none;
+}
+
+.common-value-node #title {
+  background-color: rgba(63, 63, 63, 0.8);
+}
+
+.common-value-node #title-label {
+  color: rgb(193, 193, 193);
+  -unity-font-style: bold;
+}
+
+.common-value-node #title-icon-container {
+  display: flex;
+}
+
+.common-value-node #title-icon {
+  background-image: url("../Icons/CommonValueIcon.png");
+}
+
+.integer-node #title-icon {
+  background-image: url("../Icons/IntegerIcon.png");
+}
+
+.string-node #title-icon {
+  background-image: url("../Icons/StringIcon.png");
+}
+
+.other-node #title {
+  background-color: rgba(102, 102, 102, 0.8);
+}
+
+.other-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
+}
+
+.other-node #title-icon-container {
+  display: none;
+}
+
+.missing-node #title {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+
+.missing-node #title-icon-container {
+  display: none;
+}

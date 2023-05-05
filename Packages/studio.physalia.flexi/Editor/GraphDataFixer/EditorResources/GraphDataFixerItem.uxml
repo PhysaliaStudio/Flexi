@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-direction: row; height: 24px;">
+        <ui:TextField picking-mode="Ignore" name="original" readonly="true" style="width: 40%; flex-grow: 1;" />
+        <ui:VisualElement style="width: 100px;" />
+        <ui:TextField picking-mode="Ignore" name="modified" style="width: 40%; flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>

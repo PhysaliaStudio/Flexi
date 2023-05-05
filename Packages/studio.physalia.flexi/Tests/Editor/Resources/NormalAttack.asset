@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f4e526f6c4d2a49979457203108d7a, type: 3}
+  m_Name: NormalAttack
+  m_EditorClassIdentifier: 
+  blackboard: []
+  graphJsons:
+  - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":393698,"_position":{"x":570.0,"y":67.0},"_type":"Physalia.Flexi.Tests.CustomDamageNode"},{"_id":957515,"_position":{"x":321.0,"y":216.0},"_type":"Physalia.Flexi.Tests.CustomUnitNode"},{"_id":512761,"_position":{"x":50.0,"y":67.0},"_type":"Physalia.Flexi.Tests.CustomNormalAttackEntryNode"}],"edges":[{"id1":512761,"port1":"next","id2":393698,"port2":"previous"},{"id1":512761,"port1":"attackerPort","id2":393698,"port2":"instigatorPort"},{"id1":512761,"port1":"targetPort","id2":393698,"port2":"targets"},{"id1":957515,"port1":"attackPort","id2":393698,"port2":"baseValue"},{"id1":512761,"port1":"attackerPort","id2":957515,"port2":"customUnitPort"}]}'

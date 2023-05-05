@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c92fbae696a330a4ba1956f20907b71d, type: 3}
+  m_Name: 001-DamageProcess
+  m_EditorClassIdentifier: 
+  text: '{"_type":"Physalia.Flexi.AbilityGraph","$input":{"position":{"x":0.0,"y":250.0},"portDatas":[{"name":"attackerPort","type":"Physalia.Flexi.Samples.CardGame.Unit"},{"name":"targetsPort","type":"System.Collections.Generic.IReadOnlyList`1[[Physalia.Flexi.Samples.CardGame.Unit,
+    Physalia.Flexi.Samples.CardGame, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]"},{"name":"valuePort","type":"System.Int32"}]},"$output":{"position":{"x":640.0,"y":399.0},"portDatas":[]},"variables":[],"nodes":[{"_id":376280,"_position":{"x":273.0,"y":250.0},"_type":"Physalia.Flexi.Samples.CardGame.DamageNode"},{"_id":336967,"_position":{"x":456.0,"y":399.0},"_type":"Physalia.Flexi.Samples.CardGame.KillNode"}],"edges":[{"id1":-1,"port1":"next","id2":376280,"port2":"previous"},{"id1":-1,"port1":"attackerPort","id2":376280,"port2":"attackerPort"},{"id1":-1,"port1":"targetsPort","id2":376280,"port2":"targetsPort"},{"id1":-1,"port1":"targetsPort","id2":336967,"port2":"targetsPort"},{"id1":-1,"port1":"valuePort","id2":376280,"port2":"valuePort"},{"id1":376280,"port1":"next","id2":336967,"port2":"previous"},{"id1":336967,"port1":"next","id2":-2,"port2":"previous"}]}'

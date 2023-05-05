@@ -1,0 +1,32 @@
+<linker>
+  <assembly fullname="Physalia.Flexi.Samples.ActionGame">
+    <type fullname="Physalia.Flexi.Samples.ActionGame.ActionStartNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.ActionGame.PlayMontageAndWait" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.ActionGame.SetControllableNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.ActionGame.SetSlotStatusNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.ActionGame.WaitRecastNode" preserve="all" />
+  </assembly>
+  <assembly fullname="Physalia.Flexi.Samples.CardGame">
+    <type fullname="Physalia.Flexi.Samples.CardGame.AllEnemiesNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.ApplyStatusNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.ClearManaNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.DamageNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.DiscardAllCardsNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.DrawCardNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.HealNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.KillNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.ModifyManaNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.OnDamagedEventNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.OnTurnEndNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.PlayCardNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.PlayerNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.RandomPickNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.RemoveStatusNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.SingleTargetNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.SpawnEnemyGroup" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.StatusStackNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.SystemProcessEntryNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.TriggerTurnEndEventNode" preserve="all" />
+    <type fullname="Physalia.Flexi.Samples.CardGame.UnitNode" preserve="all" />
+  </assembly>
+</linker>

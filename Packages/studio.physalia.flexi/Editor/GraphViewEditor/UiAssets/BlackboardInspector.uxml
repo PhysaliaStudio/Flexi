@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Label text="Blackboard" style="font-size: 14px; -unity-text-align: middle-left;" />
+    <ui:ListView virtualization-method="DynamicHeight" reorderable="true" show-add-remove-footer="true" />
+</ui:UXML>

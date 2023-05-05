@@ -1,0 +1,16 @@
+{
+    "name": "Physalia.Flexi.PerformanceTests",
+    "rootNamespace": "Physalia.Flexi.PerformanceTests",
+    "references": [
+        "Physalia.Flexi"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f4e526f6c4d2a49979457203108d7a, type: 3}
+  m_Name: EnemyGeneration
+  m_EditorClassIdentifier: 
+  blackboard: []
+  graphJsons:
+  - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":311755,"_position":{"x":42.0,"y":49.0},"_type":"Physalia.Flexi.Samples.CardGame.SystemProcessEntryNode"},{"_id":762930,"_position":{"x":660.0,"y":49.0},"_type":"Physalia.Flexi.IfElseNode"},{"_id":271428,"_position":{"x":237.0,"y":202.0},"_type":"Physalia.Flexi.Samples.CardGame.AllEnemiesNode"},{"_id":809558,"_position":{"x":389.0,"y":125.0},"_type":"Physalia.Flexi.CountNode"},{"_id":830981,"_position":{"x":569.0,"y":188.0},"_type":"Physalia.Flexi.EqualNode"},{"_id":559407,"_position":{"x":408.0,"y":279.0},"_type":"Physalia.Flexi.IntegerNode","value":0},{"_id":6663,"_position":{"x":841.0,"y":105.0},"_type":"Physalia.Flexi.Samples.CardGame.SpawnEnemyGroup"}],"edges":[{"id1":311755,"port1":"next","id2":762930,"port2":"previousPort"},{"id1":311755,"port1":"gamePort","id2":271428,"port2":"gamePort"},{"id1":311755,"port1":"gamePort","id2":6663,"port2":"gamePort"},{"id1":762930,"port1":"truePort","id2":6663,"port2":"previous"},{"id1":830981,"port1":"result","id2":762930,"port2":"conditionPort"},{"id1":809558,"port1":"countPort","id2":830981,"port2":"a"},{"id1":559407,"port1":"output","id2":830981,"port2":"b"},{"id1":271428,"port1":"resultPort","id2":809558,"port2":"collectionPort"}]}'

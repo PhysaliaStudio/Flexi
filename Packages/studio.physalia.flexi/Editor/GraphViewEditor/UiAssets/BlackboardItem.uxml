@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-direction: row; height: 24px;">
+        <ui:TextField picking-mode="Ignore" name="key" style="width: 100px; margin-left: 1px; margin-right: 1px; -unity-text-align: middle-left;" />
+        <uie:IntegerField picking-mode="Ignore" name="value" style="width: 80px; margin-left: 1px; margin-right: 1px; -unity-text-align: middle-left;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="height: 100%; width: 100%;">
+        <ui:TextField picking-mode="Ignore" text="How to use:&#10;1. Select the AbilityAssets you need to validate or fix.&#10;2. Press &apos;Validate&apos; button and the missing node types are listed.&#10;3. Fill the correct type for each missing type.&#10;4. Press &apos;Fix&apos; button." readonly="true" multiline="true" name="Instruction" style="width: 100%; height: 80px;" />
+        <ui:VisualElement name="step1" style="height: 100px; align-items: center; justify-content: center; width: 100%;">
+            <ui:Button text="Validate" name="validate-button" style="width: 150px; height: 30px;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="quick-replacement-area" style="height: 150px;">
+            <ui:Label text="Quick Replace:" style="font-size: 16px; -unity-text-align: middle-left; margin-top: 5px; margin-bottom: 5px;" />
+            <ui:VisualElement style="flex-direction: row; height: 24px;">
+                <ui:TextField picking-mode="Ignore" name="original" style="width: 40%; flex-grow: 1;" />
+                <ui:VisualElement style="width: 100px;" />
+                <ui:TextField picking-mode="Ignore" name="modified" style="width: 40%; flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="align-items: center;">
+                <ui:Button text="Replace" name="replace-button" style="width: 100px; height: 20px; margin-top: 5px; margin-bottom: 5px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="scroll-view-area" style="height: 100%; width: 100%;">
+            <ui:VisualElement style="flex-direction: row; height: 24px; margin-bottom: 2px; margin-top: 2px; padding-right: 13px;">
+                <ui:Label text="Invalid Type Names" style="flex-grow: 1; width: 40%; -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgb(46, 114, 132);" />
+                <ui:VisualElement style="width: 100px;" />
+                <ui:Label text="Modified Names" style="flex-grow: 1; width: 40%; -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgb(46, 114, 132);" />
+            </ui:VisualElement>
+            <ui:ScrollView style="width: 100%; height: 100%;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="step3" style="height: 100px; align-items: center; justify-content: space-around; padding-left: 0; padding-right: 0; padding-top: 5px; padding-bottom: 5px; width: 100%;">
+            <ui:Button text="Fix" name="fix-button" style="width: 150px; height: 30px;" />
+            <ui:Button text="Clear" name="clear-button" style="width: 100px; height: 20px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

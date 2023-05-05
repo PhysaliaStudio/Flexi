@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: edf8bab232e600342909d424534633f6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - uiAsset: {fileID: 9197481963319205126, guid: 408a354e556814a40811504305218584, type: 3}
+  - uiStyleSheet: {fileID: 7433441132597879392, guid: f3be9f9f751a48a4dab38eaa569a30d1, type: 3}
+  - nodeInspectorAsset: {fileID: 9197481963319205126, guid: ab0f910d6e7e82b478a4caae48fb9fac, type: 3}
+  - portListViewItemAsset: {fileID: 9197481963319205126, guid: 1ff7931cd3abe0e49aebcedd8faed6fa, type: 3}
+  - blackboardInspectorAsset: {fileID: 9197481963319205126, guid: 16ec9e9505b1e0a4cae5f5952a2d7bb6, type: 3}
+  - blackboardItemAsset: {fileID: 9197481963319205126, guid: 2210c4a898c5f8a4cbf1c5d5fd0cbba8, type: 3}
+  - currentAsset: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

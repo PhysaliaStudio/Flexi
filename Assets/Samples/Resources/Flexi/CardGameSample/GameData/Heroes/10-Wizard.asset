@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef4b887d92506d49962a8fa46a778ad, type: 3}
+  m_Name: 10-Wizard
+  m_EditorClassIdentifier: 
+  id: 10
+  heroName: Wizard
+  avatarPrefab: {fileID: 4111084646342530079, guid: 83d42c15384d92d4784893bc942c9915, type: 3}
+  startHealth: 50
+  startCoin: 100
+  startCardIds: e9030000e9030000e9030000e9030000d1070000d1070000d1070000d2070000d2070000ea030000d3070000d3070000

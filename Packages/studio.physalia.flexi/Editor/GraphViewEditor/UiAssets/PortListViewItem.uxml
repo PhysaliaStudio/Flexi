@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="height: 45px; margin-top: 3px; margin-bottom: 3px;">
+        <ui:TextField name="name" label="Port Name" is-delayed="true" />
+        <ui:TextField label="Value Type" name="type" is-delayed="true" />
+    </ui:VisualElement>
+</ui:UXML>
