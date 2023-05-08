@@ -37,6 +37,8 @@ namespace Physalia.Flexi
                     stat.CurrentValue += sum;
                 }
             }
+
+            sumsCache.Clear();
         }
     }
 }
