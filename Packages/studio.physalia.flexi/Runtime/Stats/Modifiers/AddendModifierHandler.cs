@@ -8,11 +8,12 @@ namespace Physalia.Flexi
 
         public void RefreshStats(StatOwner owner)
         {
-            foreach (StatModifier modifier in owner.Modifiers)
+            for (var i = 0; i < owner.Modifiers.Count; i++)
             {
-                for (var i = 0; i < modifier.items.Count; i++)
+                StatModifier modifier = owner.Modifiers[i];
+                for (var j = 0; j < modifier.items.Count; j++)
                 {
-                    StatModifierItem modifierItem = modifier.items[i];
+                    StatModifierItem modifierItem = modifier.items[j];
                     if (modifierItem.op == StatModifierItem.Operator.ADD)
                     {
                         if (sumsCache.ContainsKey(modifierItem.statId))
