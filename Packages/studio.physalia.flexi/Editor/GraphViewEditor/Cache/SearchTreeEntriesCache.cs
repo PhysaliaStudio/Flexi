@@ -24,6 +24,11 @@ namespace Physalia.Flexi.GraphViewEditor
         };
 #endif
 
+        private static Texture2D entryNodeMenuIcon;
+        private static Texture2D flowNodeMenuIcon;
+        private static Texture2D macroNodeMenuIcon;
+        private static Texture2D otherNodeMenuIcon;
+
         private static readonly List<SearchTreeEntry> searchTreeEntries = new();
         private static readonly List<SearchTreeEntry> nodeTreeEntries = new();
         private static readonly List<SearchTreeEntry> macroTreeEntries = new();
@@ -35,7 +40,17 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private static void Rebuild(bool didDomainReload)
         {
+            ReloadAllIcons();
             RebuildSearchTreeEntries(didDomainReload);
+        }
+
+        private static void ReloadAllIcons()
+        {
+            const string IconFolder = "Packages/studio.physalia.flexi/Editor/GraphViewEditor/Icons/";
+            entryNodeMenuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconFolder + "EntryNode_MenuIcon.png");
+            flowNodeMenuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconFolder + "FlowNode_MenuIcon.png");
+            macroNodeMenuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconFolder + "MacroNode_MenuIcon.png");
+            otherNodeMenuIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(IconFolder + "OtherNode_MenuIcon.png");
         }
 
         private static void RebuildSearchTreeEntries(bool didDomainReload)
@@ -65,7 +80,8 @@ namespace Physalia.Flexi.GraphViewEditor
                 NodeTypeSearchTree.Node node = enumerator.Current;
                 if (node.IsLeaf)
                 {
-                    nodeTreeEntries.Add(new SearchTreeEntry(new GUIContent(node.Text)) { level = node.Level, userData = node.Type });
+                    Texture2D icon = GetNonMacroNodeIcon(node.Type);
+                    nodeTreeEntries.Add(new SearchTreeEntry(new GUIContent(node.Text, icon)) { level = node.Level, userData = node.Type });
                 }
                 else
                 {
@@ -126,6 +142,20 @@ namespace Physalia.Flexi.GraphViewEditor
             return searchTree;
         }
 
+        private static Texture2D GetNonMacroNodeIcon(Type nodeType)
+        {
+            if (typeof(EntryNode).IsAssignableFrom(nodeType))
+            {
+                return entryNodeMenuIcon;
+            }
+
+            if (typeof(FlowNode).IsAssignableFrom(nodeType))
+            {
+                return flowNodeMenuIcon;
+            }
+
+            return otherNodeMenuIcon;
+        }
 
         private static void RebuildMacroTreeEntries()
         {
@@ -138,7 +168,7 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 string key = pair.Key;
                 string name = pair.Value;
-                macroTreeEntries.Add(new SearchTreeEntry(new GUIContent(name)) { level = 2, userData = key });
+                macroTreeEntries.Add(new SearchTreeEntry(new GUIContent(name, macroNodeMenuIcon)) { level = 2, userData = key });
             }
         }
 
