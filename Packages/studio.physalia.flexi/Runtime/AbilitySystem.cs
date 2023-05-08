@@ -234,6 +234,11 @@ namespace Physalia.Flexi
             IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
             for (var i = 0; i < owners.Count; i++)
             {
+                owners[i].ClearAllModifiers();
+            }
+
+            for (var i = 0; i < owners.Count; i++)
+            {
                 StatOwner owner = owners[i];
                 for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {

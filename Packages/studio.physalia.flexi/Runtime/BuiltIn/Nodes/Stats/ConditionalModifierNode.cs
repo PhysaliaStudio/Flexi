@@ -9,28 +9,15 @@ namespace Physalia.Flexi
         public Inport<bool> enabledPort;
         public Variable<StatModifier> modifierVariable;
 
-        private StatModifierInstance modifierInstance;
-
         protected override AbilityState DoLogic()
         {
             IReadOnlyList<Actor> owners = actorsPort.GetValue();
-            bool enabled = enabledPort.GetValue();
-
             StatModifier modifier = modifierVariable.Value;
-            if (modifierInstance == null)
+            if (enabledPort.GetValue())
             {
-                modifierInstance = new StatModifierInstance(modifier);
-            }
-
-            for (var i = 0; i < owners.Count; i++)
-            {
-                if (enabled)
+                for (var i = 0; i < owners.Count; i++)
                 {
-                    owners[i].AppendModifier(modifierInstance);
-                }
-                else
-                {
-                    owners[i].RemoveModifier(modifierInstance);
+                    owners[i].AppendModifier(modifier);
                 }
             }
 
