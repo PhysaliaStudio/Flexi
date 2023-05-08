@@ -9,7 +9,7 @@ namespace Physalia.Flexi
     {
         private const string WARNING_COMMENT =
 @"// ###############################################
-// #### AUTO GENERATED CODE, DO NOT MODIFIE!! ####
+// #### AUTO GENERATED CODE, DO NOT MODIFY!! #####
 // ###############################################
 ";
         private const string DEFAULT_CLASS_NAME = "StatId";
