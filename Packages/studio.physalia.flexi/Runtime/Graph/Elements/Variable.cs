@@ -83,5 +83,7 @@ namespace Physalia.Flexi
         {
             this.value = value;
         }
+
+        public static implicit operator T(Variable<T> variable) => variable.Value;
     }
 }

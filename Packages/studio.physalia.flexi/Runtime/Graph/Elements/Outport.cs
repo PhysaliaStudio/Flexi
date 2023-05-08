@@ -104,5 +104,7 @@ namespace Physalia.Flexi
 
             value = default;
         }
+
+        public static implicit operator T(Outport<T> outport) => outport.value;
     }
 }

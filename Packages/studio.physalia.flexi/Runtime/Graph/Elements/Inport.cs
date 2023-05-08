@@ -89,5 +89,7 @@ namespace Physalia.Flexi
 
             return null;
         }
+
+        public static implicit operator T(Inport<T> inport) => inport.GetValue();
     }
 }
