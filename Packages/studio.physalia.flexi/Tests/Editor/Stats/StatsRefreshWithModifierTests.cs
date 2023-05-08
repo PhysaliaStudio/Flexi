@@ -33,11 +33,9 @@ namespace Physalia.Flexi.Tests
                 value = 50,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
             owner.RemoveStat(StatTestHelper.ATTACK);
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.IsNull(owner.GetStat(StatTestHelper.ATTACK));
@@ -55,10 +53,8 @@ namespace Physalia.Flexi.Tests
                 value = 50,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.Pass();
@@ -75,10 +71,8 @@ namespace Physalia.Flexi.Tests
                 value = -10,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -96,10 +90,8 @@ namespace Physalia.Flexi.Tests
                 value = 50,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -123,10 +115,8 @@ namespace Physalia.Flexi.Tests
                 value = 6,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -156,10 +146,8 @@ namespace Physalia.Flexi.Tests
                 value = -10,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -191,10 +179,8 @@ namespace Physalia.Flexi.Tests
                 value = -10,
             });
 
-            var instance = new StatModifierInstance(modifier);
             var owner = CreateOwner();
-
-            owner.AppendModifier(instance);
+            owner.AppendModifier(modifier);
             repository.RefreshStats(owner);
             repository.RefreshStats(owner);
 

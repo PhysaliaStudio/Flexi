@@ -8,11 +8,12 @@ namespace Physalia.Flexi
 
         public void RefreshStats(StatOwner owner)
         {
-            foreach (StatModifierInstance modifierInstance in owner.Modifiers)
+            for (var i = 0; i < owner.Modifiers.Count; i++)
             {
-                for (var i = 0; i < modifierInstance.Items.Count; i++)
+                StatModifier modifier = owner.Modifiers[i];
+                for (var j = 0; j < modifier.items.Count; j++)
                 {
-                    StatModifierItem modifierItem = modifierInstance.Items[i];
+                    StatModifierItem modifierItem = modifier.items[j];
                     if (modifierItem.op == StatModifierItem.Operator.MUL)
                     {
                         if (sumsCache.ContainsKey(modifierItem.statId))
@@ -36,6 +37,8 @@ namespace Physalia.Flexi
                     stat.CurrentValue = stat.CurrentValue * (100 + sum) / 100;
                 }
             }
+
+            sumsCache.Clear();
         }
     }
 }

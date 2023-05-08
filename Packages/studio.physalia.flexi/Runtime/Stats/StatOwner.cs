@@ -15,7 +15,7 @@ namespace Physalia.Flexi
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<Ability> abilities = new();
         private readonly List<AbilityFlow> abilityFlows = new();
-        private readonly HashSet<StatModifierInstance> modifiers = new();
+        private readonly List<StatModifier> modifiers = new();
 
         private bool isValid = true;
 
@@ -24,7 +24,7 @@ namespace Physalia.Flexi
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
         public IReadOnlyList<Ability> Abilities => abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => abilityFlows;
-        internal IReadOnlyCollection<StatModifierInstance> Modifiers => modifiers;
+        internal IReadOnlyList<StatModifier> Modifiers => modifiers;
 
         internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
         {
@@ -142,12 +142,12 @@ namespace Physalia.Flexi
             abilityFlows.Clear();
         }
 
-        public void AppendModifier(StatModifierInstance modifier)
+        public void AppendModifier(StatModifier modifier)
         {
             modifiers.Add(modifier);
         }
 
-        public void RemoveModifier(StatModifierInstance modifier)
+        public void RemoveModifier(StatModifier modifier)
         {
             modifiers.Remove(modifier);
         }

@@ -77,9 +77,9 @@ namespace Physalia.Flexi
 
         internal void RefreshStatsForAllOwners()
         {
-            foreach (StatOwner owner in owners)
+            for (var i = 0; i < owners.Count; i++)
             {
-                RefreshStats(owner);
+                RefreshStats(owners[i]);
             }
         }
 

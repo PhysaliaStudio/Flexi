@@ -3,18 +3,6 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class StatModifierInstance
-    {
-        private readonly StatModifier data;
-
-        internal IReadOnlyList<StatModifierItem> Items => data.items;
-
-        public StatModifierInstance(StatModifier data)
-        {
-            this.data = data;
-        }
-    }
-
     [Serializable]
     public class StatModifier
     {

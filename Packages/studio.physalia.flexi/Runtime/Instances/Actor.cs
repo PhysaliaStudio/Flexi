@@ -15,7 +15,6 @@ namespace Physalia.Flexi
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
         public IReadOnlyList<Ability> Abilities => owner.Abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
-        internal IReadOnlyCollection<StatModifierInstance> Modifiers => owner.Modifiers;
 
         public Actor(AbilitySystem abilitySystem)
         {
@@ -112,12 +111,12 @@ namespace Physalia.Flexi
             return true;
         }
 
-        public void AppendModifier(StatModifierInstance modifier)
+        public void AppendModifier(StatModifier modifier)
         {
             owner.AppendModifier(modifier);
         }
 
-        public void RemoveModifier(StatModifierInstance modifier)
+        public void RemoveModifier(StatModifier modifier)
         {
             owner.RemoveModifier(modifier);
         }
