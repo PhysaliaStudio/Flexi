@@ -49,6 +49,15 @@ namespace Physalia.Flexi
 
             var generateButton = rootVisualElement.Q<Button>("generate-button");
             generateButton.clicked += GenerateCode;
+
+            var pingButton = rootVisualElement.Q<Button>("ping-button");
+            pingButton.clicked += () =>
+            {
+                if (scriptAsset != null)
+                {
+                    EditorGUIUtility.PingObject(scriptAsset);
+                }
+            };
         }
 
         private void GenerateCode()

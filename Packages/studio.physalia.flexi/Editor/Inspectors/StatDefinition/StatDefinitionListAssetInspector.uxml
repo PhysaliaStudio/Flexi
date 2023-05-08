@@ -2,7 +2,10 @@
     <ui:VisualElement style="flex-shrink: 0; margin-bottom: 10px;">
         <ui:TextField picking-mode="Ignore" label="Namespace" name="namespace-field" />
         <uie:ObjectField label="Generated Script" name="script-field" allow-scene-objects="false" type="UnityEditor.MonoScript, UnityEditor" />
-        <ui:Button text="Generate Code" display-tooltip-when-elided="true" name="generate-button" style="width: 150px; height: 30px;" />
+        <ui:VisualElement style="flex-direction: row;">
+            <ui:Button text="Generate Code" display-tooltip-when-elided="true" name="generate-button" style="width: 150px; height: 30px;" />
+            <ui:Button text="Ping Script" name="ping-button" style="width: 150px; height: 30px;" />
+        </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement style="flex-direction: row; gap: 10px; height: 20px; flex-shrink: 0; margin-bottom: 5px;">
         <ui:Label text="ID" style="width: 80px; -unity-text-align: middle-center; background-color: rgb(63, 92, 118); margin-right: 1px; margin-left: 1px; flex-shrink: 1;" />
