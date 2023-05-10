@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StatList
   m_EditorClassIdentifier: 
   namespaceName: Physalia.Flexi.Samples.ActionGame
-  scriptAssetPath: Assets/Samples/ActionGameSample/Scripts/StatId.cs
+  scriptGuid: b9c690e96f3b1774cba1941a74446471
   stats:
   - Id: 103
     Name: Speed

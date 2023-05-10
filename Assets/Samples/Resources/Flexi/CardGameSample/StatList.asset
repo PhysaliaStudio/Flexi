@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StatList
   m_EditorClassIdentifier: 
   namespaceName: Physalia.Flexi.Samples.CardGame
-  scriptAssetPath: Assets/Samples/CardGameSample/Scripts/StatId.cs
+  scriptGuid: 83a9b313657d98a49b3b9d9586605153
   stats:
   - Id: 101
     Name: Health
