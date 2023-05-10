@@ -1,5 +1,5 @@
 // ###############################################
-// #### AUTO GENERATED CODE, DO NOT MODIFIE!! ####
+// #### AUTO GENERATED CODE, DO NOT MODIFY!! #####
 // ###############################################
 
 namespace Physalia.Flexi.Samples.CardGame

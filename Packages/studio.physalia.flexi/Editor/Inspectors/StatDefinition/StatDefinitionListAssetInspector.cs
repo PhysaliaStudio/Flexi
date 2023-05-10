@@ -41,8 +41,10 @@ namespace Physalia.Flexi
             var namespaceField = rootVisualElement.Q<TextField>("namespace-field");
             namespaceField.BindProperty(serializedObject.FindProperty(nameof(StatDefinitionListAsset.namespaceName)));
 
-            string assetPath = serializedObject.FindProperty(nameof(StatDefinitionListAsset.scriptAssetPath)).stringValue;
-            var scriptAsset = AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
+            string guid = serializedObject.FindProperty(nameof(StatDefinitionListAsset.scriptGuid)).stringValue;
+            string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+            MonoScript scriptAsset = string.IsNullOrEmpty(assetPath) ? null :
+                AssetDatabase.LoadAssetAtPath<MonoScript>(assetPath);
             var scriptField = rootVisualElement.Q<ObjectField>("script-field");
             scriptField.value = scriptAsset;
             scriptField.SetEnabled(false);

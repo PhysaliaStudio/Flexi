@@ -7,7 +7,7 @@ namespace Physalia.Flexi
     public class StatDefinitionListAsset : ScriptableObject
     {
         public string namespaceName = "";
-        public string scriptAssetPath = "";
+        public string scriptGuid = "";
         public List<StatDefinition> stats = new();
 
         /// <remarks>
