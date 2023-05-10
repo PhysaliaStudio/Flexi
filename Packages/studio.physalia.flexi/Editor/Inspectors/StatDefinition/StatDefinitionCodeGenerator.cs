@@ -73,7 +73,7 @@ public static class {className}
 ";
             }
 
-            statDefinitionListAsset.scriptAssetPath = assetPath;
+            statDefinitionListAsset.scriptGuid = AssetDatabase.AssetPathToGUID(assetPath);
             EditorUtility.SetDirty(statDefinitionListAsset);
             AssetDatabase.SaveAssetIfDirty(statDefinitionListAsset);
 
@@ -82,14 +82,16 @@ public static class {className}
 
         private static string ShowSaveDialog(StatDefinitionListAsset statDefinitionListAsset)
         {
+            string scriptAssetPath = AssetDatabase.GUIDToAssetPath(statDefinitionListAsset.scriptGuid);
+
             string className;
-            if (string.IsNullOrEmpty(statDefinitionListAsset.scriptAssetPath))
+            if (string.IsNullOrEmpty(scriptAssetPath))
             {
                 className = DEFAULT_CLASS_NAME;
             }
             else
             {
-                className = PathToFileName(statDefinitionListAsset.scriptAssetPath);
+                className = PathToFileName(scriptAssetPath);
             }
 
             string folderPath = GetStartFolderPathFromAsset(statDefinitionListAsset);
@@ -109,7 +111,7 @@ public static class {className}
 
         private static string GetStartFolderPathFromAsset(StatDefinitionListAsset asset)
         {
-            string scriptAssetPath = asset.scriptAssetPath;
+            string scriptAssetPath = AssetDatabase.GUIDToAssetPath(asset.scriptGuid);
             if (string.IsNullOrEmpty(scriptAssetPath))
             {
                 return "Assets/";
