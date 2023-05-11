@@ -58,15 +58,15 @@ namespace Physalia.Flexi
         }
 
 #if UNITY_5_3_OR_NEWER
-        public Ability AppendAbility(AbilityAsset abilityAsset)
+        public Ability AppendAbility(AbilityAsset abilityAsset, object userData = null)
         {
-            return AppendAbility(abilityAsset.Data);
+            return AppendAbility(abilityAsset.Data, userData);
         }
 #endif
 
-        public Ability AppendAbility(AbilityData abilityData)
+        public Ability AppendAbility(AbilityData abilityData, object userData = null)
         {
-            Ability ability = abilitySystem.InstantiateAbility(abilityData);
+            Ability ability = abilitySystem.InstantiateAbility(abilityData, userData);
             ability.Actor = this;
             owner.AppendAbility(ability);
 

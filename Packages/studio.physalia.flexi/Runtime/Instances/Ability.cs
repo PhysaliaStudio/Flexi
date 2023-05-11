@@ -15,6 +15,8 @@ namespace Physalia.Flexi
         private readonly Dictionary<string, BlackboardVariable> variableTable = new();
         private readonly List<AbilityFlow> abilityFlows = new();
 
+        private object userData;
+
         public AbilitySystem System => abilitySystem;
         public AbilityData Data => abilityData;
 
@@ -29,6 +31,12 @@ namespace Physalia.Flexi
             this.abilityData = abilityData;
         }
 
+        internal Ability(AbilitySystem abilitySystem, AbilityData abilityData, object userData)
+        {
+            this.abilitySystem = abilitySystem;
+            this.abilityData = abilityData;
+            this.userData = userData;
+        }
         internal void Initialize()
         {
             for (var i = 0; i < abilityData.blackboard.Count; i++)
@@ -83,6 +91,30 @@ namespace Physalia.Flexi
                 variableList.Add(variable);
                 variableTable.Add(key, variable);
             }
+        }
+
+        public T GetUserData<T>()
+        {
+            if (userData == null)
+            {
+                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't have userData. Returns null.");
+                return default;
+            }
+
+            if (userData is T genericData)
+            {
+                return genericData;
+            }
+            else
+            {
+                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' userData is not type of '{typeof(T)}'. Returns null.");
+                return default;
+            }
+        }
+
+        public void SetUserData<T>(T userData)
+        {
+            this.userData = userData;
         }
     }
 }

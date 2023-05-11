@@ -307,6 +307,22 @@ namespace Physalia.Flexi
             return flow.Payload as T;
         }
 
+        public T GetUserData<T>()
+        {
+            if (flow == null)
+            {
+                return default;
+            }
+
+            Ability ability = flow.Ability;
+            if (ability == null)
+            {
+                return default;
+            }
+
+            return ability.GetUserData<T>();
+        }
+
         public virtual bool CheckNodeContext(IResumeContext resumeContext)
         {
             return false;
