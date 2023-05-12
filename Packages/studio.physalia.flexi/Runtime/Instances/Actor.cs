@@ -96,19 +96,23 @@ namespace Physalia.Flexi
                 return false;
             }
 
+            RemoveAbility(ability);
+            return true;
+        }
+
+        public void RemoveAbility(Ability ability)
+        {
             owner.RemoveAbility(ability);
 
             IReadOnlyList<AbilityFlow> abilityFlows = Owner.AbilityFlows;
             for (var i = abilityFlows.Count - 1; i >= 0; i--)
             {
                 AbilityFlow abilityFlow = abilityFlows[i];
-                if (abilityFlow.Ability.Data == abilityData)
+                if (abilityFlow.Ability == ability)
                 {
                     owner.RemoveAbilityFlowAt(i);
                 }
             }
-
-            return true;
         }
 
         public void AppendModifier(StatModifier modifier)
