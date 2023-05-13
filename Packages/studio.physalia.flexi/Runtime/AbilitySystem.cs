@@ -18,12 +18,15 @@ namespace Physalia.Flexi
         private readonly StatRefreshRunner statRefreshRunner = new();
 
         private readonly MacroLibrary macroLibrary = new();
+        private readonly AbilityPoolManager poolManager;
 
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
+
+            poolManager = new(this);
         }
 
         internal StatOwner CreateOwner()
@@ -60,13 +63,79 @@ namespace Physalia.Flexi
         }
 
 #if UNITY_5_3_OR_NEWER
-        public Ability InstantiateAbility(AbilityAsset abilityAsset, object userData = null)
+        public void CreateAbilityPool(AbilityAsset abilityAsset, int startSize)
+        {
+            CreateAbilityPool(abilityAsset.Data, startSize);
+        }
+#endif
+
+        public void CreateAbilityPool(AbilityData abilityData, int startSize)
+        {
+            poolManager.CreatePool(abilityData, startSize);
+        }
+
+#if UNITY_5_3_OR_NEWER
+        public void DestroyAbilityPool(AbilityAsset abilityAsset)
+        {
+            DestroyAbilityPool(abilityAsset.Data);
+        }
+#endif
+
+        public void DestroyAbilityPool(AbilityData abilityData)
+        {
+            poolManager.DestroyPool(abilityData);
+        }
+
+#if UNITY_5_3_OR_NEWER
+        internal AbilityPool GetAbilityPool(AbilityAsset abilityAsset)
+        {
+            return GetAbilityPool(abilityAsset.Data);
+        }
+#endif
+
+        internal AbilityPool GetAbilityPool(AbilityData abilityData)
+        {
+            return poolManager.GetPool(abilityData);
+        }
+
+#if UNITY_5_3_OR_NEWER
+        public Ability GetAbility(AbilityAsset abilityAsset, object userData = null)
+        {
+            return GetAbility(abilityAsset.Data, userData);
+        }
+#endif
+
+        public Ability GetAbility(AbilityData abilityData, object userData = null)
+        {
+            if (poolManager.ContainsPool(abilityData))
+            {
+                Ability ability = poolManager.GetAbility(abilityData);
+                ability.SetUserData(userData);
+                return ability;
+            }
+
+            return InstantiateAbility(abilityData, userData);
+        }
+
+        public void ReleaseAbility(Ability ability)
+        {
+            if (poolManager.ContainsPool(ability.Data))
+            {
+                poolManager.ReleaseAbility(ability);
+                return;
+            }
+
+            ability.Reset();
+        }
+
+#if UNITY_5_3_OR_NEWER
+        internal Ability InstantiateAbility(AbilityAsset abilityAsset, object userData = null)
         {
             return InstantiateAbility(abilityAsset.Data, userData);
         }
 #endif
 
-        public Ability InstantiateAbility(AbilityData abilityData, object userData = null)
+        internal Ability InstantiateAbility(AbilityData abilityData, object userData = null)
         {
             var ability = new Ability(this, abilityData, userData);
             ability.Initialize();
