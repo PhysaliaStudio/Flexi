@@ -77,14 +77,27 @@ namespace Physalia.Flexi
             return poolManager.GetPool(abilityData);
         }
 
-        public Ability GetAbility(AbilityData abilityData)
+        public Ability GetAbility(AbilityData abilityData, object userData = null)
         {
-            return poolManager.GetAbility(abilityData);
+            if (poolManager.ContainsPool(abilityData))
+            {
+                Ability ability = poolManager.GetAbility(abilityData);
+                ability.SetUserData(userData);
+                return ability;
+            }
+
+            return InstantiateAbility(abilityData, userData);
         }
 
         public void ReleaseAbility(Ability ability)
         {
-            poolManager.ReleaseAbility(ability);
+            if (poolManager.ContainsPool(ability.Data))
+            {
+                poolManager.ReleaseAbility(ability);
+                return;
+            }
+
+            ability.Reset();
         }
 
 #if UNITY_5_3_OR_NEWER

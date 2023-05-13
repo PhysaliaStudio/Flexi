@@ -124,6 +124,7 @@ namespace Physalia.Flexi
             {
                 abilityFlows[i].Reset();
             }
+            Actor = null;
         }
     }
 }

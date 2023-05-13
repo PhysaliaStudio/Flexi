@@ -66,7 +66,7 @@ namespace Physalia.Flexi
 
         public Ability AppendAbility(AbilityData abilityData, object userData = null)
         {
-            Ability ability = abilitySystem.InstantiateAbility(abilityData, userData);
+            Ability ability = abilitySystem.GetAbility(abilityData, userData);
             ability.Actor = this;
             owner.AppendAbility(ability);
 
@@ -113,6 +113,8 @@ namespace Physalia.Flexi
                     owner.RemoveAbilityFlowAt(i);
                 }
             }
+
+            abilitySystem.ReleaseAbility(ability);
         }
 
         public void AppendModifier(StatModifier modifier)

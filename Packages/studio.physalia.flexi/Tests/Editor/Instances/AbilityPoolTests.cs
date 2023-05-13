@@ -132,5 +132,47 @@ namespace Physalia.Flexi.Tests
                 Assert.AreEqual(null, flow.Current);
             }
         }
+
+        [Test]
+        public void AppendPoolizedAbilityToActor_UsingCountIs1()
+        {
+            var abilityData = new AbilityData();
+            abilitySystem.CreateAbilityPool(abilityData, 1);
+
+            var actor = new EmptyActor(abilitySystem);
+            _ = actor.AppendAbility(abilityData);
+
+            Assert.AreEqual(1, abilitySystem.GetAbilityPool(abilityData).UsingCount);
+        }
+
+        [Test]
+        public void AppendPoolizedAbilityToActorAndRelease_UsingCountIs0()
+        {
+            var abilityData = new AbilityData();
+            abilitySystem.CreateAbilityPool(abilityData, 1);
+
+            var actor = new EmptyActor(abilitySystem);
+            Ability ability = actor.AppendAbility(abilityData);
+            actor.RemoveAbility(ability);
+
+            Assert.AreEqual(0, abilitySystem.GetAbilityPool(abilityData).UsingCount);
+        }
+
+        [Test]
+        public void AppendPoolizedAbilityToActorAndRelease_ActorCachesShouldBeNull()
+        {
+            var abilityData = new AbilityData();
+            abilitySystem.CreateAbilityPool(abilityData, 1);
+
+            var actor = new EmptyActor(abilitySystem);
+            Ability ability = actor.AppendAbility(abilityData);
+            actor.RemoveAbility(ability);
+
+            Assert.AreEqual(null, ability.Actor);
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                Assert.AreEqual(null, ability.Flows[i].Actor);
+            }
+        }
     }
 }
