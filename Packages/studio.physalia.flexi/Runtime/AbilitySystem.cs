@@ -62,20 +62,48 @@ namespace Physalia.Flexi
             return graph;
         }
 
+#if UNITY_5_3_OR_NEWER
+        public void CreateAbilityPool(AbilityAsset abilityAsset, int startSize)
+        {
+            CreateAbilityPool(abilityAsset.Data, startSize);
+        }
+#endif
+
         public void CreateAbilityPool(AbilityData abilityData, int startSize)
         {
             poolManager.CreatePool(abilityData, startSize);
         }
+
+#if UNITY_5_3_OR_NEWER
+        public void DestroyAbilityPool(AbilityAsset abilityAsset)
+        {
+            DestroyAbilityPool(abilityAsset.Data);
+        }
+#endif
 
         public void DestroyAbilityPool(AbilityData abilityData)
         {
             poolManager.DestroyPool(abilityData);
         }
 
+#if UNITY_5_3_OR_NEWER
+        internal AbilityPool GetAbilityPool(AbilityAsset abilityAsset)
+        {
+            return GetAbilityPool(abilityAsset.Data);
+        }
+#endif
+
         internal AbilityPool GetAbilityPool(AbilityData abilityData)
         {
             return poolManager.GetPool(abilityData);
         }
+
+#if UNITY_5_3_OR_NEWER
+        public Ability GetAbility(AbilityAsset abilityAsset, object userData = null)
+        {
+            return GetAbility(abilityAsset.Data, userData);
+        }
+#endif
 
         public Ability GetAbility(AbilityData abilityData, object userData = null)
         {
