@@ -27,7 +27,7 @@ namespace Physalia.Flexi.Tests
             {
                 characters.Add(new CustomCharacter(abilitySystem));
 
-                Ability ability = abilitySystem.InstantiateAbility(abilityAsset);
+                Ability ability = abilitySystem.GetAbility(abilityAsset);
                 abilities.Add(ability);
             }
         }

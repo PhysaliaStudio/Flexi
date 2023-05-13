@@ -52,9 +52,9 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.ChoiceOccurred += OnChoiceOccurred;
             abilitySystem.EventResolveMethod = ResolveEvent;
 
-            Ability turnStartEffect = abilitySystem.InstantiateAbility(gameSetting.turnStartGraph);
-            Ability turnEndEffect = abilitySystem.InstantiateAbility(gameSetting.turnEndGraph);
-            Ability enemyGenerationEffect = abilitySystem.InstantiateAbility(gameSetting.enemyGenerationGraph);
+            Ability turnStartEffect = abilitySystem.GetAbility(gameSetting.turnStartGraph);
+            Ability turnEndEffect = abilitySystem.GetAbility(gameSetting.turnEndGraph);
+            Ability enemyGenerationEffect = abilitySystem.GetAbility(gameSetting.enemyGenerationGraph);
 
             gameStartProcess = new List<Ability> { enemyGenerationEffect, turnStartEffect };
             turnEndProcess = new List<Ability> { turnEndEffect, enemyGenerationEffect, turnStartEffect };

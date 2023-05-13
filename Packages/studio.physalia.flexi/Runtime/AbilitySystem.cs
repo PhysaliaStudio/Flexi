@@ -129,13 +129,13 @@ namespace Physalia.Flexi
         }
 
 #if UNITY_5_3_OR_NEWER
-        public Ability InstantiateAbility(AbilityAsset abilityAsset, object userData = null)
+        internal Ability InstantiateAbility(AbilityAsset abilityAsset, object userData = null)
         {
             return InstantiateAbility(abilityAsset.Data, userData);
         }
 #endif
 
-        public Ability InstantiateAbility(AbilityData abilityData, object userData = null)
+        internal Ability InstantiateAbility(AbilityData abilityData, object userData = null)
         {
             var ability = new Ability(this, abilityData, userData);
             ability.Initialize();
