@@ -18,12 +18,15 @@ namespace Physalia.Flexi
         private readonly StatRefreshRunner statRefreshRunner = new();
 
         private readonly MacroLibrary macroLibrary = new();
+        private readonly AbilityPoolManager poolManager;
 
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             this.runner = runner;
             runner.abilitySystem = this;
+
+            poolManager = new(this);
         }
 
         internal StatOwner CreateOwner()
@@ -57,6 +60,31 @@ namespace Physalia.Flexi
 
             AbilityGraph graph = AbilityGraphUtility.Deserialize("", macroJson, macroLibrary);
             return graph;
+        }
+
+        public void CreateAbilityPool(AbilityData abilityData, int startSize)
+        {
+            poolManager.CreatePool(abilityData, startSize);
+        }
+
+        public void DestroyAbilityPool(AbilityData abilityData)
+        {
+            poolManager.DestroyPool(abilityData);
+        }
+
+        internal AbilityPool GetAbilityPool(AbilityData abilityData)
+        {
+            return poolManager.GetPool(abilityData);
+        }
+
+        public Ability GetAbility(AbilityData abilityData)
+        {
+            return poolManager.GetAbility(abilityData);
+        }
+
+        public void ReleaseAbility(Ability ability)
+        {
+            poolManager.ReleaseAbility(ability);
         }
 
 #if UNITY_5_3_OR_NEWER

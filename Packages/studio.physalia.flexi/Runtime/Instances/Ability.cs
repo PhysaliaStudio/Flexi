@@ -116,5 +116,14 @@ namespace Physalia.Flexi
         {
             this.userData = userData;
         }
+
+        internal void Reset()
+        {
+            userData = null;
+            for (var i = 0; i < abilityFlows.Count; i++)
+            {
+                abilityFlows[i].Reset();
+            }
+        }
     }
 }
