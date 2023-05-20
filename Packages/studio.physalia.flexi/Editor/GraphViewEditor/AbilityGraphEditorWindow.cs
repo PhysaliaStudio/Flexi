@@ -62,6 +62,9 @@ namespace Physalia.Flexi.GraphViewEditor
         [HideInInspector]
         [SerializeField]
         private GraphAsset tempAsset = null;
+        [HideInInspector]
+        [SerializeField]
+        private int currentGraphIndex = 0;
 
         private ObjectField objectField;
 
@@ -155,7 +158,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
             else
             {
-                LoadFile(currentAsset);
+                LoadFile(currentAsset, currentGraphIndex);
             }
         }
 
@@ -244,7 +247,7 @@ namespace Physalia.Flexi.GraphViewEditor
             nodeInspector.SetNodeView(null);
         }
 
-        private bool LoadFile(GraphAsset asset)
+        private bool LoadFile(GraphAsset asset, int graphIndex)
         {
             HideNodeInspector();
 
@@ -255,11 +258,23 @@ namespace Physalia.Flexi.GraphViewEditor
                     blackboardInspector.SetBlackboard(null);
                     return false;
                 case AbilityAsset abilityAsset:
+                    if (graphIndex < 0 || graphIndex >= abilityAsset.GraphJsons.Count)
+                    {
+                        graphIndex = 0;
+                    }
+
+                    // In case of empty graph
+                    if (abilityAsset.GraphJsons.Count == 0)
+                    {
+                        abilityAsset.AddGraphJson("");
+                    }
+
                     blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
-                    string graphJson = abilityAsset.GraphJsons.Count > 0 ? abilityAsset.GraphJsons[0] : "";
+                    string graphJson = abilityAsset.GraphJsons[graphIndex];
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
+                    graphIndex = 0;
                     blackboardInspector.SetBlackboard(null);
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
@@ -273,7 +288,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
-            ResetAssetState(asset);
+            ResetAssetState(asset, graphIndex);
             return true;
         }
 
@@ -289,7 +304,7 @@ namespace Physalia.Flexi.GraphViewEditor
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                LoadFile(currentAsset);
+                LoadFile(currentAsset, currentGraphIndex);
             }
         }
 
@@ -396,7 +411,7 @@ namespace Physalia.Flexi.GraphViewEditor
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                bool success = LoadFile(asset);
+                bool success = LoadFile(asset, 0);
                 if (success)
                 {
                     return true;
@@ -450,7 +465,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             SetUpGraphView(new AbilityGraphView(this));
 
-            ResetAssetState(newAsset);
+            ResetAssetState(newAsset, 0);
         }
 
         private void NewMacroGraphView()
@@ -471,14 +486,15 @@ namespace Physalia.Flexi.GraphViewEditor
             AbilityGraphView graphView = AbilityGraphView.Create(graph, this);
             SetUpGraphView(graphView);
 
-            ResetAssetState(newAsset);
+            ResetAssetState(newAsset, 0);
         }
 
-        private void ResetAssetState(GraphAsset graphAsset)
+        private void ResetAssetState(GraphAsset graphAsset, int graphIndex)
         {
             SetDirty(false);
             currentAsset = graphAsset;
             tempAsset = Instantiate(currentAsset);
+            currentGraphIndex = graphIndex;
             objectField.SetValueWithoutNotify(currentAsset);
         }
 
