@@ -59,6 +59,9 @@ namespace Physalia.Flexi.GraphViewEditor
         [HideInInspector]
         [SerializeField]
         private GraphAsset currentAsset = null;
+        [HideInInspector]
+        [SerializeField]
+        private GraphAsset tempAsset = null;
 
         private ObjectField objectField;
 
@@ -356,7 +359,7 @@ namespace Physalia.Flexi.GraphViewEditor
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
             SetDirty(false);
-
+            tempAsset = Instantiate(currentAsset);
             return true;
         }
 
@@ -475,6 +478,7 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             SetDirty(false);
             currentAsset = graphAsset;
+            tempAsset = Instantiate(currentAsset);
             objectField.SetValueWithoutNotify(currentAsset);
         }
 
