@@ -148,11 +148,10 @@ namespace Physalia.Flexi.GraphViewEditor
 
             if (currentAsset == null)
             {
-                NewGraphView();
+                NewGraphView();  // Note: This will set currentAsset, so currentAsset is always not null.
             }
             else
             {
-                objectField.SetValueWithoutNotify(currentAsset);
                 LoadFile(currentAsset);
             }
         }
@@ -271,14 +270,16 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
-            SetDirty(false);
+            ResetAssetState(asset);
             return true;
         }
 
         private void ReloadFile()
         {
-            if (currentAsset == null)
+            bool isBlankAssets = IsBlankAsset(currentAsset);
+            if (isBlankAssets)
             {
+                ShowNotification(new GUIContent("You can not reload non-asset!"));
                 return;
             }
 
@@ -300,7 +301,8 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             // Save as new asset if necessary
-            if (currentAsset == null)
+            bool isBlankAssets = IsBlankAsset(currentAsset);
+            if (isBlankAssets)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
                     "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
@@ -358,6 +360,13 @@ namespace Physalia.Flexi.GraphViewEditor
             return true;
         }
 
+        private bool IsBlankAsset(GraphAsset graphAsset)
+        {
+            string assetPath = AssetDatabase.GetAssetPath(graphAsset);
+            bool isBlankAssets = string.IsNullOrEmpty(assetPath);
+            return isBlankAssets;
+        }
+
         private void OnNewButtonClicked(bool isMacro)
         {
             bool ok = AskForSaveIfDirty();
@@ -387,7 +396,6 @@ namespace Physalia.Flexi.GraphViewEditor
                 bool success = LoadFile(asset);
                 if (success)
                 {
-                    currentAsset = asset;
                     return true;
                 }
 
@@ -432,16 +440,25 @@ namespace Physalia.Flexi.GraphViewEditor
             HideNodeInspector();
             blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
+            // Create new asset in memory, and add an empty graph
+            AbilityAsset newAsset = CreateInstance<AbilityAsset>();
+            newAsset.name = "NewAbility";
+            newAsset.AddGraphJson("");
+
             SetUpGraphView(new AbilityGraphView(this));
-            SetDirty(false);
-            objectField.SetValueWithoutNotify(null);
-            currentAsset = null;
+
+            ResetAssetState(newAsset);
         }
 
         private void NewMacroGraphView()
         {
             HideNodeInspector();
             blackboardInspector.SetBlackboard(null);
+
+            // Create new asset in memory, and add an empty graph
+            MacroAsset newAsset = CreateInstance<MacroAsset>();
+            newAsset.name = "NewMacro";
+            newAsset.Text = "";
 
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();
@@ -450,9 +467,15 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(graph, this);
             SetUpGraphView(graphView);
+
+            ResetAssetState(newAsset);
+        }
+
+        private void ResetAssetState(GraphAsset graphAsset)
+        {
             SetDirty(false);
-            objectField.SetValueWithoutNotify(null);
-            currentAsset = null;
+            currentAsset = graphAsset;
+            objectField.SetValueWithoutNotify(currentAsset);
         }
 
         private void SetUpGraphView(AbilityGraphView graphView)
