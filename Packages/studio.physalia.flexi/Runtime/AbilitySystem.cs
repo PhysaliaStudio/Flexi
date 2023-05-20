@@ -232,7 +232,6 @@ namespace Physalia.Flexi
                 {
                     hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, eventContext);
-                    break;
                 }
             }
 
@@ -245,21 +244,10 @@ namespace Physalia.Flexi
             for (var i = 0; i < abilities.Count; i++)
             {
                 Ability ability = abilities[i];
-                for (var j = 0; j < ability.Flows.Count; j++)
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(ability, eventContext);
+                if (hasAnyEnqueuedInThis)
                 {
-                    AbilityFlow abilityFlow = ability.Flows[j];
-                    if (abilityFlow.IsRunning())
-                    {
-                        continue;
-                    }
-
-                    if (abilityFlow.CanExecute(eventContext))
-                    {
-                        // Move to next ability
-                        hasAnyEnqueued = true;
-                        EnqueueAbilityFlow(abilityFlow, eventContext);
-                        break;
-                    }
+                    hasAnyEnqueued = true;
                 }
             }
 
