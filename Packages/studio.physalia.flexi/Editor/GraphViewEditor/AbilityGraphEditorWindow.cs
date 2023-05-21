@@ -497,6 +497,12 @@ namespace Physalia.Flexi.GraphViewEditor
             // Note: We want to keep the origianl asset unchanged, so we modified the temp object.
             if (tempAsset is AbilityAsset abilityAsset)
             {
+                bool success = SaveToTemp(currentGraphIndex);
+                if (!success)
+                {
+                    return;
+                }
+
                 abilityAsset.AddGraphJson("");
                 currentGraphIndex = abilityAsset.GraphJsons.Count - 1;
                 SetDirty(true);
@@ -516,6 +522,12 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 if (index >= 0 && index < abilityAsset.GraphJsons.Count)
                 {
+                    bool success = SaveToTemp(currentGraphIndex);
+                    if (!success)
+                    {
+                        return;
+                    }
+
                     currentGraphIndex = index;
                     abilityFlowMenu.Refresh();
 
@@ -559,6 +571,40 @@ namespace Physalia.Flexi.GraphViewEditor
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Save the current graph to temp, so we can restore it later.
+        /// </summary>
+        private bool SaveToTemp(int index)
+        {
+            // If graphView is null, it means there is no graph in this asset, so we can skip saving.
+            if (graphView == null)
+            {
+                return true;
+            }
+
+            // Is the graph has any missing element, cancel saving
+            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
+            if (abilityGraph.HasMissingElement())
+            {
+                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
+                return false;
+            }
+
+            switch (tempAsset)
+            {
+                case AbilityAsset abilityAsset:
+                    abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
+                    string json = AbilityGraphUtility.Serialize(abilityGraph);
+                    abilityAsset.GraphJsons[index] = json;
+                    break;
+                case MacroAsset macroAsset:
+                    macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
+                    break;
+            }
+
+            return true;
         }
 
         private void NewGraphView()
