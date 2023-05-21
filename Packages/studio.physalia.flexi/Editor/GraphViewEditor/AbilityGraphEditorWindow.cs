@@ -305,7 +305,11 @@ namespace Physalia.Flexi.GraphViewEditor
                     // In case of empty graph
                     if (abilityAsset.GraphJsons.Count == 0)
                     {
-                        abilityAsset.AddGraphJson("");
+                        graphIndex = -1;
+                        RemoveGraphView();
+
+                        ResetAssetState(asset, graphIndex);
+                        return true;
                     }
 
                     blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
