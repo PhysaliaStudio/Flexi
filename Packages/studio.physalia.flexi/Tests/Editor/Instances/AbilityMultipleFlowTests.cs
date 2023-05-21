@@ -14,6 +14,7 @@ namespace Physalia.Flexi.Tests
             AbilitySystemBuilder builder = new AbilitySystemBuilder();
 
             var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
+            statDefinitionListAsset.stats.AddRange(CustomStats.List);
             builder.SetStatDefinitions(statDefinitionListAsset);
 
             abilitySystem = builder.Build();
@@ -81,6 +82,35 @@ namespace Physalia.Flexi.Tests
             LogAssert.Expect(LogType.Log, "Test0");
             LogAssert.Expect(LogType.Log, "Test2");
             LogAssert.NoUnexpectedReceived();
+        }
+
+        [Test]
+        public void DisableModifierFlow_OnlyThatFlowDoesNotExecute()
+        {
+            // Create an modifier graph
+            var abilityGraph = new AbilityGraph();
+            StatRefreshEventNode statRefreshEventNode = abilityGraph.AddNewNode<StatRefreshEventNode>();
+            AttackUpModifierNode attackUpModifierNode = abilityGraph.AddNewNode<AttackUpModifierNode>();
+            statRefreshEventNode.next.Connect(attackUpModifierNode.previous);
+
+            // Create an ability data with 3 modifier flows
+            var abilityData = new AbilityData();
+            string json = AbilityGraphUtility.Serialize(abilityGraph);
+            for (var i = 0; i < 3; i++)
+            {
+                abilityData.graphJsons.Add(json);
+            }
+
+            var actor = new EmptyActor(abilitySystem);
+            actor.AddStat(CustomStats.ATTACK, 0);
+
+            Ability ability = actor.AppendAbility(abilityData);
+            ability.SetEnable(1, false);
+
+            abilitySystem.RefreshStatsAndModifiers();
+
+            // Assert
+            Assert.AreEqual(20, actor.GetStat(CustomStats.ATTACK).CurrentValue);
         }
     }
 }

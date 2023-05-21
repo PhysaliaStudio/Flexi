@@ -305,6 +305,11 @@ namespace Physalia.Flexi
                 for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {
                     AbilityFlow abilityFlow = owner.AbilityFlows[j];
+                    if (!abilityFlow.IsEnable)
+                    {
+                        continue;
+                    }
+
                     if (abilityFlow.CanStatRefresh())
                     {
                         abilityFlow.Reset();
