@@ -34,6 +34,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private static readonly string RELOAD_BUTTON_NAME = "reload-button";
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
 
+        private static readonly string ABILITY_FLOW_MENU_PARENT_NAME = "ability-flow-menu-parent";
         private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
         private static readonly string BLACKBOARD_INSPECTOR_PARENT_NAME = "blackboard-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
@@ -45,6 +46,8 @@ namespace Physalia.Flexi.GraphViewEditor
         private StyleSheet uiStyleSheet;
 
         [Space]
+        [SerializeField]
+        private VisualTreeAsset abilityFlowMenuAsset;
         [SerializeField]
         private VisualTreeAsset nodeInspectorAsset;
         [SerializeField]
@@ -59,13 +62,37 @@ namespace Physalia.Flexi.GraphViewEditor
         [HideInInspector]
         [SerializeField]
         private GraphAsset currentAsset = null;
+        [HideInInspector]
+        [SerializeField]
+        private GraphAsset tempAsset = null;
+        [HideInInspector]
+        [SerializeField]
+        private int currentGraphIndex = 0;
 
         private ObjectField objectField;
 
         private AbilityGraphView graphView;
+        private AbilityFlowMenu abilityFlowMenu;
         private NodeInspector nodeInspector;
         private BlackboardInspector blackboardInspector;
         private bool isDirty;
+
+        internal int GraphCount
+        {
+            get
+            {
+                if (tempAsset is AbilityAsset abilityAsset)
+                {
+                    return abilityAsset.GraphJsons.Count;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
+
+        internal int CurrentGraphIndex => currentGraphIndex;
 
         [MenuItem("Tools/Flexi/Ability Editor &1")]
         private static void Open()
@@ -88,11 +115,6 @@ namespace Physalia.Flexi.GraphViewEditor
             window.Focus();
 
             bool ok = window.AskForOpenAssetIfDirty(asset);
-            if (ok)
-            {
-                window.objectField.SetValueWithoutNotify(asset);
-            }
-
             return ok;
         }
 
@@ -143,17 +165,17 @@ namespace Physalia.Flexi.GraphViewEditor
             Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
+            SetUpAbilityFlowMenu();
             SetUpNodeInspector();
             SetUpBlackboardInspector();
 
             if (currentAsset == null)
             {
-                NewGraphView();
+                NewGraphView();  // Note: This will set currentAsset, so currentAsset is always not null.
             }
             else
             {
-                objectField.SetValueWithoutNotify(currentAsset);
-                LoadFile(currentAsset);
+                LoadFile(currentAsset, currentGraphIndex);
             }
         }
 
@@ -174,6 +196,15 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 uiStyleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(folderPath + "AbilityGraphEditorWindow.uss");
                 if (uiStyleSheet == null)
+                {
+                    return false;
+                }
+            }
+
+            if (abilityFlowMenuAsset == null)
+            {
+                abilityFlowMenuAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "AbilityFlowMenu.uxml");
+                if (abilityFlowMenuAsset == null)
                 {
                     return false;
                 }
@@ -218,6 +249,14 @@ namespace Physalia.Flexi.GraphViewEditor
             return true;
         }
 
+        private void SetUpAbilityFlowMenu()
+        {
+            VisualElement abilityFlowMenuParent = rootVisualElement.Query<VisualElement>(ABILITY_FLOW_MENU_PARENT_NAME).First();
+            abilityFlowMenu = new AbilityFlowMenu(this);
+            abilityFlowMenu.CreateGUI(abilityFlowMenuAsset);
+            abilityFlowMenuParent.Add(abilityFlowMenu);
+        }
+
         private void SetUpNodeInspector()
         {
             VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
@@ -242,7 +281,7 @@ namespace Physalia.Flexi.GraphViewEditor
             nodeInspector.SetNodeView(null);
         }
 
-        private bool LoadFile(GraphAsset asset)
+        private bool LoadFile(GraphAsset asset, int graphIndex)
         {
             HideNodeInspector();
 
@@ -253,11 +292,27 @@ namespace Physalia.Flexi.GraphViewEditor
                     blackboardInspector.SetBlackboard(null);
                     return false;
                 case AbilityAsset abilityAsset:
+                    if (graphIndex < 0 || graphIndex >= abilityAsset.GraphJsons.Count)
+                    {
+                        graphIndex = 0;
+                    }
+
+                    // In case of empty graph
+                    if (abilityAsset.GraphJsons.Count == 0)
+                    {
+                        graphIndex = -1;
+                        RemoveGraphView();
+
+                        ResetAssetState(asset, graphIndex);
+                        return true;
+                    }
+
                     blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
-                    string graphJson = abilityAsset.GraphJsons.Count > 0 ? abilityAsset.GraphJsons[0] : "";
+                    string graphJson = abilityAsset.GraphJsons[graphIndex];
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
+                    graphIndex = 0;
                     blackboardInspector.SetBlackboard(null);
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
@@ -271,36 +326,37 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
-            SetDirty(false);
+            ResetAssetState(asset, graphIndex);
             return true;
         }
 
         private void ReloadFile()
         {
-            if (currentAsset == null)
+            bool isBlankAssets = IsBlankAsset(currentAsset);
+            if (isBlankAssets)
             {
+                ShowNotification(new GUIContent("You can not reload non-asset!"));
                 return;
             }
 
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                LoadFile(currentAsset);
+                LoadFile(currentAsset, currentGraphIndex);
             }
         }
 
         private bool SaveFile()
         {
-            // Is the graph has any missing element, cancel saving
-            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            if (abilityGraph.HasMissingElement())
+            bool success = SaveToTemp(currentGraphIndex);
+            if (!success)
             {
-                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
                 return false;
             }
 
             // Save as new asset if necessary
-            if (currentAsset == null)
+            bool isBlankAssets = IsBlankAsset(currentAsset);
+            if (isBlankAssets)
             {
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
                     "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
@@ -309,53 +365,66 @@ namespace Physalia.Flexi.GraphViewEditor
                     return false;
                 }
 
-                if (abilityGraph.HasSubgraphElement())
-                {
-                    MacroAsset newAsset = CreateInstance<MacroAsset>();
-                    newAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
-                    AssetDatabase.CreateAsset(newAsset, assetPath);
-                }
-                else
-                {
-                    AbilityAsset newAsset = CreateInstance<AbilityAsset>();
-                    newAsset.Blackboard = blackboardInspector.GetBlackboard();
-                    newAsset.AddGraphJson(AbilityGraphUtility.Serialize(abilityGraph));
-                    AssetDatabase.CreateAsset(newAsset, assetPath);
-                }
-
+                AssetDatabase.CreateAsset(tempAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
+
+                AssetDatabase.Refresh();
+                SetDirty(false);
+                return true;
             }
-            else
+
+            switch (tempAsset)
             {
-                switch (currentAsset)
-                {
-                    case AbilityAsset abilityAsset:
-                        abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
-
-                        string json = AbilityGraphUtility.Serialize(abilityGraph);
-                        if (abilityAsset.GraphJsons.Count == 0)
-                        {
-                            abilityAsset.AddGraphJson(json);
-                        }
-                        else
-                        {
-                            abilityAsset.GraphJsons[0] = json;
-                        }
-                        EditorUtility.SetDirty(currentAsset);
-                        break;
-                    case MacroAsset macroAsset:
-                        macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
-                        EditorUtility.SetDirty(currentAsset);
-                        break;
-                }
+                case AbilityAsset abilityAsset:
+                    CopyAbilityAsset(abilityAsset, currentAsset as AbilityAsset);
+                    break;
+                case MacroAsset macroAsset:
+                    CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
+                    break;
             }
 
+            EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            SetDirty(false);
 
+            SetDirty(false);
             return true;
+        }
+
+        private void CopyAbilityAsset(AbilityAsset source, AbilityAsset destination)
+        {
+            destination.Blackboard = source.Blackboard;  // This should be copy
+
+            int sourceGraphCount = source.GraphJsons.Count;
+            int destinationGraphCount = destination.GraphJsons.Count;
+            if (destinationGraphCount > sourceGraphCount)
+            {
+                destination.GraphJsons.RemoveRange(destinationGraphCount - 1, destinationGraphCount - sourceGraphCount);
+                destinationGraphCount = sourceGraphCount;
+            }
+
+            for (var i = 0; i < destinationGraphCount; i++)
+            {
+                destination.GraphJsons[i] = source.GraphJsons[i];
+            }
+
+            for (var i = destinationGraphCount; i < sourceGraphCount; i++)
+            {
+                destination.AddGraphJson(source.GraphJsons[i]);
+            }
+        }
+
+        private void CopyMacroAsset(MacroAsset source, MacroAsset destination)
+        {
+            destination.Text = source.Text;
+        }
+
+        private bool IsBlankAsset(GraphAsset graphAsset)
+        {
+            string assetPath = AssetDatabase.GetAssetPath(graphAsset);
+            bool isBlankAssets = string.IsNullOrEmpty(assetPath);
+            return isBlankAssets;
         }
 
         private void OnNewButtonClicked(bool isMacro)
@@ -384,10 +453,9 @@ namespace Physalia.Flexi.GraphViewEditor
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                bool success = LoadFile(asset);
+                bool success = LoadFile(asset, 0);
                 if (success)
                 {
-                    currentAsset = asset;
                     return true;
                 }
 
@@ -397,7 +465,7 @@ namespace Physalia.Flexi.GraphViewEditor
             return false;
         }
 
-        private bool AskForSaveIfDirty()
+        internal bool AskForSaveIfDirty()
         {
             if (!isDirty)
             {
@@ -427,21 +495,145 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
+        internal void CreateNewGraph()
+        {
+            // Note: We want to keep the origianl asset unchanged, so we modified the temp object.
+            if (tempAsset is AbilityAsset abilityAsset)
+            {
+                bool success = SaveToTemp(currentGraphIndex);
+                if (!success)
+                {
+                    return;
+                }
+
+                abilityAsset.AddGraphJson("");
+                currentGraphIndex = abilityAsset.GraphJsons.Count - 1;
+                SetDirty(true);
+
+                abilityFlowMenu.Refresh();
+
+                string graphJson = abilityAsset.GraphJsons[currentGraphIndex];
+                AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
+                AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
+                SetUpGraphView(graphView);
+            }
+        }
+
+        internal void SelectGraph(int index)
+        {
+            if (tempAsset is AbilityAsset abilityAsset)
+            {
+                if (index >= 0 && index < abilityAsset.GraphJsons.Count)
+                {
+                    bool success = SaveToTemp(currentGraphIndex);
+                    if (!success)
+                    {
+                        return;
+                    }
+
+                    currentGraphIndex = index;
+                    abilityFlowMenu.Refresh();
+
+                    string graphJson = abilityAsset.GraphJsons[index];
+                    AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
+                    AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
+                    SetUpGraphView(graphView);
+                }
+            }
+        }
+
+        internal void DeleteGraph(int index)
+        {
+            if (tempAsset is AbilityAsset abilityAsset)
+            {
+                if (index >= 0 && index < abilityAsset.GraphJsons.Count)
+                {
+                    abilityAsset.GraphJsons.RemoveAt(index);
+                    SetDirty(true);
+
+                    abilityFlowMenu.Refresh();
+
+                    ShowNotification(new GUIContent($"Flow {index} is deleted!"));
+
+                    if (abilityAsset.GraphJsons.Count == 0)
+                    {
+                        currentGraphIndex = -1;
+                        RemoveGraphView();
+                    }
+                    else
+                    {
+                        if (currentGraphIndex >= abilityAsset.GraphJsons.Count)
+                        {
+                            currentGraphIndex = abilityAsset.GraphJsons.Count - 1;
+                        }
+
+                        string graphJson = abilityAsset.GraphJsons[currentGraphIndex];
+                        AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
+                        AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
+                        SetUpGraphView(graphView);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Save the current graph to temp, so we can restore it later.
+        /// </summary>
+        private bool SaveToTemp(int index)
+        {
+            // If graphView is null, it means there is no graph in this asset, so we can skip saving.
+            if (graphView == null)
+            {
+                return true;
+            }
+
+            // Is the graph has any missing element, cancel saving
+            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
+            if (abilityGraph.HasMissingElement())
+            {
+                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
+                return false;
+            }
+
+            switch (tempAsset)
+            {
+                case AbilityAsset abilityAsset:
+                    abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
+                    string json = AbilityGraphUtility.Serialize(abilityGraph);
+                    abilityAsset.GraphJsons[index] = json;
+                    break;
+                case MacroAsset macroAsset:
+                    macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
+                    break;
+            }
+
+            return true;
+        }
+
         private void NewGraphView()
         {
             HideNodeInspector();
             blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
+            // Create new asset in memory, and add an empty graph
+            AbilityAsset newAsset = CreateInstance<AbilityAsset>();
+            newAsset.name = "NewAbility";
+            newAsset.AddGraphJson("");
+
             SetUpGraphView(new AbilityGraphView(this));
-            SetDirty(false);
-            objectField.SetValueWithoutNotify(null);
-            currentAsset = null;
+
+            ResetAssetState(newAsset, 0);
         }
 
         private void NewMacroGraphView()
         {
             HideNodeInspector();
             blackboardInspector.SetBlackboard(null);
+
+            // Create new asset in memory, and add an empty graph
+            MacroAsset newAsset = CreateInstance<MacroAsset>();
+            newAsset.name = "NewMacro";
+            newAsset.Text = "";
 
             AbilityGraph graph = new AbilityGraph();
             graph.AddSubgraphInOutNodes();
@@ -450,9 +642,26 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(graph, this);
             SetUpGraphView(graphView);
+
+            ResetAssetState(newAsset, 0);
+        }
+
+        private void ResetAssetState(GraphAsset graphAsset, int graphIndex)
+        {
             SetDirty(false);
-            objectField.SetValueWithoutNotify(null);
-            currentAsset = null;
+            currentAsset = graphAsset;
+            tempAsset = Instantiate(currentAsset);
+            currentGraphIndex = graphIndex;
+
+            objectField.SetValueWithoutNotify(currentAsset);
+            abilityFlowMenu.Refresh();
+        }
+
+        private void RemoveGraphView()
+        {
+            VisualElement graphViewParent = rootVisualElement.Query<VisualElement>(GRAPH_VIEW_PARENT_NAME).First();
+            graphViewParent.Clear();
+            graphView = null;
         }
 
         private void SetUpGraphView(AbilityGraphView graphView)
@@ -660,6 +869,11 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return graphViewChange;
+        }
+
+        internal bool IsDirty()
+        {
+            return isDirty;
         }
 
         public void SetDirty(bool value)

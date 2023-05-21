@@ -1,3 +1,7 @@
+#flow-button.selected {
+  background-color: rgba(0, 127, 255, 1);
+}
+
 #node-inspector-parent .unity-base-field__label {
   min-width: 75px;
 }
