@@ -349,11 +349,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private bool SaveFile()
         {
-            // Is the graph has any missing element, cancel saving
-            AbilityGraph abilityGraph = graphView.GetAbilityGraph();
-            if (abilityGraph.HasMissingElement())
+            bool success = SaveToTemp(currentGraphIndex);
+            if (!success)
             {
-                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
                 return false;
             }
 
@@ -368,53 +366,59 @@ namespace Physalia.Flexi.GraphViewEditor
                     return false;
                 }
 
-                if (abilityGraph.HasSubgraphElement())
-                {
-                    MacroAsset newAsset = CreateInstance<MacroAsset>();
-                    newAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
-                    AssetDatabase.CreateAsset(newAsset, assetPath);
-                }
-                else
-                {
-                    AbilityAsset newAsset = CreateInstance<AbilityAsset>();
-                    newAsset.Blackboard = blackboardInspector.GetBlackboard();
-                    newAsset.AddGraphJson(AbilityGraphUtility.Serialize(abilityGraph));
-                    AssetDatabase.CreateAsset(newAsset, assetPath);
-                }
-
+                AssetDatabase.CreateAsset(tempAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
+
+                AssetDatabase.Refresh();
+                SetDirty(false);
+                return true;
             }
-            else
+
+            switch (tempAsset)
             {
-                switch (currentAsset)
-                {
-                    case AbilityAsset abilityAsset:
-                        abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
-
-                        string json = AbilityGraphUtility.Serialize(abilityGraph);
-                        if (abilityAsset.GraphJsons.Count == 0)
-                        {
-                            abilityAsset.AddGraphJson(json);
-                        }
-                        else
-                        {
-                            abilityAsset.GraphJsons[0] = json;
-                        }
-                        EditorUtility.SetDirty(currentAsset);
-                        break;
-                    case MacroAsset macroAsset:
-                        macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
-                        EditorUtility.SetDirty(currentAsset);
-                        break;
-                }
+                case AbilityAsset abilityAsset:
+                    CopyAbilityAsset(abilityAsset, currentAsset as AbilityAsset);
+                    break;
+                case MacroAsset macroAsset:
+                    CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
+                    break;
             }
 
+            EditorUtility.SetDirty(currentAsset);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+
             SetDirty(false);
-            tempAsset = Instantiate(currentAsset);
             return true;
+        }
+
+        private void CopyAbilityAsset(AbilityAsset source, AbilityAsset destination)
+        {
+            destination.Blackboard = source.Blackboard;  // This should be copy
+
+            int sourceGraphCount = source.GraphJsons.Count;
+            int destinationGraphCount = destination.GraphJsons.Count;
+            if (destinationGraphCount > sourceGraphCount)
+            {
+                destination.GraphJsons.RemoveRange(destinationGraphCount - 1, destinationGraphCount - sourceGraphCount);
+                destinationGraphCount = sourceGraphCount;
+            }
+
+            for (var i = 0; i < destinationGraphCount; i++)
+            {
+                destination.GraphJsons[i] = source.GraphJsons[i];
+            }
+
+            for (var i = destinationGraphCount; i < sourceGraphCount; i++)
+            {
+                destination.AddGraphJson(source.GraphJsons[i]);
+            }
+        }
+
+        private void CopyMacroAsset(MacroAsset source, MacroAsset destination)
+        {
+            destination.Text = source.Text;
         }
 
         private bool IsBlankAsset(GraphAsset graphAsset)
