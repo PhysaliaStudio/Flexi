@@ -115,11 +115,6 @@ namespace Physalia.Flexi.GraphViewEditor
             window.Focus();
 
             bool ok = window.AskForOpenAssetIfDirty(asset);
-            if (ok)
-            {
-                window.objectField.SetValueWithoutNotify(asset);
-            }
-
             return ok;
         }
 
