@@ -1,16 +1,9 @@
 using System;
-using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
     [Serializable]
-    public class StatModifier
-    {
-        public List<StatModifierItem> items = new();
-    }
-
-    [Serializable]
-    public class StatModifierItem
+    public struct StatModifier
     {
         public enum Operator
         {
@@ -19,8 +12,15 @@ namespace Physalia.Flexi
             MUL = 2,
         }
 
+        public StatModifier(int statId, int value, Operator op)
+        {
+            this.statId = statId;
+            this.value = value;
+            this.op = op;
+        }
+
         public int statId;
-        public Operator op;
         public int value;
+        public Operator op;
     }
 }

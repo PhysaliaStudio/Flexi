@@ -107,15 +107,7 @@ namespace Physalia.Flexi.Tests
             StatOwner owner = repository.CreateOwner();
             owner.AddStat(CustomStats.ATTACK, 10);
 
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.ADD,
-                value = -2,
-            });
-
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(8, owner.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -128,16 +120,8 @@ namespace Physalia.Flexi.Tests
             StatOwner owner = repository.CreateOwner();
             owner.AddStat(CustomStats.ATTACK, 10);
 
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.ADD,
-                value = -2,
-            });
-
-            owner.AppendModifier(modifier);
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(6, owner.GetStat(CustomStats.ATTACK).CurrentValue);

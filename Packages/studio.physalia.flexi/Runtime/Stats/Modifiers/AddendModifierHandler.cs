@@ -11,19 +11,15 @@ namespace Physalia.Flexi
             for (var i = 0; i < owner.Modifiers.Count; i++)
             {
                 StatModifier modifier = owner.Modifiers[i];
-                for (var j = 0; j < modifier.items.Count; j++)
+                if (modifier.op == StatModifier.Operator.ADD)
                 {
-                    StatModifierItem modifierItem = modifier.items[j];
-                    if (modifierItem.op == StatModifierItem.Operator.ADD)
+                    if (sumsCache.ContainsKey(modifier.statId))
                     {
-                        if (sumsCache.ContainsKey(modifierItem.statId))
-                        {
-                            sumsCache[modifierItem.statId] += modifierItem.value;
-                        }
-                        else
-                        {
-                            sumsCache.Add(modifierItem.statId, modifierItem.value);
-                        }
+                        sumsCache[modifier.statId] += modifier.value;
+                    }
+                    else
+                    {
+                        sumsCache.Add(modifier.statId, modifier.value);
                     }
                 }
             }

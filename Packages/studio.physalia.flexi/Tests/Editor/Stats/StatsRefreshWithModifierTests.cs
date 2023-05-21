@@ -25,17 +25,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleModifier_WithStatIdOwnerNotOwned_NoError()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-
             var owner = CreateOwner();
             owner.RemoveStat(StatTestHelper.ATTACK);
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 50, StatModifier.Operator.MUL));
             repository.RefreshStats(owner);
 
             Assert.IsNull(owner.GetStat(StatTestHelper.ATTACK));
@@ -45,16 +37,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleModifier_WithInvalidStatId_NoError()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = 999,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(999, 50, StatModifier.Operator.MUL));
             repository.RefreshStats(owner);
 
             Assert.Pass();
@@ -63,16 +47,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleModifier_100Minus10_CurrentBaseReturns100AndCurrentValueReturns90()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.MAX_HEALTH,
-                op = StatModifierItem.Operator.ADD,
-                value = -10,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -82,16 +58,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SingleModifier_12Mul50Percent_CurrentBaseReturns12AndCurrentValueReturns18()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 50, StatModifier.Operator.MUL));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -101,22 +69,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void MultipleModifier_Base12Add6AndMul50Percent_CurrentBaseReturns12AndCurrentValueReturns27()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.ADD,
-                value = 6,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 50, StatModifier.Operator.MUL));
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 6, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(12, owner.GetStat(StatTestHelper.ATTACK).CurrentBase);
@@ -126,28 +81,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void MultipleModifier_WithDifferentStatIds()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.ADD,
-                value = 6,
-            });
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.MAX_HEALTH,
-                op = StatModifierItem.Operator.ADD,
-                value = -10,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 50, StatModifier.Operator.MUL));
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 6, StatModifier.Operator.ADD));
+            owner.AppendModifier(new StatModifier(StatTestHelper.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
 
             Assert.AreEqual(100, owner.GetStat(StatTestHelper.MAX_HEALTH).CurrentBase);
@@ -159,28 +96,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RefreshTwice_ReturnsTheSameValues()
         {
-            var modifier = new StatModifier();
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.MUL,
-                value = 50,
-            });
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.ATTACK,
-                op = StatModifierItem.Operator.ADD,
-                value = 6,
-            });
-            modifier.items.Add(new StatModifierItem
-            {
-                statId = StatTestHelper.MAX_HEALTH,
-                op = StatModifierItem.Operator.ADD,
-                value = -10,
-            });
-
             var owner = CreateOwner();
-            owner.AppendModifier(modifier);
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 50, StatModifier.Operator.MUL));
+            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, 6, StatModifier.Operator.ADD));
+            owner.AppendModifier(new StatModifier(StatTestHelper.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             repository.RefreshStats(owner);
             repository.RefreshStats(owner);
 

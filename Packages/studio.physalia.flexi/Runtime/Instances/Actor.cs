@@ -122,6 +122,14 @@ namespace Physalia.Flexi
             owner.AppendModifier(modifier);
         }
 
+        public void AppendModifiers(IReadOnlyList<StatModifier> modifiers)
+        {
+            for (var i = 0; i < modifiers.Count; i++)
+            {
+                owner.AppendModifier(modifiers[i]);
+            }
+        }
+
         public void RemoveModifier(StatModifier modifier)
         {
             owner.RemoveModifier(modifier);
