@@ -527,6 +527,40 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
+        internal void DeleteGraph(int index)
+        {
+            if (tempAsset is AbilityAsset abilityAsset)
+            {
+                if (index >= 0 && index < abilityAsset.GraphJsons.Count)
+                {
+                    abilityAsset.GraphJsons.RemoveAt(index);
+                    SetDirty(true);
+
+                    abilityFlowMenu.Refresh();
+
+                    ShowNotification(new GUIContent($"Flow {index} is deleted!"));
+
+                    if (abilityAsset.GraphJsons.Count == 0)
+                    {
+                        currentGraphIndex = -1;
+                        RemoveGraphView();
+                    }
+                    else
+                    {
+                        if (currentGraphIndex >= abilityAsset.GraphJsons.Count)
+                        {
+                            currentGraphIndex = abilityAsset.GraphJsons.Count - 1;
+                        }
+
+                        string graphJson = abilityAsset.GraphJsons[currentGraphIndex];
+                        AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
+                        AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
+                        SetUpGraphView(graphView);
+                    }
+                }
+            }
+        }
+
         private void NewGraphView()
         {
             HideNodeInspector();
@@ -572,6 +606,13 @@ namespace Physalia.Flexi.GraphViewEditor
 
             objectField.SetValueWithoutNotify(currentAsset);
             abilityFlowMenu.Refresh();
+        }
+
+        private void RemoveGraphView()
+        {
+            VisualElement graphViewParent = rootVisualElement.Query<VisualElement>(GRAPH_VIEW_PARENT_NAME).First();
+            graphViewParent.Clear();
+            graphView = null;
         }
 
         private void SetUpGraphView(AbilityGraphView graphView)

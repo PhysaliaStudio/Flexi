@@ -48,6 +48,11 @@ namespace Physalia.Flexi.GraphViewEditor
                     button.AddToClassList("selected");
                 }
 
+                button.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
+                {
+                    evt.menu.AppendAction("Delete", action => { DeleteGraph(index); });
+                }));
+
                 flowButtonParent.Add(button);
             }
         }
@@ -55,6 +60,11 @@ namespace Physalia.Flexi.GraphViewEditor
         private void SelectGraph(int index)
         {
             editorWindow.SelectGraph(index);
+        }
+
+        private void DeleteGraph(int index)
+        {
+            editorWindow.DeleteGraph(index);
         }
     }
 }
