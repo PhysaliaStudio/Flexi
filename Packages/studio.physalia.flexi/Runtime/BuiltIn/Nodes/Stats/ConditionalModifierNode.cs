@@ -7,17 +7,16 @@ namespace Physalia.Flexi
     {
         public Inport<IReadOnlyList<Actor>> actorsPort;
         public Inport<bool> enabledPort;
-        public Variable<StatModifier> modifierVariable;
+        public Variable<List<StatModifier>> modifiers;
 
         protected override AbilityState DoLogic()
         {
             IReadOnlyList<Actor> owners = actorsPort.GetValue();
-            StatModifier modifier = modifierVariable.Value;
             if (enabledPort.GetValue())
             {
                 for (var i = 0; i < owners.Count; i++)
                 {
-                    owners[i].AppendModifier(modifier);
+                    owners[i].AppendModifiers(modifiers.Value);
                 }
             }
 
