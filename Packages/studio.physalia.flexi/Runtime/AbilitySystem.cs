@@ -228,6 +228,11 @@ namespace Physalia.Flexi
                     continue;
                 }
 
+                if (!abilityFlow.IsEnable)
+                {
+                    continue;
+                }
+
                 if (abilityFlow.CanExecute(eventContext))
                 {
                     hasAnyEnqueued = true;

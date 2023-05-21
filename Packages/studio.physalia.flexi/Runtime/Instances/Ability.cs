@@ -93,6 +93,17 @@ namespace Physalia.Flexi
             }
         }
 
+        public void SetEnable(int index, bool enable)
+        {
+            if (index < 0 || index >= abilityFlows.Count)
+            {
+                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't have flow at index '{index}'.");
+                return;
+            }
+
+            abilityFlows[index].SetEnable(enable);
+        }
+
         public T GetUserData<T>()
         {
             if (userData == null)
