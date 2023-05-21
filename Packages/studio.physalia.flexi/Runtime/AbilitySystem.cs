@@ -228,6 +228,11 @@ namespace Physalia.Flexi
                     continue;
                 }
 
+                if (!abilityFlow.IsEnable)
+                {
+                    continue;
+                }
+
                 if (abilityFlow.CanExecute(eventContext))
                 {
                     hasAnyEnqueued = true;
@@ -300,6 +305,11 @@ namespace Physalia.Flexi
                 for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {
                     AbilityFlow abilityFlow = owner.AbilityFlows[j];
+                    if (!abilityFlow.IsEnable)
+                    {
+                        continue;
+                    }
+
                     if (abilityFlow.CanStatRefresh())
                     {
                         abilityFlow.Reset();
