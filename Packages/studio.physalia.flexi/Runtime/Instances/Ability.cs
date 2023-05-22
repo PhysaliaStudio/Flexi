@@ -20,7 +20,7 @@ namespace Physalia.Flexi
         public AbilitySystem System => abilitySystem;
         public AbilityData Data => abilityData;
 
-        internal IReadOnlyList<BlackboardVariable> Blackboard => variableList;
+        public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         internal IReadOnlyList<AbilityFlow> Flows => abilityFlows;
 
         public Actor Actor { get; internal set; }
@@ -64,6 +64,11 @@ namespace Physalia.Flexi
                 AbilityFlow abilityFlow = abilitySystem.InstantiateAbilityFlow(this, i);
                 abilityFlows.Add(abilityFlow);
             }
+        }
+
+        public bool HasVariable(string key)
+        {
+            return variableTable.ContainsKey(key);
         }
 
         public int GetVariable(string key)
