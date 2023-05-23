@@ -294,6 +294,13 @@ namespace Physalia.Flexi
 
         public void RefreshStatsAndModifiers()
         {
+            for (var i = 0; i < actorRepository.Actors.Count; i++)
+            {
+                Actor actor = actorRepository.Actors[i];
+                actor.ClearAllModifiers();
+                actor.ResetAllStats();
+            }
+
             DoStatRefreshLogicForAllOwners();
             ownerRepository.RefreshStatsForAllOwners();
         }
@@ -304,11 +311,6 @@ namespace Physalia.Flexi
         private void DoStatRefreshLogicForAllOwners()
         {
             IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
-            {
-                owners[i].ClearAllModifiers();
-            }
-
             for (var i = 0; i < owners.Count; i++)
             {
                 StatOwner owner = owners[i];
