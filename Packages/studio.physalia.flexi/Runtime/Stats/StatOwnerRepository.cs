@@ -88,5 +88,11 @@ namespace Physalia.Flexi
             owner.ResetAllStats();
             modifierAlgorithm.RefreshStats(owner);
         }
+
+        internal void RefreshStats(Actor actor)
+        {
+            actor.Owner.ResetAllStats();
+            modifierAlgorithm.RefreshStats(actor.Owner);
+        }
     }
 }
