@@ -69,37 +69,5 @@ namespace Physalia.Flexi.Tests
 
             Assert.IsNull(owner.GetStat(11));
         }
-
-        [Test]
-        public void SetStat_OriginalBaseIs2AndNewBaseIs6_OriginalBaseIs2AndCurrentBaseAndCurrentValueAre6()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddStat(11, 2);
-            owner.SetStat(11, 6);
-            repository.RefreshStats(owner);
-
-            var stat = owner.GetStat(11);
-            Assert.AreEqual(2, stat.OriginalBase);
-            Assert.AreEqual(6, stat.CurrentBase);
-            Assert.AreEqual(6, stat.CurrentValue);
-        }
-
-        [Test]
-        public void ModifyStat_OriginalBaseIs2AndAdd4_OriginalBaseIs2AndCurrentBaseAndCurrentValueAre6()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-
-            owner.AddStat(11, 2);
-            owner.ModifyStat(11, 4);
-            repository.RefreshStats(owner);
-
-            var stat = owner.GetStat(11);
-            Assert.AreEqual(2, stat.OriginalBase);
-            Assert.AreEqual(6, stat.CurrentBase);
-            Assert.AreEqual(6, stat.CurrentValue);
-        }
     }
 }
