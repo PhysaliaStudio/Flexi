@@ -23,16 +23,19 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void CreateOwner_GetOwnerReturnsTheSameInstance()
         {
-            StatOwner owner = abilitySystem.CreateOwner();
-            Assert.AreEqual(owner, abilitySystem.GetOwner(owner.Id));
+            var emptyActor = new EmptyActor(abilitySystem);
+            Assert.AreEqual(emptyActor.Owner, abilitySystem.GetOwner(emptyActor.OwnerId));
+            Assert.AreEqual(emptyActor, abilitySystem.GetActor(emptyActor.OwnerId));
+            Assert.AreEqual(true, emptyActor.Owner.Id == emptyActor.OwnerId, "The Id from Owner and Actor is different.");
         }
 
         [Test]
         public void RemoveOwner_GetOwnerReturnsNull()
         {
-            StatOwner owner = abilitySystem.CreateOwner();
-            abilitySystem.RemoveOwner(owner);
-            Assert.AreEqual(null, abilitySystem.GetOwner(owner.Id));
+            var emptyActor = new EmptyActor(abilitySystem);
+            abilitySystem.DestroyOwner(emptyActor);
+            Assert.AreEqual(null, abilitySystem.GetOwner(emptyActor.Owner.Id));
+            Assert.AreEqual(null, abilitySystem.GetActor(emptyActor.OwnerId));
         }
 
         [Test]

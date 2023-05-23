@@ -19,7 +19,7 @@ namespace Physalia.Flexi
         public Actor(AbilitySystem abilitySystem)
         {
             this.abilitySystem = abilitySystem;
-            owner = abilitySystem.CreateOwner();
+            owner = abilitySystem.CreateOwner(this);
         }
 
         public bool IsValid()
@@ -152,7 +152,7 @@ namespace Physalia.Flexi
 
         public void Destroy()
         {
-            owner.Destroy();
+            abilitySystem.DestroyOwner(this);
         }
     }
 }

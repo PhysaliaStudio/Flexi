@@ -13,6 +13,7 @@ namespace Physalia.Flexi
         public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
+        private readonly ActorRepository actorRepository = new();
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
@@ -29,14 +30,23 @@ namespace Physalia.Flexi
             poolManager = new(this);
         }
 
-        internal StatOwner CreateOwner()
+        internal StatOwner CreateOwner(Actor actor)
         {
-            return ownerRepository.CreateOwner();
+            StatOwner owner = ownerRepository.CreateOwner();
+            actorRepository.AddActor(owner.Id, actor);
+            return owner;
         }
 
-        internal void RemoveOwner(StatOwner owner)
+        internal void DestroyOwner(Actor actor)
         {
-            ownerRepository.RemoveOwner(owner);
+            StatOwner owner = actor.Owner;
+            actorRepository.RemoveActor(owner.Id);
+            owner.Destroy();
+        }
+
+        internal Actor GetActor(int id)
+        {
+            return actorRepository.GetActor(id);
         }
 
         internal StatOwner GetOwner(int id)
