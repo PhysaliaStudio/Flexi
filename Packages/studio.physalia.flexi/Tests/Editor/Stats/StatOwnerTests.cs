@@ -78,6 +78,7 @@ namespace Physalia.Flexi.Tests
 
             owner.AddStat(11, 2);
             owner.SetStat(11, 6);
+            repository.RefreshStats(owner);
 
             var stat = owner.GetStat(11);
             Assert.AreEqual(2, stat.OriginalBase);
@@ -93,6 +94,7 @@ namespace Physalia.Flexi.Tests
 
             owner.AddStat(11, 2);
             owner.ModifyStat(11, 4);
+            repository.RefreshStats(owner);
 
             var stat = owner.GetStat(11);
             Assert.AreEqual(2, stat.OriginalBase);

@@ -72,21 +72,25 @@ namespace Physalia.Flexi
             return stat;
         }
 
-        public void SetStat(int statId, int newBase)
+        /// <remarks>
+        /// Note: After this method is called, you need to trigger <see cref="AbilitySystem.RefreshStats"/> to update all stats.
+        /// </remarks>
+        internal void SetStat(int statId, int newBase)
         {
             if (stats.TryGetValue(statId, out Stat stat))
             {
                 stat.CurrentBase = newBase;
-                RefreshStats();
             }
         }
 
-        public void ModifyStat(int statId, int value)
+        /// <remarks>
+        /// Note: After this method is called, you need to trigger <see cref="AbilitySystem.RefreshStats"/> to update all stats.
+        /// </remarks>
+        internal void ModifyStat(int statId, int value)
         {
             if (stats.TryGetValue(statId, out Stat stat))
             {
                 stat.CurrentBase += value;
-                RefreshStats();
             }
         }
 
@@ -155,11 +159,6 @@ namespace Physalia.Flexi
         public void ClearAllModifiers()
         {
             modifiers.Clear();
-        }
-
-        internal void RefreshStats()
-        {
-            repository.RefreshStats(this);
         }
 
         internal void ResetAllStats()

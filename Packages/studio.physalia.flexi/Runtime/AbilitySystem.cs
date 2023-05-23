@@ -302,7 +302,12 @@ namespace Physalia.Flexi
             }
 
             DoStatRefreshLogicForAllOwners();
-            ownerRepository.RefreshStatsForAllOwners();
+            actorRepository.RefreshStatsForAll();
+        }
+
+        internal void RefreshStats(Actor actor)
+        {
+            actorRepository.RefreshStats(actor);
         }
 
         /// <remarks>

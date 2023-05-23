@@ -279,7 +279,7 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            unit.Owner.SetStat(CustomStats.HEALTH, 6);
+            unit.SetStat(CustomStats.HEALTH, 6);
             abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Owner.Modifiers.Count);

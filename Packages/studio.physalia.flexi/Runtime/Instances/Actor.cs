@@ -45,11 +45,13 @@ namespace Physalia.Flexi
         public void SetStat(int statId, int newBase)
         {
             owner.SetStat(statId, newBase);
+            RefreshStats();
         }
 
         public void ModifyStat(int statId, int value)
         {
             owner.ModifyStat(statId, value);
+            RefreshStats();
         }
 
         public Ability FindAbility(AbilityData abilityData)
@@ -140,9 +142,12 @@ namespace Physalia.Flexi
             owner.ClearAllModifiers();
         }
 
-        internal void RefreshStats()
+        /// <summary>
+        /// This method just total all modifiers by algorithm, so there is no priority issue.
+        /// </summary>
+        public void RefreshStats()
         {
-            owner.RefreshStats();
+            abilitySystem.RefreshStats(this);
         }
 
         internal void ResetAllStats()
