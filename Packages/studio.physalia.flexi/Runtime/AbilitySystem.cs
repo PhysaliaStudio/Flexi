@@ -294,7 +294,6 @@ namespace Physalia.Flexi
 
         public void RefreshStatsAndModifiers()
         {
-            ownerRepository.RefreshStatsForAllOwners();
             DoStatRefreshLogicForAllOwners();
             ownerRepository.RefreshStatsForAllOwners();
         }
