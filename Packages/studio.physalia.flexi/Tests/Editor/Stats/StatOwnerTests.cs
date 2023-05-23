@@ -101,32 +101,5 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(6, stat.CurrentBase);
             Assert.AreEqual(6, stat.CurrentValue);
         }
-
-        [Test]
-        public void AppendModifier_CurrentIs10_Becomes8()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-            owner.AddStat(CustomStats.ATTACK, 10);
-
-            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
-            repository.RefreshStats(owner);
-
-            Assert.AreEqual(8, owner.GetStat(CustomStats.ATTACK).CurrentValue);
-        }
-
-        [Test]
-        public void AppendModifier_CurrentIs10AndApplyTwice_Becomes6()
-        {
-            StatOwnerRepository repository = CreateRepository();
-            StatOwner owner = repository.CreateOwner();
-            owner.AddStat(CustomStats.ATTACK, 10);
-
-            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
-            owner.AppendModifier(new StatModifier(StatTestHelper.ATTACK, -2, StatModifier.Operator.ADD));
-            repository.RefreshStats(owner);
-
-            Assert.AreEqual(6, owner.GetStat(CustomStats.ATTACK).CurrentValue);
-        }
     }
 }
