@@ -20,9 +20,9 @@ namespace Physalia.Flexi.Tests
                 return;
             }
 
-            healthPort.SetValue(customUnit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            maxHealthPort.SetValue(customUnit.Owner.GetStat(CustomStats.MAX_HEALTH).CurrentValue);
-            attackPort.SetValue(customUnit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            healthPort.SetValue(customUnit.GetStat(CustomStats.HEALTH).CurrentValue);
+            maxHealthPort.SetValue(customUnit.GetStat(CustomStats.MAX_HEALTH).CurrentValue);
+            attackPort.SetValue(customUnit.GetStat(CustomStats.ATTACK).CurrentValue);
         }
     }
 }

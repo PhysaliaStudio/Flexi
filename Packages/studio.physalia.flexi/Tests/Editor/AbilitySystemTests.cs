@@ -58,10 +58,10 @@ namespace Physalia.Flexi.Tests
             Ability ability = unit.AppendAbility(CustomAbility.ATTACK_DOUBLE);
 
             abilitySystem.TryEnqueueAndRunAbility(ability, null);
-            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(4, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
             abilitySystem.TryEnqueueAndRunAbility(ability, null);
-            Assert.AreEqual(8, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(8, unit.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
@@ -98,8 +98,8 @@ namespace Physalia.Flexi.Tests
             abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
             abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
-            Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(21, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(21, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -127,9 +127,9 @@ namespace Physalia.Flexi.Tests
             abilitySystem.TryEnqueueAndRunAbility(ability2, payload1);
             abilitySystem.TryEnqueueAndRunAbility(ability2, payload2);
 
-            Assert.AreEqual(2, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
-            Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(23, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(2, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(23, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -163,7 +163,7 @@ namespace Physalia.Flexi.Tests
             abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
             Assert.IsNotNull(choiceContext);
-            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
+            Assert.AreEqual(6, unit2.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace Physalia.Flexi.Tests
             var answerContext = new CustomSingleTargetAnswerContext { target = unit2 };
             abilitySystem.Resume(answerContext);
 
-            Assert.AreEqual(4, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -210,7 +210,7 @@ namespace Physalia.Flexi.Tests
             abilitySystem.Resume(answerContext);
 
             TestUtilities.LogAssertAnyString(LogType.Error);
-            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
+            Assert.AreEqual(6, unit2.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
         }
 
         [Test]
@@ -233,8 +233,8 @@ namespace Physalia.Flexi.Tests
             abilitySystem.Resume(new CustomCancellation());
 
             // Nothing happened
-            Assert.AreEqual(25, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(25, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -247,9 +247,9 @@ namespace Physalia.Flexi.Tests
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshStatsAndModifiers();
 
-            Assert.AreEqual(1, unit.Owner.Modifiers.Count);
-            Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(1, unit.Modifiers.Count);
+            Assert.AreEqual(3, unit.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
@@ -261,9 +261,9 @@ namespace Physalia.Flexi.Tests
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshStatsAndModifiers();
 
-            Assert.AreEqual(0, unit.Owner.Modifiers.Count);
-            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(0, unit.Modifiers.Count);
+            Assert.AreEqual(6, unit.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
@@ -275,16 +275,16 @@ namespace Physalia.Flexi.Tests
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshStatsAndModifiers();
 
-            Assert.AreEqual(1, unit.Owner.Modifiers.Count);
-            Assert.AreEqual(3, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(1, unit.Modifiers.Count);
+            Assert.AreEqual(3, unit.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
             unit.SetStat(CustomStats.HEALTH, 6);
             abilitySystem.RefreshStatsAndModifiers();
 
-            Assert.AreEqual(0, unit.Owner.Modifiers.Count);
-            Assert.AreEqual(6, unit.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(4, unit.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(0, unit.Modifiers.Count);
+            Assert.AreEqual(6, unit.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(4, unit.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
@@ -311,10 +311,10 @@ namespace Physalia.Flexi.Tests
             abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
             abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
-            Assert.AreEqual(1, unit2.Owner.Modifiers.Count);
-            Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(6, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
-            Assert.AreEqual(19, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(1, unit2.Modifiers.Count);
+            Assert.AreEqual(3, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(6, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(19, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -341,9 +341,9 @@ namespace Physalia.Flexi.Tests
             abilitySystem.TryEnqueueAndRunAbility(ability, payload1);
             abilitySystem.TryEnqueueAndRunAbility(ability, payload2);
 
-            Assert.AreEqual(3, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(8, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
-            Assert.AreEqual(17, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(3, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(8, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(17, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
@@ -364,9 +364,9 @@ namespace Physalia.Flexi.Tests
 
             abilitySystem.TryEnqueueAndRunAbility(ability, payload);
 
-            Assert.AreEqual(2, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(5, unit2.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
-            Assert.AreEqual(32, unit2.Owner.GetStat(CustomStats.ATTACK).CurrentValue);
+            Assert.AreEqual(2, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(5, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(32, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
         }
 
         [Test]
@@ -384,7 +384,7 @@ namespace Physalia.Flexi.Tests
             };
 
             abilitySystem.TryEnqueueAndRunAbility(ability, payload);
-            Assert.AreEqual(5, unit1.Owner.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(5, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
 
         [Test]
