@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class DefaultModifierAlgorithm : IModifierAlgorithm
+    public class DefaultStatsRefreshAlgorithm : IStatsRefreshAlgorithm
     {
         private readonly List<IModifierHandler> handlers = new()
         {

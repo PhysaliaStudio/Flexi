@@ -21,10 +21,10 @@ namespace Physalia.Flexi
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
 
-        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm, AbilityFlowRunner runner)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
-            actorRepository = new ActorRepository(modifierAlgorithm);
+            actorRepository = new ActorRepository(statsRefreshAlgorithm);
             this.runner = runner;
             runner.abilitySystem = this;
 

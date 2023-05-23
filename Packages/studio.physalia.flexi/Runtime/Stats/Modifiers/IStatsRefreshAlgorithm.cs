@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    public interface IModifierAlgorithm
+    public interface IStatsRefreshAlgorithm
     {
         void RefreshStats(Actor actor);
     }

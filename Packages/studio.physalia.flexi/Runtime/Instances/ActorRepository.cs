@@ -4,16 +4,16 @@ namespace Physalia.Flexi
 {
     public class ActorRepository
     {
-        private readonly IModifierAlgorithm modifierAlgorithm;
+        private readonly IStatsRefreshAlgorithm statsRefreshAlgorithm;
 
         private readonly Dictionary<int, Actor> actorTable = new();
         private readonly List<Actor> actorList = new();
 
         public IReadOnlyList<Actor> Actors => actorList;
 
-        public ActorRepository(IModifierAlgorithm modifierAlgorithm)
+        public ActorRepository(IStatsRefreshAlgorithm statsRefreshAlgorithm)
         {
-            this.modifierAlgorithm = modifierAlgorithm;
+            this.statsRefreshAlgorithm = statsRefreshAlgorithm;
         }
 
         internal Actor GetActor(int id)
@@ -59,7 +59,7 @@ namespace Physalia.Flexi
         internal void RefreshStats(Actor actor)
         {
             actor.ResetAllStats();
-            modifierAlgorithm.RefreshStats(actor);
+            statsRefreshAlgorithm.RefreshStats(actor);
         }
     }
 }

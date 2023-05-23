@@ -5,7 +5,7 @@ namespace Physalia.Flexi
     public class AbilitySystemBuilder
     {
         private StatDefinitionListAsset asset;
-        private IModifierAlgorithm modifierAlgorithm;
+        private IStatsRefreshAlgorithm statsRefreshAlgorithm;
         private AbilityFlowRunner runner;
 
         public AbilitySystem Build()
@@ -16,9 +16,9 @@ namespace Physalia.Flexi
                 Logger.Warn($"[{nameof(AbilitySystemBuilder)}] The stat definition asset is null. Internally created an empty one.");
             }
 
-            if (modifierAlgorithm == null)
+            if (statsRefreshAlgorithm == null)
             {
-                modifierAlgorithm = new DefaultModifierAlgorithm();
+                statsRefreshAlgorithm = new DefaultStatsRefreshAlgorithm();
             }
 
             if (runner == null)
@@ -28,7 +28,7 @@ namespace Physalia.Flexi
 
             Logger.Info($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");
 
-            return new AbilitySystem(asset, modifierAlgorithm, runner);
+            return new AbilitySystem(asset, statsRefreshAlgorithm, runner);
         }
 
         public void SetStatDefinitions(StatDefinitionListAsset asset)
@@ -36,9 +36,9 @@ namespace Physalia.Flexi
             this.asset = asset;
         }
 
-        public void SetModifierAlgorithm(IModifierAlgorithm modifierAlgorithm)
+        public void SetModifierAlgorithm(IStatsRefreshAlgorithm statsRefreshAlgorithm)
         {
-            this.modifierAlgorithm = modifierAlgorithm;
+            this.statsRefreshAlgorithm = statsRefreshAlgorithm;
         }
 
         public void SetRunner(AbilityFlowRunner runner)
