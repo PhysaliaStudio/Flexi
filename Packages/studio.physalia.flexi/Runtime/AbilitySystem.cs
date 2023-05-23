@@ -13,7 +13,7 @@ namespace Physalia.Flexi
         public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
-        private readonly ActorRepository actorRepository = new();
+        private readonly ActorRepository actorRepository;
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
@@ -21,9 +21,10 @@ namespace Physalia.Flexi
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
 
-        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm, AbilityFlowRunner runner)
         {
-            ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset, modifierAlgorithm);
+            actorRepository = new ActorRepository(modifierAlgorithm);
             this.runner = runner;
             runner.abilitySystem = this;
 

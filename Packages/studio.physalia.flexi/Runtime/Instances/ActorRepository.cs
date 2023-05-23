@@ -9,6 +9,13 @@ namespace Physalia.Flexi
         private readonly Dictionary<int, Actor> actorTable = new();
         private readonly List<Actor> actorList = new();
 
+        public IReadOnlyList<Actor> Actors => actorList;
+
+        public ActorRepository(IModifierAlgorithm modifierAlgorithm)
+        {
+            this.modifierAlgorithm = modifierAlgorithm;
+        }
+
         internal Actor GetActor(int id)
         {
             if (actorTable.TryGetValue(id, out Actor actor))
