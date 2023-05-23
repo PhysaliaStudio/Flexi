@@ -14,7 +14,6 @@ namespace Physalia.Flexi.Tests
             {
                 Stat stat = targets[i].GetStat(CustomStats.ATTACK);
                 stat.CurrentBase *= 2;
-                targets[i].RefreshStats();
             }
 
             return AbilityState.RUNNING;

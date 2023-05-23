@@ -6,8 +6,8 @@ namespace Physalia.Flexi
 
         public int Id => statDefinition.Id;
         public int OriginalBase { get; private set; }
-        public int CurrentBase { get; internal set; }
-        public int CurrentValue { get; internal set; }
+        public int CurrentBase { get; set; }
+        public int CurrentValue { get; set; }
 
         internal Stat(StatDefinition statDefinition, int baseValue)
         {

@@ -15,11 +15,12 @@ namespace Physalia.Flexi
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
         public IReadOnlyList<Ability> Abilities => owner.Abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
+        public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
 
         public Actor(AbilitySystem abilitySystem)
         {
             this.abilitySystem = abilitySystem;
-            owner = abilitySystem.CreateOwner();
+            owner = abilitySystem.CreateOwner(this);
         }
 
         public bool IsValid()
@@ -44,12 +45,22 @@ namespace Physalia.Flexi
 
         public void SetStat(int statId, int newBase)
         {
-            owner.SetStat(statId, newBase);
+            Stat stat = owner.GetStat(statId);
+            if (stat != null)
+            {
+                stat.CurrentBase = newBase;
+                RefreshStats();
+            }
         }
 
         public void ModifyStat(int statId, int value)
         {
-            owner.ModifyStat(statId, value);
+            Stat stat = owner.GetStat(statId);
+            if (stat != null)
+            {
+                stat.CurrentBase += value;
+                RefreshStats();
+            }
         }
 
         public Ability FindAbility(AbilityData abilityData)
@@ -140,9 +151,12 @@ namespace Physalia.Flexi
             owner.ClearAllModifiers();
         }
 
-        internal void RefreshStats()
+        /// <summary>
+        /// This method just total all modifiers by algorithm, so there is no priority issue.
+        /// </summary>
+        public void RefreshStats()
         {
-            owner.RefreshStats();
+            abilitySystem.RefreshStats(this);
         }
 
         internal void ResetAllStats()
@@ -152,7 +166,7 @@ namespace Physalia.Flexi
 
         public void Destroy()
         {
-            owner.Destroy();
+            abilitySystem.DestroyOwner(this);
         }
     }
 }

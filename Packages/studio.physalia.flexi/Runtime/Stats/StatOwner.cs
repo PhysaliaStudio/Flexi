@@ -72,24 +72,6 @@ namespace Physalia.Flexi
             return stat;
         }
 
-        public void SetStat(int statId, int newBase)
-        {
-            if (stats.TryGetValue(statId, out Stat stat))
-            {
-                stat.CurrentBase = newBase;
-                RefreshStats();
-            }
-        }
-
-        public void ModifyStat(int statId, int value)
-        {
-            if (stats.TryGetValue(statId, out Stat stat))
-            {
-                stat.CurrentBase += value;
-                RefreshStats();
-            }
-        }
-
         internal Ability FindAbility(AbilityData abilityData)
         {
             return abilities.Find(x => x.Data == abilityData);
@@ -155,11 +137,6 @@ namespace Physalia.Flexi
         public void ClearAllModifiers()
         {
             modifiers.Clear();
-        }
-
-        internal void RefreshStats()
-        {
-            repository.RefreshStats(this);
         }
 
         internal void ResetAllStats()

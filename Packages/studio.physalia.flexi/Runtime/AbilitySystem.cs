@@ -13,6 +13,7 @@ namespace Physalia.Flexi
         public Action<IEventContext> EventResolveMethod;
 
         private readonly StatOwnerRepository ownerRepository;
+        private readonly ActorRepository actorRepository;
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
@@ -20,23 +21,33 @@ namespace Physalia.Flexi
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
 
-        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, AbilityFlowRunner runner)
+        internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm, AbilityFlowRunner runner)
         {
             ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
+            actorRepository = new ActorRepository(modifierAlgorithm);
             this.runner = runner;
             runner.abilitySystem = this;
 
             poolManager = new(this);
         }
 
-        internal StatOwner CreateOwner()
+        internal StatOwner CreateOwner(Actor actor)
         {
-            return ownerRepository.CreateOwner();
+            StatOwner owner = ownerRepository.CreateOwner();
+            actorRepository.AddActor(owner.Id, actor);
+            return owner;
         }
 
-        internal void RemoveOwner(StatOwner owner)
+        internal void DestroyOwner(Actor actor)
         {
-            ownerRepository.RemoveOwner(owner);
+            StatOwner owner = actor.Owner;
+            actorRepository.RemoveActor(owner.Id);
+            owner.Destroy();
+        }
+
+        internal Actor GetActor(int id)
+        {
+            return actorRepository.GetActor(id);
         }
 
         internal StatOwner GetOwner(int id)
@@ -283,9 +294,20 @@ namespace Physalia.Flexi
 
         public void RefreshStatsAndModifiers()
         {
-            ownerRepository.RefreshStatsForAllOwners();
+            for (var i = 0; i < actorRepository.Actors.Count; i++)
+            {
+                Actor actor = actorRepository.Actors[i];
+                actor.ClearAllModifiers();
+                actor.ResetAllStats();
+            }
+
             DoStatRefreshLogicForAllOwners();
-            ownerRepository.RefreshStatsForAllOwners();
+            actorRepository.RefreshStatsForAll();
+        }
+
+        internal void RefreshStats(Actor actor)
+        {
+            actorRepository.RefreshStats(actor);
         }
 
         /// <remarks>
@@ -294,11 +316,6 @@ namespace Physalia.Flexi
         private void DoStatRefreshLogicForAllOwners()
         {
             IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
-            {
-                owners[i].ClearAllModifiers();
-            }
-
             for (var i = 0; i < owners.Count; i++)
             {
                 StatOwner owner = owners[i];

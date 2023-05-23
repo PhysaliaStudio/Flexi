@@ -15,7 +15,7 @@ namespace Physalia.Flexi.Tests
             int damage = baseValue.GetValue();
             for (var i = 0; i < list.Count; i++)
             {
-                Stat stat = list[i].Owner.GetStat(CustomStats.HEALTH);
+                Stat stat = list[i].GetStat(CustomStats.HEALTH);
                 stat.CurrentBase -= damage;
 
                 EnqueueEvent(new CustomDamageEvent

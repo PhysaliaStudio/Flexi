@@ -10,11 +10,11 @@ namespace Physalia.Flexi
             new MultiplierModifierHandler(),
         };
 
-        public void RefreshStats(StatOwner owner)
+        public void RefreshStats(Actor actor)
         {
             for (var i = 0; i < handlers.Count; i++)
             {
-                handlers[i].RefreshStats(owner);
+                handlers[i].RefreshStats(actor.Owner);
             }
         }
     }
