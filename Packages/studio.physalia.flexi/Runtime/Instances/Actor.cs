@@ -44,14 +44,22 @@ namespace Physalia.Flexi
 
         public void SetStat(int statId, int newBase)
         {
-            owner.SetStat(statId, newBase);
-            RefreshStats();
+            Stat stat = owner.GetStat(statId);
+            if (stat != null)
+            {
+                stat.CurrentBase = newBase;
+                RefreshStats();
+            }
         }
 
         public void ModifyStat(int statId, int value)
         {
-            owner.ModifyStat(statId, value);
-            RefreshStats();
+            Stat stat = owner.GetStat(statId);
+            if (stat != null)
+            {
+                stat.CurrentBase += value;
+                RefreshStats();
+            }
         }
 
         public Ability FindAbility(AbilityData abilityData)

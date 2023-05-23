@@ -72,28 +72,6 @@ namespace Physalia.Flexi
             return stat;
         }
 
-        /// <remarks>
-        /// Note: After this method is called, you need to trigger <see cref="AbilitySystem.RefreshStats"/> to update all stats.
-        /// </remarks>
-        internal void SetStat(int statId, int newBase)
-        {
-            if (stats.TryGetValue(statId, out Stat stat))
-            {
-                stat.CurrentBase = newBase;
-            }
-        }
-
-        /// <remarks>
-        /// Note: After this method is called, you need to trigger <see cref="AbilitySystem.RefreshStats"/> to update all stats.
-        /// </remarks>
-        internal void ModifyStat(int statId, int value)
-        {
-            if (stats.TryGetValue(statId, out Stat stat))
-            {
-                stat.CurrentBase += value;
-            }
-        }
-
         internal Ability FindAbility(AbilityData abilityData)
         {
             return abilities.Find(x => x.Data == abilityData);
