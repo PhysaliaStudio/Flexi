@@ -23,7 +23,7 @@ namespace Physalia.Flexi
 
         internal AbilitySystem(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm, AbilityFlowRunner runner)
         {
-            ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset, modifierAlgorithm);
+            ownerRepository = StatOwnerRepository.Create(statDefinitionListAsset);
             actorRepository = new ActorRepository(modifierAlgorithm);
             this.runner = runner;
             runner.abilitySystem = this;

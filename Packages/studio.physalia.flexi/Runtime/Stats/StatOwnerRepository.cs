@@ -6,7 +6,6 @@ namespace Physalia.Flexi
     public class StatOwnerRepository
     {
         private readonly StatDefinitionTable table;
-        private readonly IModifierAlgorithm modifierAlgorithm;
 
         private readonly Dictionary<int, StatOwner> idToOwners = new();
         private readonly List<StatOwner> owners = new();
@@ -14,22 +13,16 @@ namespace Physalia.Flexi
 
         public IReadOnlyList<StatOwner> Owners => owners;
 
-        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset, IModifierAlgorithm modifierAlgorithm = null)
+        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset)
         {
             StatDefinitionTable table = new StatDefinitionTable.Factory().Create(statDefinitionListAsset.stats);
-            if (modifierAlgorithm == null)
-            {
-                modifierAlgorithm = new DefaultModifierAlgorithm();
-            }
-
-            var ownerRepository = new StatOwnerRepository(table, modifierAlgorithm);
+            var ownerRepository = new StatOwnerRepository(table);
             return ownerRepository;
         }
 
-        private StatOwnerRepository(StatDefinitionTable table, IModifierAlgorithm modifierAlgorithm)
+        private StatOwnerRepository(StatDefinitionTable table)
         {
             this.table = table;
-            this.modifierAlgorithm = modifierAlgorithm;
         }
 
         public StatOwner CreateOwner()
@@ -73,20 +66,6 @@ namespace Physalia.Flexi
 
             idToOwners.Remove(owner.Id);
             owners.Remove(owner);
-        }
-
-        internal void RefreshStatsForAllOwners()
-        {
-            for (var i = 0; i < owners.Count; i++)
-            {
-                RefreshStats(owners[i]);
-            }
-        }
-
-        internal void RefreshStats(StatOwner owner)
-        {
-            owner.ResetAllStats();
-            modifierAlgorithm.RefreshStats(owner);
         }
     }
 }
