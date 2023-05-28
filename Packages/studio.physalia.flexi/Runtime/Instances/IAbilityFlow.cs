@@ -6,6 +6,6 @@ namespace Physalia.Flexi
 
         public bool HasNext();
         public bool MoveNext();
-        public void Reset();
+        public void Reset(int entryIndex);
     }
 }

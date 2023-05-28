@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Physalia.Flexi
 {
     /// <summary>
@@ -72,15 +74,24 @@ namespace Physalia.Flexi
             return graph.MoveNext();
         }
 
-        public bool CanExecute(IEventContext payload)
+        internal int GetAvailableEntry(IEventContext payload)
         {
             if (graph.EntryNodes.Count == 0)
             {
-                return false;
+                return -1;
             }
 
-            bool result = graph.EntryNodes[0].CanExecute(payload);
-            return result;
+            IReadOnlyList<EntryNode> entryNodes = graph.EntryNodes;
+            for (var i = 0; i < entryNodes.Count; i++)
+            {
+                bool success = entryNodes[i].CanExecute(payload);
+                if (success)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
 
         internal bool CanStatRefresh()
@@ -99,9 +110,9 @@ namespace Physalia.Flexi
             graph.Push(flowNode);
         }
 
-        public void Reset()
+        public void Reset(int entryIndex = 0)
         {
-            graph.Reset(0);
+            graph.Reset(entryIndex);
             SetPayload(null);
         }
     }
