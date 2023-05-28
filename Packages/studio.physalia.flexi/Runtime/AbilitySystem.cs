@@ -244,10 +244,11 @@ namespace Physalia.Flexi
                     continue;
                 }
 
-                if (abilityFlow.CanExecute(eventContext))
+                int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
+                if (entryIndex != -1)
                 {
                     hasAnyEnqueued = true;
-                    EnqueueAbilityFlow(abilityFlow, eventContext);
+                    EnqueueAbilityFlow(abilityFlow, entryIndex, eventContext);
                 }
             }
 
@@ -270,9 +271,9 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        private void EnqueueAbilityFlow(AbilityFlow flow, IEventContext eventContext)
+        private void EnqueueAbilityFlow(AbilityFlow flow, int entryIndex, IEventContext eventContext)
         {
-            flow.Reset();
+            flow.Reset(entryIndex);
             flow.SetPayload(eventContext);
             runner.AddFlow(flow);
         }

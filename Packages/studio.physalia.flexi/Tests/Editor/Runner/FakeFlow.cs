@@ -88,7 +88,7 @@ namespace Physalia.Flexi.Tests
             return currentIndex < countOfNode;
         }
 
-        public void Reset()
+        public void Reset(int entryIndex)
         {
             currentIndex = -1;
         }
