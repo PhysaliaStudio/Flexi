@@ -1,5 +1,6 @@
 namespace Physalia.Flexi.Samples.ActionGame
 {
+    [NodeCategory("Action Game Sample")]
     public class SetControllableNode : ProcessNode
     {
         public Variable<bool> controllable;

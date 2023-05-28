@@ -5,6 +5,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 {
     public class RecastContext : IResumeContext { }
 
+    [NodeCategory("Action Game Sample")]
     public class WaitRecastNode : FlowNode
     {
         public Inport<FlowNode> previous;
