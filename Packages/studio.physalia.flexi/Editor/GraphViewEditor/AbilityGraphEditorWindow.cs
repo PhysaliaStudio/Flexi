@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -24,6 +25,7 @@ namespace Physalia.Flexi.GraphViewEditor
     public class AbilityGraphEditorWindow : EditorWindow
     {
         private static readonly string WINDOW_TITLE = "Flexi Ability Editor";
+        private static readonly string PREFS_KEY_LAST_SAVED_FOLDER_PATH = "LastSavedFolderPath";
         private static readonly string DEFAULT_FOLDER_PATH = "Assets/";
 
         // Since we need to use names to find the correct VisualTreeAsset to replace,
@@ -358,8 +360,9 @@ namespace Physalia.Flexi.GraphViewEditor
             bool isBlankAssets = IsBlankAsset(currentAsset);
             if (isBlankAssets)
             {
+                string lastSavedFolderPath = PlayerPrefs.GetString(PREFS_KEY_LAST_SAVED_FOLDER_PATH, DEFAULT_FOLDER_PATH);
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
-                    "Please enter a file name to save to", DEFAULT_FOLDER_PATH);
+                    "Please enter a file name to save to", lastSavedFolderPath);
                 if (assetPath.Length == 0)
                 {
                     return false;
@@ -368,6 +371,9 @@ namespace Physalia.Flexi.GraphViewEditor
                 AssetDatabase.CreateAsset(tempAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
+
+                string savedFolderPath = Path.GetDirectoryName(assetPath);
+                PlayerPrefs.SetString(PREFS_KEY_LAST_SAVED_FOLDER_PATH, savedFolderPath);
 
                 AssetDatabase.Refresh();
                 SetDirty(false);
