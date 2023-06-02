@@ -252,5 +252,33 @@ namespace Physalia.Flexi.Tests
             List<int> result = ConversionUtility.Convert<List<float>, List<int>>(new List<float> { 3.3f, 5.5f });
             TestUtilities.AreListEqual(new List<int> { 3, 5 }, result);
         }
+
+        [Test]
+        public void Convert_Special_NullToListOfObject()
+        {
+            List<object> result = ConversionUtility.Convert<object, List<object>>(null);
+            TestUtilities.AreListEqual(new List<object>(), result);
+        }
+
+        [Test]
+        public void CreateDefaultInstance_Int_Returns0()
+        {
+            int result = ConversionUtility.CreateDefaultInstance<int>();
+            Assert.AreEqual(0, result);
+        }
+
+        [Test]
+        public void CreateDefaultInstance_Object_ReturnsNull()
+        {
+            object result = ConversionUtility.CreateDefaultInstance<object>();
+            Assert.AreEqual(null, result);
+        }
+
+        [Test]
+        public void CreateDefaultInstance_ListOfInt_ReturnsEmptyListOfInt()
+        {
+            IReadOnlyList<int> result = ConversionUtility.CreateDefaultInstance<IReadOnlyList<int>>();
+            TestUtilities.AreListEqual(new List<int>(), result as List<int>);
+        }
     }
 }

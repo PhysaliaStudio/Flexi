@@ -43,6 +43,13 @@ namespace Physalia.Flexi
 
     public sealed class Inport<T> : Inport
     {
+        private static T defaultValue;
+
+        static Inport()
+        {
+            defaultValue = ConversionUtility.CreateDefaultInstance<T>();
+        }
+
         public override Type ValueType => typeof(T);
 
         internal Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
@@ -54,7 +61,7 @@ namespace Physalia.Flexi
         {
             if (outports.Count == 0)
             {
-                return default;
+                return defaultValue;
             }
 
             T value = GetOutportValue(outports[0]);
@@ -75,7 +82,7 @@ namespace Physalia.Flexi
                 return convertFunc.Invoke();
             }
 
-            return default;
+            return defaultValue;
         }
 
         internal override Func<TTo> GetValueConverter<TTo>()

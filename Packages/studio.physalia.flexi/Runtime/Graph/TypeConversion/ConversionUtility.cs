@@ -250,6 +250,25 @@ namespace Physalia.Flexi
             return null;
         }
 
+        internal static T CreateDefaultInstance<T>()
+        {
+            Type type = typeof(T);
+            if (IsListType(type))
+            {
+                Type[] typeArguments = type.GenericTypeArguments;
+                if (typeArguments.Length != 1)
+                {
+                    return default;
+                }
+
+                Type genericListType = typeof(List<>).MakeGenericType(typeArguments[0]);
+                var list = (T)Activator.CreateInstance(genericListType);
+                return list;
+            }
+
+            return default;
+        }
+
         private static bool IsListType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IList<>)))
