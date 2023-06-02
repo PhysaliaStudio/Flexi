@@ -891,5 +891,10 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
             }
         }
+
+        private void OnDestroy()
+        {
+            AskForSaveIfDirty();
+        }
     }
 }
