@@ -46,16 +46,27 @@ namespace Physalia.Flexi
             {
                 if (abilityData == null)
                 {
-                    abilityData = new AbilityData
-                    {
-                        name = name,
-                        blackboard = blackboard,
-                        graphJsons = graphJsons,
-                    };
+                    abilityData = CreateAbilityData(this);
                 }
 
                 return abilityData;
             }
+        }
+
+        private static AbilityData CreateAbilityData(AbilityAsset abilityAsset)
+        {
+            var abilityData = new AbilityData { name = abilityAsset.name };
+            for (var i = 0; i < abilityAsset.blackboard.Count; i++)
+            {
+                abilityData.blackboard.Add(abilityAsset.blackboard[i].Clone());
+            }
+
+            for (var i = 0; i < abilityAsset.graphJsons.Count; i++)
+            {
+                abilityData.graphJsons.Add(abilityAsset.graphJsons[i]);
+            }
+
+            return abilityData;
         }
 
         internal void AddBlackboardVariable(BlackboardVariable variable)
@@ -66,16 +77,6 @@ namespace Physalia.Flexi
         internal void AddGraphJson(string graphJson)
         {
             graphJsons.Add(graphJson);
-        }
-
-        private void OnValidate()
-        {
-            if (abilityData != null)
-            {
-                abilityData.name = name;
-                abilityData.blackboard = blackboard;
-                abilityData.graphJsons = graphJsons;
-            }
         }
     }
 }
