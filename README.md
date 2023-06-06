@@ -5,7 +5,7 @@
 
 -   **This repository is for source reference and demo**
 -   **This project is still work-in-progress**  
-    :green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square::white_large_square::white_large_square: 70%
+    :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square::white_large_square: 80%
 
 -----
 
@@ -53,10 +53,3 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 
 - Not support DOTS (and not in roadmap for now)
 - It's a tool for programmers, and recommended to have experienced programming skill
-
-## TODO
-
-- Support undo/redo for the editor
-- Better implementation for Status & Aura
-- Enable/Disable abilities
-- Add Examples: Need to show how to implement each common machanic, to lower the learning curve.
