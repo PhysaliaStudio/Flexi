@@ -23,9 +23,18 @@ public static class UnityPackageExporter
         // Collect all assets from the package
         var assetPathsList = new List<string>();
         string[] assetGuids = AssetDatabase.FindAssets("", new[] { packageInfo.assetPath });
+
+        string testFolderPath = $"{packageInfo.assetPath}/Tests/";
         foreach (string guid in assetGuids)
         {
             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+
+            // If the assetPath is in "Tests" folder, skip it.
+            if (assetPath.StartsWith(testFolderPath))
+            {
+                continue;
+            }
+
             assetPathsList.Add(assetPath);
         }
 
@@ -35,7 +44,7 @@ public static class UnityPackageExporter
 
         // Export
         AssetDatabase.ExportPackage(assetPathsList.ToArray(), exportedPackageName,
-            ExportPackageOptions.Interactive | ExportPackageOptions.Recurse | ExportPackageOptions.IncludeDependencies);
+            ExportPackageOptions.Interactive | ExportPackageOptions.IncludeDependencies);
     }
 
     private static PackageInfo FindPackageInfo(string assemblyName)
