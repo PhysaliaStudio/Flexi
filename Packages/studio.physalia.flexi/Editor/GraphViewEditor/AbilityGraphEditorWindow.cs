@@ -8,10 +8,16 @@ using UnityEditor.Experimental.GraphView;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using EdgeView = UnityEditor.Experimental.GraphView.Edge;
 
 namespace Physalia.Flexi.GraphViewEditor
 {
+    using NodeData = Physalia.Flexi.Node;
+    using PortData = Physalia.Flexi.Port;
+    using EdgeData = Physalia.Flexi.Edge;
+    using Node = UnityEditor.Experimental.GraphView.Node;
+    using Port = UnityEditor.Experimental.GraphView.Port;
+    using Edge = UnityEditor.Experimental.GraphView.Edge;
+
     // Note: For handling missing clear callback method
     // https://forum.unity.com/threads/clearing-previous-registervaluechangedcallbacks-or-passing-custom-arguments-to-the-callback.1042819/#post-6765157
     internal class ElementCallbackToken<T> : IDisposable
@@ -693,13 +699,13 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 if (element is NodeView nodeView)
                 {
-                    Node node = nodeView.Node;
-                    if (node is IIsMissing)
+                    NodeData nodeData = nodeView.NodeData;
+                    if (nodeData is IIsMissing)
                     {
                         continue;
                     }
 
-                    partialGraph.nodes.Add(node);
+                    partialGraph.nodes.Add(nodeData);
                 }
             }
 
@@ -712,24 +718,24 @@ namespace Physalia.Flexi.GraphViewEditor
                     var inputNodeView = edgeView.input.node as NodeView;
 
                     // If there's any node not in this selection, remove this edge.
-                    if (partialGraph.nodes.Contains(outputNodeView.Node) && partialGraph.nodes.Contains(inputNodeView.Node))
+                    if (partialGraph.nodes.Contains(outputNodeView.NodeData) && partialGraph.nodes.Contains(inputNodeView.NodeData))
                     {
-                        Port outport = outputNodeView.GetPort(edgeView.output);
-                        Port inport = inputNodeView.GetPort(edgeView.input);
+                        PortData outport = outputNodeView.GetPortData(edgeView.output);
+                        PortData inport = inputNodeView.GetPortData(edgeView.input);
                         if (outport is IIsMissing || inport is IIsMissing)
                         {
                             continue;
                         }
 
-                        Edge edge = new Edge
+                        var edgeData = new EdgeData
                         {
-                            id1 = outputNodeView.Node.id,
-                            id2 = inputNodeView.Node.id,
+                            id1 = outputNodeView.NodeData.id,
+                            id2 = inputNodeView.NodeData.id,
                             port1 = outport.Name,
                             port2 = inport.Name,
                         };
 
-                        partialGraph.edges.Add(edge);
+                        partialGraph.edges.Add(edgeData);
                     }
                 }
             }
@@ -764,34 +770,34 @@ namespace Physalia.Flexi.GraphViewEditor
             var topLeft = new Vector2(float.MaxValue, float.MaxValue);
             for (var i = 0; i < partialGraph.nodes.Count; i++)
             {
-                Node node = partialGraph.nodes[i];
-                if (node.position.x < topLeft.x)
+                NodeData nodeData = partialGraph.nodes[i];
+                if (nodeData.position.x < topLeft.x)
                 {
-                    topLeft.x = node.position.x;
+                    topLeft.x = nodeData.position.x;
                 }
 
-                if (node.position.y < topLeft.y)
+                if (nodeData.position.y < topLeft.y)
                 {
-                    topLeft.y = node.position.y;
+                    topLeft.y = nodeData.position.y;
                 }
             }
 
             // Offset the nodes to match the menu position
             for (var i = 0; i < partialGraph.nodes.Count; i++)
             {
-                Node node = partialGraph.nodes[i];
-                node.id = -node.id;
-                node.position += localMousePosition - topLeft;
-                graphView.AddNode(node);
+                NodeData nodeData = partialGraph.nodes[i];
+                nodeData.id = -nodeData.id;
+                nodeData.position += localMousePosition - topLeft;
+                graphView.AddNode(nodeData);
             }
 
             // Connect the edges
             for (var i = 0; i < partialGraph.edges.Count; i++)
             {
-                Edge edge = partialGraph.edges[i];
-                edge.id1 = -edge.id1;
-                edge.id2 = -edge.id2;
-                graphView.AddEdge(edge);
+                EdgeData edgeData = partialGraph.edges[i];
+                edgeData.id1 = -edgeData.id1;
+                edgeData.id2 = -edgeData.id2;
+                graphView.AddEdge(edgeData);
             }
 
             graphView.ValidateNodeIds();
@@ -826,24 +832,24 @@ namespace Physalia.Flexi.GraphViewEditor
                 {
                     if (element is NodeView nodeView)
                     {
-                        graphView.RemoveNode(nodeView.Node);
+                        graphView.RemoveNode(nodeView.NodeData);
                     }
                     else if (element is EdgeView edgeView)
                     {
                         var outputNodeView = edgeView.output.node as NodeView;
                         var inputNodeView = edgeView.input.node as NodeView;
-                        Port outport = outputNodeView.GetPort(edgeView.output);
-                        Port inport = inputNodeView.GetPort(edgeView.input);
-                        outport.Disconnect(inport);
+                        PortData outportData = outputNodeView.GetPortData(edgeView.output);
+                        PortData inportData = inputNodeView.GetPortData(edgeView.input);
+                        outportData.Disconnect(inportData);
 
-                        if (outport is MissingOutport && outport.GetConnections().Count == 0)
+                        if (outportData is MissingOutport && outportData.GetConnections().Count == 0)
                         {
-                            outputNodeView.DestroyPort(outport);
+                            outputNodeView.DestroyPort(outportData);
                         }
 
-                        if (inport is MissingInport && inport.GetConnections().Count == 0)
+                        if (inportData is MissingInport && inportData.GetConnections().Count == 0)
                         {
-                            inputNodeView.DestroyPort(inport);
+                            inputNodeView.DestroyPort(inportData);
                         }
                     }
                 }
@@ -852,13 +858,19 @@ namespace Physalia.Flexi.GraphViewEditor
             if (graphViewChange.edgesToCreate != null)
             {
                 SetDirty(true);
-                foreach (EdgeView edgeView in graphViewChange.edgesToCreate)
+                foreach (Edge edge in graphViewChange.edgesToCreate)
                 {
-                    var outputNodeView = edgeView.output.node as NodeView;
-                    var inputNodeView = edgeView.input.node as NodeView;
-                    Port outport = outputNodeView.GetPort(edgeView.output);
-                    Port inport = inputNodeView.GetPort(edgeView.input);
-                    outport.Connect(inport);
+                    if (edge is EdgeView edgeView)
+                    {
+                        if (edgeView.output.node is NodeView && edgeView.input.node is NodeView)
+                        {
+                            var outputNodeView = edgeView.output.node as NodeView;
+                            var inputNodeView = edgeView.input.node as NodeView;
+                            PortData outportData = outputNodeView.GetPortData(edgeView.output);
+                            PortData inportData = inputNodeView.GetPortData(edgeView.input);
+                            outportData.Connect(inportData);
+                        }
+                    }
                 }
             }
 
@@ -869,7 +881,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 {
                     if (element is NodeView nodeView)
                     {
-                        nodeView.Node.position = element.GetPosition().position;
+                        nodeView.NodeData.position = element.GetPosition().position;
                     }
                 }
             }

@@ -52,7 +52,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             visible = true;
 
-            Node node = nodeView.Node;
+            Node node = nodeView.NodeData;
             nodeNameLabel.text = node.GetType().Name;
 
             if (node is GraphInputNode)

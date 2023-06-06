@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using EdgeView = UnityEditor.Experimental.GraphView.Edge;
-using PortView = UnityEditor.Experimental.GraphView.Port;
 
 namespace Physalia.Flexi.GraphViewEditor
 {
+    using NodeData = Physalia.Flexi.Node;
+    using PortData = Physalia.Flexi.Port;
+    using EdgeData = Physalia.Flexi.Edge;
+    using Node = UnityEditor.Experimental.GraphView.Node;
+    using Port = UnityEditor.Experimental.GraphView.Port;
+    using Edge = UnityEditor.Experimental.GraphView.Edge;
+
     public class AbilityGraphView : GraphView
     {
         // Note: BUG!!! Derive for preventing bug, otherwise it cannot show the grid
@@ -16,7 +21,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private readonly AbilityGraph abilityGraph;
         private readonly AbilityGraphEditorWindow window;
 
-        private readonly Dictionary<Node, NodeView> nodeTable = new();
+        private readonly Dictionary<NodeData, NodeView> nodeTable = new();
         private Vector2 lastContextPosition;
 
         public Vector2 LastContextPosition => lastContextPosition;
@@ -56,10 +61,10 @@ namespace Physalia.Flexi.GraphViewEditor
 
         public void CreateNewNode(Type nodeType, Vector2 position)
         {
-            Node node = abilityGraph.AddNewNode(nodeType);
-            node.position = position;
-            NodeView nodeView = CreateNodeElement(node);
-            nodeTable.Add(node, nodeView);
+            NodeData nodeData = abilityGraph.AddNewNode(nodeType);
+            nodeData.position = position;
+            NodeView nodeView = CreateNodeElement(nodeData);
+            nodeTable.Add(nodeData, nodeView);
         }
 
         public void CreateMacroNode(MacroLibrary macroLibrary, string macroKey, Vector2 position)
@@ -71,65 +76,65 @@ namespace Physalia.Flexi.GraphViewEditor
             nodeTable.Add(node, nodeView);
         }
 
-        public void AddNode(Node node)
+        public void AddNode(NodeData nodeData)
         {
-            if (node == null)
+            if (nodeData == null)
             {
                 return;
             }
 
-            abilityGraph.AddNode(node);
-            NodeView nodeView = CreateNodeElement(node);
-            nodeTable.Add(node, nodeView);
+            abilityGraph.AddNode(nodeData);
+            NodeView nodeView = CreateNodeElement(nodeData);
+            nodeTable.Add(nodeData, nodeView);
         }
 
-        private NodeView CreateNodeElement(Node node)
+        private NodeView CreateNodeElement(NodeData nodeData)
         {
-            var nodeView = new NodeView(node, window, this);
-            nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
+            var nodeView = new NodeView(nodeData, window, this);
+            nodeView.SetPosition(new Rect(nodeData.position, nodeView.GetPosition().size));
             AddElement(nodeView);
             return nodeView;
         }
 
-        public void RemoveNode(Node node)
+        public void RemoveNode(NodeData nodeData)
         {
-            abilityGraph.RemoveNode(node);
-            if (nodeTable.TryGetValue(node, out NodeView nodeView))
+            abilityGraph.RemoveNode(nodeData);
+            if (nodeTable.TryGetValue(nodeData, out NodeView nodeView))
             {
-                nodeTable.Remove(node);
+                nodeTable.Remove(nodeData);
                 nodeView.RemoveFromHierarchy();
             }
         }
 
-        public void AddEdge(Edge edge)
+        public void AddEdge(EdgeData edgeData)
         {
-            Node node1 = abilityGraph.GetNode(edge.id1);
-            Node node2 = abilityGraph.GetNode(edge.id2);
-            Port port1 = node1.GetPort(edge.port1);
-            Port port2 = node2.GetPort(edge.port2);
-            port1.Connect(port2);
+            NodeData nodeData1 = abilityGraph.GetNode(edgeData.id1);
+            NodeData nodeData2 = abilityGraph.GetNode(edgeData.id2);
+            PortData portData1 = nodeData1.GetPort(edgeData.port1);
+            PortData portData2 = nodeData2.GetPort(edgeData.port2);
+            portData1.Connect(portData2);
 
-            NodeView currentNodeView = nodeTable[node1];
-            NodeView anotherNodeView = nodeTable[node2];
-            PortView portView1 = currentNodeView.GetPortView(port1);
-            PortView portView2 = anotherNodeView.GetPortView(port2);
-            EdgeView edgeView = portView1.ConnectTo(portView2);
+            NodeView currentNodeView = nodeTable[nodeData1];
+            NodeView anotherNodeView = nodeTable[nodeData2];
+            Port port1 = currentNodeView.GetPortView(portData1);
+            Port port2 = anotherNodeView.GetPortView(portData2);
+            EdgeView edgeView = port1.ConnectTo<EdgeView>(port2);
             AddElement(edgeView);
         }
 
-        public void RemoveEdgeView(EdgeView edgeView)
+        public void RemoveEdgeView(Edge edge)
         {
-            edgeView.input?.Disconnect(edgeView);
-            edgeView.output?.Disconnect(edgeView);
-            RemoveElement(edgeView);
+            edge.input?.Disconnect(edge);
+            edge.output?.Disconnect(edge);
+            RemoveElement(edge);
         }
 
-        public void RemoveAllEdgeViewsFromPortView(PortView portView)
+        public void RemoveAllEdgeViewsFromPortView(Port port)
         {
-            var edgeViews = new List<EdgeView>(portView.connections);
-            for (var i = 0; i < edgeViews.Count; i++)
+            var edges = new List<Edge>(port.connections);
+            for (var i = 0; i < edges.Count; i++)
             {
-                RemoveEdgeView(edgeViews[i]);
+                RemoveEdgeView(edges[i]);
             }
         }
 
@@ -145,12 +150,12 @@ namespace Physalia.Flexi.GraphViewEditor
             lastContextPosition = ElementAt(1).WorldToLocal(worldPos);
         }
 
-        public override List<PortView> GetCompatiblePorts(PortView startAnchor, NodeAdapter nodeAdapter)
+        public override List<Port> GetCompatiblePorts(Port startAnchor, NodeAdapter nodeAdapter)
         {
-            var compatiblePorts = new List<PortView>();
-            foreach (PortView portView in ports.ToList())
+            var compatiblePorts = new List<Port>();
+            foreach (Port port in ports.ToList())
             {
-                if (startAnchor.node == portView.node || startAnchor.direction == portView.direction)
+                if (startAnchor.node == port.node || startAnchor.direction == port.direction)
                 {
                     continue;
                 }
@@ -158,16 +163,16 @@ namespace Physalia.Flexi.GraphViewEditor
                 bool canCast;
                 if (startAnchor.direction == Direction.Output)
                 {
-                    canCast = ConversionUtility.CanConvert(startAnchor.portType, portView.portType);
+                    canCast = ConversionUtility.CanConvert(startAnchor.portType, port.portType);
                 }
                 else
                 {
-                    canCast = ConversionUtility.CanConvert(portView.portType, startAnchor.portType);
+                    canCast = ConversionUtility.CanConvert(port.portType, startAnchor.portType);
                 }
 
                 if (canCast)
                 {
-                    compatiblePorts.Add(portView);
+                    compatiblePorts.Add(port);
                 }
             }
             return compatiblePorts;
@@ -209,8 +214,8 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             var graphView = new AbilityGraphView(abilityGraph, window);
 
-            IReadOnlyList<Node> nodes = abilityGraph.Nodes;
-            if (!abilityGraph.HasSubgraphElement() && nodes.Count == 0)
+            IReadOnlyList<NodeData> nodeDatas = abilityGraph.Nodes;
+            if (!abilityGraph.HasSubgraphElement() && nodeDatas.Count == 0)
             {
                 return graphView;
             }
@@ -218,28 +223,28 @@ namespace Physalia.Flexi.GraphViewEditor
             // Create subgraph input/output if necessary
             if (abilityGraph.GraphInputNode != null)
             {
-                Node node = abilityGraph.GraphInputNode;
+                NodeData nodeData = abilityGraph.GraphInputNode;
 
-                var nodeView = new NodeView(node, window, graphView);
-                nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
+                var nodeView = new NodeView(nodeData, window, graphView);
+                nodeView.SetPosition(new Rect(nodeData.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
-                graphView.nodeTable.Add(node, nodeView);
+                graphView.nodeTable.Add(nodeData, nodeView);
             }
 
             if (abilityGraph.GraphOutputNode != null)
             {
-                Node node = abilityGraph.GraphOutputNode;
+                NodeData nodeData = abilityGraph.GraphOutputNode;
 
-                var nodeView = new NodeView(node, window, graphView);
-                nodeView.SetPosition(new Rect(node.position, nodeView.GetPosition().size));
+                var nodeView = new NodeView(nodeData, window, graphView);
+                nodeView.SetPosition(new Rect(nodeData.position, nodeView.GetPosition().size));
                 graphView.AddElement(nodeView);
-                graphView.nodeTable.Add(node, nodeView);
+                graphView.nodeTable.Add(nodeData, nodeView);
             }
 
             // Create nodes
-            for (var i = 0; i < nodes.Count; i++)
+            for (var i = 0; i < nodeDatas.Count; i++)
             {
-                Node nodeData = nodes[i];
+                NodeData nodeData = nodeDatas[i];
 
                 var node = new NodeView(nodeData, window, graphView);
                 node.SetPosition(new Rect(nodeData.position, node.GetPosition().size));
@@ -254,7 +259,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             // Create edges with DFS
-            var unhandledNodes = new HashSet<Node>();
+            var unhandledNodes = new HashSet<NodeData>();
             if (abilityGraph.GraphInputNode != null)
             {
                 unhandledNodes.Add(abilityGraph.GraphInputNode);
@@ -263,33 +268,33 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 unhandledNodes.Add(abilityGraph.GraphOutputNode);
             }
-            for (var i = 0; i < nodes.Count; i++)
+            for (var i = 0; i < nodeDatas.Count; i++)
             {
-                unhandledNodes.Add(nodes[i]);
+                unhandledNodes.Add(nodeDatas[i]);
             }
 
-            Node current = abilityGraph.GetFirstNode();
+            NodeData current = abilityGraph.GetFirstNode();
             SearchAllNodes(current, ref graphView, ref unhandledNodes);
 
             return graphView;
         }
 
-        private static void SearchAllNodes(Node current, ref AbilityGraphView graphView, ref HashSet<Node> unhandledNodes)
+        private static void SearchAllNodes(NodeData current, ref AbilityGraphView graphView, ref HashSet<NodeData> unhandledNodes)
         {
             if (!unhandledNodes.Contains(current))
             {
                 return;
             }
 
-            foreach (Port currentPort in current.Ports)
+            foreach (PortData currentPort in current.Ports)
             {
-                IReadOnlyList<Port> connections = currentPort.GetConnections();
+                IReadOnlyList<PortData> connections = currentPort.GetConnections();
                 if (connections.Count == 0)
                 {
                     continue;
                 }
 
-                foreach (Port anotherPort in connections)
+                foreach (PortData anotherPort in connections)
                 {
                     if (!unhandledNodes.Contains(anotherPort.Node))
                     {
@@ -299,25 +304,25 @@ namespace Physalia.Flexi.GraphViewEditor
                     NodeView currentNodeView = graphView.nodeTable[current];
                     NodeView anotherNodeView = graphView.nodeTable[anotherPort.Node];
 
-                    PortView portView1 = currentNodeView.GetPortView(currentPort);
-                    PortView portView2 = anotherNodeView.GetPortView(anotherPort);
+                    Port port1 = currentNodeView.GetPortView(currentPort);
+                    Port port2 = anotherNodeView.GetPortView(anotherPort);
 
-                    EdgeView edgeView = portView1.ConnectTo(portView2);
+                    EdgeView edgeView = port1.ConnectTo<EdgeView>(port2);
                     graphView.AddElement(edgeView);
                 }
             }
 
             unhandledNodes.Remove(current);
 
-            foreach (Port currentPort in current.Ports)
+            foreach (PortData currentPort in current.Ports)
             {
-                IReadOnlyList<Port> connections = currentPort.GetConnections();
+                IReadOnlyList<PortData> connections = currentPort.GetConnections();
                 if (connections.Count == 0)
                 {
                     continue;
                 }
 
-                foreach (Port anotherPort in connections)
+                foreach (PortData anotherPort in connections)
                 {
                     SearchAllNodes(anotherPort.Node, ref graphView, ref unhandledNodes);
                 }
