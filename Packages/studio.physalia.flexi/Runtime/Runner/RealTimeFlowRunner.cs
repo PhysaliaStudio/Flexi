@@ -23,6 +23,12 @@ namespace Physalia.Flexi
         {
             for (var i = 0; i < flows.Count; i++)
             {
+                // If the flow is already running, skip it, or it will move next.
+                if (flows[i].Current != null)
+                {
+                    continue;
+                }
+
                 StepHandleAction handleAction;
                 do
                 {
