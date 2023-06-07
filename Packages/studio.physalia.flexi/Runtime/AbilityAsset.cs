@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Physalia.Flexi
         [SerializeField]
         private List<string> graphJsons = new();
 
+        [NonSerialized]
         private AbilityData abilityData;
 
         internal List<BlackboardVariable> Blackboard
