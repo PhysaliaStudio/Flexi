@@ -10,6 +10,76 @@
   min-width: 50px;
 }
 
+#input-field-container {
+  --layer: -50;
+  position: absolute;
+  right: 100%;
+  top: 42px;
+  align-items: flex-end;
+  padding-top: 4px;
+}
+
+#input-field-container .port-input-element {
+  background-color: rgba(72, 72, 72, 0.6);
+  height: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-right: 1px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+#input-field-container .port-input-element__hidden {
+  visibility: Hidden;
+  height: 20px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-right: 2px;
+  margin-left: 2px;
+  padding-right: 1px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+#input-field-container .port-input-element Vector2Field Label,
+#input-field-container .port-input-element Vector3Field Label,
+#input-field-container .port-input-element Vector4Field Label,
+#input-field-container .port-input-element Vector2IntField Label,
+#input-field-container .port-input-element Vector3IntField Label {
+  min-width: 8px;
+  flex-basis: 8px;
+  padding-top: 2px;
+  margin-right: 4px;
+}
+
+#input-field-container .port-input-element Toggle .unity-toggle__input {
+  height: 18px;
+}
+
+#input-field-container .port-input-element TextField TextInput {
+  min-width: 100px;
+  height: 18px;
+}
+
+#input-field-container .port-input-element IntegerField IntegerInput,
+#input-field-container .port-input-element LongField LongInput,
+#input-field-container .port-input-element FloatField FloatInput,
+#input-field-container .port-input-element DoubleField DoubleInput,
+#input-field-container .port-input-element Vector2Field FloatInput,
+#input-field-container .port-input-element Vector3Field FloatInput,
+#input-field-container .port-input-element Vector4Field FloatInput,
+#input-field-container .port-input-element Vector2IntField IntegerInput,
+#input-field-container .port-input-element Vector3IntField IntegerInput {
+  min-width: 50px;
+  height: 18px;
+}
+
+.node #node-border {
+  overflow: visible;
+}
+
 .node #extension {
   background-color: rgba(43, 43, 43, 0.8);
 }
