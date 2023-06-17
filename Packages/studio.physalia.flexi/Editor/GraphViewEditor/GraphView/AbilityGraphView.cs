@@ -48,10 +48,77 @@ namespace Physalia.Flexi.GraphViewEditor
             var searchWindowProvider = ScriptableObject.CreateInstance<NodeSearchWindowProvider>();
             searchWindowProvider.Initialize(this);
 
+            graphViewChanged += OnChanged;
             nodeCreationRequest = context =>
             {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindowProvider);
             };
+        }
+
+        private GraphViewChange OnChanged(GraphViewChange graphViewChange)
+        {
+            if (graphViewChange.elementsToRemove != null)
+            {
+                window.SetDirty(true);
+                foreach (GraphElement element in graphViewChange.elementsToRemove)
+                {
+                    if (element is NodeView nodeView)
+                    {
+                        RemoveNode(nodeView.NodeData);
+                    }
+                    else if (element is EdgeView edgeView)
+                    {
+                        var outputNodeView = edgeView.output.node as NodeView;
+                        var inputNodeView = edgeView.input.node as NodeView;
+                        PortData outportData = outputNodeView.GetPortData(edgeView.output);
+                        PortData inportData = inputNodeView.GetPortData(edgeView.input);
+                        outportData.Disconnect(inportData);
+
+                        if (outportData is MissingOutport && outportData.GetConnections().Count == 0)
+                        {
+                            outputNodeView.DestroyPort(outportData);
+                        }
+
+                        if (inportData is MissingInport && inportData.GetConnections().Count == 0)
+                        {
+                            inputNodeView.DestroyPort(inportData);
+                        }
+                    }
+                }
+            }
+
+            if (graphViewChange.edgesToCreate != null)
+            {
+                window.SetDirty(true);
+                foreach (Edge edge in graphViewChange.edgesToCreate)
+                {
+                    if (edge is EdgeView edgeView)
+                    {
+                        if (edgeView.output.node is NodeView && edgeView.input.node is NodeView)
+                        {
+                            var outputNodeView = edgeView.output.node as NodeView;
+                            var inputNodeView = edgeView.input.node as NodeView;
+                            PortData outportData = outputNodeView.GetPortData(edgeView.output);
+                            PortData inportData = inputNodeView.GetPortData(edgeView.input);
+                            outportData.Connect(inportData);
+                        }
+                    }
+                }
+            }
+
+            if (graphViewChange.movedElements != null)
+            {
+                window.SetDirty(true);
+                foreach (GraphElement element in graphViewChange.movedElements)
+                {
+                    if (element is NodeView nodeView)
+                    {
+                        nodeView.NodeData.position = element.GetPosition().position;
+                    }
+                }
+            }
+
+            return graphViewChange;
         }
 
         public AbilityGraph GetAbilityGraph()

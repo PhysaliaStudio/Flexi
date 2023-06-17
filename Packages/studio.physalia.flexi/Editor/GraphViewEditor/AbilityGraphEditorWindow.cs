@@ -683,7 +683,6 @@ namespace Physalia.Flexi.GraphViewEditor
 
             this.graphView = graphView;
             graphView.name = GRAPH_VIEW_NAME;
-            graphView.graphViewChanged += OnGraphViewChanged;
             graphView.serializeGraphElements += SerializeGraphElements;
             graphView.canPasteSerializedData += CanPasteSerializedData;
             graphView.unserializeAndPaste += UnserializeAndPaste;
@@ -821,72 +820,6 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return canParse;
-        }
-
-        private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange)
-        {
-            if (graphViewChange.elementsToRemove != null)
-            {
-                SetDirty(true);
-                foreach (GraphElement element in graphViewChange.elementsToRemove)
-                {
-                    if (element is NodeView nodeView)
-                    {
-                        graphView.RemoveNode(nodeView.NodeData);
-                    }
-                    else if (element is EdgeView edgeView)
-                    {
-                        var outputNodeView = edgeView.output.node as NodeView;
-                        var inputNodeView = edgeView.input.node as NodeView;
-                        PortData outportData = outputNodeView.GetPortData(edgeView.output);
-                        PortData inportData = inputNodeView.GetPortData(edgeView.input);
-                        outportData.Disconnect(inportData);
-
-                        if (outportData is MissingOutport && outportData.GetConnections().Count == 0)
-                        {
-                            outputNodeView.DestroyPort(outportData);
-                        }
-
-                        if (inportData is MissingInport && inportData.GetConnections().Count == 0)
-                        {
-                            inputNodeView.DestroyPort(inportData);
-                        }
-                    }
-                }
-            }
-
-            if (graphViewChange.edgesToCreate != null)
-            {
-                SetDirty(true);
-                foreach (Edge edge in graphViewChange.edgesToCreate)
-                {
-                    if (edge is EdgeView edgeView)
-                    {
-                        if (edgeView.output.node is NodeView && edgeView.input.node is NodeView)
-                        {
-                            var outputNodeView = edgeView.output.node as NodeView;
-                            var inputNodeView = edgeView.input.node as NodeView;
-                            PortData outportData = outputNodeView.GetPortData(edgeView.output);
-                            PortData inportData = inputNodeView.GetPortData(edgeView.input);
-                            outportData.Connect(inportData);
-                        }
-                    }
-                }
-            }
-
-            if (graphViewChange.movedElements != null)
-            {
-                SetDirty(true);
-                foreach (GraphElement element in graphViewChange.movedElements)
-                {
-                    if (element is NodeView nodeView)
-                    {
-                        nodeView.NodeData.position = element.GetPosition().position;
-                    }
-                }
-            }
-
-            return graphViewChange;
         }
 
         internal bool IsDirty()
