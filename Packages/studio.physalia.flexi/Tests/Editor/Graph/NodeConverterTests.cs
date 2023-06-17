@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using NUnit.Framework;
@@ -9,9 +10,11 @@ namespace Physalia.Flexi.Tests
     public class NodeConverterTests
     {
         [NodeCategoryForTests]
-        public class TestNode : Node
+        private class TestNode : Node
         {
-            public Inport<string> input;
+            public Inport<object> someObject;
+            public Inport<string> text;
+            public Inport<List<int>> intList;
             public Outport<int> output;
             public Variable<int> value;
         }
@@ -28,6 +31,39 @@ namespace Physalia.Flexi.Tests
             var json = JsonConvert.SerializeObject(node);
 
             var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0},\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}";
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void SerializeCustomNode_InportIsDefined()
+        {
+            TestNode node = NodeFactory.Create<TestNode>();
+            node.id = 1;
+            node.position = new Vector2(200f, 100f);
+            node.text.DefaultValue = "Hello World!";
+            node.value.Value = 42;
+
+            var json = JsonConvert.SerializeObject(node);
+
+            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0}," +
+                "\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\"," +
+                "\"text\":\"Hello World!\",\"value\":42}";
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void SerializeCustomNode_InportIsDefinedButSameAsDefault()
+        {
+            TestNode node = NodeFactory.Create<TestNode>();
+            node.id = 1;
+            node.position = new Vector2(200f, 100f);
+            node.text.DefaultValue = "";
+            node.value.Value = 42;
+
+            var json = JsonConvert.SerializeObject(node);
+
+            var expected = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0}," +
+                "\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\",\"value\":42}";
             Assert.AreEqual(expected, json);
         }
 
@@ -55,10 +91,32 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(true, node is TestNode);
             Assert.AreEqual(1, node.id);
             Assert.AreEqual(new Vector2(200f, 100f), node.position);
-            Assert.AreEqual(true, (node as TestNode).input != null);
+            Assert.AreEqual(true, (node as TestNode).text != null);
             Assert.AreEqual(true, (node as TestNode).output != null);
-            Assert.AreEqual(node, (node as TestNode).input.Node);
+            Assert.AreEqual(node, (node as TestNode).text.Node);
             Assert.AreEqual(node, (node as TestNode).output.Node);
+            Assert.AreEqual("", (node as TestNode).text.DefaultValue);
+            TestUtilities.AreListEqual(new List<int>(), (node as TestNode).intList.DefaultValue);
+            Assert.AreEqual(42, (node as TestNode).value.Value);
+        }
+
+        [Test]
+        public void DeserializeCustomNode_InportIsDefined()
+        {
+            var json = "{\"_id\":1,\"_position\":{\"x\":200.0,\"y\":100.0}," +
+                "\"_type\":\"Physalia.Flexi.Tests.NodeConverterTests+TestNode\"," +
+                "\"text\":\"Hello World!\",\"value\":42}";
+
+            Node node = JsonConvert.DeserializeObject<Node>(json);
+
+            Assert.AreEqual(true, node is TestNode);
+            Assert.AreEqual(1, node.id);
+            Assert.AreEqual(new Vector2(200f, 100f), node.position);
+            Assert.AreEqual(true, (node as TestNode).text != null);
+            Assert.AreEqual(true, (node as TestNode).output != null);
+            Assert.AreEqual(node, (node as TestNode).text.Node);
+            Assert.AreEqual(node, (node as TestNode).output.Node);
+            Assert.AreEqual("Hello World!", (node as TestNode).text.DefaultValue);
             Assert.AreEqual(42, (node as TestNode).value.Value);
         }
 
