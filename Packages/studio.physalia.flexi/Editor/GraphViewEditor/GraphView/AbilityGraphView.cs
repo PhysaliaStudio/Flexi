@@ -64,7 +64,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 {
                     if (element is NodeView nodeView)
                     {
-                        RemoveNode(nodeView.NodeData);
+                        RemoveNodeView(nodeView.NodeData);
                     }
                     else if (element is EdgeView edgeView)
                     {
@@ -134,17 +134,14 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             NodeData nodeData = abilityGraph.AddNewNode(nodeType);
             nodeData.position = position;
-            NodeView nodeView = CreateNodeElement(nodeData);
-            nodeTable.Add(nodeData, nodeView);
+            _ = CreateNodeView(nodeData);
         }
 
         public void CreateMacroNode(MacroLibrary macroLibrary, string macroKey, Vector2 position)
         {
             SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, macroKey);
             node.position = position;
-
-            NodeView nodeView = CreateNodeElement(node);
-            nodeTable.Add(node, nodeView);
+            _ = CreateNodeView(node);
         }
 
         public void AddNode(NodeData nodeData)
@@ -155,19 +152,20 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             abilityGraph.AddNode(nodeData);
-            NodeView nodeView = CreateNodeElement(nodeData);
-            nodeTable.Add(nodeData, nodeView);
+            _ = CreateNodeView(nodeData);
         }
 
-        private NodeView CreateNodeElement(NodeData nodeData)
+        private NodeView CreateNodeView(NodeData nodeData)
         {
             var nodeView = new NodeView(nodeData, window, this);
             nodeView.SetPosition(new Rect(nodeData.position, nodeView.GetPosition().size));
             AddElement(nodeView);
+
+            nodeTable.Add(nodeData, nodeView);
             return nodeView;
         }
 
-        public void RemoveNode(NodeData nodeData)
+        private void RemoveNodeView(NodeData nodeData)
         {
             abilityGraph.RemoveNode(nodeData);
             if (nodeTable.TryGetValue(nodeData, out NodeView nodeView))
