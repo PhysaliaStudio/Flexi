@@ -70,6 +70,8 @@ namespace Physalia.Flexi.GraphViewEditor
                     {
                         var outputNodeView = edgeView.output.node as NodeView;
                         var inputNodeView = edgeView.input.node as NodeView;
+                        inputNodeView.OnInputPortDisconnected(edgeView.input as PortView);
+
                         PortData outportData = outputNodeView.GetPortData(edgeView.output);
                         PortData inportData = inputNodeView.GetPortData(edgeView.input);
                         outportData.Disconnect(inportData);
@@ -98,6 +100,8 @@ namespace Physalia.Flexi.GraphViewEditor
                         {
                             var outputNodeView = edgeView.output.node as NodeView;
                             var inputNodeView = edgeView.input.node as NodeView;
+                            inputNodeView.OnInputPortConnected(edgeView.input as PortView);
+
                             PortData outportData = outputNodeView.GetPortData(edgeView.output);
                             PortData inportData = inputNodeView.GetPortData(edgeView.input);
                             outportData.Connect(inportData);
@@ -373,6 +377,16 @@ namespace Physalia.Flexi.GraphViewEditor
 
                     Port port1 = currentNodeView.GetPortView(currentPort);
                     Port port2 = anotherNodeView.GetPortView(anotherPort);
+
+                    // TODO: We need to trigger this handler manually, which is really ugly.
+                    if (port1.direction == Direction.Input)
+                    {
+                        currentNodeView.OnInputPortConnected(port1 as PortView);
+                    }
+                    else
+                    {
+                        anotherNodeView.OnInputPortConnected(port2 as PortView);
+                    }
 
                     EdgeView edgeView = port1.ConnectTo<EdgeView>(port2);
                     graphView.AddElement(edgeView);

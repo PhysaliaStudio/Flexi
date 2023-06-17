@@ -505,6 +505,36 @@ namespace Physalia.Flexi.GraphViewEditor
             portViewToDataTable.Remove(portView);
         }
 
+        public void OnInputPortConnected(PortView input)
+        {
+            HideInputField(input);
+        }
+
+        public void OnInputPortDisconnected(PortView input)
+        {
+            ShowInputField(input);
+        }
+
+        private void ShowInputField(PortView input)
+        {
+            bool success = inputPortToFieldTable.TryGetValue(input, out VisualElement inputField);
+            if (success)
+            {
+                inputField.RemoveFromClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+                inputField.AddToClassList(USS_CLASS_INPUT_FIELD);
+            }
+        }
+
+        private void HideInputField(PortView input)
+        {
+            bool success = inputPortToFieldTable.TryGetValue(input, out VisualElement inputField);
+            if (success)
+            {
+                inputField.RemoveFromClassList(USS_CLASS_INPUT_FIELD);
+                inputField.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+            }
+        }
+
         public void ChangePortIndex(Direction direction, int index1, int index2)
         {
             if (direction == Direction.Input)
