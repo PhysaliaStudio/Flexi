@@ -44,6 +44,8 @@ namespace Physalia.Flexi.GraphViewEditor
         private readonly Dictionary<Port, PortData> portViewToDataTable = new();
 
         public NodeData NodeData => nodeData;
+        public IReadOnlyList<PortView> InputPorts => inputPortViews;
+        public IReadOnlyList<PortView> OutputPorts => outputPortViews;
 
         public NodeView(NodeData nodeData, AbilityGraphEditorWindow window, AbilityGraphView graphView)
             : base(EditorConst.PackagePath + "Editor/GraphViewEditor/UiAssets/Node.uxml")
@@ -321,12 +323,15 @@ namespace Physalia.Flexi.GraphViewEditor
             AddPortView(portData);
         }
 
-        public PortView CreateInputPortView(string name, Type type, int index = -1)
+        private PortView CreateInputPortView(Inport inportData, int index)
         {
-            VisualElement inputField = CreateInputField(type);
-            var portView = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Multi, type) { portName = name };
+            string portName = GetPortPrettyName(inportData.Name);
+            Type portType = inportData.ValueType;
+            var portView = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Multi, portType) { portName = portName };
 
+            VisualElement inputField = CreateInputField(inportData);
             inputPortToFieldTable.Add(portView, inputField);
+
             if (index == -1)
             {
                 inputPortViews.Add(portView);
@@ -343,73 +348,107 @@ namespace Physalia.Flexi.GraphViewEditor
             return portView;
         }
 
-        public PortView CreateOutputPortView(string name, Type type, int index = -1)
+        private PortView CreateOutputPortView(Outport outport, int index = -1)
         {
-            var portView = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Multi, type)
-            {
-                portName = name
-            };
+            string portName = GetPortPrettyName(outport.Name);
+            Type portType = outport.ValueType;
+            var portView = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Multi, portType) { portName = portName };
 
-            outputPortViews.Add(portView);
             if (index == -1)
             {
+                outputPortViews.Add(portView);
                 outputContainer.Add(portView);
             }
             else
             {
+                outputPortViews.Insert(index, portView);
                 outputContainer.Insert(index, portView);
             }
 
             return portView;
         }
 
-        private VisualElement CreateInputField(Type portType)
+        private VisualElement CreateInputField(Inport inportData)
         {
-            BindableElement field = null;
+            Type portType = inportData.ValueType;
 
-            if (portType == typeof(bool))
+            BindableElement field = null;
+            if (inportData is Inport<bool> inportBool)
             {
-                field = new Toggle();
+                var toggle = new Toggle();
+                toggle.SetValueWithoutNotify(inportBool.DefaultValue);
+                toggle.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = toggle;
             }
-            else if (portType == typeof(int))
+            else if (inportData is Inport<int> inportInt)
             {
-                field = new IntegerField();
+                var integerField = new IntegerField();
+                integerField.SetValueWithoutNotify(inportInt.DefaultValue);
+                integerField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = integerField;
             }
-            else if (portType == typeof(long))
+            else if (inportData is Inport<long> inportLong)
             {
-                field = new LongField();
+                var longField = new LongField();
+                longField.SetValueWithoutNotify(inportLong.DefaultValue);
+                longField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = longField;
             }
-            else if (portType == typeof(float))
+            else if (inportData is Inport<float> inportFloat)
             {
-                field = new FloatField();
+                var floatField = new FloatField();
+                floatField.SetValueWithoutNotify(inportFloat.DefaultValue);
+                floatField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = floatField;
             }
-            else if (portType == typeof(double))
+            else if (inportData is Inport<double> inportDouble)
             {
-                field = new DoubleField();
+                var doubleField = new DoubleField();
+                doubleField.SetValueWithoutNotify(inportDouble.DefaultValue);
+                doubleField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = doubleField;
             }
-            else if (portType == typeof(Vector2))
+            else if (inportData is Inport<Vector2> inportVector2)
             {
-                field = new Vector2Field();
+                var vector2Field = new Vector2Field();
+                vector2Field.SetValueWithoutNotify(inportVector2.DefaultValue);
+                vector2Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector2Field;
             }
-            else if (portType == typeof(Vector3))
+            else if (inportData is Inport<Vector3> inportVector3)
             {
-                field = new Vector3Field();
+                var vector3Field = new Vector3Field();
+                vector3Field.SetValueWithoutNotify(inportVector3.DefaultValue);
+                vector3Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector3Field;
             }
-            else if (portType == typeof(Vector4))
+            else if (inportData is Inport<Vector4> inportVector4)
             {
-                field = new Vector4Field();
+                var vector4Field = new Vector4Field();
+                vector4Field.SetValueWithoutNotify(inportVector4.DefaultValue);
+                vector4Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector4Field;
             }
-            else if (portType == typeof(Vector2Int))
+            else if (inportData is Inport<Vector2Int> inportVector2Int)
             {
-                field = new Vector2IntField();
+                var vector2IntField = new Vector2IntField();
+                vector2IntField.SetValueWithoutNotify(inportVector2Int.DefaultValue);
+                vector2IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector2IntField;
             }
-            else if (portType == typeof(Vector3Int))
+            else if (inportData is Inport<Vector3Int> inportVector3Int)
             {
-                field = new Vector3IntField();
+                var vector3IntField = new Vector3IntField();
+                vector3IntField.SetValueWithoutNotify(inportVector3Int.DefaultValue);
+                vector3IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector3IntField;
             }
-            else if (portType == typeof(string))
+            else if (inportData is Inport<string> inportString)
             {
-                field = new TextField();
+                var textField = new TextField();
+                textField.SetValueWithoutNotify(inportString.DefaultValue);
+                textField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = textField;
             }
 
             var box = new VisualElement();
@@ -428,9 +467,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void AddPortView(PortData portData, int index = -1)
         {
-            if (portData is Inport)
+            if (portData is Inport inportData)
             {
-                Port port = CreateInputPortView(GetPortPrettyName(portData.Name), portData.ValueType, index);
+                Port port = CreateInputPortView(inportData, index);
 
                 if (portData is MissingInport)
                 {
@@ -440,9 +479,9 @@ namespace Physalia.Flexi.GraphViewEditor
                 portDataToViewTable.Add(portData, port);
                 portViewToDataTable.Add(port, portData);
             }
-            else if (portData is Outport)
+            else if (portData is Outport outportData)
             {
-                Port port = CreateOutputPortView(GetPortPrettyName(portData.Name), portData.ValueType, index);
+                Port port = CreateOutputPortView(outportData, index);
 
                 if (portData is MissingOutport)
                 {
