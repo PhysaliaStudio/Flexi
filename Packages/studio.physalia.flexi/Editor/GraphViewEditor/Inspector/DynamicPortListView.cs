@@ -115,14 +115,14 @@ namespace Physalia.Flexi.GraphViewEditor
                             return;
                         }
 
-                        Port portWithNewName = currentNodeView.GetPort(evt.newValue);
+                        Port portWithNewName = currentNodeView.GetPortData(evt.newValue);
                         if (portWithNewName != null)
                         {
                             nameField.SetValueWithoutNotify(evt.previousValue);
                             return;
                         }
 
-                        Port port = currentNodeView.GetPort(evt.previousValue);
+                        Port port = currentNodeView.GetPortData(evt.previousValue);
                         if (port == null)
                         {
                             portData.name = evt.newValue;
@@ -168,7 +168,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
                         portData.type = type;
 
-                        Port port = currentNodeView.GetPort(portData.name);
+                        Port port = currentNodeView.GetPortData(portData.name);
                         if (port == null)
                         {
                             if (!string.IsNullOrEmpty(portData.name) && portData.type != null)
@@ -223,12 +223,12 @@ namespace Physalia.Flexi.GraphViewEditor
                 var dynamicPorts = new List<Port>();
                 if (direction == Direction.Input)
                 {
-                    IReadOnlyList<Inport> dynamicInports = nodeView.Node.DynamicInports;
+                    IReadOnlyList<Inport> dynamicInports = nodeView.NodeData.DynamicInports;
                     dynamicPorts.AddRange(dynamicInports);
                 }
                 else if (direction == Direction.Output)
                 {
-                    IReadOnlyList<Outport> dynamicOutports = nodeView.Node.DynamicOutports;
+                    IReadOnlyList<Outport> dynamicOutports = nodeView.NodeData.DynamicOutports;
                     dynamicPorts.AddRange(dynamicOutports);
 
                 }

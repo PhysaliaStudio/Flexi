@@ -51,7 +51,8 @@ namespace Physalia.Flexi
 
         private static void ReadVariables(JsonSerializer serializer, JObject jsonObject, Node node)
         {
-            FieldInfo[] fields = node.GetType().GetFields();
+            BindingFlags flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            FieldInfo[] fields = node.GetType().GetFields(flags);
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
@@ -73,17 +74,27 @@ namespace Physalia.Flexi
                     continue;
                 }
 
+                if (fieldType.IsSubclassOf(typeof(Inport)))
+                {
+                    if (field.GetValue(node) is Inport inport)
+                    {
+                        JToken jsonToken = jsonObject[field.Name];
+                        if (jsonToken != null)
+                        {
+                            inport.DefaultValue = jsonToken.ToObject(inport.ValueType, serializer);
+                        }
+                    }
+                }
+
                 if (fieldType.IsSubclassOf(typeof(Variable)))
                 {
                     if (field.GetValue(node) is Variable variable)
                     {
                         JToken jsonToken = jsonObject[field.Name];
-                        if (jsonToken == null)
+                        if (jsonToken != null)
                         {
-                            continue;
+                            variable.Value = jsonToken.ToObject(variable.ValueType, serializer);
                         }
-
-                        variable.Value = jsonToken.ToObject(variable.ValueType, serializer);
                     }
                 }
             }
@@ -173,6 +184,18 @@ namespace Physalia.Flexi
                 if (fieldType.IsDefined(typeof(NonSerializedAttribute), true))
                 {
                     continue;
+                }
+
+                if (fieldType.IsSubclassOf(typeof(Inport)))
+                {
+                    if (field.GetValue(value) is Inport inport)
+                    {
+                        if (inport.IsDefaultValueSet())
+                        {
+                            writer.WritePropertyName(field.Name);
+                            serializer.Serialize(writer, inport.DefaultValue);
+                        }
+                    }
                 }
 
                 if (fieldType.IsSubclassOf(typeof(Variable)))

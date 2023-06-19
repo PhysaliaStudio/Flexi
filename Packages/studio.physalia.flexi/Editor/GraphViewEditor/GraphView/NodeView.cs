@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using PortView = UnityEditor.Experimental.GraphView.Port;
 
 namespace Physalia.Flexi.GraphViewEditor
 {
+    using static UnityEditor.Experimental.GraphView.Port;
+    using NodeData = Node;
+    using Port = UnityEditor.Experimental.GraphView.Port;
+    using PortData = Port;
+
     public class NodeView : UnityEditor.Experimental.GraphView.Node
     {
         private const string USS_CLASS_ENTRY_NODE = "entry-node";
@@ -22,35 +27,48 @@ namespace Physalia.Flexi.GraphViewEditor
         private const string USS_CLASS_INTEGER_NODE = "integer-node";
         private const string USS_CLASS_OTHER_NODE = "other-node";
 
+        private const string USS_CLASS_INPUT_FIELD = "port-input-element";
+        private const string USS_CLASS_INPUT_FIELD_HIDDEN = "port-input-element__hidden";
+
         private static readonly Color MISSING_PORT_COLOR = new(1f, 0f, 0f);
 
-        private readonly Node node;
+        private VisualElement inputFieldContainer;
+        private readonly List<PortView> inputPortViews = new();
+        private readonly List<PortView> outputPortViews = new();
+        private readonly Dictionary<PortView, VisualElement> inputPortToFieldTable = new();
+
+        private readonly NodeData nodeData;
         private readonly AbilityGraphEditorWindow window;
         private readonly AbilityGraphView graphView;
-        private readonly Dictionary<Port, PortView> portDataToViewTable = new();
-        private readonly Dictionary<PortView, Port> portViewToDataTable = new();
+        private readonly Dictionary<PortData, Port> portDataToViewTable = new();
+        private readonly Dictionary<Port, PortData> portViewToDataTable = new();
 
-        public Node Node => node;
+        public NodeData NodeData => nodeData;
+        public IReadOnlyList<PortView> InputPorts => inputPortViews;
+        public IReadOnlyList<PortView> OutputPorts => outputPortViews;
 
-        public NodeView(Node node, AbilityGraphEditorWindow window, AbilityGraphView graphView) : base(EditorConst.PackagePath + "Editor/GraphViewEditor/UiAssets/Node.uxml")
+        public NodeView(NodeData nodeData, AbilityGraphEditorWindow window, AbilityGraphView graphView)
+            : base(EditorConst.PackagePath + "Editor/GraphViewEditor/UiAssets/Node.uxml")
         {
             UseDefaultStyling();
 
-            this.node = node;
+            this.nodeData = nodeData;
             this.window = window;
             this.graphView = graphView;
-            HandleNodeStyles(node);
+            HandleNodeStyles(nodeData);
+
+            CreateInputFieldContainer();
             CreatePorts();
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            switch (node)
+            switch (nodeData)
             {
                 default:
                     evt.menu.AppendAction("Edit Script", action =>
                     {
-                        Utility.OpenScriptOfType(node.GetType());
+                        Utility.OpenScriptOfType(nodeData.GetType());
                     });
                     evt.menu.AppendSeparator();
                     break;
@@ -63,8 +81,18 @@ namespace Physalia.Flexi.GraphViewEditor
             base.BuildContextualMenu(evt);
         }
 
-        private void HandleNodeStyles(Node node)
+        private void CreateInputFieldContainer()
         {
+            inputFieldContainer = new VisualElement { name = "input-field-container" };
+            inputFieldContainer.SendToBack();
+            inputFieldContainer.pickingMode = PickingMode.Ignore;
+            mainContainer.parent.Add(inputFieldContainer);
+        }
+
+        private void HandleNodeStyles(NodeData node)
+        {
+            mainContainer.style.overflow = Overflow.Visible;
+
             switch (node)
             {
                 default:
@@ -137,7 +165,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
-        private void HandleOtherNodeStyles(Node node)
+        private void HandleOtherNodeStyles(NodeData node)
         {
             switch (node)
             {
@@ -169,49 +197,26 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
+        public override Port InstantiatePort(Orientation orientation, Direction direction, Capacity capacity, Type type)
+        {
+            return new PortView(orientation, direction, capacity, type);
+        }
+
         private void CreatePorts()
         {
-            foreach (Port portData in node.Ports)
+            foreach (PortData portData in nodeData.Ports)
             {
-                if (portData is Inport)
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, portData.ValueType);
-                    port.portName = GetPortPrettyName(portData.Name);
-                    inputContainer.Add(port);
-
-                    if (portData is MissingInport)
-                    {
-                        port.portColor = MISSING_PORT_COLOR;
-                    }
-
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
-
-                if (portData is Outport)
-                {
-                    PortView port = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, portData.ValueType);
-                    port.portName = GetPortPrettyName(portData.Name);
-                    outputContainer.Add(port);
-
-                    if (portData is MissingOutport)
-                    {
-                        port.portColor = MISSING_PORT_COLOR;
-                    }
-
-                    portDataToViewTable.Add(portData, port);
-                    portViewToDataTable.Add(port, portData);
-                }
+                AddPortView(portData);
             }
 
-            FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
+            FieldInfo[] fields = nodeData.GetType().GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
                 Type type = field.FieldType;
                 if (type.InstanceOfGenericType(typeof(Variable<>)))
                 {
-                    var variable = field.GetValue(node) as Variable;
+                    var variable = field.GetValue(nodeData) as Variable;
                     VisualElement variableField = VariableFieldFactory.Create(field.Name, variable, window);
                     extensionContainer.Add(variableField);
                 }
@@ -248,39 +253,29 @@ namespace Physalia.Flexi.GraphViewEditor
             return portName;
         }
 
-        public void DestroyPort(Port port)
+        public void DestroyPort(PortData portData)
         {
-            PortView portView = GetPortView(port);
+            Port port = GetPortView(portData);
 
-            if (port is Outport outport)
+            if (portData is Outport outport)
             {
-                port.Node.RemoveOutport(outport);
-                outputContainer.Remove(portView);
+                portData.Node.RemoveOutport(outport);
+                outputContainer.Remove(port);
             }
 
-            if (port is Inport inport)
+            if (portData is Inport inport)
             {
-                port.Node.RemoveInport(inport);
-                inputContainer.Remove(portView);
+                portData.Node.RemoveInport(inport);
+                inputContainer.Remove(port);
             }
 
-            portDataToViewTable.Remove(port);
-            portViewToDataTable.Remove(portView);
+            portDataToViewTable.Remove(portData);
+            portViewToDataTable.Remove(port);
         }
 
-        public PortView GetPortView(Port port)
+        public Port GetPortView(PortData portData)
         {
-            if (portDataToViewTable.TryGetValue(port, out PortView portView))
-            {
-                return portView;
-            }
-
-            return null;
-        }
-
-        public Port GetPort(PortView portView)
-        {
-            if (portViewToDataTable.TryGetValue(portView, out Port port))
+            if (portDataToViewTable.TryGetValue(portData, out Port port))
             {
                 return port;
             }
@@ -288,9 +283,19 @@ namespace Physalia.Flexi.GraphViewEditor
             return null;
         }
 
-        public Port GetPort(string name)
+        public PortData GetPortData(Port port)
         {
-            return node.GetPort(name);
+            if (portViewToDataTable.TryGetValue(port, out PortData portData))
+            {
+                return portData;
+            }
+
+            return null;
+        }
+
+        public PortData GetPortData(string name)
+        {
+            return nodeData.GetPort(name);
         }
 
         public void AddPort(string name, Direction direction, Type type)
@@ -300,67 +305,198 @@ namespace Physalia.Flexi.GraphViewEditor
                 return;
             }
 
-            Port port = node.GetPort(name);
-            if (port != null)
+            PortData portData = nodeData.GetPort(name);
+            if (portData != null)
             {
                 return;
             }
 
             if (direction == Direction.Input)
             {
-                port = node.CreateInportWithArgumentType(type, name, true);
+                portData = nodeData.CreateInportWithArgumentType(type, name, true);
             }
             else if (direction == Direction.Output)
             {
-                port = node.CreateOutportWithArgumentType(type, name, true);
+                portData = nodeData.CreateOutportWithArgumentType(type, name, true);
             }
 
-            AddPortView(port);
+            AddPortView(portData);
         }
 
-        private void AddPortView(Port port, int index = -1)
+        private PortView CreateInputPortView(Inport inportData, int index)
         {
-            if (port is Inport)
+            string portName = GetPortPrettyName(inportData.Name);
+            Type portType = inportData.ValueType;
+            var portView = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Multi, portType) { portName = portName };
+
+            VisualElement inputField = CreateInputField(inportData);
+            inputPortToFieldTable.Add(portView, inputField);
+
+            if (index == -1)
             {
-                PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Input, PortView.Capacity.Multi, port.ValueType);
-                portView.portName = GetPortPrettyName(port.Name);
-                if (index == -1)
-                {
-                    inputContainer.Add(portView);
-                }
-                else
-                {
-                    inputContainer.Insert(index, portView);
-                }
-
-                if (port is MissingInport)
-                {
-                    portView.portColor = MISSING_PORT_COLOR;
-                }
-
-                portDataToViewTable.Add(port, portView);
-                portViewToDataTable.Add(portView, port);
+                inputPortViews.Add(portView);
+                inputContainer.Add(portView);
+                inputFieldContainer.Add(inputField);
             }
-            else if (port is Outport)
+            else
             {
-                PortView portView = InstantiatePort(Orientation.Horizontal, Direction.Output, PortView.Capacity.Multi, port.ValueType);
-                portView.portName = GetPortPrettyName(port.Name);
-                if (index == -1)
+                inputPortViews.Insert(index, portView);
+                inputContainer.Insert(index, portView);
+                inputFieldContainer.Insert(index, inputField);
+            }
+
+            return portView;
+        }
+
+        private PortView CreateOutputPortView(Outport outport, int index = -1)
+        {
+            string portName = GetPortPrettyName(outport.Name);
+            Type portType = outport.ValueType;
+            var portView = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Multi, portType) { portName = portName };
+
+            if (index == -1)
+            {
+                outputPortViews.Add(portView);
+                outputContainer.Add(portView);
+            }
+            else
+            {
+                outputPortViews.Insert(index, portView);
+                outputContainer.Insert(index, portView);
+            }
+
+            return portView;
+        }
+
+        private VisualElement CreateInputField(Inport inportData)
+        {
+            // TODO: Disable input fields for subgraph nodes for now, since I didn't find the solution.
+            var box = new VisualElement();
+            if (inportData.Node is SubgraphNode)
+            {
+                box.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+                return box;
+            }
+
+            Type portType = inportData.ValueType;
+
+            BindableElement field = null;
+            if (inportData is Inport<bool> inportBool)
+            {
+                var toggle = new Toggle();
+                toggle.SetValueWithoutNotify(inportBool.DefaultValue);
+                toggle.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = toggle;
+            }
+            else if (inportData is Inport<int> inportInt)
+            {
+                var integerField = new IntegerField();
+                integerField.SetValueWithoutNotify(inportInt.DefaultValue);
+                integerField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = integerField;
+            }
+            else if (inportData is Inport<long> inportLong)
+            {
+                var longField = new LongField();
+                longField.SetValueWithoutNotify(inportLong.DefaultValue);
+                longField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = longField;
+            }
+            else if (inportData is Inport<float> inportFloat)
+            {
+                var floatField = new FloatField();
+                floatField.SetValueWithoutNotify(inportFloat.DefaultValue);
+                floatField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = floatField;
+            }
+            else if (inportData is Inport<double> inportDouble)
+            {
+                var doubleField = new DoubleField();
+                doubleField.SetValueWithoutNotify(inportDouble.DefaultValue);
+                doubleField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = doubleField;
+            }
+            else if (inportData is Inport<Vector2> inportVector2)
+            {
+                var vector2Field = new Vector2Field();
+                vector2Field.SetValueWithoutNotify(inportVector2.DefaultValue);
+                vector2Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector2Field;
+            }
+            else if (inportData is Inport<Vector3> inportVector3)
+            {
+                var vector3Field = new Vector3Field();
+                vector3Field.SetValueWithoutNotify(inportVector3.DefaultValue);
+                vector3Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector3Field;
+            }
+            else if (inportData is Inport<Vector4> inportVector4)
+            {
+                var vector4Field = new Vector4Field();
+                vector4Field.SetValueWithoutNotify(inportVector4.DefaultValue);
+                vector4Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector4Field;
+            }
+            else if (inportData is Inport<Vector2Int> inportVector2Int)
+            {
+                var vector2IntField = new Vector2IntField();
+                vector2IntField.SetValueWithoutNotify(inportVector2Int.DefaultValue);
+                vector2IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector2IntField;
+            }
+            else if (inportData is Inport<Vector3Int> inportVector3Int)
+            {
+                var vector3IntField = new Vector3IntField();
+                vector3IntField.SetValueWithoutNotify(inportVector3Int.DefaultValue);
+                vector3IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = vector3IntField;
+            }
+            else if (inportData is Inport<string> inportString)
+            {
+                var textField = new TextField();
+                textField.SetValueWithoutNotify(inportString.DefaultValue);
+                textField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                field = textField;
+            }
+
+            if (field != null)
+            {
+                box.AddToClassList(USS_CLASS_INPUT_FIELD);
+                box.Add(field);
+            }
+            else
+            {
+                box.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+            }
+
+            return box;
+        }
+
+        private void AddPortView(PortData portData, int index = -1)
+        {
+            if (portData is Inport inportData)
+            {
+                Port port = CreateInputPortView(inportData, index);
+
+                if (portData is MissingInport)
                 {
-                    outputContainer.Add(portView);
-                }
-                else
-                {
-                    outputContainer.Insert(index, portView);
+                    port.portColor = MISSING_PORT_COLOR;
                 }
 
-                if (port is MissingOutport)
+                portDataToViewTable.Add(portData, port);
+                portViewToDataTable.Add(port, portData);
+            }
+            else if (portData is Outport outportData)
+            {
+                Port port = CreateOutputPortView(outportData, index);
+
+                if (portData is MissingOutport)
                 {
-                    portView.portColor = MISSING_PORT_COLOR;
+                    port.portColor = MISSING_PORT_COLOR;
                 }
 
-                portDataToViewTable.Add(port, portView);
-                portViewToDataTable.Add(portView, port);
+                portDataToViewTable.Add(portData, port);
+                portViewToDataTable.Add(port, portData);
             }
         }
 
@@ -368,31 +504,31 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             if (direction == Direction.Input)
             {
-                Inport inport = node.GetDynamicInport(index);
+                Inport inport = nodeData.GetDynamicInport(index);
                 if (inport == null)
                 {
                     return;
                 }
 
-                node.RemoveInport(inport);
+                nodeData.RemoveInport(inport);
                 RemovePortView(inport);
             }
             else if (direction == Direction.Output)
             {
-                Outport outport = node.GetDynamicOutport(index);
+                Outport outport = nodeData.GetDynamicOutport(index);
                 if (outport == null)
                 {
                     return;
                 }
 
-                node.RemoveOutport(outport);
+                nodeData.RemoveOutport(outport);
                 RemovePortView(outport);
             }
         }
 
-        private void RemovePortView(Port port)
+        private void RemovePortView(PortData portData)
         {
-            PortView portView = GetPortView(port);
+            Port portView = GetPortView(portData);
             if (portView == null)
             {
                 return;
@@ -411,85 +547,115 @@ namespace Physalia.Flexi.GraphViewEditor
                 outputContainer.Remove(portView);
             }
 
-            portDataToViewTable.Remove(port);
+            portDataToViewTable.Remove(portData);
             portViewToDataTable.Remove(portView);
+        }
+
+        public void OnInputPortConnected(PortView input)
+        {
+            HideInputField(input);
+        }
+
+        public void OnInputPortDisconnected(PortView input)
+        {
+            ShowInputField(input);
+        }
+
+        private void ShowInputField(PortView input)
+        {
+            bool success = inputPortToFieldTable.TryGetValue(input, out VisualElement inputField);
+            if (success)
+            {
+                inputField.RemoveFromClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+                inputField.AddToClassList(USS_CLASS_INPUT_FIELD);
+            }
+        }
+
+        private void HideInputField(PortView input)
+        {
+            bool success = inputPortToFieldTable.TryGetValue(input, out VisualElement inputField);
+            if (success)
+            {
+                inputField.RemoveFromClassList(USS_CLASS_INPUT_FIELD);
+                inputField.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+            }
         }
 
         public void ChangePortIndex(Direction direction, int index1, int index2)
         {
             if (direction == Direction.Input)
             {
-                Port port = node.GetDynamicInport(index1);
-                node.InsertOrMoveDynamicPort(index2, port);
+                PortData portData = nodeData.GetDynamicInport(index1);
+                nodeData.InsertOrMoveDynamicPort(index2, portData);
 
-                PortView portView = GetPortView(port);
-                inputContainer.Remove(portView);
+                Port port = GetPortView(portData);
+                inputContainer.Remove(port);
 
-                int portViewNewIndex = index2 + node.GetCountOfStaticInport();
-                inputContainer.Insert(portViewNewIndex, portView);
+                int portNewIndex = index2 + nodeData.GetCountOfStaticInport();
+                inputContainer.Insert(portNewIndex, port);
             }
             else if (direction == Direction.Output)
             {
-                Port port = node.GetDynamicOutport(index1);
-                node.InsertOrMoveDynamicPort(index2, port);
+                PortData portData = nodeData.GetDynamicOutport(index1);
+                nodeData.InsertOrMoveDynamicPort(index2, portData);
 
-                PortView portView = GetPortView(port);
-                outputContainer.Remove(portView);
+                Port port = GetPortView(portData);
+                outputContainer.Remove(port);
 
-                int portViewNewIndex = index2 + node.GetCountOfStaticOutport();
-                outputContainer.Insert(portViewNewIndex, portView);
+                int portNewIndex = index2 + nodeData.GetCountOfStaticOutport();
+                outputContainer.Insert(portNewIndex, port);
             }
         }
 
         public bool TryRenamePort(string oldName, string newName)
         {
             // Ensure the port with the old name exists.
-            Port port = node.GetPort(oldName);
-            if (port == null)
+            PortData portData = nodeData.GetPort(oldName);
+            if (portData == null)
             {
                 Logger.Error($"The port with the old name '{oldName}' doesn't exist!");
                 return false;
             }
 
             // Ensure the new name is not used.
-            Port portWithNewName = node.GetPort(newName);
+            PortData portWithNewName = nodeData.GetPort(newName);
             if (portWithNewName != null)
             {
                 Logger.Error($"The new name '{newName}' has been used!");
                 return false;
             }
 
-            bool success = node.TryRenamePort(oldName, newName);
+            bool success = nodeData.TryRenamePort(oldName, newName);
             if (!success)
             {
                 return false;
             }
 
-            PortView portView = portDataToViewTable[port];
-            portView.portName = newName;
+            Port port = portDataToViewTable[portData];
+            port.portName = newName;
             return true;
         }
 
         public void ChangePortType(string name, Type type)
         {
-            Port oldPort = node.GetPort(name);
-            RemovePortView(oldPort);
+            PortData oldPortData = nodeData.GetPort(name);
+            RemovePortView(oldPortData);
 
-            node.ChangeDynamicPortType(name, type);
+            nodeData.ChangeDynamicPortType(name, type);
 
-            Port newPort = node.GetPort(name);
-            int index = node.GetIndexOfDynamicPort(newPort);
+            PortData newPortData = nodeData.GetPort(name);
+            int index = nodeData.GetIndexOfDynamicPort(newPortData);
 
-            if (newPort is Inport)
+            if (newPortData is Inport)
             {
-                index += node.GetCountOfStaticInport();
+                index += nodeData.GetCountOfStaticInport();
             }
-            else if (newPort is Outport)
+            else if (newPortData is Outport)
             {
-                index += node.GetCountOfStaticOutport();
+                index += nodeData.GetCountOfStaticOutport();
             }
 
-            AddPortView(newPort, index);
+            AddPortView(newPortData, index);
         }
     }
 }

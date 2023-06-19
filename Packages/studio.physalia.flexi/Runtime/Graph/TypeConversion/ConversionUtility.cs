@@ -265,6 +265,10 @@ namespace Physalia.Flexi
                 var list = (T)Activator.CreateInstance(genericListType);
                 return list;
             }
+            else if (type == typeof(string))
+            {
+                return (T)(object)string.Empty;
+            }
 
             return default;
         }

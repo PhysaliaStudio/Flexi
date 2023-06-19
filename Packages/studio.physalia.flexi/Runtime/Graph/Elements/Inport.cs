@@ -7,10 +7,26 @@ namespace Physalia.Flexi
     {
         protected readonly List<Outport> outports = new();
 
+        public object DefaultValue
+        {
+            get
+            {
+                return GetDefaultValueBoxed();
+            }
+            internal set
+            {
+                SetDefaultValueBoxed(value);
+            }
+        }
+
         protected Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
         }
+
+        public abstract bool IsDefaultValueSet();
+        protected abstract object GetDefaultValueBoxed();
+        protected abstract void SetDefaultValueBoxed(object value);
 
         protected override bool CanConnectTo(Port port)
         {
@@ -43,18 +59,39 @@ namespace Physalia.Flexi
 
     public sealed class Inport<T> : Inport
     {
-        private static T defaultValue;
+        private static readonly T globalDefaultValue;
+        private T defaultValue;
+
+        public override Type ValueType => typeof(T);
+        public new T DefaultValue
+        {
+            get { return defaultValue; }
+            internal set { defaultValue = value; }
+        }
 
         static Inport()
         {
-            defaultValue = ConversionUtility.CreateDefaultInstance<T>();
+            globalDefaultValue = ConversionUtility.CreateDefaultInstance<T>();
         }
-
-        public override Type ValueType => typeof(T);
 
         internal Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
+            defaultValue = globalDefaultValue;
+        }
 
+        public override bool IsDefaultValueSet()
+        {
+            return !EqualityComparer<T>.Default.Equals(defaultValue, globalDefaultValue);
+        }
+
+        protected override object GetDefaultValueBoxed()
+        {
+            return defaultValue;
+        }
+
+        protected override void SetDefaultValueBoxed(object defaultValue)
+        {
+            this.defaultValue = (T)defaultValue;
         }
 
         public T GetValue()
