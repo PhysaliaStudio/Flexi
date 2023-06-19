@@ -370,6 +370,14 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private VisualElement CreateInputField(Inport inportData)
         {
+            // TODO: Disable input fields for subgraph nodes for now, since I didn't find the solution.
+            var box = new VisualElement();
+            if (inportData.Node is SubgraphNode)
+            {
+                box.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
+                return box;
+            }
+
             Type portType = inportData.ValueType;
 
             BindableElement field = null;
@@ -451,7 +459,6 @@ namespace Physalia.Flexi.GraphViewEditor
                 field = textField;
             }
 
-            var box = new VisualElement();
             if (field != null)
             {
                 box.AddToClassList(USS_CLASS_INPUT_FIELD);
