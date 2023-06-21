@@ -78,6 +78,12 @@ namespace Physalia.Flexi
         public Ability AppendAbility(AbilityData abilityData, object userData = null)
         {
             Ability ability = abilitySystem.GetAbility(abilityData, userData);
+            AppendAbility(ability);
+            return ability;
+        }
+
+        public void AppendAbility(Ability ability)
+        {
             ability.Actor = this;
             owner.AppendAbility(ability);
 
@@ -88,8 +94,6 @@ namespace Physalia.Flexi
                 abilityFlow.SetOwner(this);
                 owner.AppendAbilityFlow(abilityFlow);
             }
-
-            return ability;
         }
 
 #if UNITY_5_3_OR_NEWER
