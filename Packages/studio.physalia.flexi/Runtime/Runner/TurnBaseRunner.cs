@@ -17,6 +17,11 @@ namespace Physalia.Flexi
             runningFlows.Add(flow);
         }
 
+        public override bool IsFlowRunning(IAbilityFlow flow)
+        {
+            return runningFlows.Contains(flow);
+        }
+
         public override void Start()
         {
             if (runningState != RunningState.IDLE)

@@ -128,7 +128,6 @@ namespace Physalia.Flexi.Tests
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow flow = ability.Flows[i];
-                Assert.AreEqual(false, flow.IsRunning());
                 Assert.AreEqual(null, flow.Current);
             }
         }

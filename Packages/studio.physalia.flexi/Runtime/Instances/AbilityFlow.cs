@@ -59,11 +59,6 @@ namespace Physalia.Flexi
             isEnable = enable;
         }
 
-        public bool IsRunning()
-        {
-            return graph.Current != null;
-        }
-
         public bool HasNext()
         {
             return graph.HasNext();

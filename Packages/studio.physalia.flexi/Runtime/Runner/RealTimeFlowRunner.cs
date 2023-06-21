@@ -21,6 +21,11 @@ namespace Physalia.Flexi
             runningFlows.Add(flow);
         }
 
+        public override bool IsFlowRunning(IAbilityFlow flow)
+        {
+            return runningFlows.Contains(flow);
+        }
+
         public override void Start()
         {
             for (var i = 0; i < flows.Count; i++)
