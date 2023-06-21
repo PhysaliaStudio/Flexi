@@ -234,7 +234,7 @@ namespace Physalia.Flexi
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow abilityFlow = ability.Flows[i];
-                if (abilityFlow.IsRunning())
+                if (runner.IsFlowRunning(abilityFlow))
                 {
                     continue;
                 }

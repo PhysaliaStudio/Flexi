@@ -30,6 +30,8 @@ namespace Physalia.Flexi
         }
 
         public abstract void AddFlow(IAbilityFlow flow);
+        public abstract bool IsFlowRunning(IAbilityFlow flow);
+
         public abstract void Start();
         public abstract void Resume(IResumeContext resumeContext);
         public abstract void Tick();
