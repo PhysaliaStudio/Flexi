@@ -161,7 +161,7 @@ namespace Physalia.Flexi
             return flow;
         }
 
-        internal void EnqueueEvent(IEventContext eventContext)
+        public void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
             EventOccurred?.Invoke(eventContext);
