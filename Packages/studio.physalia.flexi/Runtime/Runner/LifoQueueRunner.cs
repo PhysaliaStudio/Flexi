@@ -27,6 +27,7 @@ namespace Physalia.Flexi
 
         public override void AddFlow(IAbilityFlow flow)
         {
+            base.AddFlow(flow);
             Queue<IAbilityFlow> topmostQueue = queueStack.Peek();
             topmostQueue.Enqueue(flow);
         }

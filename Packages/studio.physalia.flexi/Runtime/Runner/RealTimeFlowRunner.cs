@@ -12,11 +12,13 @@ namespace Physalia.Flexi
         }
 
         private readonly List<IAbilityFlow> flows = new();
+        private readonly HashSet<IAbilityFlow> runningFlows = new();
         private readonly List<int> indiceForRemoved = new();
 
         public override void AddFlow(IAbilityFlow flow)
         {
             flows.Add(flow);
+            runningFlows.Add(flow);
         }
 
         public override void Start()
@@ -45,7 +47,10 @@ namespace Physalia.Flexi
 
             for (var i = indiceForRemoved.Count - 1; i >= 0; i--)
             {
-                flows.RemoveAt(i);
+                int removeIndex = indiceForRemoved[i];
+                IAbilityFlow flow = flows[removeIndex];
+                runningFlows.Remove(flow);
+                flows.RemoveAt(removeIndex);
             }
             indiceForRemoved.Clear();
         }
@@ -82,7 +87,10 @@ namespace Physalia.Flexi
 
             for (var i = indiceForRemoved.Count - 1; i >= 0; i--)
             {
-                flows.RemoveAt(i);
+                int removeIndex = indiceForRemoved[i];
+                IAbilityFlow flow = flows[removeIndex];
+                runningFlows.Remove(flow);
+                flows.RemoveAt(removeIndex);
             }
             indiceForRemoved.Clear();
         }
@@ -119,7 +127,10 @@ namespace Physalia.Flexi
 
             for (var i = indiceForRemoved.Count - 1; i >= 0; i--)
             {
-                flows.RemoveAt(i);
+                int removeIndex = indiceForRemoved[i];
+                IAbilityFlow flow = flows[removeIndex];
+                runningFlows.Remove(flow);
+                flows.RemoveAt(removeIndex);
             }
             indiceForRemoved.Clear();
         }
@@ -197,6 +208,7 @@ namespace Physalia.Flexi
         public override void Clear()
         {
             flows.Clear();
+            runningFlows.Clear();
         }
     }
 }

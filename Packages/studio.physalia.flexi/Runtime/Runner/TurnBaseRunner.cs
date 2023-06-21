@@ -1,13 +1,21 @@
+using System.Collections.Generic;
 using static Physalia.Flexi.AbilityFlowStepper;
 
 namespace Physalia.Flexi
 {
     public abstract class TurnBaseRunner : AbilityFlowRunner
     {
+        private readonly HashSet<IAbilityFlow> runningFlows = new();
+
         private RunningState runningState = RunningState.IDLE;
 
         public abstract IAbilityFlow Peek();
         internal abstract IAbilityFlow DequeueFlow();
+
+        public override void AddFlow(IAbilityFlow flow)
+        {
+            runningFlows.Add(flow);
+        }
 
         public override void Start()
         {
@@ -123,6 +131,7 @@ namespace Physalia.Flexi
                     }
                     else if (result.state == ResultState.ABORT)
                     {
+                        runningFlows.Remove(result.flow);
                         _ = DequeueFlow();
                     }
                     else if (result.state == ResultState.PAUSE)
@@ -132,6 +141,7 @@ namespace Physalia.Flexi
                     }
                     break;
                 case ExecutionType.FLOW_FINISH:
+                    runningFlows.Remove(result.flow);
                     _ = DequeueFlow();
                     break;
             }
@@ -173,6 +183,7 @@ namespace Physalia.Flexi
 
         public override void Clear()
         {
+            runningFlows.Clear();
             runningState = RunningState.IDLE;
         }
     }
