@@ -63,21 +63,22 @@ namespace Physalia.Flexi
             }
         }
 
-        public Ability FindAbility(AbilityData abilityData)
+        public Ability FindAbility(AbilityDataSource abilityDataSource)
         {
-            return owner.FindAbility(abilityData);
+            return owner.FindAbility(abilityDataSource);
         }
 
-#if UNITY_5_3_OR_NEWER
-        public Ability AppendAbility(AbilityAsset abilityAsset, object userData = null)
+        public Ability AppendAbility(AbilityData abilityData, int groupIndex, object userData = null)
         {
-            return AppendAbility(abilityAsset.Data, userData);
+            AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource, userData);
+            AppendAbility(ability);
+            return ability;
         }
-#endif
 
-        public Ability AppendAbility(AbilityData abilityData, object userData = null)
+        public Ability AppendAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
-            Ability ability = abilitySystem.GetAbility(abilityData, userData);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource, userData);
             AppendAbility(ability);
             return ability;
         }
@@ -96,16 +97,9 @@ namespace Physalia.Flexi
             }
         }
 
-#if UNITY_5_3_OR_NEWER
-        public bool RemoveAbility(AbilityAsset abilityAsset)
+        public bool RemoveAbility(AbilityDataSource abilityDataSource)
         {
-            return RemoveAbility(abilityAsset.Data);
-        }
-#endif
-
-        public bool RemoveAbility(AbilityData abilityData)
-        {
-            Ability ability = owner.FindAbility(abilityData);
+            Ability ability = owner.FindAbility(abilityDataSource);
             if (ability == null)
             {
                 return false;

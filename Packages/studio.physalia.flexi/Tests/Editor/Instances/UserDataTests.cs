@@ -32,8 +32,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SetUserDataWithInstantiation_GetUserDataReturnsTheSameObject()
         {
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             var userData = new TestUserData();
-            Ability ability = abilitySystem.InstantiateAbility(new AbilityData(), userData);
+            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource, userData);
 
             Assert.AreEqual(userData, ability.GetUserData<TestUserData>());
         }
@@ -41,7 +42,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SetUserDataWithMethod_GetUserDataReturnsTheSameObject()
         {
-            Ability ability = abilitySystem.InstantiateAbility(new AbilityData());
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
+            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
             var userData = new TestUserData();
             ability.SetUserData(userData);
 
@@ -51,7 +53,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void UserDataIsNull_GetUserDataLogsWarning()
         {
-            Ability ability = abilitySystem.InstantiateAbility(new AbilityData());
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
+            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
             var userData = ability.GetUserData<TestUserData>();
 
             Assert.IsNull(userData);
@@ -61,7 +64,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void UserDataIsNotNull_GetUserDataWithAnotherTypeLogsWarning()
         {
-            Ability ability = abilitySystem.InstantiateAbility(new AbilityData(), new TestUserData());
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
+            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource, new TestUserData());
             var userData = ability.GetUserData<TestUserDataAnother>();
 
             Assert.IsNull(userData);

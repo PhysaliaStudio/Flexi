@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -51,7 +50,8 @@ namespace Physalia.Flexi.Tests
         public void EmptyData_ReturnsFalse()
         {
             var abilityData = new AbilityData();
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            abilityData.graphGroups.Add(new AbilityGraphGroup());
+            Ability ability = abilitySystem.GetAbility(abilityData, 0);
 
             bool success = abilitySystem.TryEnqueueAbility(ability, null);
             Assert.AreEqual(false, success);
@@ -61,8 +61,8 @@ namespace Physalia.Flexi.Tests
         public void ContainsFlowWithoutNode_ReturnsFalse()
         {
             var json = "{\"_type\":\"Physalia.Flexi.AbilityGraph\",\"nodes\":[],\"edges\":[]}";
-            var abilityData = new AbilityData { graphJsons = new List<string> { json } };
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            var abilityData = AbilityTestHelper.CreateSingleGraphData(json);
+            Ability ability = abilitySystem.GetAbility(abilityData, 0);
 
             bool success = abilitySystem.TryEnqueueAbility(ability, null);
             Assert.AreEqual(false, success);
@@ -75,8 +75,8 @@ namespace Physalia.Flexi.Tests
             var json = "{\"_type\":\"Physalia.Flexi.AbilityGraph\"," +
                 "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.Flexi.Tests.AbilityRunningTests+FlagEntryNode\",startFlags:11}]," +
                 "\"edges\":[]}";
-            var abilityData = new AbilityData { graphJsons = new List<string> { json } };
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            var abilityData = AbilityTestHelper.CreateSingleGraphData(json);
+            Ability ability = abilitySystem.GetAbility(abilityData, 0);
 
             bool success = abilitySystem.TryEnqueueAbility(ability, new FlagEntryNode.Context { flag = 11 });
             Assert.AreEqual(true, success);
@@ -90,8 +90,8 @@ namespace Physalia.Flexi.Tests
                 "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.Flexi.Tests.AbilityRunningTests+FlagEntryNode\",startFlags:11}," +
                 "{\"_id\":2,\"_type\":\"Physalia.Flexi.Tests.AbilityRunningTests+FlagEntryNode\",startFlags:22}]," +
                 "\"edges\":[]}";
-            var abilityData = new AbilityData { graphJsons = new List<string> { json } };
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            var abilityData = AbilityTestHelper.CreateSingleGraphData(json);
+            Ability ability = abilitySystem.GetAbility(abilityData, 0);
 
             bool success = abilitySystem.TryEnqueueAbility(ability, new FlagEntryNode.Context { flag = 33 });
             Assert.AreEqual(false, success);
@@ -108,8 +108,8 @@ namespace Physalia.Flexi.Tests
                 "\"nodes\":[{\"_id\":1,\"_type\":\"Physalia.Flexi.Tests.AbilityRunningTests+FlagEntryNode\",startFlags:11}," +
                 "{\"_id\":2,\"_type\":\"Physalia.Flexi.Tests.AbilityRunningTests+FlagEntryNode\",startFlags:22}]," +
                 "\"edges\":[]}";
-            var abilityData = new AbilityData { graphJsons = new List<string> { json } };
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            var abilityData = AbilityTestHelper.CreateSingleGraphData(json);
+            Ability ability = abilitySystem.GetAbility(abilityData, 0);
 
             bool success = abilitySystem.TryEnqueueAbility(ability, new FlagEntryNode.Context { flag = 22 });
             Assert.AreEqual(true, success);

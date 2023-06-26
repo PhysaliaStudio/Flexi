@@ -9,11 +9,23 @@ namespace Physalia.Flexi
 
         public readonly AbilityData AbilityData => abilityData;
         public readonly int GroupIndex => groupIndex;
+        public bool IsValid => abilityData != null && groupIndex >= 0 && groupIndex < abilityData.graphGroups.Count;
+        public AbilityGraphGroup GraphGroup => IsValid ? abilityData.graphGroups[groupIndex] : null;
 
         public AbilityDataSource(AbilityData abilityData, int groupIndex)
         {
             this.abilityData = abilityData;
             this.groupIndex = groupIndex;
+        }
+
+        public override string ToString()
+        {
+            if (!IsValid)
+            {
+                return "Invalid Source";
+            }
+
+            return $"Source({abilityData.name}-{groupIndex})";
         }
 
         public override bool Equals(object obj)

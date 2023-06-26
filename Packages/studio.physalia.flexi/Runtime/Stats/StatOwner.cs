@@ -72,9 +72,9 @@ namespace Physalia.Flexi
             return stat;
         }
 
-        internal Ability FindAbility(AbilityData abilityData)
+        internal Ability FindAbility(AbilityDataSource abilityDataSource)
         {
-            return abilities.Find(x => x.Data == abilityData);
+            return abilities.Find(x => x.DataSource == abilityDataSource);
         }
 
         internal void AppendAbility(Ability ability)

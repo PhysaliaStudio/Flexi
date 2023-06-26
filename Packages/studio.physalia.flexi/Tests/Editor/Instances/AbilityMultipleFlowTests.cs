@@ -32,16 +32,16 @@ namespace Physalia.Flexi.Tests
             logNode.text.Connect(stringNode.output);
 
             // Create an ability data with 3 flows
-            var abilityData = new AbilityData();
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             for (var i = 0; i < 3; i++)
             {
                 stringNode.text.Value = "Test" + i.ToString();
                 string json = AbilityGraphUtility.Serialize(abilityGraph);
-                abilityData.graphJsons.Add(json);
+                AbilityTestHelper.AppendGraphToSource(abilityDataSource, json);
             }
 
             // Get an ability, run it
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource);
             abilitySystem.TryEnqueueAbility(ability, null);
             abilitySystem.Run();
 
@@ -63,16 +63,16 @@ namespace Physalia.Flexi.Tests
             logNode.text.Connect(stringNode.output);
 
             // Create an ability data with 3 flows
-            var abilityData = new AbilityData();
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             for (var i = 0; i < 3; i++)
             {
                 stringNode.text.Value = "Test" + i.ToString();
                 string json = AbilityGraphUtility.Serialize(abilityGraph);
-                abilityData.graphJsons.Add(json);
+                AbilityTestHelper.AppendGraphToSource(abilityDataSource, json);
             }
 
             // Get an ability, run it
-            Ability ability = abilitySystem.GetAbility(abilityData);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource);
             ability.SetEnable(1, false);
 
             abilitySystem.TryEnqueueAbility(ability, null);
@@ -94,17 +94,17 @@ namespace Physalia.Flexi.Tests
             statRefreshEventNode.next.Connect(attackUpModifierNode.previous);
 
             // Create an ability data with 3 modifier flows
-            var abilityData = new AbilityData();
+            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             string json = AbilityGraphUtility.Serialize(abilityGraph);
             for (var i = 0; i < 3; i++)
             {
-                abilityData.graphJsons.Add(json);
+                AbilityTestHelper.AppendGraphToSource(abilityDataSource, json);
             }
 
             var actor = new EmptyActor(abilitySystem);
             actor.AddStat(CustomStats.ATTACK, 0);
 
-            Ability ability = actor.AppendAbility(abilityData);
+            Ability ability = actor.AppendAbility(abilityDataSource);
             ability.SetEnable(1, false);
 
             abilitySystem.RefreshStatsAndModifiers();

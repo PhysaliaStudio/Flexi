@@ -5,22 +5,22 @@ namespace Physalia.Flexi
     internal class AbilityPoolManager
     {
         private readonly AbilitySystem abilitySystem;
-        private readonly Dictionary<AbilityData, AbilityPool> pools;
+        private readonly Dictionary<AbilityDataSource, AbilityPool> pools;
 
         internal AbilityPoolManager(AbilitySystem abilitySystem, int capacity = 0)
         {
             this.abilitySystem = abilitySystem;
-            pools = new Dictionary<AbilityData, AbilityPool>(capacity);
+            pools = new Dictionary<AbilityDataSource, AbilityPool>(capacity);
         }
 
-        internal bool ContainsPool(AbilityData abilityData)
+        internal bool ContainsPool(AbilityDataSource abilityDataSource)
         {
-            return pools.ContainsKey(abilityData);
+            return pools.ContainsKey(abilityDataSource);
         }
 
-        internal void CreatePool(AbilityData abilityData, int startSize)
+        internal void CreatePool(AbilityDataSource abilityDataSource, int startSize)
         {
-            if (abilityData == null)
+            if (abilityDataSource == null)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Create pool failed! abilityData is null!");
                 return;
@@ -32,67 +32,67 @@ namespace Physalia.Flexi
                 return;
             }
 
-            if (pools.ContainsKey(abilityData))
+            if (pools.ContainsKey(abilityDataSource))
             {
-                Logger.Error($"[{nameof(AbilityPoolManager)}] Create pool failed! key: 'AbilityData({abilityData.name})' already exists!");
+                Logger.Error($"[{nameof(AbilityPoolManager)}] Create pool failed! key: {abilityDataSource} already exists!");
                 return;
             }
 
-            var factory = new AbilityFactory(abilitySystem, abilityData);
+            var factory = new AbilityFactory(abilitySystem, abilityDataSource);
             var pool = new AbilityPool(factory, startSize);
-            pools.Add(abilityData, pool);
+            pools.Add(abilityDataSource, pool);
         }
 
-        internal void DestroyPool(AbilityData abilityData)
+        internal void DestroyPool(AbilityDataSource abilityDataSource)
         {
-            if (abilityData == null)
+            if (abilityDataSource == null)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Destroy pool failed! abilityData is null!");
                 return;
             }
 
-            if (!pools.ContainsKey(abilityData))
+            if (!pools.ContainsKey(abilityDataSource))
             {
-                Logger.Error($"[{nameof(AbilityPoolManager)}] Destroy pool failed! key: 'AbilityData({abilityData.name})' does not exist!");
+                Logger.Error($"[{nameof(AbilityPoolManager)}] Destroy pool failed! key: {abilityDataSource} does not exist!");
                 return;
             }
 
-            pools[abilityData].Clear();  // Note: Need to trigger Recover() for each Ability instance before releasing the reference.
-            pools.Remove(abilityData);
+            pools[abilityDataSource].Clear();  // Note: Need to trigger Recover() for each Ability instance before releasing the reference.
+            pools.Remove(abilityDataSource);
         }
 
-        internal AbilityPool GetPool(AbilityData abilityData)
+        internal AbilityPool GetPool(AbilityDataSource abilityDataSource)
         {
-            if (abilityData == null)
+            if (abilityDataSource == null)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Get pool failed! abilityData is null!");
                 return null;
             }
 
-            if (!pools.ContainsKey(abilityData))
+            if (!pools.ContainsKey(abilityDataSource))
             {
-                Logger.Error($"[{nameof(AbilityPoolManager)}] Get pool failed! key: 'AbilityData({abilityData.name})' does not exist!");
+                Logger.Error($"[{nameof(AbilityPoolManager)}] Get pool failed! key: {abilityDataSource} does not exist!");
                 return null;
             }
 
-            return pools[abilityData];
+            return pools[abilityDataSource];
         }
 
-        internal Ability GetAbility(AbilityData abilityData)
+        internal Ability GetAbility(AbilityDataSource abilityDataSource)
         {
-            if (abilityData == null)
+            if (abilityDataSource == null)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Get ability failed! abilityData is null!");
                 return null;
             }
 
-            if (!pools.ContainsKey(abilityData))
+            if (!pools.ContainsKey(abilityDataSource))
             {
-                Logger.Error($"[{nameof(AbilityPoolManager)}] Get ability failed! key: 'AbilityData({abilityData.name})' does not exist!");
+                Logger.Error($"[{nameof(AbilityPoolManager)}] Get ability failed! key: {abilityDataSource} does not exist!");
                 return null;
             }
 
-            AbilityPool pool = pools[abilityData];
+            AbilityPool pool = pools[abilityDataSource];
             return pool.Get();
         }
 
@@ -104,13 +104,13 @@ namespace Physalia.Flexi
                 return;
             }
 
-            if (!pools.ContainsKey(ability.Data))
+            if (!pools.ContainsKey(ability.DataSource))
             {
-                Logger.Error($"[{nameof(AbilityPoolManager)}] Release ability failed! key: 'AbilityData({ability.Data.name})' does not exist!");
+                Logger.Error($"[{nameof(AbilityPoolManager)}] Release ability failed! key: {ability.DataSource} does not exist!");
                 return;
             }
 
-            AbilityPool pool = pools[ability.Data];
+            AbilityPool pool = pools[ability.DataSource];
             pool.Release(ability);
         }
     }

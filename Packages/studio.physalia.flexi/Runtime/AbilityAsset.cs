@@ -79,15 +79,5 @@ namespace Physalia.Flexi
 
             return abilityData;
         }
-
-        internal void AddBlackboardVariable(BlackboardVariable variable)
-        {
-            blackboard.Add(variable);
-        }
-
-        internal void AddGraphJson(string graphJson)
-        {
-            graphJsons.Add(graphJson);
-        }
     }
 }

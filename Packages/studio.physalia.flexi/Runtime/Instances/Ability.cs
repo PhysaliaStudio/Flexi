@@ -9,7 +9,7 @@ namespace Physalia.Flexi
     public class Ability
     {
         private readonly AbilitySystem abilitySystem;
-        private readonly AbilityData abilityData;
+        private readonly AbilityDataSource abilityDataSource;
 
         private readonly List<BlackboardVariable> variableList = new();
         private readonly Dictionary<string, BlackboardVariable> variableTable = new();
@@ -18,39 +18,36 @@ namespace Physalia.Flexi
         private object userData;
 
         public AbilitySystem System => abilitySystem;
-        public AbilityData Data => abilityData;
+        public AbilityData Data => abilityDataSource.AbilityData;
+        public AbilityDataSource DataSource => abilityDataSource;
 
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         internal IReadOnlyList<AbilityFlow> Flows => abilityFlows;
 
         public Actor Actor { get; internal set; }
 
-        internal Ability(AbilitySystem abilitySystem, AbilityData abilityData)
+        internal Ability(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource, object userData)
         {
             this.abilitySystem = abilitySystem;
-            this.abilityData = abilityData;
-        }
-
-        internal Ability(AbilitySystem abilitySystem, AbilityData abilityData, object userData)
-        {
-            this.abilitySystem = abilitySystem;
-            this.abilityData = abilityData;
+            this.abilityDataSource = abilityDataSource;
             this.userData = userData;
         }
+
         internal void Initialize()
         {
+            AbilityData abilityData = abilityDataSource.AbilityData;
             for (var i = 0; i < abilityData.blackboard.Count; i++)
             {
                 BlackboardVariable variable = abilityData.blackboard[i];
                 if (string.IsNullOrWhiteSpace(variable.key))
                 {
-                    Logger.Warn($"[{nameof(Ability)}] '{Data.name}' has variable with empty key. This is invalid.");
+                    Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} has variable with empty key. This is invalid.");
                     continue;
                 }
 
                 if (variableTable.ContainsKey(variable.key))
                 {
-                    Logger.Warn($"[{nameof(Ability)}] '{Data.name}' has variable with duplicated key '{variable.key}'. Only the first will be applied.");
+                    Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} has variable with duplicated key '{variable.key}'. Only the first will be applied.");
                     continue;
                 }
 
@@ -59,9 +56,11 @@ namespace Physalia.Flexi
                 variableTable.Add(clone.key, clone);
             }
 
-            for (var i = 0; i < abilityData.graphJsons.Count; i++)
+            AbilityGraphGroup group = abilityDataSource.GraphGroup;
+            for (var i = 0; i < group.graphs.Count; i++)
             {
-                AbilityFlow abilityFlow = abilitySystem.InstantiateAbilityFlow(this, i);
+                string json = group.graphs[i];
+                AbilityFlow abilityFlow = abilitySystem.InstantiateAbilityFlow(this, json);
                 abilityFlows.Add(abilityFlow);
             }
         }
@@ -79,7 +78,7 @@ namespace Physalia.Flexi
                 return variable.value;
             }
 
-            Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't contain key '{key}', returns 0");
+            Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't contain key '{key}', returns 0");
             return 0;
         }
 
@@ -91,7 +90,7 @@ namespace Physalia.Flexi
             }
             else
             {
-                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't contain key '{key}'. Already added it instead.");
+                Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't contain key '{key}'. Already added it instead.");
                 BlackboardVariable variable = new BlackboardVariable { key = key, value = newValue };
                 variableList.Add(variable);
                 variableTable.Add(key, variable);
@@ -102,7 +101,7 @@ namespace Physalia.Flexi
         {
             if (index < 0 || index >= abilityFlows.Count)
             {
-                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't have flow at index '{index}'.");
+                Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't have flow at index '{index}'.");
                 return;
             }
 
@@ -113,7 +112,7 @@ namespace Physalia.Flexi
         {
             if (userData == null)
             {
-                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' doesn't have userData. Returns null.");
+                Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't have userData. Returns null.");
                 return default;
             }
 
@@ -123,7 +122,7 @@ namespace Physalia.Flexi
             }
             else
             {
-                Logger.Warn($"[{nameof(Ability)}] '{Data.name}' userData is not type of '{typeof(T)}'. Returns null.");
+                Logger.Warn($"[{nameof(Ability)}] UserData in {abilityDataSource} is not type of '{typeof(T)}'. Returns null.");
                 return default;
             }
         }

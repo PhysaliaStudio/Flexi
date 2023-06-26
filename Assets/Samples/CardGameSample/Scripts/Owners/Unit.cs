@@ -50,8 +50,13 @@ namespace Physalia.Flexi.Samples.CardGame
             else
             {
                 statusTable.Add(statusData, stack);
-                Ability ability = AppendAbility(statusData.AbilityAsset);
-                return;
+
+                AbilityData abilityData = statusData.AbilityAsset.Data;
+                for (var i = 0; i < abilityData.graphGroups.Count; i++)
+                {
+                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
+                    _ = AppendAbility(abilityDataSource);
+                }
             }
         }
 
@@ -68,7 +73,12 @@ namespace Physalia.Flexi.Samples.CardGame
                 statusTable[statusData] -= stack;
                 if (statusTable[statusData] <= 0)
                 {
-                    RemoveAbility(statusData.AbilityAsset);
+                    AbilityData abilityData = statusData.AbilityAsset.Data;
+                    for (var i = 0; i < abilityData.graphGroups.Count; i++)
+                    {
+                        AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
+                        _ = RemoveAbility(abilityDataSource);
+                    }
                 }
             }
         }
