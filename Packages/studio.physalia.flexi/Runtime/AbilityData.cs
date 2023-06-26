@@ -31,7 +31,6 @@ namespace Physalia.Flexi
     {
         public string name;
         public List<BlackboardVariable> blackboard = new();
-        public List<string> graphJsons = new();
         public List<AbilityGraphGroup> graphGroups = new();
 
         /// <remarks>
