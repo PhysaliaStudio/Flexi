@@ -19,24 +19,32 @@ namespace Physalia.Flexi.GraphDataFixer
 
             for (var i = 0; i < assets.Count; i++)
             {
-                string graphJson;
                 if (assets[i] is MacroAsset macroAsset)
                 {
-                    graphJson = macroAsset.Text;
+                    bool success = Validate(macroAsset.Text, result);
+                    if (!success && !result.invalidAssets.Contains(assets[i]))
+                    {
+                        result.invalidAssets.Add(assets[i]);
+                    }
                 }
                 else if (assets[i] is AbilityAsset abilityAsset)
                 {
-                    graphJson = abilityAsset.GraphJsons[0];
+                    for (var groupIndex = 0; groupIndex < abilityAsset.GraphGroups.Count; groupIndex++)
+                    {
+                        AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
+                        for (var graphIndex = 0; graphIndex < group.graphs.Count; graphIndex++)
+                        {
+                            bool success = Validate(group.graphs[graphIndex], result);
+                            if (!success && !result.invalidAssets.Contains(assets[i]))
+                            {
+                                result.invalidAssets.Add(assets[i]);
+                            }
+                        }
+                    }
                 }
                 else
                 {
                     continue;
-                }
-
-                bool success = Validate(graphJson, result);
-                if (!success)
-                {
-                    result.invalidAssets.Add(assets[i]);
                 }
             }
 
@@ -79,7 +87,14 @@ namespace Physalia.Flexi.GraphDataFixer
                 }
                 else if (assets[i] is AbilityAsset abilityAsset)
                 {
-                    abilityAsset.GraphJsons[0] = Fix(abilityAsset.GraphJsons[0], fixTable);
+                    for (var groupIndex = 0; groupIndex < abilityAsset.GraphGroups.Count; groupIndex++)
+                    {
+                        AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
+                        for (var graphIndex = 0; graphIndex < group.graphs.Count; graphIndex++)
+                        {
+                            group.graphs[graphIndex] = Fix(group.graphs[graphIndex], fixTable);
+                        }
+                    }
                 }
                 else
                 {
