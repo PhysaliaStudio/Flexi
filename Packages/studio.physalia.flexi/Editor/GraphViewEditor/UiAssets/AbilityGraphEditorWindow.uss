@@ -1,4 +1,12 @@
-#flow-button.selected {
+.group-label {
+  font-size: 18px;
+}
+
+.graph-button {
+  font-size: 14px;
+}
+
+.graph-button--selected {
   background-color: rgba(0, 127, 255, 1);
 }
 
