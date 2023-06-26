@@ -25,6 +25,11 @@ namespace Physalia.Flexi
         private void OnEnable()
         {
             asset = target as AbilityAsset;
+            if (foldoutIndex > 0 && foldoutIndex <= asset.GraphGroups.Count)
+            {
+                AbilityGraphGroup group = asset.GraphGroups[foldoutIndex];
+                CachePreviews(group);
+            }
         }
 
         public override void OnInspectorGUI()
@@ -47,6 +52,11 @@ namespace Physalia.Flexi
                     foldoutIndex = i;
                     CachePreviews(group);
                 }
+                else if (!isFoldout && foldoutIndex == i)
+                {
+                    foldoutIndex = -1;
+                    ClearPreviews();
+                }
 
                 if (isFoldout)
                 {
@@ -62,10 +72,15 @@ namespace Physalia.Flexi
         {
             Rect rect = GUILayoutUtility.GetRect(content, textStyle);
             float addedWidth = rect.x;
-            rect.x = 0;
-            rect.y -= 3;
+            rect.x = 0;  // Force align to left
+            rect.y += 1;
             rect.width += addedWidth + 5;
             GUI.Box(rect, content, textStyle);
+        }
+
+        private void ClearPreviews()
+        {
+            cachedPreviews.Clear();
         }
 
         private void CachePreviews(AbilityGraphGroup group)
