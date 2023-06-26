@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: 1002-HellFire
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons:
-  - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":404908,"_position":{"x":91.0,"y":52.0},"_type":"Physalia.Flexi.Samples.CardGame.PlayCardNode"},{"_id":100916,"_position":{"x":552.0,"y":52.0},"_type":"Physalia.Flexi.SubgraphNode","key":"001-DamageProcess"},{"_id":140110,"_position":{"x":382.0,"y":293.0},"_type":"Physalia.Flexi.IntegerNode","value":2},{"_id":868376,"_position":{"x":316.0,"y":177.0},"_type":"Physalia.Flexi.Samples.CardGame.AllEnemiesNode"}],"edges":[{"id1":404908,"port1":"next","id2":100916,"port2":"previous"},{"id1":404908,"port1":"gamePort","id2":868376,"port2":"gamePort"},{"id1":404908,"port1":"unitPort","id2":100916,"port2":"attackerPort"},{"id1":868376,"port1":"resultPort","id2":100916,"port2":"targetsPort"},{"id1":140110,"port1":"output","id2":100916,"port2":"valuePort"}]}'
+  graphJsons: []
+  graphGroups:
+  - graphs:
+    - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":404908,"_position":{"x":91.0,"y":52.0},"_type":"Physalia.Flexi.Samples.CardGame.PlayCardNode"},{"_id":100916,"_position":{"x":552.0,"y":52.0},"_type":"Physalia.Flexi.SubgraphNode","key":"001-DamageProcess"},{"_id":140110,"_position":{"x":382.0,"y":293.0},"_type":"Physalia.Flexi.IntegerNode","value":2},{"_id":868376,"_position":{"x":316.0,"y":177.0},"_type":"Physalia.Flexi.Samples.CardGame.AllEnemiesNode"}],"edges":[{"id1":404908,"port1":"next","id2":100916,"port2":"previous"},{"id1":404908,"port1":"gamePort","id2":868376,"port2":"gamePort"},{"id1":404908,"port1":"unitPort","id2":100916,"port2":"attackerPort"},{"id1":868376,"port1":"resultPort","id2":100916,"port2":"targetsPort"},{"id1":140110,"port1":"output","id2":100916,"port2":"valuePort"}]}'
