@@ -16,6 +16,9 @@ namespace Physalia.Flexi
         [HideInInspector]
         [SerializeField]
         private List<string> graphJsons = new();
+        [HideInInspector]
+        [SerializeField]
+        private List<AbilityGraphGroup> graphGroups = new();
 
         [NonSerialized]
         private AbilityData abilityData;
@@ -41,6 +44,7 @@ namespace Physalia.Flexi
         }
 
         internal List<string> GraphJsons => graphJsons;
+        internal List<AbilityGraphGroup> GraphGroups => graphGroups;
 
         public AbilityData Data
         {
@@ -66,6 +70,11 @@ namespace Physalia.Flexi
             for (var i = 0; i < abilityAsset.graphJsons.Count; i++)
             {
                 abilityData.graphJsons.Add(abilityAsset.graphJsons[i]);
+            }
+
+            for (var i = 0; i < abilityAsset.graphGroups.Count; i++)
+            {
+                abilityData.graphGroups.Add(abilityAsset.graphGroups[i].Clone());
             }
 
             return abilityData;
