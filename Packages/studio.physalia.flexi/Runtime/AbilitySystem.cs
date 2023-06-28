@@ -73,64 +73,42 @@ namespace Physalia.Flexi
             return graph;
         }
 
-#if UNITY_5_3_OR_NEWER
-        public void CreateAbilityPool(AbilityAsset abilityAsset, int startSize)
+        public void CreateAbilityPool(AbilityDataSource abilityDataSource, int startSize)
         {
-            CreateAbilityPool(abilityAsset.Data, startSize);
-        }
-#endif
-
-        public void CreateAbilityPool(AbilityData abilityData, int startSize)
-        {
-            poolManager.CreatePool(abilityData, startSize);
+            poolManager.CreatePool(abilityDataSource, startSize);
         }
 
-#if UNITY_5_3_OR_NEWER
-        public void DestroyAbilityPool(AbilityAsset abilityAsset)
+        public void DestroyAbilityPool(AbilityDataSource abilityDataSource)
         {
-            DestroyAbilityPool(abilityAsset.Data);
-        }
-#endif
-
-        public void DestroyAbilityPool(AbilityData abilityData)
-        {
-            poolManager.DestroyPool(abilityData);
+            poolManager.DestroyPool(abilityDataSource);
         }
 
-#if UNITY_5_3_OR_NEWER
-        internal AbilityPool GetAbilityPool(AbilityAsset abilityAsset)
+        internal AbilityPool GetAbilityPool(AbilityDataSource abilityDataSource)
         {
-            return GetAbilityPool(abilityAsset.Data);
-        }
-#endif
-
-        internal AbilityPool GetAbilityPool(AbilityData abilityData)
-        {
-            return poolManager.GetPool(abilityData);
+            return poolManager.GetPool(abilityDataSource);
         }
 
-#if UNITY_5_3_OR_NEWER
-        public Ability GetAbility(AbilityAsset abilityAsset, object userData = null)
+        public Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
         {
-            return GetAbility(abilityAsset.Data, userData);
+            AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
+            return GetAbility(abilityDataSource, userData);
         }
-#endif
 
-        public Ability GetAbility(AbilityData abilityData, object userData = null)
+        public Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
-            if (poolManager.ContainsPool(abilityData))
+            if (poolManager.ContainsPool(abilityDataSource))
             {
-                Ability ability = poolManager.GetAbility(abilityData);
+                Ability ability = poolManager.GetAbility(abilityDataSource);
                 ability.SetUserData(userData);
                 return ability;
             }
 
-            return InstantiateAbility(abilityData, userData);
+            return InstantiateAbility(abilityDataSource, userData);
         }
 
         public void ReleaseAbility(Ability ability)
         {
-            if (poolManager.ContainsPool(ability.Data))
+            if (poolManager.ContainsPool(ability.DataSource))
             {
                 poolManager.ReleaseAbility(ability);
                 return;
@@ -139,24 +117,16 @@ namespace Physalia.Flexi
             ability.Reset();
         }
 
-#if UNITY_5_3_OR_NEWER
-        internal Ability InstantiateAbility(AbilityAsset abilityAsset, object userData = null)
+        internal Ability InstantiateAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
-            return InstantiateAbility(abilityAsset.Data, userData);
-        }
-#endif
-
-        internal Ability InstantiateAbility(AbilityData abilityData, object userData = null)
-        {
-            var ability = new Ability(this, abilityData, userData);
+            var ability = new Ability(this, abilityDataSource, userData);
             ability.Initialize();
             return ability;
         }
 
-        internal AbilityFlow InstantiateAbilityFlow(Ability ability, int index)
+        internal AbilityFlow InstantiateAbilityFlow(Ability ability, string json)
         {
-            string graphJson = ability.Data.graphJsons[index];
-            AbilityGraph graph = AbilityGraphUtility.Deserialize("", graphJson, macroLibrary);
+            AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, macroLibrary);
             AbilityFlow flow = new AbilityFlow(this, graph, ability);
             return flow;
         }

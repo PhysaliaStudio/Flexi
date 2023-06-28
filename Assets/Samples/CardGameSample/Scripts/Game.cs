@@ -52,9 +52,9 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.ChoiceOccurred += OnChoiceOccurred;
             abilitySystem.EventResolveMethod = ResolveEvent;
 
-            Ability turnStartEffect = abilitySystem.GetAbility(gameSetting.turnStartGraph);
-            Ability turnEndEffect = abilitySystem.GetAbility(gameSetting.turnEndGraph);
-            Ability enemyGenerationEffect = abilitySystem.GetAbility(gameSetting.enemyGenerationGraph);
+            Ability turnStartEffect = abilitySystem.GetAbility(gameSetting.turnStartGraph.Data, 0);
+            Ability turnEndEffect = abilitySystem.GetAbility(gameSetting.turnEndGraph.Data, 0);
+            Ability enemyGenerationEffect = abilitySystem.GetAbility(gameSetting.enemyGenerationGraph.Data, 0);
 
             gameStartProcess = new List<Ability> { enemyGenerationEffect, turnStartEffect };
             turnEndProcess = new List<Ability> { turnEndEffect, enemyGenerationEffect, turnStartEffect };
@@ -116,7 +116,12 @@ namespace Physalia.Flexi.Samples.CardGame
             for (var i = 0; i < startStatusIds.Count; i++)
             {
                 StatusData statusData = gameDataManager.GetData<StatusData>(startStatusIds[i]);
-                unit.AppendAbility(statusData.AbilityAsset);
+                AbilityData abilityData = statusData.AbilityAsset.Data;
+                for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
+                {
+                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
+                    _ = unit.AppendAbility(abilityDataSource);
+                }
             }
             return unit;
         }
@@ -147,7 +152,12 @@ namespace Physalia.Flexi.Samples.CardGame
             card.AddStat(StatId.COST, cardData.Cost);
             if (cardData.AbilityAsset != null)
             {
-                card.AppendAbility(cardData.AbilityAsset);
+                AbilityData abilityData = cardData.AbilityAsset.Data;
+                for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
+                {
+                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
+                    _ = card.AppendAbility(abilityDataSource);
+                }
             }
 
             return card;

@@ -18,16 +18,18 @@ namespace Physalia.Flexi
 
         private GUIStyle textStyle;
         private AbilityAsset asset;
-        private string assetPath;
 
         private readonly List<GUIContent> cachedPreviews = new();
-        private Hash128 lastDependencyHash;
+        private int foldoutIndex = -1;
 
         private void OnEnable()
         {
             asset = target as AbilityAsset;
-            assetPath = AssetDatabase.GetAssetPath(asset);
-            CachePreviews();
+            if (foldoutIndex > 0 && foldoutIndex <= asset.GraphGroups.Count)
+            {
+                AbilityGraphGroup group = asset.GraphGroups[foldoutIndex];
+                CachePreviews(group);
+            }
         }
 
         public override void OnInspectorGUI()
@@ -40,16 +42,29 @@ namespace Physalia.Flexi
             base.OnInspectorGUI();
             EditorGUILayout.Space();
 
-            Hash128 dependencyHash = AssetDatabase.GetAssetDependencyHash(assetPath);
-            if (lastDependencyHash != dependencyHash)
+            for (var i = 0; i < asset.GraphGroups.Count; i++)
             {
-                CachePreviews();
-                lastDependencyHash = dependencyHash;
-            }
+                // Foldout for each group
+                AbilityGraphGroup group = asset.GraphGroups[i];
+                bool isFoldout = EditorGUILayout.Foldout(foldoutIndex == i, $"Group {i}", true);
+                if (isFoldout && foldoutIndex != i)
+                {
+                    foldoutIndex = i;
+                    CachePreviews(group);
+                }
+                else if (!isFoldout && foldoutIndex == i)
+                {
+                    foldoutIndex = -1;
+                    ClearPreviews();
+                }
 
-            for (var i = 0; i < cachedPreviews.Count; i++)
-            {
-                RenderPreview(cachedPreviews[i]);
+                if (isFoldout)
+                {
+                    for (var previewIndex = 0; previewIndex < cachedPreviews.Count; previewIndex++)
+                    {
+                        RenderPreview(cachedPreviews[previewIndex]);
+                    }
+                }
             }
         }
 
@@ -57,13 +72,18 @@ namespace Physalia.Flexi
         {
             Rect rect = GUILayoutUtility.GetRect(content, textStyle);
             float addedWidth = rect.x;
-            rect.x = 0;
-            rect.y -= 3;
+            rect.x = 0;  // Force align to left
+            rect.y += 1;
             rect.width += addedWidth + 5;
             GUI.Box(rect, content, textStyle);
         }
 
-        private void CachePreviews()
+        private void ClearPreviews()
+        {
+            cachedPreviews.Clear();
+        }
+
+        private void CachePreviews(AbilityGraphGroup group)
         {
             cachedPreviews.Clear();
 
@@ -74,9 +94,9 @@ namespace Physalia.Flexi
                 return;
             }
 
-            for (var i = 0; i < asset.GraphJsons.Count; i++)
+            for (var i = 0; i < group.graphs.Count; i++)
             {
-                GUIContent content = CreateJsonPreview(asset.GraphJsons[i]);
+                GUIContent content = CreateJsonPreview(group.graphs[i]);
                 cachedPreviews.Add(content);
             }
         }

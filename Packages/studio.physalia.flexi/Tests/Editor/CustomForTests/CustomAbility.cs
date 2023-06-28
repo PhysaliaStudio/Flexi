@@ -4,7 +4,7 @@ namespace Physalia.Flexi.Tests
 {
     public static class CustomAbility
     {
-        public static AbilityAsset THROW_EXCEPTION
+        public static AbilityDataSource THROW_EXCEPTION
         {
             get
             {
@@ -12,7 +12,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset HELLO_WORLD
+        public static AbilityDataSource HELLO_WORLD
         {
             get
             {
@@ -20,7 +20,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset HELLO_WORLD_MACRO_CALLER
+        public static AbilityDataSource HELLO_WORLD_MACRO_CALLER
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset HELLO_WORLD_MACRO_CALLER_5_TIMES
+        public static AbilityDataSource HELLO_WORLD_MACRO_CALLER_5_TIMES
         {
             get
             {
@@ -44,7 +44,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset HELLO_WORLD_MISSING_ELEMENTS
+        public static AbilityDataSource HELLO_WORLD_MISSING_ELEMENTS
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset NORAML_ATTACK
+        public static AbilityDataSource NORAML_ATTACK
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset NORAML_ATTACK_SELECTION
+        public static AbilityDataSource NORAML_ATTACK_SELECTION
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset NORMAL_ATTACK_5_TIMES
+        public static AbilityDataSource NORMAL_ATTACK_5_TIMES
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset ATTACK_DECREASE
+        public static AbilityDataSource ATTACK_DECREASE
         {
             get
             {
@@ -84,7 +84,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset ATTACK_DOUBLE
+        public static AbilityDataSource ATTACK_DOUBLE
         {
             get
             {
@@ -92,7 +92,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset ATTACK_UP_WHEN_LOW_HEALTH
+        public static AbilityDataSource ATTACK_UP_WHEN_LOW_HEALTH
         {
             get
             {
@@ -100,7 +100,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset ATTACK_DOUBLE_WHEN_DAMAGED
+        public static AbilityDataSource ATTACK_DOUBLE_WHEN_DAMAGED
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset LOG_WHEN_ATTACKED
+        public static AbilityDataSource LOG_WHEN_ATTACKED
         {
             get
             {
@@ -116,7 +116,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset COUNTER_ATTACK
+        public static AbilityDataSource COUNTER_ATTACK
         {
             get
             {
@@ -124,7 +124,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityAsset POISON
+        public static AbilityDataSource POISON
         {
             get
             {
@@ -132,10 +132,12 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        private static AbilityAsset LoadAbilityAsset(string fileName)
+        private static AbilityDataSource LoadAbilityAsset(string fileName)
         {
             var asset = Resources.Load<AbilityAsset>(fileName);
-            return asset;
+            AbilityData data = asset.Data;
+            AbilityDataSource dataSource = data.CreateDataSource(0);
+            return dataSource;
         }
 
         private static MacroAsset ReadMacroAsset(string fileName)

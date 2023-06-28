@@ -47,7 +47,12 @@ namespace Physalia.Flexi.Samples.ActionGame
             unit.AddStat(StatId.CONTROLLABLE, 1);
 
             AbilityAsset abilityAsset = assetManager.Load<AbilityAsset>("AbilityGraphs/Combo");
-            unit.AppendAbility(abilityAsset);
+            AbilityData abilityData = abilityAsset.Data;
+            for (var i = 0; i < abilityData.graphGroups.Count; i++)
+            {
+                AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
+                unit.AppendAbility(abilityDataSource);
+            }
 
             return unit;
         }

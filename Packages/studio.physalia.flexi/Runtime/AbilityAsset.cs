@@ -13,9 +13,13 @@ namespace Physalia.Flexi
     {
         [SerializeField]
         private List<BlackboardVariable> blackboard = new();
+        [Obsolete]
         [HideInInspector]
         [SerializeField]
         private List<string> graphJsons = new();
+        [HideInInspector]
+        [SerializeField]
+        private List<AbilityGraphGroup> graphGroups = new();
 
         [NonSerialized]
         private AbilityData abilityData;
@@ -40,7 +44,9 @@ namespace Physalia.Flexi
             }
         }
 
+        [Obsolete]
         internal List<string> GraphJsons => graphJsons;
+        internal List<AbilityGraphGroup> GraphGroups => graphGroups;
 
         public AbilityData Data
         {
@@ -63,22 +69,12 @@ namespace Physalia.Flexi
                 abilityData.blackboard.Add(abilityAsset.blackboard[i].Clone());
             }
 
-            for (var i = 0; i < abilityAsset.graphJsons.Count; i++)
+            for (var i = 0; i < abilityAsset.graphGroups.Count; i++)
             {
-                abilityData.graphJsons.Add(abilityAsset.graphJsons[i]);
+                abilityData.graphGroups.Add(abilityAsset.graphGroups[i].Clone());
             }
 
             return abilityData;
-        }
-
-        internal void AddBlackboardVariable(BlackboardVariable variable)
-        {
-            blackboard.Add(variable);
-        }
-
-        internal void AddGraphJson(string graphJson)
-        {
-            graphJsons.Add(graphJson);
         }
     }
 }

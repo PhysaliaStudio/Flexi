@@ -5,7 +5,7 @@ namespace Physalia.Flexi.GraphViewEditor
     public class AbilityFlowMenu : VisualElement
     {
         private readonly AbilityGraphEditorWindow editorWindow;
-        private VisualElement flowButtonParent;
+        private VisualElement elementParent;
 
         internal AbilityFlowMenu(AbilityGraphEditorWindow editorWindow)
         {
@@ -16,55 +16,74 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             uiAsset.CloneTree(this);
 
-            Button buttonNewFlow = this.Q<Button>("button-new-flow");
-            buttonNewFlow.clicked += OnNewGraphButtonClicked;
+            Button buttonNewGroup = this.Q<Button>("button-new-group");
+            buttonNewGroup.clicked += CreateNewGroup;
 
-            flowButtonParent = this.Q<VisualElement>("flow-button-parent");
+            elementParent = this.Q<VisualElement>("element-parent");
         }
 
-        private void OnNewGraphButtonClicked()
+        internal void Refresh(int currentGroupIndex, int currentGraphIndex, int[] buttonCountsPerGroup)
         {
-            editorWindow.CreateNewGraph();
-            Refresh();
-        }
+            elementParent.Clear();
 
-        internal void Refresh()
-        {
-            flowButtonParent.Clear();
-
-            int graphCount = editorWindow.GraphCount;
-            int currentGraphIndex = editorWindow.CurrentGraphIndex;
-            for (var i = 0; i < graphCount; i++)
+            for (var i = 0; i < buttonCountsPerGroup.Length; i++)
             {
-                int index = i;
-                var button = new Button(() => SelectGraph(index))
+                int groupIndex = i;
+                var label = new Label($"Group {groupIndex}");
+                label.AddToClassList("group-label");
+                label.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
                 {
-                    name = "flow-button",
-                    text = $"Flow {i}",
-                };
-
-                if (i == currentGraphIndex)
-                {
-                    button.AddToClassList("selected");
-                }
-
-                button.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
-                {
-                    evt.menu.AppendAction("Delete", action => { DeleteGraph(index); });
+                    evt.menu.AppendAction("Add Flow", action => { CreateNewGraph(groupIndex); });
+                    evt.menu.AppendSeparator();
+                    evt.menu.AppendAction("Delete Group", action => { DeleteGroup(groupIndex); });
                 }));
 
-                flowButtonParent.Add(button);
+                elementParent.Add(label);
+
+                for (var j = 0; j < buttonCountsPerGroup[i]; j++)
+                {
+                    int graphIndex = j;
+
+                    var button = new Button(() => SelectGraph(groupIndex, graphIndex)) { text = $"Flow {groupIndex}-{graphIndex}" };
+                    button.AddToClassList("graph-button");
+                    if (groupIndex == currentGroupIndex && graphIndex == currentGraphIndex)
+                    {
+                        button.AddToClassList("graph-button--selected");
+                    }
+
+                    button.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
+                    {
+                        evt.menu.AppendAction("Delete", action => { DeleteGraph(groupIndex, graphIndex); });
+                    }));
+
+                    elementParent.Add(button);
+                }
             }
         }
 
-        private void SelectGraph(int index)
+        private void CreateNewGroup()
         {
-            editorWindow.SelectGraph(index);
+            editorWindow.CreateNewGroup();
         }
 
-        private void DeleteGraph(int index)
+        private void DeleteGroup(int groupIndex)
         {
-            editorWindow.DeleteGraph(index);
+            editorWindow.DeleteGroup(groupIndex);
+        }
+
+        private void CreateNewGraph(int groupIndex)
+        {
+            editorWindow.CreateNewGraph(groupIndex);
+        }
+
+        private void SelectGraph(int groupIndex, int graphIndex)
+        {
+            editorWindow.SelectGraph(groupIndex, graphIndex);
+        }
+
+        private void DeleteGraph(int groupIndex, int graphIndex)
+        {
+            editorWindow.DeleteGraph(groupIndex, graphIndex);
         }
     }
 }

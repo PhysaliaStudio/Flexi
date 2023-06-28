@@ -25,9 +25,22 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private static void UpgradeAbilityAsset(AbilityAsset abilityAsset)
         {
-            for (var i = 0; i < abilityAsset.GraphJsons.Count; i++)
+            if (abilityAsset.GraphJsons.Count > 0)
             {
-                abilityAsset.GraphJsons[i] = abilityAsset.GraphJsons[i].Replace("Physalia.AbilityFramework", "Physalia.Flexi");
+                var newGroup = new AbilityGraphGroup();
+                newGroup.graphs.AddRange(abilityAsset.GraphJsons);
+                abilityAsset.GraphGroups.Add(newGroup);
+
+                abilityAsset.GraphJsons.Clear();
+            }
+
+            for (var groupIndex = 0; groupIndex < abilityAsset.GraphGroups.Count; groupIndex++)
+            {
+                AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
+                for (var graphIndex = 0; graphIndex < group.graphs.Count; graphIndex++)
+                {
+                    group.graphs[graphIndex] = group.graphs[graphIndex].Replace("Physalia.AbilityFramework", "Physalia.Flexi");
+                }
             }
             EditorUtility.SetDirty(abilityAsset);
         }
