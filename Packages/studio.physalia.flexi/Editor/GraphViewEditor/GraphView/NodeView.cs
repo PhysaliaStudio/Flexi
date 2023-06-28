@@ -385,77 +385,121 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 var toggle = new Toggle();
                 toggle.SetValueWithoutNotify(inportBool.DefaultValue);
-                toggle.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                toggle.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = toggle;
             }
             else if (inportData is Inport<int> inportInt)
             {
                 var integerField = new IntegerField();
                 integerField.SetValueWithoutNotify(inportInt.DefaultValue);
-                integerField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                integerField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = integerField;
             }
             else if (inportData is Inport<long> inportLong)
             {
                 var longField = new LongField();
                 longField.SetValueWithoutNotify(inportLong.DefaultValue);
-                longField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                longField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = longField;
             }
             else if (inportData is Inport<float> inportFloat)
             {
                 var floatField = new FloatField();
                 floatField.SetValueWithoutNotify(inportFloat.DefaultValue);
-                floatField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                floatField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = floatField;
             }
             else if (inportData is Inport<double> inportDouble)
             {
                 var doubleField = new DoubleField();
                 doubleField.SetValueWithoutNotify(inportDouble.DefaultValue);
-                doubleField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                doubleField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = doubleField;
             }
             else if (inportData is Inport<Vector2> inportVector2)
             {
                 var vector2Field = new Vector2Field();
                 vector2Field.SetValueWithoutNotify(inportVector2.DefaultValue);
-                vector2Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                vector2Field.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = vector2Field;
             }
             else if (inportData is Inport<Vector3> inportVector3)
             {
                 var vector3Field = new Vector3Field();
                 vector3Field.SetValueWithoutNotify(inportVector3.DefaultValue);
-                vector3Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                vector3Field.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = vector3Field;
             }
             else if (inportData is Inport<Vector4> inportVector4)
             {
                 var vector4Field = new Vector4Field();
                 vector4Field.SetValueWithoutNotify(inportVector4.DefaultValue);
-                vector4Field.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                vector4Field.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = vector4Field;
             }
             else if (inportData is Inport<Vector2Int> inportVector2Int)
             {
                 var vector2IntField = new Vector2IntField();
                 vector2IntField.SetValueWithoutNotify(inportVector2Int.DefaultValue);
-                vector2IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                vector2IntField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = vector2IntField;
             }
             else if (inportData is Inport<Vector3Int> inportVector3Int)
             {
                 var vector3IntField = new Vector3IntField();
                 vector3IntField.SetValueWithoutNotify(inportVector3Int.DefaultValue);
-                vector3IntField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                vector3IntField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = vector3IntField;
             }
             else if (inportData is Inport<string> inportString)
             {
                 var textField = new TextField();
                 textField.SetValueWithoutNotify(inportString.DefaultValue);
-                textField.RegisterValueChangedCallback(evt => inportData.DefaultValue = evt.newValue);
+                textField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
                 field = textField;
             }
 
