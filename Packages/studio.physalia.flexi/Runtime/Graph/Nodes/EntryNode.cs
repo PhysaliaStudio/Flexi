@@ -17,6 +17,12 @@ namespace Physalia.Flexi
             }
         }
 
+        internal bool CheckCanExecute(IEventContext payload)
+        {
+            EvaluateInports();
+            return CanExecute(payload);
+        }
+
         public virtual bool CanExecute(IEventContext payload)
         {
             return false;

@@ -13,7 +13,7 @@ namespace Physalia.Flexi
             return DoLogic();
         }
 
-        private void EvaluateInports()
+        private protected void EvaluateInports()
         {
             IReadOnlyList<Inport> inports = Inports;
             for (var i = 0; i < inports.Count; i++)

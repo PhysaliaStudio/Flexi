@@ -79,7 +79,7 @@ namespace Physalia.Flexi
             IReadOnlyList<EntryNode> entryNodes = graph.EntryNodes;
             for (var i = 0; i < entryNodes.Count; i++)
             {
-                bool success = entryNodes[i].CanExecute(payload);
+                bool success = entryNodes[i].CheckCanExecute(payload);
                 if (success)
                 {
                     return i;
