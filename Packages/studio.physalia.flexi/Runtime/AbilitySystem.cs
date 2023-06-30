@@ -9,6 +9,7 @@ namespace Physalia.Flexi
 
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
+        public event Action<Ability> AbilityFinished;
 
         public Action<IEventContext> EventResolveMethod;
 
@@ -29,6 +30,16 @@ namespace Physalia.Flexi
             runner.abilitySystem = this;
 
             poolManager = new(this);
+            runner.StepExecuted += OnFlowStepExecuted;
+        }
+
+        private void OnFlowStepExecuted(AbilityFlowStepper.StepResult stepResult)
+        {
+            if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH)
+            {
+                AbilityFlow flow = stepResult.flow as AbilityFlow;
+                AbilityFinished?.Invoke(flow.Ability);
+            }
         }
 
         internal StatOwner CreateOwner(Actor actor)
