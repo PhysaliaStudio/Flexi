@@ -31,6 +31,12 @@ namespace Physalia.Flexi
             handler.Handle<Vector3Int, Vector3>(value => value);
             handler.Handle<Vector3Int, Vector2Int>(value => (Vector2Int)value);
             //handler.Handle<Vector3Int, Vector3Int>(value => value);
+
+            handler.Handle<Vector2, string>(value => value.ToString());
+            handler.Handle<Vector3, string>(value => value.ToString());
+            handler.Handle<Vector4, string>(value => value.ToString());
+            handler.Handle<Vector2Int, string>(value => value.ToString());
+            handler.Handle<Vector3Int, string>(value => value.ToString());
         }
     }
 }

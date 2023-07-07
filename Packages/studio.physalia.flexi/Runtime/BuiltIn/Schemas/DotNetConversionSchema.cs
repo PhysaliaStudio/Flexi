@@ -135,6 +135,18 @@ namespace Physalia.Flexi
             handler.Handle<decimal, float>(value => (float)value);
             handler.Handle<decimal, double>(value => (double)value);
             //handler.Handle<decimal, decimal>(value => value);
+
+            handler.Handle<byte, string>(value => value.ToString());
+            handler.Handle<sbyte, string>(value => value.ToString());
+            handler.Handle<short, string>(value => value.ToString());
+            handler.Handle<ushort, string>(value => value.ToString());
+            handler.Handle<int, string>(value => value.ToString());
+            handler.Handle<uint, string>(value => value.ToString());
+            handler.Handle<long, string>(value => value.ToString());
+            handler.Handle<ulong, string>(value => value.ToString());
+            handler.Handle<float, string>(value => value.ToString());
+            handler.Handle<double, string>(value => value.ToString());
+            handler.Handle<decimal, string>(value => value.ToString());
         }
     }
 }
