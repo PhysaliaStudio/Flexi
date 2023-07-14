@@ -28,6 +28,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private static Texture2D flowNodeMenuIcon;
         private static Texture2D macroNodeMenuIcon;
         private static Texture2D otherNodeMenuIcon;
+        private static readonly Dictionary<Color, Texture2D> customNodeMenuIcons = new();
 
         private static readonly List<SearchTreeEntry> searchTreeEntries = new();
         private static readonly List<SearchTreeEntry> nodeTreeEntries = new();
@@ -144,6 +145,13 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private static Texture2D GetNonMacroNodeIcon(Type nodeType)
         {
+            NodeColor nodeColor = nodeType.GetCustomAttribute<NodeColor>();
+            if (nodeColor != null && nodeColor.IsValid)
+            {
+                Texture2D customIcon = GetOrCreateCustomMenuIcon(nodeColor.Color);
+                return customIcon;
+            }
+
             if (typeof(EntryNode).IsAssignableFrom(nodeType))
             {
                 return entryNodeMenuIcon;
@@ -155,6 +163,29 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return otherNodeMenuIcon;
+        }
+
+        private static Texture2D GetOrCreateCustomMenuIcon(Color color)
+        {
+            bool success = customNodeMenuIcons.TryGetValue(color, out Texture2D icon);
+            if (success)
+            {
+                return icon;
+            }
+
+            // Create a 32x32 colored icon
+            icon = new Texture2D(32, 32);
+            for (var x = 0; x < icon.width; x++)
+            {
+                for (var y = 0; y < icon.height; y++)
+                {
+                    icon.SetPixel(x, y, color);
+                }
+            }
+            icon.Apply();
+
+            customNodeMenuIcons.Add(color, icon);
+            return icon;
         }
 
         private static void RebuildMacroTreeEntries()

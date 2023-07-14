@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Physalia.Flexi
 {
@@ -40,5 +41,38 @@ namespace Physalia.Flexi
     public sealed class HideFromSearchWindow : Attribute
     {
 
+    }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public sealed class NodeColor : Attribute
+    {
+        private readonly bool isValid;
+        private readonly Color color;
+
+        public bool IsValid => isValid;
+        public Color Color => color;
+
+        /// <param name="hexString">6 digit rgb string begin with '#'</param>
+        /// <param name="a">Additional alpha</param>
+        public NodeColor(string hexString, float a = 0.8f)
+        {
+            bool success = ColorUtility.TryParseHtmlString(hexString, out Color color);
+            if (success)
+            {
+                isValid = true;
+                this.color = color;
+                color.a = a;
+                return;
+            }
+
+            isValid = false;
+            this.color = Color.clear;
+        }
+
+        public NodeColor(byte r, byte g, byte b, float a = 0.8f)
+        {
+            isValid = true;
+            color = new Color(r / 255f, g / 255f, b / 255f, a);
+        }
     }
 }

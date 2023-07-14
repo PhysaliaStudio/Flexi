@@ -163,6 +163,8 @@ namespace Physalia.Flexi.GraphViewEditor
                     title = "NOT";
                     break;
             }
+
+            HandleCustomColorIfSet(node);
         }
 
         private void HandleOtherNodeStyles(NodeData node)
@@ -194,6 +196,15 @@ namespace Physalia.Flexi.GraphViewEditor
                 case NotNode:
                     AddToClassList(USS_CLASS_COMMON_VALUE_NODE);
                     break;
+            }
+        }
+
+        private void HandleCustomColorIfSet(NodeData nodeData)
+        {
+            NodeColor nodeColor = nodeData.GetType().GetCustomAttribute<NodeColor>();
+            if (nodeColor != null && nodeColor.IsValid)
+            {
+                titleContainer.style.backgroundColor = nodeColor.Color;
             }
         }
 
