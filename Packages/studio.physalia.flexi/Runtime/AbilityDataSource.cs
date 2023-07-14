@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public readonly struct AbilityDataSource : IEqualityComparer<AbilityDataSource>
+    public readonly struct AbilityDataSource : IEquatable<AbilityDataSource>, IEqualityComparer<AbilityDataSource>
     {
         private readonly AbilityData abilityData;
         private readonly int groupIndex;
@@ -36,6 +37,11 @@ namespace Physalia.Flexi
         public override int GetHashCode()
         {
             return GetHashCode(this);
+        }
+
+        public bool Equals(AbilityDataSource other)
+        {
+            return AbilityData == other.AbilityData && GroupIndex == other.GroupIndex;
         }
 
         public bool Equals(AbilityDataSource x, AbilityDataSource y)
