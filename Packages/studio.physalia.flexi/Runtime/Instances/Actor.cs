@@ -59,26 +59,6 @@ namespace Physalia.Flexi
             return owner.GetStat(statId);
         }
 
-        public void SetStat(int statId, int newBase)
-        {
-            Stat stat = owner.GetStat(statId);
-            if (stat != null)
-            {
-                stat.CurrentBase = newBase;
-                RefreshStats();
-            }
-        }
-
-        public void ModifyStat(int statId, int value)
-        {
-            Stat stat = owner.GetStat(statId);
-            if (stat != null)
-            {
-                stat.CurrentBase += value;
-                RefreshStats();
-            }
-        }
-
         public Ability FindAbility(AbilityDataSource abilityDataSource)
         {
             return owner.FindAbility(abilityDataSource);

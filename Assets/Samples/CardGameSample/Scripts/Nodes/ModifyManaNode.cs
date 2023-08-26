@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             Player player = playerPort.GetValue();
             int amount = amountPort.GetValue();
-            player.ModifyStat(StatId.MANA, amount);
+            player.GetStat(StatId.MANA).CurrentBase += amount;
 
             EnqueueEvent(new ManaChangeEvent
             {

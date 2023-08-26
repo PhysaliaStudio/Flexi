@@ -99,7 +99,7 @@ namespace Physalia.Flexi.Samples.CardGame
         private void PayCosts(Payload payload)
         {
             int cost = payload.card.GetStat(StatId.COST).CurrentValue;
-            payload.player.ModifyStat(StatId.MANA, -cost);
+            payload.player.GetStat(StatId.MANA).CurrentBase -= cost;
 
             int newManaAmount = payload.player.GetStat(StatId.MANA).CurrentValue;
             EnqueueEvent(new ManaChangeEvent

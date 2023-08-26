@@ -237,7 +237,7 @@ namespace Physalia.Flexi.Tests
         {
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.SetStat(CustomStats.HEALTH, 3);
+            unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
 
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshStatsAndModifiers();
@@ -266,7 +266,7 @@ namespace Physalia.Flexi.Tests
         {
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit.SetStat(CustomStats.HEALTH, 3);
+            unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
             _ = unit.AppendAbility(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH);
             abilitySystem.RefreshStatsAndModifiers();
 
@@ -274,7 +274,7 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(3, unit.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(6, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            unit.SetStat(CustomStats.HEALTH, 6);
+            unit.GetStat(CustomStats.HEALTH).CurrentBase = 6;
             abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Modifiers.Count);

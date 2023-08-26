@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             Player player = playerPort.GetValue();
             int mana = player.GetStat(StatId.MANA).CurrentValue;
-            player.ModifyStat(StatId.MANA, -mana);
+            player.GetStat(StatId.MANA).CurrentBase = 0;
 
             EnqueueEvent(new ManaChangeEvent
             {
