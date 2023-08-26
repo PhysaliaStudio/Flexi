@@ -56,7 +56,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 return false;
             }
 
-            int mana = payload.player.GetStat(StatId.MANA).CurrentValue;
+            int mana = payload.player.Mana;
             int cost = payload.card.GetStat(StatId.COST).CurrentValue;
             if (mana < cost)
             {
@@ -99,13 +99,12 @@ namespace Physalia.Flexi.Samples.CardGame
         private void PayCosts(Payload payload)
         {
             int cost = payload.card.GetStat(StatId.COST).CurrentValue;
-            payload.player.GetStat(StatId.MANA).CurrentBase -= cost;
+            payload.player.Mana -= cost;
 
-            int newManaAmount = payload.player.GetStat(StatId.MANA).CurrentValue;
             EnqueueEvent(new ManaChangeEvent
             {
                 modifyValue = -cost,
-                newAmount = newManaAmount,
+                newAmount = payload.player.Mana,
             });
 
             EnqueueEvent(new PlayCardEvent
