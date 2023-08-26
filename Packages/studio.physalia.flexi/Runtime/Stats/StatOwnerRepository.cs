@@ -3,26 +3,17 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class StatOwnerRepository
+    internal class StatOwnerRepository
     {
-        private readonly StatDefinitionTable table;
-
         private readonly Dictionary<int, StatOwner> idToOwners = new();
         private readonly List<StatOwner> owners = new();
         private readonly Random random = new();
 
         public IReadOnlyList<StatOwner> Owners => owners;
 
-        public static StatOwnerRepository Create(StatDefinitionListAsset statDefinitionListAsset)
+        public StatOwnerRepository()
         {
-            StatDefinitionTable table = new StatDefinitionTable.Factory().Create(statDefinitionListAsset.stats);
-            var ownerRepository = new StatOwnerRepository(table);
-            return ownerRepository;
-        }
 
-        private StatOwnerRepository(StatDefinitionTable table)
-        {
-            this.table = table;
         }
 
         public StatOwner CreateOwner()
@@ -33,7 +24,7 @@ namespace Physalia.Flexi
                 randomId = random.Next(0, int.MaxValue);
             }
 
-            var owner = new StatOwner(randomId, table, this);
+            var owner = new StatOwner(randomId, this);
             idToOwners.Add(randomId, owner);
             owners.Add(owner);
             return owner;
@@ -50,7 +41,7 @@ namespace Physalia.Flexi
             return null;
         }
 
-        internal void RemoveOwner(StatOwner owner)
+        public void RemoveOwner(StatOwner owner)
         {
             if (owner == null)
             {
