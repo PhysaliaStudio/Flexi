@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
             if (disableControl.Value)
             {
-                Actor.SetStat(StatId.CONTROLLABLE, 0);
+                Actor.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
             }
 
             avatar.PlayMontage(name.Value);
@@ -30,7 +30,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             {
                 if (disableControl.Value)
                 {
-                    Actor.SetStat(StatId.CONTROLLABLE, 1);
+                    Actor.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
                 }
 
                 return AbilityState.RUNNING;

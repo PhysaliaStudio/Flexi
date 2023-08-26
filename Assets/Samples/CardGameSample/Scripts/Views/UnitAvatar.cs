@@ -21,8 +21,8 @@ namespace Physalia.Flexi.Samples.CardGame
         public void SetUnit(Unit unit)
         {
             this.unit = unit;
-            healthBar.SetMaxHealth(unit.GetStat(StatId.HEALTH).OriginalBase);
-            healthBar.SetCurrentHealth(unit.GetStat(StatId.HEALTH).CurrentValue);
+            healthBar.SetMaxHealth(unit.HealthMax);
+            healthBar.SetCurrentHealth(unit.Health);
         }
 
         public void Heal(int amount)

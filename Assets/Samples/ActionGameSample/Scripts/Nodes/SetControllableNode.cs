@@ -7,7 +7,14 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         protected override AbilityState DoLogic()
         {
-            Actor.SetStat(StatId.CONTROLLABLE, controllable.Value ? 1 : 0);
+            if (controllable)
+            {
+                Actor.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
+            }
+            else
+            {
+                Actor.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
+            }
             return AbilityState.RUNNING;
         }
     }

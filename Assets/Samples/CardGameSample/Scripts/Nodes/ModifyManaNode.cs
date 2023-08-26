@@ -10,12 +10,12 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             Player player = playerPort.GetValue();
             int amount = amountPort.GetValue();
-            player.ModifyStat(StatId.MANA, amount);
+            player.Mana += amount;
 
             EnqueueEvent(new ManaChangeEvent
             {
                 modifyValue = amount,
-                newAmount = player.GetStat(StatId.MANA).CurrentValue,
+                newAmount = player.Mana,
             });
 
             return AbilityState.RUNNING;

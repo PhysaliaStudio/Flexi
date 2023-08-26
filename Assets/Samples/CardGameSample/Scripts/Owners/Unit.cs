@@ -7,10 +7,14 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly IUnitData unitData;
         private readonly Dictionary<StatusData, int> statusTable = new();
 
+        private int health;
+
         public IUnitData Data => unitData;
 
         public string Name => unitData.Name;
         public UnitType UnitType => unitData.UnitType;
+        public int Health { get => health; set => health = value; }
+        public int HealthMax => GetStat(StatId.HEALTH_MAX).CurrentValue;
 
         public Unit(IUnitData unitData, AbilitySystem abilitySystem) : base(abilitySystem)
         {

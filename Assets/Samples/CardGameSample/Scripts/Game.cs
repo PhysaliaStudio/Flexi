@@ -92,25 +92,29 @@ namespace Physalia.Flexi.Samples.CardGame
         private Player CreatePlayer(HeroData heroData)
         {
             var player = new Player(abilitySystem);
-            player.AddStat(StatId.MANA, 0);
             player.AddStat(StatId.MANA_RECOVER, 3);
-            player.AddStat(StatId.COIN, heroData.StartCoin);
             player.AddStat(StatId.DRAW, 5);
+
+            player.Mana = 0;
+            player.Coin = heroData.StartCoin;
+
             return player;
         }
 
         private Unit CreateHeroUnit(HeroData heroData)
         {
             var unit = new Unit(heroData, abilitySystem);
-            unit.AddStat(StatId.HEALTH, heroData.StartHealth);
+            unit.AddStat(StatId.HEALTH_MAX, heroData.StartHealth);
+            unit.Health = heroData.StartHealth;
             return unit;
         }
 
         private Unit CreateEnemyUnit(EnemyData enemyData)
         {
             Unit unit = new Unit(enemyData, abilitySystem);
-            unit.AddStat(StatId.HEALTH, enemyData.Health);
+            unit.AddStat(StatId.HEALTH_MAX, enemyData.Health);
             unit.AddStat(StatId.ATTACK, enemyData.Attack);
+            unit.Health = enemyData.Health;
 
             var startStatusIds = enemyData.StartStatusIds;
             for (var i = 0; i < startStatusIds.Count; i++)

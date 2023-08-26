@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi
@@ -28,6 +29,21 @@ namespace Physalia.Flexi
             return owner.IsValid();
         }
 
+        public void AddStat<TEnum>(TEnum statId, int baseValue) where TEnum : Enum
+        {
+            owner.AddStat(statId, baseValue);
+        }
+
+        public void RemoveStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            owner.RemoveStat(statId);
+        }
+
+        public Stat GetStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            return owner.GetStat(statId);
+        }
+
         public void AddStat(int statId, int baseValue)
         {
             owner.AddStat(statId, baseValue);
@@ -41,26 +57,6 @@ namespace Physalia.Flexi
         public Stat GetStat(int statId)
         {
             return owner.GetStat(statId);
-        }
-
-        public void SetStat(int statId, int newBase)
-        {
-            Stat stat = owner.GetStat(statId);
-            if (stat != null)
-            {
-                stat.CurrentBase = newBase;
-                RefreshStats();
-            }
-        }
-
-        public void ModifyStat(int statId, int value)
-        {
-            Stat stat = owner.GetStat(statId);
-            if (stat != null)
-            {
-                stat.CurrentBase += value;
-                RefreshStats();
-            }
         }
 
         public Ability FindAbility(AbilityDataSource abilityDataSource)

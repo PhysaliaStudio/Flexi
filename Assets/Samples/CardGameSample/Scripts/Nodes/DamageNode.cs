@@ -21,7 +21,7 @@ namespace Physalia.Flexi.Samples.CardGame
             var value = valuePort.GetValue();
             for (var i = 0; i < targets.Count; i++)
             {
-                targets[i].ModifyStat(StatId.HEALTH, -value);
+                targets[i].Health -= value;
             }
 
             EnqueueEvent(new DamageEvent

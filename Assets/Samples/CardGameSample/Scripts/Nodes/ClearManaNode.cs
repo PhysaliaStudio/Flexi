@@ -8,8 +8,8 @@ namespace Physalia.Flexi.Samples.CardGame
         protected override AbilityState DoLogic()
         {
             Player player = playerPort.GetValue();
-            int mana = player.GetStat(StatId.MANA).CurrentValue;
-            player.ModifyStat(StatId.MANA, -mana);
+            int mana = player.Mana;
+            player.Mana = 0;
 
             EnqueueEvent(new ManaChangeEvent
             {

@@ -17,7 +17,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
             for (var i = 0; i < targets.Count; i++)
             {
-                int health = targets[i].GetStat(StatId.HEALTH).CurrentValue;
+                int health = targets[i].Health;
                 if (health <= 0)
                 {
                     EnqueueEvent(new DeathEvent
