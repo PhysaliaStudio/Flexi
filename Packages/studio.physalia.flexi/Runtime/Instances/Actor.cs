@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi
@@ -26,6 +27,21 @@ namespace Physalia.Flexi
         public bool IsValid()
         {
             return owner.IsValid();
+        }
+
+        public void AddStat<TEnum>(TEnum statId, int baseValue) where TEnum : Enum
+        {
+            owner.AddStat(statId, baseValue);
+        }
+
+        public void RemoveStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            owner.RemoveStat(statId);
+        }
+
+        public Stat GetStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            return owner.GetStat(statId);
         }
 
         public void AddStat(int statId, int baseValue)

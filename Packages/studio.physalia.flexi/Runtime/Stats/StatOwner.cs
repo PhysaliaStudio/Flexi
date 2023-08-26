@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace Physalia.Flexi
 {
@@ -34,6 +35,24 @@ namespace Physalia.Flexi
         public bool IsValid()
         {
             return isValid;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddStat<TEnum>(TEnum statId, int baseValue) where TEnum : Enum
+        {
+            AddStat(CastTo<int>.From(statId), baseValue);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void RemoveStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            RemoveStat(CastTo<int>.From(statId));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Stat GetStat<TEnum>(TEnum statId) where TEnum : Enum
+        {
+            return GetStat(CastTo<int>.From(statId));
         }
 
         public void AddStat(int statId, int baseValue)
