@@ -2,16 +2,16 @@ namespace Physalia.Flexi
 {
     public class Stat
     {
-        private readonly StatDefinition statDefinition;
+        private readonly int id;
 
-        public int Id => statDefinition.Id;
+        public int Id => id;
         public int OriginalBase { get; private set; }
         public int CurrentBase { get; set; }
         public int CurrentValue { get; set; }
 
-        internal Stat(StatDefinition statDefinition, int baseValue)
+        internal Stat(int id, int baseValue)
         {
-            this.statDefinition = statDefinition;
+            this.id = id;
             OriginalBase = baseValue;
             CurrentBase = baseValue;
             CurrentValue = baseValue;

@@ -12,7 +12,6 @@ namespace Physalia.Flexi.Samples.CardGame
         private GameDataManager gameDataManager;
         private GameSystem gameSystem;
 
-        private StatDefinitionListAsset statListAsset;
         private MacroAsset[] macroAssets;
 
         private void Awake()
@@ -27,7 +26,6 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             assetManager = new AssetManager("Flexi/CardGameSample");
             gameDataManager = new GameDataManager(assetManager);
-            statListAsset = assetManager.Load<StatDefinitionListAsset>("StatList");
             macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");
 
             gameDataManager.LoadAllData<CardData>("GameData/Cards");
@@ -40,7 +38,6 @@ namespace Physalia.Flexi.Samples.CardGame
         private void CreateGameSystem()
         {
             var builder = new AbilitySystemBuilder();
-            builder.SetStatDefinitions(statListAsset);
             AbilitySystem abilitySystem = builder.Build();
             for (var i = 0; i < macroAssets.Length; i++)
             {

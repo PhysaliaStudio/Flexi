@@ -12,10 +12,6 @@ namespace Physalia.Flexi.Tests
         public void SetUp()
         {
             AbilitySystemBuilder builder = new AbilitySystemBuilder();
-
-            var statDefinitionListAsset = ScriptableObject.CreateInstance<StatDefinitionListAsset>();
-            builder.SetStatDefinitions(statDefinitionListAsset);
-
             abilitySystem = builder.Build();
         }
 

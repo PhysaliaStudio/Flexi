@@ -22,9 +22,6 @@ namespace Physalia.Flexi.Samples.ActionGame
         private static AbilitySystem CreateAbilitySystem(AssetManager assetManager)
         {
             var builder = new AbilitySystemBuilder();
-
-            StatDefinitionListAsset statListAsset = assetManager.Load<StatDefinitionListAsset>("StatList");
-            builder.SetStatDefinitions(statListAsset);
             builder.SetRunner(new RealTimeFlowRunner());
 
             AbilitySystem abilitySystem = builder.Build();

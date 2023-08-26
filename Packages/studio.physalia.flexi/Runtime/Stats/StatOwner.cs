@@ -9,7 +9,6 @@ namespace Physalia.Flexi
     public class StatOwner
     {
         private readonly int id;
-        private readonly StatDefinitionTable table;
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
@@ -26,10 +25,9 @@ namespace Physalia.Flexi
         public IReadOnlyList<AbilityFlow> AbilityFlows => abilityFlows;
         internal IReadOnlyList<StatModifier> Modifiers => modifiers;
 
-        internal StatOwner(int id, StatDefinitionTable table, StatOwnerRepository repository)
+        internal StatOwner(int id, StatOwnerRepository repository)
         {
             this.id = id;
-            this.table = table;
             this.repository = repository;
         }
 
@@ -40,21 +38,14 @@ namespace Physalia.Flexi
 
         public void AddStat(int statId, int baseValue)
         {
-            StatDefinition definition = table.GetStatDefinition(statId);
-            if (definition == null)
-            {
-                Logger.Error($"Create stat failed! See upon messages for details");
-                return;
-            }
-
             if (stats.ContainsKey(statId))
             {
-                Logger.Error($"Create stat failed! Owner {id} already has stat {definition}");
+                Logger.Error($"Create stat failed! Owner {id} already has stat {statId}");
                 return;
             }
 
-            var stat = new Stat(definition, baseValue);
-            stats.Add(definition.Id, stat);
+            var stat = new Stat(statId, baseValue);
+            stats.Add(statId, stat);
         }
 
         public void RemoveStat(int statId)

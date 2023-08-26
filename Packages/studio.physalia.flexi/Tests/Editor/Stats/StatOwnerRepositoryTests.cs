@@ -8,8 +8,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void CreateOwner_TheCreatedOwnerIsManagedByRepository()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository = new StatOwnerRepository();
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreSame(owner, repository.GetOwner(owner.Id));
@@ -18,8 +17,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void CreateOwner_IsValidReturnsTrue()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository = new StatOwnerRepository();
             StatOwner owner = repository.CreateOwner();
 
             Assert.AreEqual(true, owner.IsValid());
@@ -28,8 +26,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void DestroyOwner_IsValidReturnsFalse()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository = new StatOwnerRepository();
             StatOwner owner = repository.CreateOwner();
 
             owner.Destroy();
@@ -40,8 +37,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RemoveOwner_TheOwnerIsNull_LogError()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository = new StatOwnerRepository();
 
             repository.RemoveOwner(null);
 
@@ -51,9 +47,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RemoveOwner_TheOwnerDoesNotBelongToTargetRepository_LogError()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository1 = StatOwnerRepository.Create(statDefinitionList);
-            StatOwnerRepository repository2 = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository1 = new StatOwnerRepository();
+            StatOwnerRepository repository2 = new StatOwnerRepository();
             StatOwner ownerFrom1 = repository1.CreateOwner();
 
             repository2.RemoveOwner(ownerFrom1);
@@ -64,8 +59,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RemoveOwner_Success_GetOwnerWithTheSameIdReturnsNull()
         {
-            StatDefinitionListAsset statDefinitionList = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            StatOwnerRepository repository = StatOwnerRepository.Create(statDefinitionList);
+            StatOwnerRepository repository = new StatOwnerRepository();
             StatOwner owner = repository.CreateOwner();
 
             repository.RemoveOwner(owner);

@@ -10,10 +10,6 @@ namespace Physalia.Flexi.Tests
         public void SetUp()
         {
             AbilitySystemBuilder builder = new AbilitySystemBuilder();
-
-            StatDefinitionListAsset statDefinitionListAsset = StatDefinitionListAsset.CreateWithList(StatTestHelper.ValidList);
-            builder.SetStatDefinitions(statDefinitionListAsset);
-
             abilitySystem = builder.Build();
         }
 
@@ -22,10 +18,10 @@ namespace Physalia.Flexi.Tests
         {
             Actor actor = new EmptyActor(abilitySystem);
 
-            actor.AddStat(StatTestHelper.ATTACK, 2);
-            actor.SetStat(StatTestHelper.ATTACK, 6);
+            actor.AddStat(CustomStats.ATTACK, 2);
+            actor.SetStat(CustomStats.ATTACK, 6);
 
-            Stat stat = actor.GetStat(StatTestHelper.ATTACK);
+            Stat stat = actor.GetStat(CustomStats.ATTACK);
             Assert.AreEqual(2, stat.OriginalBase);
             Assert.AreEqual(6, stat.CurrentBase);
             Assert.AreEqual(6, stat.CurrentValue);
@@ -36,10 +32,10 @@ namespace Physalia.Flexi.Tests
         {
             Actor actor = new EmptyActor(abilitySystem);
 
-            actor.AddStat(StatTestHelper.ATTACK, 2);
-            actor.ModifyStat(StatTestHelper.ATTACK, 4);
+            actor.AddStat(CustomStats.ATTACK, 2);
+            actor.ModifyStat(CustomStats.ATTACK, 4);
 
-            Stat stat = actor.GetStat(StatTestHelper.ATTACK);
+            Stat stat = actor.GetStat(CustomStats.ATTACK);
             Assert.AreEqual(2, stat.OriginalBase);
             Assert.AreEqual(6, stat.CurrentBase);
             Assert.AreEqual(6, stat.CurrentValue);
