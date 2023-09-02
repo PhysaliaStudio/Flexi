@@ -261,11 +261,6 @@ namespace Physalia.Flexi
                     continue;
                 }
 
-                if (!abilityFlow.IsEnable)
-                {
-                    continue;
-                }
-
                 int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
                 if (entryIndex != -1)
                 {
@@ -353,11 +348,6 @@ namespace Physalia.Flexi
                     for (var k = 0; k < ability.Flows.Count; k++)
                     {
                         AbilityFlow abilityFlow = ability.Flows[k];
-                        if (!abilityFlow.IsEnable)
-                        {
-                            continue;
-                        }
-
                         if (abilityFlow.CanStatRefresh())
                         {
                             anySuccess = true;
@@ -386,11 +376,6 @@ namespace Physalia.Flexi
                 for (var j = 0; j < owner.AbilityFlows.Count; j++)
                 {
                     AbilityFlow abilityFlow = owner.AbilityFlows[j];
-                    if (!abilityFlow.IsEnable)
-                    {
-                        continue;
-                    }
-
                     if (abilityFlow.CanStatRefresh())
                     {
                         abilityFlow.Reset();
