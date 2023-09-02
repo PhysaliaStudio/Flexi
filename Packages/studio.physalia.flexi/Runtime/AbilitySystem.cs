@@ -41,6 +41,7 @@ namespace Physalia.Flexi
             {
                 AbilityFlow flow = stepResult.flow as AbilityFlow;
                 AbilityFinished?.Invoke(flow.Ability);
+                ReleaseAbility(flow.Ability);
             }
         }
 

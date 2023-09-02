@@ -493,5 +493,16 @@ namespace Physalia.Flexi.Tests
             LogAssert.Expect(LogType.Log, "World!");
             LogAssert.NoUnexpectedReceived();
         }
+
+        [Test]
+        public void ExecuteAbilitiy_AbilityIsPoolized_NormallyFinished_AbilitiesShouldBeReleased()
+        {
+            AbilityDataSource helloWorld = CustomAbility.HELLO_WORLD;
+            abilitySystem.CreateAbilityPool(helloWorld, 4);
+            _ = abilitySystem.TryEnqueueAbility(null, helloWorld, null);
+            abilitySystem.Run();
+
+            Assert.AreEqual(0, abilitySystem.GetAbilityPool(helloWorld).UsingCount);
+        }
     }
 }
