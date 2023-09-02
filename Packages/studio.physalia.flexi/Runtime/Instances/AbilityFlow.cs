@@ -14,7 +14,6 @@ namespace Physalia.Flexi
 
         public object userData;
 
-        private Actor actor;
         private IEventContext payload;
         private bool isEnable = true;
 
@@ -22,15 +21,10 @@ namespace Physalia.Flexi
         internal Ability Ability => ability;
         internal AbilityGraph Graph => graph;
 
-        public Actor Actor => actor;
+        public Actor Actor => ability.Actor;
         internal IEventContext Payload => payload;
         public FlowNode Current => graph.Current;
         public bool IsEnable => isEnable;
-
-        internal AbilityFlow(AbilityGraph graph) : this(null, graph, null)
-        {
-
-        }
 
         internal AbilityFlow(AbilitySystem system, AbilityGraph graph, Ability ability)
         {
@@ -42,11 +36,6 @@ namespace Physalia.Flexi
             {
                 graph.Nodes[i].flow = this;
             }
-        }
-
-        internal void SetOwner(Actor actor)
-        {
-            this.actor = actor;
         }
 
         public void SetPayload(IEventContext payload)

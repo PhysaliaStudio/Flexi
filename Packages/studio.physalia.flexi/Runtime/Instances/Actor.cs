@@ -88,7 +88,6 @@ namespace Physalia.Flexi
             for (var i = 0; i < abilityFlows.Count; i++)
             {
                 AbilityFlow abilityFlow = abilityFlows[i];
-                abilityFlow.SetOwner(this);
                 owner.AppendAbilityFlow(abilityFlow);
             }
         }
