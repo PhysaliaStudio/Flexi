@@ -6,10 +6,10 @@ namespace Physalia.Flexi
     public class AbilitySystem
     {
         private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
+        private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
-        public event Action<Ability> AbilityFinished;
 
         public Action<IEventContext> EventResolveMethod;
 
@@ -21,6 +21,8 @@ namespace Physalia.Flexi
 
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
+
+        private readonly List<Ability> _cachedAbilites = new(8);
 
         internal AbilitySystem(IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
         {
@@ -38,7 +40,7 @@ namespace Physalia.Flexi
             if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH)
             {
                 AbilityFlow flow = stepResult.flow as AbilityFlow;
-                AbilityFinished?.Invoke(flow.Ability);
+                ReleaseAbility(flow.Ability);
             }
         }
 
@@ -84,6 +86,11 @@ namespace Physalia.Flexi
             return graph;
         }
 
+        public bool HasAbilityPool(AbilityDataSource abilityDataSource)
+        {
+            return poolManager.ContainsPool(abilityDataSource);
+        }
+
         public void CreateAbilityPool(AbilityDataSource abilityDataSource, int startSize)
         {
             poolManager.CreatePool(abilityDataSource, startSize);
@@ -99,25 +106,26 @@ namespace Physalia.Flexi
             return poolManager.GetPool(abilityDataSource);
         }
 
-        public Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
+        internal Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
         {
             AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
             return GetAbility(abilityDataSource, userData);
         }
 
-        public Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
+        internal Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
-            if (poolManager.ContainsPool(abilityDataSource))
+            if (!poolManager.ContainsPool(abilityDataSource))
             {
-                Ability ability = poolManager.GetAbility(abilityDataSource);
-                ability.SetUserData(userData);
-                return ability;
+                Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityDataSource}. Note that instantiation is <b>VERY</b> expensive!");
+                CreateAbilityPool(abilityDataSource, DEFAULT_ABILITY_POOL_SIZE);
             }
 
-            return InstantiateAbility(abilityDataSource, userData);
+            Ability ability = poolManager.GetAbility(abilityDataSource);
+            ability.SetUserData(userData);
+            return ability;
         }
 
-        public void ReleaseAbility(Ability ability)
+        internal void ReleaseAbility(Ability ability)
         {
             if (poolManager.ContainsPool(ability.DataSource))
             {
@@ -173,43 +181,64 @@ namespace Physalia.Flexi
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
         {
-            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
+            IReadOnlyList<Actor> actors = actorRepository.Actors;
+            for (var i = 0; i < actors.Count; i++)
             {
-                StatOwner owner = owners[i];
-                _ = TryEnqueueAbility(owner.Abilities, eventContext);
+                _ = TryEnqueueAbility(actors[i], eventContext);
             }
         }
 
-        public bool TryEnqueueAndRunAbility(Ability ability, IEventContext eventContext)
+        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
         {
+            bool hasAnyEnqueued = false;
+
+            IReadOnlyList<AbilityDataSource> abilityDataSources = actor.AbilityDataSources;
+            for (var i = 0; i < abilityDataSources.Count; i++)
+            {
+                AbilityDataSource abilityDataSource = abilityDataSources[i];
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(actor, abilityDataSource, eventContext);
+                if (hasAnyEnqueuedInThis)
+                {
+                    hasAnyEnqueued = true;
+                }
+            }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataSource> abilityDataSources, IEventContext eventContext)
+        {
+            bool hasAnyEnqueued = false;
+
+            for (var i = 0; i < abilityDataSources.Count; i++)
+            {
+                AbilityDataSource abilityDataSource = abilityDataSources[i];
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(null, abilityDataSource, eventContext);
+                if (hasAnyEnqueuedInThis)
+                {
+                    hasAnyEnqueued = true;
+                }
+            }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbility(Actor actor, AbilityDataSource abilityDataSource, IEventContext eventContext)
+        {
+            Ability ability = GetAbility(abilityDataSource, eventContext);
+            ability.Actor = actor;
+
             bool success = TryEnqueueAbility(ability, eventContext);
-            if (success)
+            if (!success)
             {
-                Run();
-                return true;
+                ability.Actor = null;
+                ReleaseAbility(ability);
             }
-            else
-            {
-                return false;
-            }
+
+            return success;
         }
 
-        public bool TryEnqueueAndRunAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
-        {
-            bool success = TryEnqueueAbility(abilities, eventContext);
-            if (success)
-            {
-                Run();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
+        internal bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
         {
             bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
@@ -220,32 +249,11 @@ namespace Physalia.Flexi
                     continue;
                 }
 
-                if (!abilityFlow.IsEnable)
-                {
-                    continue;
-                }
-
                 int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
                 if (entryIndex != -1)
                 {
                     hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, entryIndex, eventContext);
-                }
-            }
-
-            return hasAnyEnqueued;
-        }
-
-        public bool TryEnqueueAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
-        {
-            bool hasAnyEnqueued = false;
-            for (var i = 0; i < abilities.Count; i++)
-            {
-                Ability ability = abilities[i];
-                bool hasAnyEnqueuedInThis = TryEnqueueAbility(ability, eventContext);
-                if (hasAnyEnqueuedInThis)
-                {
-                    hasAnyEnqueued = true;
                 }
             }
 
@@ -297,28 +305,50 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
-            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
+            // TODO: 3 layers of for loop! Need to optimize.
+            IReadOnlyList<Actor> actors = actorRepository.Actors;
+            for (var i = 0; i < actors.Count; i++)
             {
-                StatOwner owner = owners[i];
-                for (var j = 0; j < owner.AbilityFlows.Count; j++)
+                Actor actor = actors[i];
+                for (var j = 0; j < actor.AbilityDataSources.Count; j++)
                 {
-                    AbilityFlow abilityFlow = owner.AbilityFlows[j];
-                    if (!abilityFlow.IsEnable)
+                    AbilityDataSource abilityDataSource = actor.AbilityDataSources[j];
+                    Ability ability = GetAbility(abilityDataSource, STAT_REFRESH_EVENT);
+                    ability.Actor = actor;
+
+                    bool anySuccess = false;
+                    for (var k = 0; k < ability.Flows.Count; k++)
                     {
-                        continue;
+                        AbilityFlow abilityFlow = ability.Flows[k];
+                        if (abilityFlow.CanStatRefresh())
+                        {
+                            anySuccess = true;
+                            abilityFlow.Reset();
+                            abilityFlow.SetPayload(STAT_REFRESH_EVENT);
+                            statRefreshRunner.AddFlow(abilityFlow);
+                        }
                     }
 
-                    if (abilityFlow.CanStatRefresh())
+                    if (anySuccess)
                     {
-                        abilityFlow.Reset();
-                        abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        statRefreshRunner.AddFlow(abilityFlow);
+                        _cachedAbilites.Add(ability);
+                    }
+                    else
+                    {
+                        ability.Actor = null;
+                        ReleaseAbility(ability);
                     }
                 }
             }
 
             statRefreshRunner.Start();
+            for (var i = 0; i < _cachedAbilites.Count; i++)
+            {
+                Ability ability = _cachedAbilites[i];
+                ability.Actor = null;
+                ReleaseAbility(ability);
+            }
+            _cachedAbilites.Clear();
         }
 
         internal void TriggerChoice(IChoiceContext context)

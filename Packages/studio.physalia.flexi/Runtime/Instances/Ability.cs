@@ -97,17 +97,6 @@ namespace Physalia.Flexi
             }
         }
 
-        public void SetEnable(int index, bool enable)
-        {
-            if (index < 0 || index >= abilityFlows.Count)
-            {
-                Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't have flow at index '{index}'.");
-                return;
-            }
-
-            abilityFlows[index].SetEnable(enable);
-        }
-
         public T GetUserData<T>()
         {
             if (userData == null)
@@ -132,6 +121,9 @@ namespace Physalia.Flexi
             this.userData = userData;
         }
 
+        /// <summary>
+        /// Reset will be called when released. See <see cref="AbilitySystem.ReleaseAbility"/>.
+        /// </summary>
         internal void Reset()
         {
             userData = null;
