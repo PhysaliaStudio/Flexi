@@ -15,8 +15,6 @@ namespace Physalia.Flexi
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
         public IReadOnlyList<AbilityDataSource> AbilityDataSources => owner.AbilityDataSources;
-        public IReadOnlyList<Ability> Abilities => owner.Abilities;
-        public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
         public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
 
         public Actor(AbilitySystem abilitySystem)

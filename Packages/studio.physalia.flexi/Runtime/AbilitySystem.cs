@@ -10,7 +10,6 @@ namespace Physalia.Flexi
 
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
-        public event Action<Ability> AbilityFinished;
 
         public Action<IEventContext> EventResolveMethod;
 
@@ -41,7 +40,6 @@ namespace Physalia.Flexi
             if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH)
             {
                 AbilityFlow flow = stepResult.flow as AbilityFlow;
-                AbilityFinished?.Invoke(flow.Ability);
                 ReleaseAbility(flow.Ability);
             }
         }

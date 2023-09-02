@@ -14,8 +14,6 @@ namespace Physalia.Flexi
 
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<AbilityDataSource> abilityDataSources = new();
-        private readonly List<Ability> abilities = new();
-        private readonly List<AbilityFlow> abilityFlows = new();
         private readonly List<StatModifier> modifiers = new();
 
         private bool isValid = true;
@@ -24,8 +22,6 @@ namespace Physalia.Flexi
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
         public IReadOnlyList<AbilityDataSource> AbilityDataSources => abilityDataSources;
-        public IReadOnlyList<Ability> Abilities => abilities;
-        public IReadOnlyList<AbilityFlow> AbilityFlows => abilityFlows;
         internal IReadOnlyList<StatModifier> Modifiers => modifiers;
 
         internal StatOwner(int id, StatOwnerRepository repository)
@@ -84,11 +80,6 @@ namespace Physalia.Flexi
             return stat;
         }
 
-        internal Ability FindAbility(AbilityDataSource abilityDataSource)
-        {
-            return abilities.Find(x => x.DataSource == abilityDataSource);
-        }
-
         internal void AppendAbilityDataSource(AbilityDataSource source)
         {
             abilityDataSources.Add(source);
@@ -97,53 +88,6 @@ namespace Physalia.Flexi
         internal bool RemoveAbilityDataSource(AbilityDataSource source)
         {
             return abilityDataSources.Remove(source);
-        }
-
-        internal void AppendAbility(Ability ability)
-        {
-            abilities.Add(ability);
-        }
-
-        internal void RemoveAbility(Ability ability)
-        {
-            abilities.Remove(ability);
-        }
-
-        public AbilityFlow FindAbilityFlow(Predicate<AbilityFlow> match)
-        {
-            return abilityFlows.Find(match);
-        }
-
-        internal void AppendAbilityFlow(AbilityFlow abilityFlow)
-        {
-            abilityFlows.Add(abilityFlow);
-        }
-
-        internal void RemoveAbilityFlow(AbilityFlow abilityFlow)
-        {
-            abilityFlows.Remove(abilityFlow);
-        }
-
-        internal bool RemoveAbilityFlow(Predicate<AbilityFlow> match)
-        {
-            AbilityFlow abilityFlow = abilityFlows.Find(match);
-            if (abilityFlow == null)
-            {
-                return false;
-            }
-
-            abilityFlows.Remove(abilityFlow);
-            return true;
-        }
-
-        internal void RemoveAbilityFlowAt(int index)
-        {
-            abilityFlows.RemoveAt(index);
-        }
-
-        internal void ClearAllAbilityFlows()
-        {
-            abilityFlows.Clear();
         }
 
         public void AppendModifier(StatModifier modifier)
