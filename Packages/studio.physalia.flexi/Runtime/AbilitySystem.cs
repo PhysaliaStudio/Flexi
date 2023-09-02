@@ -6,6 +6,7 @@ namespace Physalia.Flexi
     public class AbilitySystem
     {
         private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
+        private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
@@ -87,6 +88,11 @@ namespace Physalia.Flexi
             return graph;
         }
 
+        public bool HasAbilityPool(AbilityDataSource abilityDataSource)
+        {
+            return poolManager.ContainsPool(abilityDataSource);
+        }
+
         public void CreateAbilityPool(AbilityDataSource abilityDataSource, int startSize)
         {
             poolManager.CreatePool(abilityDataSource, startSize);
@@ -110,14 +116,15 @@ namespace Physalia.Flexi
 
         internal Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
-            if (poolManager.ContainsPool(abilityDataSource))
+            if (!poolManager.ContainsPool(abilityDataSource))
             {
-                Ability ability = poolManager.GetAbility(abilityDataSource);
-                ability.SetUserData(userData);
-                return ability;
+                Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityDataSource}. Note that instantiation is <b>VERY</b> expensive!");
+                CreateAbilityPool(abilityDataSource, DEFAULT_ABILITY_POOL_SIZE);
             }
 
-            return InstantiateAbility(abilityDataSource, userData);
+            Ability ability = poolManager.GetAbility(abilityDataSource);
+            ability.SetUserData(userData);
+            return ability;
         }
 
         internal void ReleaseAbility(Ability ability)

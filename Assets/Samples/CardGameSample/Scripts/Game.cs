@@ -56,6 +56,10 @@ namespace Physalia.Flexi.Samples.CardGame
             AbilityDataSource turnEndEffect = gameSetting.turnEndGraph.Data.CreateDataSource(0);
             AbilityDataSource enemyGenerationEffect = gameSetting.enemyGenerationGraph.Data.CreateDataSource(0);
 
+            abilitySystem.CreateAbilityPool(turnStartEffect, 1);
+            abilitySystem.CreateAbilityPool(turnEndEffect, 1);
+            abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
+
             gameStartProcess = new List<AbilityDataSource> { enemyGenerationEffect, turnStartEffect };
             turnEndProcess = new List<AbilityDataSource> { turnEndEffect, enemyGenerationEffect, turnStartEffect };
 
@@ -125,6 +129,11 @@ namespace Physalia.Flexi.Samples.CardGame
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
                     unit.AppendAbilityDataSource(abilityDataSource);
+
+                    if (!abilitySystem.HasAbilityPool(abilityDataSource))
+                    {
+                        abilitySystem.CreateAbilityPool(abilityDataSource, 2);
+                    }
                 }
             }
             return unit;
@@ -161,6 +170,11 @@ namespace Physalia.Flexi.Samples.CardGame
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
                     card.AppendAbilityDataSource(abilityDataSource);
+
+                    if (!abilitySystem.HasAbilityPool(abilityDataSource))
+                    {
+                        abilitySystem.CreateAbilityPool(abilityDataSource, 2);
+                    }
                 }
             }
 
