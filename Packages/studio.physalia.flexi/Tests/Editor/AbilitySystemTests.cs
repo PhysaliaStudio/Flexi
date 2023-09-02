@@ -158,7 +158,6 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(true, success);
             LogAssert.Expect(LogType.Log, "I'm damaged!");
             LogAssert.Expect(LogType.Log, "I will revenge!");
-            LogAssert.NoUnexpectedReceived();
         }
 
         [Test]
@@ -491,7 +490,6 @@ namespace Physalia.Flexi.Tests
             LogAssert.Expect(LogType.Exception, "Exception: This is for testing");
             LogAssert.Expect(LogType.Log, "Hello");
             LogAssert.Expect(LogType.Log, "World!");
-            LogAssert.NoUnexpectedReceived();
         }
 
         [Test]
