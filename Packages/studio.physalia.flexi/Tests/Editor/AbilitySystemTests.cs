@@ -313,6 +313,27 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
+        public void ContinuousEventFor2Times_TheAbilityTriggeredTwice()
+        {
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            Ability ability = unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+
+            for (var i = 0; i < 2; i++)
+            {
+                abilitySystem.TryEnqueueAbility(ability, new CustomDamageEvent
+                {
+                    instigator = unit1,
+                    target = unit2,
+                });
+            }
+            abilitySystem.Run();
+
+            Assert.AreEqual(16, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
         public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
             var unitFactory = new CustomUnitFactory(abilitySystem);
