@@ -134,9 +134,7 @@ namespace Physalia.Flexi.Tests
             AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
-            var actor = new EmptyActor(abilitySystem);
-            _ = actor.AppendAbility(abilityDataSource);
-
+            _ = abilitySystem.GetAbility(abilityDataSource);
             Assert.AreEqual(1, abilitySystem.GetAbilityPool(abilityDataSource).UsingCount);
         }
 
@@ -146,9 +144,8 @@ namespace Physalia.Flexi.Tests
             AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
-            var actor = new EmptyActor(abilitySystem);
-            Ability ability = actor.AppendAbility(abilityDataSource);
-            actor.RemoveAbility(ability);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource);
+            abilitySystem.ReleaseAbility(ability);
 
             Assert.AreEqual(0, abilitySystem.GetAbilityPool(abilityDataSource).UsingCount);
         }
@@ -159,9 +156,9 @@ namespace Physalia.Flexi.Tests
             AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
-            var actor = new EmptyActor(abilitySystem);
-            Ability ability = actor.AppendAbility(abilityDataSource);
-            actor.RemoveAbility(ability);
+            Ability ability = abilitySystem.GetAbility(abilityDataSource);
+            ability.Actor = new EmptyActor(abilitySystem);
+            abilitySystem.ReleaseAbility(ability);
 
             Assert.AreEqual(null, ability.Actor);
             for (var i = 0; i < ability.Flows.Count; i++)

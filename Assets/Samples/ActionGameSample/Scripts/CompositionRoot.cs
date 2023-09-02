@@ -48,7 +48,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             for (var i = 0; i < abilityData.graphGroups.Count; i++)
             {
                 AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                unit.AppendAbility(abilityDataSource);
+                unit.AppendAbilityDataSource(abilityDataSource);
             }
 
             return unit;
@@ -67,7 +67,8 @@ namespace Physalia.Flexi.Samples.ActionGame
                     AbilitySlot.State state = playerUnit.AbilitySlot.GetState();
                     if (state == AbilitySlot.State.OPEN)
                     {
-                        _ = abilitySystem.TryEnqueueAndRunAbility(playerUnit.Abilities[0], null);
+                        _ = abilitySystem.TryEnqueueAbility(playerUnit, playerUnit.AbilityDataSources[0], null);
+                        abilitySystem.Run();
                     }
                     else if (state == AbilitySlot.State.RECAST)
                     {

@@ -155,46 +155,6 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void AppendAbility_FindAbilityWithSourceDataReturnsTheAbility()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            Ability ability = unit.AppendAbility(abilityDataSource);
-
-            Assert.AreEqual(ability, unit.FindAbility(abilityDataSource));
-        }
-
-        [Test]
-        public void AppendAbility_ActorOfAbilityReturnsTheSourceActor()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            Ability ability = unit.AppendAbility(abilityDataSource);
-
-            Assert.AreEqual(unit, ability.Actor);
-        }
-
-        [Test]
-        public void AppendAbility_Contains3GraphJsons_ActorHas3Flows()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            unit.AppendAbility(abilityDataSource);
-
-            Assert.AreEqual(3, unit.AbilityFlows.Count);
-        }
-
-
-        [Test]
         public void RemoveAbility_ActorHasThatAbility_ReturnsTrue()
         {
             // We should test 0 flow case, because the returned value should be true even if there's no flow.
@@ -202,9 +162,9 @@ namespace Physalia.Flexi.Tests
 
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            unit.AppendAbility(abilityDataSource);
+            unit.AppendAbilityDataSource(abilityDataSource);
 
-            bool success = unit.RemoveAbility(abilityDataSource);
+            bool success = unit.RemoveAbilityDataSource(abilityDataSource);
             Assert.AreEqual(true, success);
         }
 
@@ -216,38 +176,8 @@ namespace Physalia.Flexi.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit = unitFactory.Create(new CustomUnitData());
 
-            bool success = unit.RemoveAbility(abilityDataSource);
+            bool success = unit.RemoveAbilityDataSource(abilityDataSource);
             Assert.AreEqual(false, success);
-        }
-
-        [Test]
-        public void RemoveAbility_ActorHasThatAbility_FindAbilityWithSourceDataReturnsNull()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            unit.AppendAbility(abilityDataSource);
-
-            unit.RemoveAbility(abilityDataSource);
-            Assert.AreEqual(null, unit.FindAbility(abilityDataSource));
-        }
-
-        [Test]
-        public void RemoveAbility_ActorHaveAnAbilityWith3Graphs_ActorHas0Flows()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            unit.AppendAbility(abilityDataSource);
-
-            unit.RemoveAbility(abilityDataSource);
-
-            Assert.AreEqual(0, unit.AbilityFlows.Count);
         }
     }
 }

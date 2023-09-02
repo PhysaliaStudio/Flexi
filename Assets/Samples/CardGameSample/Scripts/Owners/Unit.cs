@@ -59,7 +59,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var i = 0; i < abilityData.graphGroups.Count; i++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                    _ = AppendAbility(abilityDataSource);
+                    AppendAbilityDataSource(abilityDataSource);
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace Physalia.Flexi.Samples.CardGame
                     for (var i = 0; i < abilityData.graphGroups.Count; i++)
                     {
                         AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                        _ = RemoveAbility(abilityDataSource);
+                        _ = RemoveAbilityDataSource(abilityDataSource);
                     }
                 }
             }
