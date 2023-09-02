@@ -22,8 +22,8 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly Random generalRandom = new();
         private readonly HashSet<EnemyGroupData> groupDatas = new();
 
-        private List<Ability> gameStartProcess;
-        private List<Ability> turnEndProcess;
+        private List<AbilityDataSource> gameStartProcess;
+        private List<AbilityDataSource> turnEndProcess;
 
         private Player player;
         private Unit heroUnit;
@@ -52,12 +52,12 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.ChoiceOccurred += OnChoiceOccurred;
             abilitySystem.EventResolveMethod = ResolveEvent;
 
-            Ability turnStartEffect = abilitySystem.GetAbility(gameSetting.turnStartGraph.Data, 0);
-            Ability turnEndEffect = abilitySystem.GetAbility(gameSetting.turnEndGraph.Data, 0);
-            Ability enemyGenerationEffect = abilitySystem.GetAbility(gameSetting.enemyGenerationGraph.Data, 0);
+            AbilityDataSource turnStartEffect = gameSetting.turnStartGraph.Data.CreateDataSource(0);
+            AbilityDataSource turnEndEffect = gameSetting.turnEndGraph.Data.CreateDataSource(0);
+            AbilityDataSource enemyGenerationEffect = gameSetting.enemyGenerationGraph.Data.CreateDataSource(0);
 
-            gameStartProcess = new List<Ability> { enemyGenerationEffect, turnStartEffect };
-            turnEndProcess = new List<Ability> { turnEndEffect, enemyGenerationEffect, turnStartEffect };
+            gameStartProcess = new List<AbilityDataSource> { enemyGenerationEffect, turnStartEffect };
+            turnEndProcess = new List<AbilityDataSource> { turnEndEffect, enemyGenerationEffect, turnStartEffect };
 
             player = CreatePlayer(heroData);
             heroUnit = CreateHeroUnit(heroData);
@@ -82,10 +82,10 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private void ResolveEvent(IEventContext context)
         {
-            abilitySystem.TryEnqueueAbility(heroUnit.Abilities, context);
+            abilitySystem.TryEnqueueAbility(heroUnit, context);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(enemyUnits[i].Abilities, context);
+                abilitySystem.TryEnqueueAbility(enemyUnits[i], context);
             }
         }
 
@@ -179,7 +179,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void Start()
         {
-            abilitySystem.TryEnqueueAndRunAbility(gameStartProcess, new SystemProcessPayload { game = this });
+            _ = abilitySystem.TryEnqueueAbility(gameStartProcess, new SystemProcessPayload { game = this });
+            abilitySystem.Run();
         }
 
         public IReadOnlyList<Unit> RandomGenerateEnemyGroup()
@@ -224,9 +225,10 @@ namespace Physalia.Flexi.Samples.CardGame
                 random = generalRandom,
             };
 
-            bool success = abilitySystem.TryEnqueueAndRunAbility(card.Abilities, payload);
+            bool success = abilitySystem.TryEnqueueAbility(card, payload);
             if (success)
             {
+                abilitySystem.Run();
                 CardSelected?.Invoke(card);
             }
         }
@@ -274,7 +276,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void EndTurn()
         {
-            abilitySystem.TryEnqueueAndRunAbility(turnEndProcess, new SystemProcessPayload { game = this });
+            _ = abilitySystem.TryEnqueueAbility(turnEndProcess, new SystemProcessPayload { game = this });
+            abilitySystem.Run();
         }
     }
 }

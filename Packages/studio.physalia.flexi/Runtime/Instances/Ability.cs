@@ -121,6 +121,9 @@ namespace Physalia.Flexi
             this.userData = userData;
         }
 
+        /// <summary>
+        /// Reset will be called when released. See <see cref="AbilitySystem.ReleaseAbility"/>.
+        /// </summary>
         internal void Reset()
         {
             userData = null;

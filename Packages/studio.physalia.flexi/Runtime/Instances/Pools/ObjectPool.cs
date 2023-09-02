@@ -18,6 +18,7 @@ namespace Physalia.Flexi
 
         public int Size => size;
         public int UsingCount => usingInstances.Count;
+        public IReadOnlyList<T> RemainedInstances => remainedInstances;
 
         public ObjectPool(ObjectInstanceFactory<T> factory, int startSize, PoolExpandMethod expandMethod = PoolExpandMethod.OneAtATime)
         {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
 
 namespace Physalia.Flexi.Tests
 {
@@ -114,13 +113,20 @@ namespace Physalia.Flexi.Tests
             // Poolize the ability
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
-            // Get an ability, run it and return it
+            // Get an ability, manually run it and return it
             Ability ability = abilitySystem.GetAbility(abilityDataSource);
-            abilitySystem.TryEnqueueAbility(ability, null);
-            abilitySystem.Run();
+            for (var i = 0; i < ability.Flows.Count; i++)
+            {
+                AbilityFlow flow = ability.Flows[i];
+                flow.Reset(0);
+                flow.MoveNext();
+            }
             abilitySystem.ReleaseAbility(ability);
 
             // Assert
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            Assert.AreEqual(0, pool.UsingCount);
+
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow flow = ability.Flows[i];

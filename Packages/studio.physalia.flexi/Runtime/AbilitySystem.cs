@@ -101,13 +101,13 @@ namespace Physalia.Flexi
             return poolManager.GetPool(abilityDataSource);
         }
 
-        public Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
+        internal Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
         {
             AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
             return GetAbility(abilityDataSource, userData);
         }
 
-        public Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
+        internal Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
         {
             if (poolManager.ContainsPool(abilityDataSource))
             {
@@ -119,7 +119,7 @@ namespace Physalia.Flexi
             return InstantiateAbility(abilityDataSource, userData);
         }
 
-        public void ReleaseAbility(Ability ability)
+        internal void ReleaseAbility(Ability ability)
         {
             if (poolManager.ContainsPool(ability.DataSource))
             {
@@ -180,44 +180,9 @@ namespace Physalia.Flexi
             {
                 _ = TryEnqueueAbility(actors[i], eventContext);
             }
-
-            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
-            {
-                StatOwner owner = owners[i];
-                _ = TryEnqueueAbility(owner.Abilities, eventContext);
-            }
         }
 
-        public bool TryEnqueueAndRunAbility(Ability ability, IEventContext eventContext)
-        {
-            bool success = TryEnqueueAbility(ability, eventContext);
-            if (success)
-            {
-                Run();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool TryEnqueueAndRunAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
-        {
-            bool success = TryEnqueueAbility(abilities, eventContext);
-            if (success)
-            {
-                Run();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        private bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
+        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
         {
             bool hasAnyEnqueued = false;
 
@@ -226,6 +191,23 @@ namespace Physalia.Flexi
             {
                 AbilityDataSource abilityDataSource = abilityDataSources[i];
                 bool hasAnyEnqueuedInThis = TryEnqueueAbility(actor, abilityDataSource, eventContext);
+                if (hasAnyEnqueuedInThis)
+                {
+                    hasAnyEnqueued = true;
+                }
+            }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataSource> abilityDataSources, IEventContext eventContext)
+        {
+            bool hasAnyEnqueued = false;
+
+            for (var i = 0; i < abilityDataSources.Count; i++)
+            {
+                AbilityDataSource abilityDataSource = abilityDataSources[i];
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(null, abilityDataSource, eventContext);
                 if (hasAnyEnqueuedInThis)
                 {
                     hasAnyEnqueued = true;
@@ -250,7 +232,7 @@ namespace Physalia.Flexi
             return success;
         }
 
-        public bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
+        internal bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
         {
             bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
@@ -266,22 +248,6 @@ namespace Physalia.Flexi
                 {
                     hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, entryIndex, eventContext);
-                }
-            }
-
-            return hasAnyEnqueued;
-        }
-
-        public bool TryEnqueueAbility(IReadOnlyList<Ability> abilities, IEventContext eventContext)
-        {
-            bool hasAnyEnqueued = false;
-            for (var i = 0; i < abilities.Count; i++)
-            {
-                Ability ability = abilities[i];
-                bool hasAnyEnqueuedInThis = TryEnqueueAbility(ability, eventContext);
-                if (hasAnyEnqueuedInThis)
-                {
-                    hasAnyEnqueued = true;
                 }
             }
 
@@ -365,22 +331,6 @@ namespace Physalia.Flexi
                     {
                         ability.Actor = null;
                         ReleaseAbility(ability);
-                    }
-                }
-            }
-
-            IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
-            for (var i = 0; i < owners.Count; i++)
-            {
-                StatOwner owner = owners[i];
-                for (var j = 0; j < owner.AbilityFlows.Count; j++)
-                {
-                    AbilityFlow abilityFlow = owner.AbilityFlows[j];
-                    if (abilityFlow.CanStatRefresh())
-                    {
-                        abilityFlow.Reset();
-                        abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                        statRefreshRunner.AddFlow(abilityFlow);
                     }
                 }
             }
