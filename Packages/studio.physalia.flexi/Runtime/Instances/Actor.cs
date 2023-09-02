@@ -14,6 +14,7 @@ namespace Physalia.Flexi
         public int OwnerId => owner.Id;
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
+        public IReadOnlyList<AbilityDataSource> AbilityDataSources => owner.AbilityDataSources;
         public IReadOnlyList<Ability> Abilities => owner.Abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => owner.AbilityFlows;
         public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
@@ -62,6 +63,16 @@ namespace Physalia.Flexi
         public Ability FindAbility(AbilityDataSource abilityDataSource)
         {
             return owner.FindAbility(abilityDataSource);
+        }
+
+        public void AppendAbilityDataSource(AbilityDataSource abilityDataSource, object userData = null)
+        {
+            owner.AppendAbilityDataSource(abilityDataSource);
+        }
+
+        public bool RemoveAbilityDataSource(AbilityDataSource abilityDataSource)
+        {
+            return owner.RemoveAbilityDataSource(abilityDataSource);
         }
 
         public Ability AppendAbility(AbilityData abilityData, int groupIndex, object userData = null)

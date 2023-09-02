@@ -13,6 +13,7 @@ namespace Physalia.Flexi
         private readonly StatOwnerRepository repository;
 
         private readonly Dictionary<int, Stat> stats = new();
+        private readonly List<AbilityDataSource> abilityDataSources = new();
         private readonly List<Ability> abilities = new();
         private readonly List<AbilityFlow> abilityFlows = new();
         private readonly List<StatModifier> modifiers = new();
@@ -22,6 +23,7 @@ namespace Physalia.Flexi
         public int Id => id;
 
         internal IReadOnlyDictionary<int, Stat> Stats => stats;
+        public IReadOnlyList<AbilityDataSource> AbilityDataSources => abilityDataSources;
         public IReadOnlyList<Ability> Abilities => abilities;
         public IReadOnlyList<AbilityFlow> AbilityFlows => abilityFlows;
         internal IReadOnlyList<StatModifier> Modifiers => modifiers;
@@ -85,6 +87,16 @@ namespace Physalia.Flexi
         internal Ability FindAbility(AbilityDataSource abilityDataSource)
         {
             return abilities.Find(x => x.DataSource == abilityDataSource);
+        }
+
+        internal void AppendAbilityDataSource(AbilityDataSource source)
+        {
+            abilityDataSources.Add(source);
+        }
+
+        internal bool RemoveAbilityDataSource(AbilityDataSource source)
+        {
+            return abilityDataSources.Remove(source);
         }
 
         internal void AppendAbility(Ability ability)

@@ -318,11 +318,13 @@ namespace Physalia.Flexi.Tests
             var unitFactory = new CustomUnitFactory(abilitySystem);
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            Ability ability = unit2.AppendAbility(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+
+            AbilityDataSource source = CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED;
+            unit2.AppendAbilityDataSource(source);
 
             for (var i = 0; i < 2; i++)
             {
-                abilitySystem.TryEnqueueAbility(ability, new CustomDamageEvent
+                abilitySystem.TryEnqueueAbility(unit2, source, new CustomDamageEvent
                 {
                     instigator = unit1,
                     target = unit2,

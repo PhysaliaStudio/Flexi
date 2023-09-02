@@ -22,6 +22,8 @@ namespace Physalia.Flexi
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
 
+        private readonly List<Ability> _cachedAbilites = new(8);
+
         internal AbilitySystem(IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
         {
             ownerRepository = new StatOwnerRepository();
@@ -173,6 +175,12 @@ namespace Physalia.Flexi
 
         private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
         {
+            IReadOnlyList<Actor> actors = actorRepository.Actors;
+            for (var i = 0; i < actors.Count; i++)
+            {
+                _ = TryEnqueueAbility(actors[i], eventContext);
+            }
+
             IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
             for (var i = 0; i < owners.Count; i++)
             {
@@ -207,6 +215,39 @@ namespace Physalia.Flexi
             {
                 return false;
             }
+        }
+
+        private bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
+        {
+            bool hasAnyEnqueued = false;
+
+            IReadOnlyList<AbilityDataSource> abilityDataSources = actor.AbilityDataSources;
+            for (var i = 0; i < abilityDataSources.Count; i++)
+            {
+                AbilityDataSource abilityDataSource = abilityDataSources[i];
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(actor, abilityDataSource, eventContext);
+                if (hasAnyEnqueuedInThis)
+                {
+                    hasAnyEnqueued = true;
+                }
+            }
+
+            return hasAnyEnqueued;
+        }
+
+        public bool TryEnqueueAbility(Actor actor, AbilityDataSource abilityDataSource, IEventContext eventContext)
+        {
+            Ability ability = GetAbility(abilityDataSource, eventContext);
+            ability.Actor = actor;
+
+            bool success = TryEnqueueAbility(ability, eventContext);
+            if (!success)
+            {
+                ability.Actor = null;
+                ReleaseAbility(ability);
+            }
+
+            return success;
         }
 
         public bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
@@ -297,6 +338,47 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
+            // TODO: 3 layers of for loop! Need to optimize.
+            IReadOnlyList<Actor> actors = actorRepository.Actors;
+            for (var i = 0; i < actors.Count; i++)
+            {
+                Actor actor = actors[i];
+                for (var j = 0; j < actor.AbilityDataSources.Count; j++)
+                {
+                    AbilityDataSource abilityDataSource = actor.AbilityDataSources[j];
+                    Ability ability = GetAbility(abilityDataSource, STAT_REFRESH_EVENT);
+                    ability.Actor = actor;
+
+                    bool anySuccess = false;
+                    for (var k = 0; k < ability.Flows.Count; k++)
+                    {
+                        AbilityFlow abilityFlow = ability.Flows[k];
+                        if (!abilityFlow.IsEnable)
+                        {
+                            continue;
+                        }
+
+                        if (abilityFlow.CanStatRefresh())
+                        {
+                            anySuccess = true;
+                            abilityFlow.Reset();
+                            abilityFlow.SetPayload(STAT_REFRESH_EVENT);
+                            statRefreshRunner.AddFlow(abilityFlow);
+                        }
+                    }
+
+                    if (anySuccess)
+                    {
+                        _cachedAbilites.Add(ability);
+                    }
+                    else
+                    {
+                        ability.Actor = null;
+                        ReleaseAbility(ability);
+                    }
+                }
+            }
+
             IReadOnlyList<StatOwner> owners = ownerRepository.Owners;
             for (var i = 0; i < owners.Count; i++)
             {
@@ -319,6 +401,13 @@ namespace Physalia.Flexi
             }
 
             statRefreshRunner.Start();
+            for (var i = 0; i < _cachedAbilites.Count; i++)
+            {
+                Ability ability = _cachedAbilites[i];
+                ability.Actor = null;
+                ReleaseAbility(ability);
+            }
+            _cachedAbilites.Clear();
         }
 
         internal void TriggerChoice(IChoiceContext context)
