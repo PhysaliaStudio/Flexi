@@ -178,9 +178,23 @@ namespace Physalia.Flexi
             var edges = new List<Edge>();
             if (value.HasNode())
             {
-                var handledNodes = new HashSet<Node>();
-                Node node = value.GetFirstNode();
-                AddEdges(node, ref edges, ref handledNodes);
+                var totalNodes = new List<Node>(value.Nodes.Count + 2);
+                if (value.GraphInputNode != null)
+                {
+                    totalNodes.Add(value.GraphInputNode);
+                }
+                if (value.GraphOutputNode != null)
+                {
+                    totalNodes.Add(value.GraphOutputNode);
+                }
+                totalNodes.AddRange(value.Nodes);
+
+                var unhandledNodes = new HashSet<Node>(totalNodes);
+                while (unhandledNodes.Count > 0)
+                {
+                    Node startNode = totalNodes.Find(x => unhandledNodes.Contains(x));
+                    AddEdges(startNode, ref edges, ref unhandledNodes);
+                }
             }
 
             // Edges
@@ -267,7 +281,7 @@ namespace Physalia.Flexi
             writer.WriteEndObject();
         }
 
-        private void AddEdges(Node node, ref List<Edge> edges, ref HashSet<Node> handledNodes)
+        private void AddEdges(Node node, ref List<Edge> edges, ref HashSet<Node> unhandledNodes)
         {
             // Rule: The port1 must be Outport, and the port2 must be Inport
 
@@ -285,7 +299,7 @@ namespace Physalia.Flexi
                         continue;
                     }
 
-                    if (handledNodes.Contains(inport.Node))
+                    if (!unhandledNodes.Contains(inport.Node))
                     {
                         continue;
                     }
@@ -314,7 +328,7 @@ namespace Physalia.Flexi
                         continue;
                     }
 
-                    if (handledNodes.Contains(outport.Node))
+                    if (!unhandledNodes.Contains(outport.Node))
                     {
                         continue;
                     }
@@ -331,15 +345,15 @@ namespace Physalia.Flexi
                 }
             }
 
-            handledNodes.Add(node);
+            _ = unhandledNodes.Remove(node);
             foreach (Node linkedNode in linkedNodes)
             {
-                if (handledNodes.Contains(linkedNode))
+                if (!unhandledNodes.Contains(linkedNode))
                 {
                     continue;
                 }
 
-                AddEdges(linkedNode, ref edges, ref handledNodes);
+                AddEdges(linkedNode, ref edges, ref unhandledNodes);
             }
         }
     }
