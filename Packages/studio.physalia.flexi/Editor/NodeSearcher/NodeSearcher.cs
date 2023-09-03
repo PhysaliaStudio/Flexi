@@ -23,7 +23,7 @@ namespace Physalia.Flexi.NodeSearcher
 
         private static GUIStyle buttonStyle;
 
-        [MenuItem(EditorConst.MenuFolder + "Node Searcher")]
+        [MenuItem(EditorConst.MenuFolder + "Node Searcher", priority = 1001)]
         public static void Open()
         {
             NodeSearcher window = GetWindow<NodeSearcher>("Node Searcher");

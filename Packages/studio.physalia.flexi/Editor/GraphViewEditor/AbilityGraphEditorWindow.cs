@@ -88,7 +88,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private BlackboardInspector blackboardInspector;
         private bool isDirty;
 
-        [MenuItem("Tools/Flexi/Ability Editor &1")]
+        [MenuItem(EditorConst.MenuFolder + "Ability Editor &1", priority = 1000)]
         private static void Open()
         {
             AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
