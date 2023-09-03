@@ -21,7 +21,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
         private ValidationResult result;
 
-        [MenuItem("Tools/Flexi/GraphData Fixer")]
+        [MenuItem(EditorConst.MenuFolder + "GraphData Fixer", priority = 1002)]
         private static void Open()
         {
             GraphDataFixerWindow window = GetWindow<GraphDataFixerWindow>("GraphData Fixer");

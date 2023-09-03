@@ -88,7 +88,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private BlackboardInspector blackboardInspector;
         private bool isDirty;
 
-        [MenuItem("Tools/Flexi/Ability Editor &1")]
+        [MenuItem(EditorConst.MenuFolder + "Ability Editor &1", priority = 1000)]
         private static void Open()
         {
             AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
@@ -108,7 +108,16 @@ namespace Physalia.Flexi.GraphViewEditor
             AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
             window.Focus();
 
-            bool ok = window.AskForOpenAssetIfDirty(asset);
+            bool ok = window.AskForOpenAssetIfDirty(asset, 0, 0);
+            return ok;
+        }
+
+        public static bool Open(GraphAsset asset, int groupIndex, int graphIndex)
+        {
+            AbilityGraphEditorWindow window = GetWindow<AbilityGraphEditorWindow>(WINDOW_TITLE);
+            window.Focus();
+
+            bool ok = window.AskForOpenAssetIfDirty(asset, groupIndex, graphIndex);
             return ok;
         }
 
@@ -140,7 +149,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
 
                 var asset = evt.newValue as GraphAsset;
-                bool ok = AskForOpenAssetIfDirty(asset);
+                bool ok = AskForOpenAssetIfDirty(asset, 0, 0);
                 if (!ok)
                 {
                     objectField.SetValueWithoutNotify(evt.previousValue);
@@ -478,12 +487,12 @@ namespace Physalia.Flexi.GraphViewEditor
             SaveFile();
         }
 
-        private bool AskForOpenAssetIfDirty(GraphAsset asset)
+        private bool AskForOpenAssetIfDirty(GraphAsset asset, int groupIndex, int graphIndex)
         {
             bool ok = AskForSaveIfDirty();
             if (ok)
             {
-                bool success = LoadFile(asset, 0, 0);
+                bool success = LoadFile(asset, groupIndex, graphIndex);
                 if (success)
                 {
                     return true;

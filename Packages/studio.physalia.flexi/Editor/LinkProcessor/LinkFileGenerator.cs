@@ -16,7 +16,7 @@ namespace Physalia.Flexi
             EditorConst.AssemblyNamePerformanceTests,
         };
 
-        [MenuItem(EditorConst.MenuFolder + "Generate link.xml")]
+        [MenuItem(EditorConst.MenuFolder + "Generate link.xml", priority = 1003)]
         private static void Generate()
         {
             string assetPath = ShowSaveFilePanel();
