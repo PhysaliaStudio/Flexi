@@ -5,7 +5,7 @@
 
 -   **This repository is for source reference and demo**
 -   **This project is still work-in-progress**  
-    :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square::white_large_square: 80%
+    :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square: 90%
 
 -----
 
@@ -27,10 +27,10 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 - **Customizable**: Focus on your gameplay with user-defined stats, nodes, logics, events, etc.
 - **Actor**: Base class to hold the stats, abilities and modifiers
 - **Built-in ability runners**: Start from easy and not make your hands dirty
-- **Node-based ability editor**: Built with GraphView
-- **Macro**: Reuse your partial graphs
+- **Node-based ability editor**: Built with GraphView and UIToolkit
 - **Blackboard**: Seperate values from graphs and inject from other sources
 - **Non-singleton approach**: You can have multiple and different systems simutaneously
+- ~~**Macro**: Reuse your partial graphs~~ (Failed to find GC free approach. Suspend until main feature finished.)
 
 ![Flexi Editor](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/flexi-editor.gif)![Card Game Sample 1](https://raw.githubusercontent.com/wiki/PhysaliaStudio/Flexi/images/card-game-samples-1.gif)
 
@@ -53,3 +53,8 @@ P.S. Yes, it's inspired from **[Unreal GAS (Gameplay Ability System)](https://do
 
 - Not support DOTS (and not in roadmap for now)
 - It's a tool for programmers, and recommended to have experienced programming skill
+
+## Known Issues
+
+- Some UX problems in editor.
+- ListView for blackboard might easily broken. (Layout update is struggling to process current layout)
