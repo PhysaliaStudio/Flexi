@@ -1,0 +1,20 @@
+{
+    "name": "Physalia.Flexi.NodeSearcher",
+    "rootNamespace": "Physalia.Flexi.NodeSearcher",
+    "references": [
+        "GUID:b4a7a0a0f6e8c8c4c99f40861c52733f",
+        "GUID:a05be25d9b0812045ac70eb7f4140953",
+        "GUID:635e10d521c636140b3056d90643370c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
