@@ -109,6 +109,73 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
+        public void Serialize_ContainsApartGraph()
+        {
+            Graph graph = new Graph();
+
+            StartNode startNode1 = graph.AddNewNode<StartNode>();
+            StartNode startNode2 = graph.AddNewNode<StartNode>();
+            LogNode logNode1 = graph.AddNewNode<LogNode>();
+            LogNode logNode2 = graph.AddNewNode<LogNode>();
+            startNode1.next.Connect(logNode1.previous);
+            startNode2.next.Connect(logNode2.previous);
+
+            // Intentionally change node id for easier test
+            startNode1.id = 1;
+            startNode2.id = 2;
+            logNode1.id = 3;
+            logNode2.id = 4;
+
+            var expected =
+                "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}," +
+                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":3,\"port2\":\"previous\"}," +
+                "{\"id1\":2,\"port1\":\"next\",\"id2\":4,\"port2\":\"previous\"}]}";
+
+            string json = JsonConvert.SerializeObject(graph);
+            Assert.AreEqual(expected, json);
+        }
+
+        [Test]
+        public void Deserialize_ContainsApartGraph()
+        {
+            var json =
+               "{\"_type\":\"Physalia.Flexi.Graph\"," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.StartNode\"}," +
+                "{\"_id\":3,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}," +
+                "{\"_id\":4,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.LogNode\"}]," +
+                "\"edges\":[{\"id1\":1,\"port1\":\"next\",\"id2\":3,\"port2\":\"previous\"}," +
+                "{\"id1\":2,\"port1\":\"next\",\"id2\":4,\"port2\":\"previous\"}]}";
+
+            Graph graph = JsonConvert.DeserializeObject<Graph>(json);
+
+            Assert.AreEqual(4, graph.Nodes.Count);
+            Assert.AreEqual(true, graph.Nodes[0] is StartNode);
+            Assert.AreEqual(true, graph.Nodes[1] is StartNode);
+            Assert.AreEqual(true, graph.Nodes[2] is LogNode);
+            Assert.AreEqual(true, graph.Nodes[3] is LogNode);
+
+            var startNode1 = graph.Nodes[0] as StartNode;
+            var startNode2 = graph.Nodes[1] as StartNode;
+            var logNode1 = graph.Nodes[2] as LogNode;
+            var logNode2 = graph.Nodes[3] as LogNode;
+
+            Assert.AreEqual(2, graph.EntryNodes.Count);
+            Assert.AreEqual(startNode1, graph.EntryNodes[0]);
+            Assert.AreEqual(startNode2, graph.EntryNodes[1]);
+
+            Assert.AreEqual(logNode1, startNode1.Next);
+            Assert.AreEqual(startNode1, logNode1.Previous);
+
+            Assert.AreEqual(logNode2, startNode2.Next);
+            Assert.AreEqual(startNode2, logNode2.Previous);
+        }
+
+        [Test]
         public void Deserialize_WithMissingPort()
         {
             var json =

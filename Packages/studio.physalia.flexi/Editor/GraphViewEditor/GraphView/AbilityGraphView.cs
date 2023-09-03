@@ -328,22 +328,23 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             // Create edges with DFS
-            var unhandledNodes = new HashSet<NodeData>();
+            var totalNodes = new List<NodeData>(nodeDatas.Count + 2);
             if (abilityGraph.GraphInputNode != null)
             {
-                unhandledNodes.Add(abilityGraph.GraphInputNode);
+                totalNodes.Add(abilityGraph.GraphInputNode);
             }
             if (abilityGraph.GraphOutputNode != null)
             {
-                unhandledNodes.Add(abilityGraph.GraphOutputNode);
+                totalNodes.Add(abilityGraph.GraphOutputNode);
             }
-            for (var i = 0; i < nodeDatas.Count; i++)
-            {
-                unhandledNodes.Add(nodeDatas[i]);
-            }
+            totalNodes.AddRange(nodeDatas);
 
-            NodeData current = abilityGraph.GetFirstNode();
-            SearchAllNodes(current, ref graphView, ref unhandledNodes);
+            var unhandledNodes = new HashSet<NodeData>(totalNodes);
+            while (unhandledNodes.Count > 0)
+            {
+                NodeData startNodeData = totalNodes.Find(x => unhandledNodes.Contains(x));
+                SearchAllNodes(startNodeData, ref graphView, ref unhandledNodes);
+            }
 
             return graphView;
         }
