@@ -22,8 +22,8 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly Random generalRandom = new();
         private readonly HashSet<EnemyGroupData> groupDatas = new();
 
-        private List<AbilityDataSource> gameStartProcess;
-        private List<AbilityDataSource> turnEndProcess;
+        private List<AbilityDataContainer> gameStartProcess;
+        private List<AbilityDataContainer> turnEndProcess;
 
         private Player player;
         private Unit heroUnit;
@@ -60,8 +60,15 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.CreateAbilityPool(turnEndEffect, 1);
             abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
 
-            gameStartProcess = new List<AbilityDataSource> { enemyGenerationEffect, turnStartEffect };
-            turnEndProcess = new List<AbilityDataSource> { turnEndEffect, enemyGenerationEffect, turnStartEffect };
+            gameStartProcess = new List<AbilityDataContainer> {
+                new AbilityDataContainer { DataSource = enemyGenerationEffect },
+                new AbilityDataContainer { DataSource = turnStartEffect },
+            };
+            turnEndProcess = new List<AbilityDataContainer> {
+                new AbilityDataContainer { DataSource = turnEndEffect },
+                new AbilityDataContainer { DataSource = enemyGenerationEffect },
+                new AbilityDataContainer { DataSource = turnStartEffect },
+            };
 
             player = CreatePlayer(heroData);
             heroUnit = CreateHeroUnit(heroData);
@@ -128,7 +135,8 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    unit.AppendAbilityDataSource(abilityDataSource);
+                    var container = new AbilityDataContainer { DataSource = abilityDataSource };
+                    unit.AppendAbilityDataContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
                     {
@@ -169,7 +177,8 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    card.AppendAbilityDataSource(abilityDataSource);
+                    var container = new AbilityDataContainer { DataSource = abilityDataSource };
+                    card.AppendAbilityDataContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
                     {

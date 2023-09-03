@@ -157,20 +157,17 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void AppendPoolizedAbilityToActorAndRelease_ActorCachesShouldBeNull()
+        public void ReleaseAbility_AbilityHasContainer_ContainerShouldBeNull()
         {
             AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
+            var container = new AbilityDataContainer { DataSource = abilityDataSource };
             Ability ability = abilitySystem.GetAbility(abilityDataSource);
-            ability.Actor = new EmptyActor(abilitySystem);
+            ability.Container = container;
             abilitySystem.ReleaseAbility(ability);
 
-            Assert.AreEqual(null, ability.Actor);
-            for (var i = 0; i < ability.Flows.Count; i++)
-            {
-                Assert.AreEqual(null, ability.Flows[i].Actor);
-            }
+            Assert.AreEqual(null, ability.Container);
         }
     }
 }

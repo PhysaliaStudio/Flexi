@@ -6,6 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         private readonly IUnitData unitData;
         private readonly Dictionary<StatusData, int> statusTable = new();
+        private readonly Dictionary<AbilityDataSource, AbilityDataContainer> sourceToContainerTable = new();
 
         private int health;
 
@@ -59,7 +60,9 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var i = 0; i < abilityData.graphGroups.Count; i++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                    AppendAbilityDataSource(abilityDataSource);
+                    var container = new AbilityDataContainer { DataSource = abilityDataSource };
+                    sourceToContainerTable.Add(abilityDataSource, container);
+                    AppendAbilityDataContainer(container);
                 }
             }
         }
@@ -77,11 +80,17 @@ namespace Physalia.Flexi.Samples.CardGame
                 statusTable[statusData] -= stack;
                 if (statusTable[statusData] <= 0)
                 {
+                    statusTable.Remove(statusData);
+
                     AbilityData abilityData = statusData.AbilityAsset.Data;
                     for (var i = 0; i < abilityData.graphGroups.Count; i++)
                     {
                         AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                        _ = RemoveAbilityDataSource(abilityDataSource);
+                        bool success = sourceToContainerTable.Remove(abilityDataSource, out AbilityDataContainer container);
+                        if (success)
+                        {
+                            _ = RemoveAbilityDataContainer(container);
+                        }
                     }
                 }
             }

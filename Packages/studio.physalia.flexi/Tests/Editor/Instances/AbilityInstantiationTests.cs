@@ -153,31 +153,5 @@ namespace Physalia.Flexi.Tests
                 Assert.AreEqual(ability, ability.Flows[i].Ability);
             }
         }
-
-        [Test]
-        public void RemoveAbility_ActorHasThatAbility_ReturnsTrue()
-        {
-            // We should test 0 flow case, because the returned value should be true even if there's no flow.
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-            unit.AppendAbilityDataSource(abilityDataSource);
-
-            bool success = unit.RemoveAbilityDataSource(abilityDataSource);
-            Assert.AreEqual(true, success);
-        }
-
-        [Test]
-        public void RemoveAbility_ActorDoesNotHaveThatAbility_ReturnsFalse()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-
-            var unitFactory = new CustomUnitFactory(abilitySystem);
-            CustomUnit unit = unitFactory.Create(new CustomUnitData());
-
-            bool success = unit.RemoveAbilityDataSource(abilityDataSource);
-            Assert.AreEqual(false, success);
-        }
     }
 }

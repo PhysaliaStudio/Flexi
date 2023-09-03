@@ -190,13 +190,17 @@ namespace Physalia.Flexi
 
         public bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
         {
+            IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
+            return TryEnqueueAbility(containers, eventContext);
+        }
+
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext)
+        {
             bool hasAnyEnqueued = false;
 
-            IReadOnlyList<AbilityDataSource> abilityDataSources = actor.AbilityDataSources;
-            for (var i = 0; i < abilityDataSources.Count; i++)
+            for (var i = 0; i < containers.Count; i++)
             {
-                AbilityDataSource abilityDataSource = abilityDataSources[i];
-                bool hasAnyEnqueuedInThis = TryEnqueueAbility(actor, abilityDataSource, eventContext);
+                bool hasAnyEnqueuedInThis = TryEnqueueAbility(containers[i], eventContext);
                 if (hasAnyEnqueuedInThis)
                 {
                     hasAnyEnqueued = true;
@@ -206,32 +210,21 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataSource> abilityDataSources, IEventContext eventContext)
+        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext)
         {
-            bool hasAnyEnqueued = false;
-
-            for (var i = 0; i < abilityDataSources.Count; i++)
+            AbilityDataSource abilityDataSource = container.DataSource;
+            if (!abilityDataSource.IsValid)
             {
-                AbilityDataSource abilityDataSource = abilityDataSources[i];
-                bool hasAnyEnqueuedInThis = TryEnqueueAbility(null, abilityDataSource, eventContext);
-                if (hasAnyEnqueuedInThis)
-                {
-                    hasAnyEnqueued = true;
-                }
+                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! container.DataSource is invalid!");
+                return false;
             }
 
-            return hasAnyEnqueued;
-        }
-
-        public bool TryEnqueueAbility(Actor actor, AbilityDataSource abilityDataSource, IEventContext eventContext)
-        {
             Ability ability = GetAbility(abilityDataSource, eventContext);
-            ability.Actor = actor;
+            ability.Container = container;
 
             bool success = TryEnqueueAbility(ability, eventContext);
             if (!success)
             {
-                ability.Actor = null;
                 ReleaseAbility(ability);
             }
 
@@ -310,11 +303,11 @@ namespace Physalia.Flexi
             for (var i = 0; i < actors.Count; i++)
             {
                 Actor actor = actors[i];
-                for (var j = 0; j < actor.AbilityDataSources.Count; j++)
+                for (var j = 0; j < actor.AbilityDataContainers.Count; j++)
                 {
-                    AbilityDataSource abilityDataSource = actor.AbilityDataSources[j];
-                    Ability ability = GetAbility(abilityDataSource, STAT_REFRESH_EVENT);
-                    ability.Actor = actor;
+                    AbilityDataContainer container = actor.AbilityDataContainers[j];
+                    Ability ability = GetAbility(container.DataSource, STAT_REFRESH_EVENT);
+                    ability.Container = container;
 
                     bool anySuccess = false;
                     for (var k = 0; k < ability.Flows.Count; k++)
@@ -335,7 +328,6 @@ namespace Physalia.Flexi
                     }
                     else
                     {
-                        ability.Actor = null;
                         ReleaseAbility(ability);
                     }
                 }
@@ -345,7 +337,6 @@ namespace Physalia.Flexi
             for (var i = 0; i < _cachedAbilites.Count; i++)
             {
                 Ability ability = _cachedAbilites[i];
-                ability.Actor = null;
                 ReleaseAbility(ability);
             }
             _cachedAbilites.Clear();

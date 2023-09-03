@@ -16,6 +16,7 @@ namespace Physalia.Flexi
         private readonly List<AbilityFlow> abilityFlows = new();
 
         private object userData;
+        private AbilityDataContainer container;
 
         public AbilitySystem System => abilitySystem;
         public AbilityData Data => abilityDataSource.AbilityData;
@@ -24,7 +25,8 @@ namespace Physalia.Flexi
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         internal IReadOnlyList<AbilityFlow> Flows => abilityFlows;
 
-        public Actor Actor { get; internal set; }
+        public Actor Actor => container?.Actor;
+        internal AbilityDataContainer Container { get => container; set => container = value; }
 
         internal Ability(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource, object userData)
         {
@@ -131,7 +133,7 @@ namespace Physalia.Flexi
             {
                 abilityFlows[i].Reset();
             }
-            Actor = null;
+            Container = null;
         }
     }
 }
