@@ -81,19 +81,6 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void GetAbilityAndRelease_UserDataIsSet_UserDataShouldBeNull()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
-
-            Ability ability = abilitySystem.GetAbility(abilityDataSource);
-            ability.SetUserData(new object());
-            abilitySystem.ReleaseAbility(ability);
-
-            Assert.AreEqual(null, ability.GetUserData<object>());
-        }
-
-        [Test]
         public void GetAbilityAndRelease_MakeFlowsRunning_EveryFlowsShouldBeNotRunning()
         {
             // Create an ability graph that can pause
@@ -157,20 +144,17 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void AppendPoolizedAbilityToActorAndRelease_ActorCachesShouldBeNull()
+        public void ReleaseAbility_AbilityHasContainer_ContainerShouldBeNull()
         {
             AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
             abilitySystem.CreateAbilityPool(abilityDataSource, 1);
 
+            var container = new AbilityDataContainer { DataSource = abilityDataSource };
             Ability ability = abilitySystem.GetAbility(abilityDataSource);
-            ability.Actor = new EmptyActor(abilitySystem);
+            ability.Container = container;
             abilitySystem.ReleaseAbility(ability);
 
-            Assert.AreEqual(null, ability.Actor);
-            for (var i = 0; i < ability.Flows.Count; i++)
-            {
-                Assert.AreEqual(null, ability.Flows[i].Actor);
-            }
+            Assert.AreEqual(null, ability.Container);
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Physalia.Flexi.Tests
 
         private AbilitySystem abilitySystem;
         private readonly List<CustomCharacter> characters = new();
-        private readonly List<AbilityDataSource> abilityDataSources = new();
 
         private void Awake()
         {
@@ -22,13 +21,15 @@ namespace Physalia.Flexi.Tests
 
             var builder = new AbilitySystemBuilder();
             abilitySystem = builder.Build();
-            
+
+            AbilityDataSource abilityDataSource = abilityAsset.Data.CreateDataSource(0);
             for (var i = 0; i < abilityCountPerFrame; i++)
             {
-                characters.Add(new CustomCharacter(abilitySystem));
+                var character = new CustomCharacter(abilitySystem);
+                var abilityDataContainer = new AbilityDataContainer { DataSource = abilityDataSource };
+                character.AppendAbilityDataContainer(abilityDataContainer);
 
-                AbilityDataSource abilityDataSource = abilityAsset.Data.CreateDataSource(0);
-                abilityDataSources.Add(abilityDataSource);
+                characters.Add(character);
             }
         }
 
@@ -39,9 +40,9 @@ namespace Physalia.Flexi.Tests
                 abilitySystem.RefreshStatsAndModifiers();
             }
 
-            for (var i = 0; i < abilityDataSources.Count; i++)
+            for (var i = 0; i < characters.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(null, abilityDataSources[i], null);
+                abilitySystem.TryEnqueueAbility(characters[i], null);
             }
 
             abilitySystem.Run();

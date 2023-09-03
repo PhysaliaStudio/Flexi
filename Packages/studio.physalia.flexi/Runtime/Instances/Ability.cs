@@ -15,7 +15,7 @@ namespace Physalia.Flexi
         private readonly Dictionary<string, BlackboardVariable> variableTable = new();
         private readonly List<AbilityFlow> abilityFlows = new();
 
-        private object userData;
+        private AbilityDataContainer container;
 
         public AbilitySystem System => abilitySystem;
         public AbilityData Data => abilityDataSource.AbilityData;
@@ -24,13 +24,13 @@ namespace Physalia.Flexi
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         internal IReadOnlyList<AbilityFlow> Flows => abilityFlows;
 
-        public Actor Actor { get; internal set; }
+        public Actor Actor => container?.Actor;
+        internal AbilityDataContainer Container { get => container; set => container = value; }
 
-        internal Ability(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource, object userData)
+        internal Ability(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource)
         {
             this.abilitySystem = abilitySystem;
             this.abilityDataSource = abilityDataSource;
-            this.userData = userData;
         }
 
         internal void Initialize()
@@ -97,41 +97,16 @@ namespace Physalia.Flexi
             }
         }
 
-        public T GetUserData<T>()
-        {
-            if (userData == null)
-            {
-                Logger.Warn($"[{nameof(Ability)}] {abilityDataSource} doesn't have userData. Returns null.");
-                return default;
-            }
-
-            if (userData is T genericData)
-            {
-                return genericData;
-            }
-            else
-            {
-                Logger.Warn($"[{nameof(Ability)}] UserData in {abilityDataSource} is not type of '{typeof(T)}'. Returns null.");
-                return default;
-            }
-        }
-
-        public void SetUserData<T>(T userData)
-        {
-            this.userData = userData;
-        }
-
         /// <summary>
         /// Reset will be called when released. See <see cref="AbilitySystem.ReleaseAbility"/>.
         /// </summary>
         internal void Reset()
         {
-            userData = null;
             for (var i = 0; i < abilityFlows.Count; i++)
             {
                 abilityFlows[i].Reset();
             }
-            Actor = null;
+            Container = null;
         }
     }
 }

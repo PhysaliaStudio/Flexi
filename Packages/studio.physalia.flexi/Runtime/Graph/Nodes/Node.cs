@@ -36,6 +36,7 @@ namespace Physalia.Flexi
         public AbilityFlow Flow => flow;
         public Ability Ability => flow?.Ability;
         public Actor Actor => flow?.Actor;
+        public AbilityDataContainer Container => flow?.Ability?.Container;
         #endregion
 
         internal void AddInport(string name, Inport inport)
@@ -305,22 +306,6 @@ namespace Physalia.Flexi
             }
 
             return flow.Payload as T;
-        }
-
-        public T GetUserData<T>()
-        {
-            if (flow == null)
-            {
-                return default;
-            }
-
-            Ability ability = flow.Ability;
-            if (ability == null)
-            {
-                return default;
-            }
-
-            return ability.GetUserData<T>();
         }
 
         public virtual bool CheckNodeContext(IResumeContext resumeContext)
