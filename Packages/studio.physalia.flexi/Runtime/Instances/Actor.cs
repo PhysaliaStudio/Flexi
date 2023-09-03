@@ -11,9 +11,12 @@ namespace Physalia.Flexi
         private readonly AbilitySystem abilitySystem;
         private readonly StatOwner owner;
 
+        private readonly List<AbilityDataContainer> abilityDataContainers = new(2);
+
         public int OwnerId => owner.Id;
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
+        public IReadOnlyList<AbilityDataContainer> AbilityDataContainers => abilityDataContainers;
         public IReadOnlyList<AbilityDataSource> AbilityDataSources => owner.AbilityDataSources;
         public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
 
@@ -56,6 +59,27 @@ namespace Physalia.Flexi
         public Stat GetStat(int statId)
         {
             return owner.GetStat(statId);
+        }
+
+        public void AppendAbilityDataContainer(AbilityDataContainer container)
+        {
+            container.Actor = this;
+            abilityDataContainers.Add(container);
+        }
+
+        public bool RemoveAbilityDataContainer(AbilityDataContainer container)
+        {
+            container.Actor = null;
+            return abilityDataContainers.Remove(container);
+        }
+
+        public void ClearAllAbilityDataContainers()
+        {
+            for (var i = 0; i < abilityDataContainers.Count; i++)
+            {
+                abilityDataContainers[i].Actor = null;
+            }
+            abilityDataContainers.Clear();
         }
 
         public void AppendAbilityDataSource(AbilityDataSource abilityDataSource, object userData = null)
