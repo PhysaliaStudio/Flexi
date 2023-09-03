@@ -37,7 +37,8 @@ namespace Physalia.Flexi
 
         private void OnFlowStepExecuted(AbilityFlowStepper.StepResult stepResult)
         {
-            if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH)
+            if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH ||
+                stepResult.state == AbilityFlowStepper.ResultState.ABORT)
             {
                 AbilityFlow flow = stepResult.flow as AbilityFlow;
                 ReleaseAbility(flow.Ability);
