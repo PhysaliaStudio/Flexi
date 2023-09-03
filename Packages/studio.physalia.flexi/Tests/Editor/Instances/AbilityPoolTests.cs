@@ -81,19 +81,6 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void GetAbilityAndRelease_UserDataIsSet_UserDataShouldBeNull()
-        {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
-
-            Ability ability = abilitySystem.GetAbility(abilityDataSource);
-            ability.SetUserData(new object());
-            abilitySystem.ReleaseAbility(ability);
-
-            Assert.AreEqual(null, ability.GetUserData<object>());
-        }
-
-        [Test]
         public void GetAbilityAndRelease_MakeFlowsRunning_EveryFlowsShouldBeNotRunning()
         {
             // Create an ability graph that can pause

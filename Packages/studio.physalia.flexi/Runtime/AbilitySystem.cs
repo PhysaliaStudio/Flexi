@@ -106,13 +106,13 @@ namespace Physalia.Flexi
             return poolManager.GetPool(abilityDataSource);
         }
 
-        internal Ability GetAbility(AbilityData abilityData, int groupIndex, object userData = null)
+        internal Ability GetAbility(AbilityData abilityData, int groupIndex)
         {
             AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-            return GetAbility(abilityDataSource, userData);
+            return GetAbility(abilityDataSource);
         }
 
-        internal Ability GetAbility(AbilityDataSource abilityDataSource, object userData = null)
+        internal Ability GetAbility(AbilityDataSource abilityDataSource)
         {
             if (!poolManager.ContainsPool(abilityDataSource))
             {
@@ -121,7 +121,6 @@ namespace Physalia.Flexi
             }
 
             Ability ability = poolManager.GetAbility(abilityDataSource);
-            ability.SetUserData(userData);
             return ability;
         }
 
@@ -136,9 +135,9 @@ namespace Physalia.Flexi
             ability.Reset();
         }
 
-        internal Ability InstantiateAbility(AbilityDataSource abilityDataSource, object userData = null)
+        internal Ability InstantiateAbility(AbilityDataSource abilityDataSource)
         {
-            var ability = new Ability(this, abilityDataSource, userData);
+            var ability = new Ability(this, abilityDataSource);
             ability.Initialize();
             return ability;
         }
@@ -219,7 +218,7 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            Ability ability = GetAbility(abilityDataSource, eventContext);
+            Ability ability = GetAbility(abilityDataSource);
             ability.Container = container;
 
             bool success = TryEnqueueAbility(ability, eventContext);
@@ -306,7 +305,7 @@ namespace Physalia.Flexi
                 for (var j = 0; j < actor.AbilityDataContainers.Count; j++)
                 {
                     AbilityDataContainer container = actor.AbilityDataContainers[j];
-                    Ability ability = GetAbility(container.DataSource, STAT_REFRESH_EVENT);
+                    Ability ability = GetAbility(container.DataSource);
                     ability.Container = container;
 
                     bool anySuccess = false;
