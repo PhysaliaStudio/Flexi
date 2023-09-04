@@ -30,7 +30,14 @@ namespace Physalia.Flexi
                 return;
             }
 
+            // If there is no flow at start, trigger cached events to see if there's any new flow.
             IAbilityFlow flow = Peek();
+            if (flow == null)
+            {
+                abilitySystem.TriggerCachedEvents(this);
+            }
+
+            flow = Peek();
             while (flow != null)
             {
                 StepResult result = ExecuteStep(flow);

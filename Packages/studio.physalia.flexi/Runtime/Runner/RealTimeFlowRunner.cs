@@ -28,6 +28,12 @@ namespace Physalia.Flexi
 
         public override void Start()
         {
+            // If there is no flow at start, trigger cached events to see if there's any new flow.
+            if (flows.Count == 0)
+            {
+                abilitySystem.TriggerCachedEvents(this);
+            }
+
             for (var i = 0; i < flows.Count; i++)
             {
                 // If the flow is already running, skip it, or it will move next.
