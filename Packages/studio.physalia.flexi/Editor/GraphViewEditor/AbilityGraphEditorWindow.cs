@@ -913,41 +913,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             SetDirty(true);
 
-            // Calculate the most top-left point
-            var topLeft = new Vector2(float.MaxValue, float.MaxValue);
-            for (var i = 0; i < partialGraph.nodes.Count; i++)
-            {
-                NodeData nodeData = partialGraph.nodes[i];
-                if (nodeData.position.x < topLeft.x)
-                {
-                    topLeft.x = nodeData.position.x;
-                }
-
-                if (nodeData.position.y < topLeft.y)
-                {
-                    topLeft.y = nodeData.position.y;
-                }
-            }
-
-            // Offset the nodes to match the menu position
-            for (var i = 0; i < partialGraph.nodes.Count; i++)
-            {
-                NodeData nodeData = partialGraph.nodes[i];
-                nodeData.id = -nodeData.id;
-                nodeData.position += localMousePosition - topLeft;
-                graphView.AddNode(nodeData);
-            }
-
-            // Connect the edges
-            for (var i = 0; i < partialGraph.edges.Count; i++)
-            {
-                EdgeData edgeData = partialGraph.edges[i];
-                edgeData.id1 = -edgeData.id1;
-                edgeData.id2 = -edgeData.id2;
-                graphView.AddEdge(edgeData);
-            }
-
-            graphView.ValidateNodeIds();
+            graphView.PastePartialGraph(partialGraph, localMousePosition);
         }
 
         private bool CanPasteSerializedData(string data)

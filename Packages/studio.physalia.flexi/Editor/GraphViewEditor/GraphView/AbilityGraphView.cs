@@ -144,15 +144,16 @@ namespace Physalia.Flexi.GraphViewEditor
             _ = CreateNodeView(node);
         }
 
-        public void AddNode(NodeData nodeData)
+        public NodeView AddNode(NodeData nodeData)
         {
             if (nodeData == null)
             {
-                return;
+                return null;
             }
 
             abilityGraph.AddNode(nodeData);
-            _ = CreateNodeView(nodeData);
+            NodeView nodeView = CreateNodeView(nodeData);
+            return nodeView;
         }
 
         private NodeView CreateNodeView(NodeData nodeData)
@@ -175,7 +176,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
-        public void AddEdge(EdgeData edgeData)
+        public EdgeView AddEdge(EdgeData edgeData)
         {
             NodeData nodeData1 = abilityGraph.GetNode(edgeData.id1);
             NodeData nodeData2 = abilityGraph.GetNode(edgeData.id2);
@@ -189,6 +190,8 @@ namespace Physalia.Flexi.GraphViewEditor
             Port port2 = anotherNodeView.GetPortView(portData2);
             EdgeView edgeView = port1.ConnectTo<EdgeView>(port2);
             AddElement(edgeView);
+
+            return edgeView;
         }
 
         public void RemoveEdgeView(Edge edge)
@@ -277,6 +280,53 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             base.ClearSelection();
             window.HideNodeInspector();
+        }
+
+        public void PastePartialGraph(PartialGraph partialGraph, Vector2 localMousePosition)
+        {
+            // Calculate the most top-left point
+            var topLeft = new Vector2(float.MaxValue, float.MaxValue);
+            for (var i = 0; i < partialGraph.nodes.Count; i++)
+            {
+                NodeData nodeData = partialGraph.nodes[i];
+                if (nodeData.position.x < topLeft.x)
+                {
+                    topLeft.x = nodeData.position.x;
+                }
+
+                if (nodeData.position.y < topLeft.y)
+                {
+                    topLeft.y = nodeData.position.y;
+                }
+            }
+
+            var elements = new List<ISelectable>();
+
+            // Offset the nodes to match the menu position
+            for (var i = 0; i < partialGraph.nodes.Count; i++)
+            {
+                NodeData nodeData = partialGraph.nodes[i];
+                nodeData.id = -nodeData.id;
+                nodeData.position += localMousePosition - topLeft;
+                elements.Add(AddNode(nodeData));
+            }
+
+            // Connect the edges
+            for (var i = 0; i < partialGraph.edges.Count; i++)
+            {
+                EdgeData edgeData = partialGraph.edges[i];
+                edgeData.id1 = -edgeData.id1;
+                edgeData.id2 = -edgeData.id2;
+                elements.Add(AddEdge(edgeData));
+            }
+
+            ValidateNodeIds();
+
+            ClearSelection();
+            for (var i = 0; i < elements.Count; i++)
+            {
+                AddToSelection(elements[i]);
+            }
         }
 
         public static AbilityGraphView Create(AbilityGraph abilityGraph, AbilityGraphEditorWindow window)
