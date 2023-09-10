@@ -8,6 +8,7 @@
         <uie:ToolbarButton name="reload-button" text="Reload" />
         <ui:VisualElement name="space" style="width: 50px;" />
         <uie:ToolbarButton name="new-macro-button" text="New Macro" enable-rich-text="false" />
+        <ui:Label text="(Not Featured)" />
     </uie:Toolbar>
     <ui:TwoPaneSplitView fixed-pane-initial-dimension="300">
         <ui:TwoPaneSplitView fixed-pane-initial-dimension="300" orientation="Vertical" style="min-width: 200px;">
