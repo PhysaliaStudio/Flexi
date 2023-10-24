@@ -344,6 +344,32 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
+        public void MultiOrderModifiers_ReachCondition_ModifierAppendedAndStatsAreCorrect()
+        {
+            var unitFactory = new CustomUnitFactory(abilitySystem);
+            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            // Note: We intentionally add the modifier with the reverse order for testing.
+            unit2.AppendAbilityDataContainer(new AbilityDataContainer { DataSource = CustomAbility.ATTACK_DOUBLE_WHEN_GREATER_THAN_5 });
+            unit2.AppendAbilityDataContainer(new AbilityDataContainer { DataSource = CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH });
+
+            var normalAttack = new AbilityDataContainer { DataSource = CustomAbility.NORAML_ATTACK };
+            var payload1 = new CustomNormalAttackPayload
+            {
+                attacker = unit1,
+                mainTarget = unit2,
+            };
+
+            bool success1 = abilitySystem.TryEnqueueAbility(normalAttack, payload1);
+            abilitySystem.Run();
+
+            Assert.AreEqual(true, success1);
+            Assert.AreEqual(2, unit2.Modifiers.Count);
+            Assert.AreEqual(3, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
+            Assert.AreEqual(12, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
+        }
+
+        [Test]
         public void ContinuousEventFor2Times_TheAbilityTriggeredTwice()
         {
             var unitFactory = new CustomUnitFactory(abilitySystem);

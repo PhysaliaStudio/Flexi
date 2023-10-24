@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32f4e526f6c4d2a49979457203108d7a, type: 3}
+  m_Name: AttackDoubleWhenGreaterThan5
+  m_EditorClassIdentifier: 
+  blackboard: []
+  graphJsons: []
+  graphGroups:
+  - graphs:
+    - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":540507,"_position":{"x":149.0,"y":107.0},"_type":"Physalia.Flexi.StatRefreshEventNode","order":1},{"_id":120779,"_position":{"x":590.0,"y":122.0},"_type":"Physalia.Flexi.ConditionalModifierNode","modifiers":[{"statId":11,"value":100,"op":2}]},{"_id":688793,"_position":{"x":345.0,"y":267.0},"_type":"Physalia.Flexi.StatCompareNode","statId":11,"op":4,"value":5},{"_id":493443,"_position":{"x":158.0,"y":205.0},"_type":"Physalia.Flexi.ActorNode"}],"edges":[{"id1":540507,"port1":"next","id2":120779,"port2":"previous"},{"id1":493443,"port1":"actor","id2":120779,"port2":"actorsPort"},{"id1":688793,"port1":"resultPort","id2":120779,"port2":"enabledPort"},{"id1":493443,"port1":"actor","id2":688793,"port2":"actorPort"}]}'

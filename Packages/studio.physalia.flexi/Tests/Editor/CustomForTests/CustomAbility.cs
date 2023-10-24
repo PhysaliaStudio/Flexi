@@ -108,6 +108,14 @@ namespace Physalia.Flexi.Tests
             }
         }
 
+        public static AbilityDataSource ATTACK_DOUBLE_WHEN_GREATER_THAN_5
+        {
+            get
+            {
+                return LoadAbilityAsset("AttackDoubleWhenGreaterThan5");
+            }
+        }
+
         public static AbilityDataSource LOG_WHEN_ATTACKED
         {
             get

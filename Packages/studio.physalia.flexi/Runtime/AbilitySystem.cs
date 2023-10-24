@@ -22,6 +22,8 @@ namespace Physalia.Flexi
         private readonly MacroLibrary macroLibrary = new();
         private readonly AbilityPoolManager poolManager;
 
+        private readonly List<AbilityFlowOrderList> statRefreshFlowOrderLists = new(4);
+        private readonly Dictionary<int, AbilityFlowOrderList> statRefreshFlowOrderListTable = new(4);
         private readonly List<Ability> _cachedAbilites = new(8);
 
         internal AbilitySystem(IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
@@ -298,7 +300,7 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
-            // TODO: 3 layers of for loop! Need to optimize.
+            // TODO: 4 layers of for loop! Should we need to optimize?
             IReadOnlyList<Actor> actors = actorRepository.Actors;
             for (var i = 0; i < actors.Count; i++)
             {
@@ -306,40 +308,95 @@ namespace Physalia.Flexi
                 for (var j = 0; j < actor.AbilityDataContainers.Count; j++)
                 {
                     AbilityDataContainer container = actor.AbilityDataContainers[j];
+
+                    // Get a copy for iterating.
                     Ability ability = GetAbility(container.DataSource);
                     ability.Container = container;
 
-                    bool anySuccess = false;
-                    for (var k = 0; k < ability.Flows.Count; k++)
+                    // Iterate all entry nodes to find all StatRefreshEventNode.
+                    for (var indexOfFlow = 0; indexOfFlow < ability.Flows.Count; indexOfFlow++)
                     {
-                        AbilityFlow abilityFlow = ability.Flows[k];
-                        if (abilityFlow.CanStatRefresh())
+                        AbilityFlow abilityFlow = ability.Flows[indexOfFlow];
+                        IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
+                        for (var indexOfEntry = 0; indexOfEntry < entryNodes.Count; indexOfEntry++)
                         {
-                            anySuccess = true;
-                            abilityFlow.Reset();
-                            abilityFlow.SetPayload(STAT_REFRESH_EVENT);
-                            statRefreshRunner.AddFlow(abilityFlow);
+                            if (entryNodes[indexOfEntry] is StatRefreshEventNode node)
+                            {
+                                // If found, get another copy and setup the flow.
+                                Ability copy = GetAbility(container.DataSource);
+                                copy.Container = container;
+
+                                AbilityFlow copyFlow = copy.Flows[indexOfFlow];
+                                copyFlow.Reset(indexOfEntry);
+                                copyFlow.SetPayload(STAT_REFRESH_EVENT);
+
+                                // Then add into the correct order list.
+                                int nodeOrder = node.order.Value;
+                                AbilityFlowOrderList orderList = GetStatRefreshFlowOrderList(nodeOrder);
+                                orderList.Add(copyFlow);
+
+                                _cachedAbilites.Add(copy);
+                            }
                         }
                     }
 
-                    if (anySuccess)
-                    {
-                        _cachedAbilites.Add(ability);
-                    }
-                    else
-                    {
-                        ReleaseAbility(ability);
-                    }
+                    // Always release the ability copy which only for iterating.
+                    ReleaseAbility(ability);
                 }
             }
 
-            statRefreshRunner.Start();
+            // Run all flows in order.
+            statRefreshFlowOrderLists.Sort();
+            for (var i = 0; i < statRefreshFlowOrderLists.Count; i++)
+            {
+                AbilityFlowOrderList orderList = statRefreshFlowOrderLists[i];
+                RunStatRefreshFlows(orderList);
+            }
+
+            // Clean up
             for (var i = 0; i < _cachedAbilites.Count; i++)
             {
                 Ability ability = _cachedAbilites[i];
                 ReleaseAbility(ability);
             }
+
+            CleaupStatRefreshFlows();
             _cachedAbilites.Clear();
+
+            AbilityFlowOrderList GetStatRefreshFlowOrderList(int order)
+            {
+                if (!statRefreshFlowOrderListTable.TryGetValue(order, out AbilityFlowOrderList list))
+                {
+                    list = new AbilityFlowOrderList(order, 8);
+                    statRefreshFlowOrderLists.Add(list);
+                    statRefreshFlowOrderListTable.Add(order, list);
+                }
+                return list;
+            }
+
+            void RunStatRefreshFlows(AbilityFlowOrderList orderList)
+            {
+                if (orderList.Count == 0)
+                {
+                    return;
+                }
+
+                for (var i = 0; i < orderList.Count; i++)
+                {
+                    statRefreshRunner.AddFlow(orderList[i]);
+                }
+
+                statRefreshRunner.Start();
+                actorRepository.RefreshStatsForAll();
+            }
+
+            void CleaupStatRefreshFlows()
+            {
+                for (var i = 0; i < statRefreshFlowOrderLists.Count; i++)
+                {
+                    statRefreshFlowOrderLists[i].Clear();
+                }
+            }
         }
 
         internal void TriggerChoice(IChoiceContext context)
