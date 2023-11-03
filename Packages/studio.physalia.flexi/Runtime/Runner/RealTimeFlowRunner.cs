@@ -62,6 +62,7 @@ namespace Physalia.Flexi
                 IAbilityFlow flow = flows[removeIndex];
                 runningFlows.Remove(flow);
                 flows.RemoveAt(removeIndex);
+                NotifyFlowFinished(flow);
             }
             indiceForRemoved.Clear();
         }

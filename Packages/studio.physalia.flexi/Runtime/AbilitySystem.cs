@@ -34,17 +34,13 @@ namespace Physalia.Flexi
             runner.abilitySystem = this;
 
             poolManager = new(this);
-            runner.StepExecuted += OnFlowStepExecuted;
+            runner.FlowFinished += OnFlowFinished;
         }
 
-        private void OnFlowStepExecuted(AbilityFlowStepper.StepResult stepResult)
+        private void OnFlowFinished(IAbilityFlow flow)
         {
-            if (stepResult.type == AbilityFlowStepper.ExecutionType.FLOW_FINISH ||
-                stepResult.state == AbilityFlowStepper.ResultState.ABORT)
-            {
-                AbilityFlow flow = stepResult.flow as AbilityFlow;
-                ReleaseAbility(flow.Ability);
-            }
+            AbilityFlow abilityFlow = flow as AbilityFlow;
+            ReleaseAbility(abilityFlow.Ability);
         }
 
         internal StatOwner CreateOwner(Actor actor)
@@ -221,35 +217,34 @@ namespace Physalia.Flexi
                 return false;
             }
 
+            // Get a copy for iterating.
             Ability ability = GetAbility(abilityDataSource);
             ability.Container = container;
 
-            bool success = TryEnqueueAbility(ability, eventContext);
-            if (!success)
-            {
-                ReleaseAbility(ability);
-            }
-
-            return success;
-        }
-
-        internal bool TryEnqueueAbility(Ability ability, IEventContext eventContext)
-        {
+            Ability copy = null;
             bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
             {
-                AbilityFlow abilityFlow = ability.Flows[i];
-                if (runner.IsFlowRunning(abilityFlow))
+                if (copy == null)
                 {
-                    continue;
+                    copy = GetAbility(abilityDataSource);
+                    copy.Container = container;
                 }
 
+                AbilityFlow abilityFlow = copy.Flows[i];
                 int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
                 if (entryIndex != -1)
                 {
                     hasAnyEnqueued = true;
                     EnqueueAbilityFlow(abilityFlow, entryIndex, eventContext);
+                    copy = null;
                 }
+            }
+
+            ReleaseAbility(ability);
+            if (copy != null)
+            {
+                ReleaseAbility(copy);
             }
 
             return hasAnyEnqueued;

@@ -139,12 +139,12 @@ namespace Physalia.Flexi
                     if (result.state == ResultState.FAILED)
                     {
                         keepRunning = false;
-                        break;
                     }
                     else if (result.state == ResultState.ABORT)
                     {
                         runningFlows.Remove(result.flow);
-                        _ = DequeueFlow();
+                        IAbilityFlow flow = DequeueFlow();
+                        NotifyFlowFinished(flow);
                     }
                     else if (result.state == ResultState.PAUSE)
                     {
@@ -153,8 +153,11 @@ namespace Physalia.Flexi
                     }
                     break;
                 case ExecutionType.FLOW_FINISH:
-                    runningFlows.Remove(result.flow);
-                    _ = DequeueFlow();
+                    {
+                        runningFlows.Remove(result.flow);
+                        IAbilityFlow flow = DequeueFlow();
+                        NotifyFlowFinished(flow);
+                    }
                     break;
             }
 

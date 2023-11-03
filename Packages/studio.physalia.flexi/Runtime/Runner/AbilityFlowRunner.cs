@@ -17,6 +17,7 @@ namespace Physalia.Flexi
             NEVER,
         }
 
+        internal event Action<IAbilityFlow> FlowFinished;
         internal event Action<StepResult> StepExecuted;
 
         internal AbilitySystem abilitySystem;
@@ -49,6 +50,18 @@ namespace Physalia.Flexi
         public virtual void Clear()
         {
 
+        }
+
+        protected void NotifyFlowFinished(IAbilityFlow flow)
+        {
+            try
+            {
+                FlowFinished?.Invoke(flow);
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
         }
 
         protected void NotifyStepResult(StepResult result)
