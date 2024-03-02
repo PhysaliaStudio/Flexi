@@ -8,6 +8,13 @@ namespace Physalia.Flexi.Tests
     public class CanConvertTests
     {
         [Test]
+        public void AnyToString_ReturnsTrue()
+        {
+            bool result = ConversionUtility.CanConvert(typeof(BoxCollider), typeof(string));
+            Assert.AreEqual(true, result);
+        }
+
+        [Test]
         public void AnyToMissing_ReturnsFalse()
         {
             bool result = ConversionUtility.CanConvert(typeof(BoxCollider), typeof(Missing));

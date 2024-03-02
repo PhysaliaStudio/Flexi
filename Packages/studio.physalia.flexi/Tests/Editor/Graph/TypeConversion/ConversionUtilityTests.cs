@@ -232,6 +232,65 @@ namespace Physalia.Flexi.Tests
         }
         #endregion
 
+        #region ToString
+        [Test]
+        public void Convert_ToString_BuiltInTypes()
+        {
+            Assert.AreEqual("True", ConversionUtility.Convert<bool, string>(true));
+            Assert.AreEqual("c", ConversionUtility.Convert<char, string>('c'));
+            Assert.AreEqual("42", ConversionUtility.Convert<string, string>("42"));
+
+            Assert.AreEqual("42", ConversionUtility.Convert<byte, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<sbyte, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<short, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<ushort, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<int, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<uint, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<long, string>(42));
+            Assert.AreEqual("42", ConversionUtility.Convert<ulong, string>(42));
+
+            Assert.AreEqual("3.3", ConversionUtility.Convert<float, string>(3.3f));
+            Assert.AreEqual("3.3", ConversionUtility.Convert<double, string>(3.3d));
+            Assert.AreEqual("3.3", ConversionUtility.Convert<decimal, string>(3.3m));
+        }
+
+        [Test]
+        public void Convert_ToString_UnityVectorTypes()
+        {
+            Assert.AreEqual("(3.30, 7.70)", ConversionUtility.Convert<Vector2, string>(new Vector2(3.3f, 7.7f)));
+            Assert.AreEqual("(3.30, 7.70, 9.90)", ConversionUtility.Convert<Vector3, string>(new Vector3(3.3f, 7.7f, 9.9f)));
+            Assert.AreEqual("(3.30, 7.70, 9.90, 11.11)", ConversionUtility.Convert<Vector4, string>(new Vector4(3.3f, 7.7f, 9.9f, 11.11f)));
+            Assert.AreEqual("(3, 7)", ConversionUtility.Convert<Vector2Int, string>(new Vector2Int(3, 7)));
+            Assert.AreEqual("(3, 7, 9)", ConversionUtility.Convert<Vector3Int, string>(new Vector3Int(3, 7, 9)));
+        }
+
+        [Test]
+        public void Convert_ToString_EnumarableTypes()
+        {
+            var list = new List<int> { 3, 7, 9 };
+            Assert.AreEqual("[3, 7, 9]", ConversionUtility.Convert<List<int>, string>(list));
+
+            var array = new int[] { 3, 7, 9 };
+            Assert.AreEqual("[3, 7, 9]", ConversionUtility.Convert<int[], string>(array));
+
+            var hashSet = new HashSet<int> { 3, 7, 9 };
+            Assert.AreEqual("[3, 7, 9]", ConversionUtility.Convert<HashSet<int>, string>(hashSet));
+
+            var dictionary = new Dictionary<int, string> { { 3, "3" }, { 7, "7" }, { 9, "9" } };
+            Assert.AreEqual("[[3, 3], [7, 7], [9, 9]]", ConversionUtility.Convert<Dictionary<int, string>, string>(dictionary));
+        }
+
+        [Test]
+        public void Convert_ToString_AnyOtherTypes()
+        {
+            var guid = System.Guid.NewGuid();
+            Assert.AreEqual(guid.ToString(), ConversionUtility.Convert<System.Guid, string>(guid));
+
+            var color = new Color(0.3f, 0.7f, 0.9f, 1.0f);
+            Assert.AreEqual(color.ToString(), ConversionUtility.Convert<Color, string>(color));
+        }
+        #endregion
+
         [Test]
         public void Convert_Special_IntToListOfInt()
         {

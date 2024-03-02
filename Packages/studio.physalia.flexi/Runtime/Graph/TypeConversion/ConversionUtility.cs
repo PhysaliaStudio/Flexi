@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Physalia.Flexi
 {
@@ -112,6 +113,11 @@ namespace Physalia.Flexi
                 return true;
             }
 
+            if (toType == typeof(string))
+            {
+                return true;
+            }
+
             bool isFromTypeList = IsListType(fromType);
             bool isToTypeList = IsListType(toType);
 
@@ -168,6 +174,35 @@ namespace Physalia.Flexi
             if (toType.IsAssignableFrom(fromType))
             {
                 return (value) => value;
+            }
+
+            // ToString. All types can be converted to string.
+            if (toType == typeof(string))
+            {
+                if (IsEnumerableType(fromType))
+                {
+                    return (value) =>
+                    {
+                        if (value == null)
+                        {
+                            return null;
+                        }
+
+                        var sb = new StringBuilder();
+                        var enumerable = value as IEnumerable;
+                        sb.Append("[");
+                        foreach (object item in enumerable)
+                        {
+                            sb.Append(item?.ToString());
+                            sb.Append(", ");
+                        }
+                        sb.Remove(sb.Length - 2, 2);
+                        sb.Append("]");
+                        return sb.ToString();
+                    };
+                }
+
+                return (value) => value?.ToString();
             }
 
             bool isFromTypeList = IsListType(fromType);
@@ -281,6 +316,16 @@ namespace Physalia.Flexi
             }
 
             if (type.InstanceOfGenericInterface(typeof(IReadOnlyList<>)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsEnumerableType(Type type)
+        {
+            if (type.InstanceOfGenericInterface(typeof(IEnumerable<>)))
             {
                 return true;
             }
