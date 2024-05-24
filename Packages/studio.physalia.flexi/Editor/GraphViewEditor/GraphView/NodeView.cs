@@ -392,7 +392,17 @@ namespace Physalia.Flexi.GraphViewEditor
             Type portType = inportData.ValueType;
 
             BindableElement field = null;
-            if (inportData is Inport<bool> inportBool)
+            if (inportData.ValueType.IsEnum)
+            {
+                var enumField = new EnumField(inportData.DefaultValue as Enum);
+                enumField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
+                field = enumField;
+            }
+            else if (inportData is Inport<bool> inportBool)
             {
                 var toggle = new Toggle();
                 toggle.SetValueWithoutNotify(inportBool.DefaultValue);
