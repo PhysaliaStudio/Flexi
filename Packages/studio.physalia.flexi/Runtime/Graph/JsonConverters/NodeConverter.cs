@@ -51,8 +51,7 @@ namespace Physalia.Flexi
 
         private static void ReadVariables(JsonSerializer serializer, JObject jsonObject, Node node)
         {
-            BindingFlags flags = BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-            FieldInfo[] fields = node.GetType().GetFields(flags);
+            FieldInfo[] fields = node.GetType().GetFieldsIncludeBasePrivate();
             for (var i = 0; i < fields.Length; i++)
             {
                 FieldInfo field = fields[i];
