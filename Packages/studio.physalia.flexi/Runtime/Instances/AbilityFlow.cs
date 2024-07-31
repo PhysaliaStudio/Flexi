@@ -20,6 +20,9 @@ namespace Physalia.Flexi
         internal Ability Ability => ability;
         internal AbilityGraph Graph => graph;
 
+        public IReadOnlyList<Node> EntryNodes => graph.EntryNodes;
+        public IReadOnlyList<Node> Nodes => graph.Nodes;
+
         public Actor Actor => ability.Actor;
         internal IEventContext Payload => payload;
         public FlowNode Current => graph.Current;

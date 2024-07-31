@@ -123,7 +123,21 @@ namespace Physalia.Flexi
             return ability;
         }
 
-        internal void ReleaseAbility(Ability ability)
+        public Ability GetAbility(AbilityDataContainer container)
+        {
+            AbilityDataSource abilityDataSource = container.DataSource;
+            if (!abilityDataSource.IsValid)
+            {
+                Logger.Error($"[{nameof(AbilitySystem)}] GetAbility failed! container.DataSource is invalid!");
+                return null;
+            }
+
+            Ability ability = GetAbility(abilityDataSource);
+            ability.Container = container;
+            return ability;
+        }
+
+        public void ReleaseAbility(Ability ability)
         {
             if (poolManager.ContainsPool(ability.DataSource))
             {
@@ -218,18 +232,13 @@ namespace Physalia.Flexi
             }
 
             // Get a copy for iterating.
-            Ability ability = GetAbility(abilityDataSource);
-            ability.Container = container;
+            Ability ability = GetAbility(container);
 
             Ability copy = null;
             bool hasAnyEnqueued = false;
             for (var i = 0; i < ability.Flows.Count; i++)
             {
-                if (copy == null)
-                {
-                    copy = GetAbility(abilityDataSource);
-                    copy.Container = container;
-                }
+                copy ??= GetAbility(container);
 
                 AbilityFlow abilityFlow = copy.Flows[i];
                 int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
@@ -305,8 +314,7 @@ namespace Physalia.Flexi
                     AbilityDataContainer container = actor.AbilityDataContainers[j];
 
                     // Get a copy for iterating.
-                    Ability ability = GetAbility(container.DataSource);
-                    ability.Container = container;
+                    Ability ability = GetAbility(container);
 
                     // Iterate all entry nodes to find all StatRefreshEventNode.
                     for (var indexOfFlow = 0; indexOfFlow < ability.Flows.Count; indexOfFlow++)
