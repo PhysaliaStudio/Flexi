@@ -304,6 +304,8 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
+            actorRepository.OnBeforeCollectModifiersForAll();
+
             // TODO: 4 layers of for loop! Should we need to optimize?
             IReadOnlyList<Actor> actors = actorRepository.Actors;
             for (var i = 0; i < actors.Count; i++)

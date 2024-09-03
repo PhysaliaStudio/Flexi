@@ -10,6 +10,11 @@ namespace Physalia.Flexi
             new MultiplierModifierHandler(),
         };
 
+        public void OnBeforeCollectModifiers(Actor actor)
+        {
+
+        }
+
         public void RefreshStats(Actor actor)
         {
             for (var i = 0; i < handlers.Count; i++)

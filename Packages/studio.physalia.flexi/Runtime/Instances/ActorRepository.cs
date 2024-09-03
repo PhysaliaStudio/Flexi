@@ -42,6 +42,14 @@ namespace Physalia.Flexi
             }
         }
 
+        internal void OnBeforeCollectModifiersForAll()
+        {
+            for (var i = 0; i < actorList.Count; i++)
+            {
+                statsRefreshAlgorithm.OnBeforeCollectModifiers(actorList[i]);
+            }
+        }
+
         /// <summary>
         /// This method just total all modifiers by algorithm, so there is no priority issue.
         /// </summary>
