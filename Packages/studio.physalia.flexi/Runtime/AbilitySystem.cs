@@ -351,7 +351,7 @@ namespace Physalia.Flexi
             }
 
             // Run all flows in order.
-            statRefreshFlowOrderLists.Sort();
+            statRefreshFlowOrderLists.Sort((a, b) => a.Order.CompareTo(b.Order));
             for (var i = 0; i < statRefreshFlowOrderLists.Count; i++)
             {
                 AbilityFlowOrderList orderList = statRefreshFlowOrderLists[i];
