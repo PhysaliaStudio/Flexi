@@ -38,7 +38,7 @@ namespace Physalia.Flexi
             return inports;
         }
 
-        internal abstract Func<TTo> GetValueConverter<TTo>();
+        internal abstract bool TryGetConvertedValue<TTo>(out TTo result);
 
         /// <remarks>
         /// This method is used at the border nodes of macros:
@@ -69,15 +69,17 @@ namespace Physalia.Flexi
             this.value = value;
         }
 
-        internal override Func<TTo> GetValueConverter<TTo>()
+        internal override bool TryGetConvertedValue<TTo>(out TTo result)
         {
             Func<T, TTo> converter = ConversionUtility.GetConverter<T, TTo>();
             if (converter != null)
             {
-                return () => converter(value);
+                result = converter(value);
+                return true;
             }
 
-            return null;
+            result = default;
+            return false;
         }
 
         /// <remarks>
@@ -94,11 +96,10 @@ namespace Physalia.Flexi
                 return;
             }
 
-            Func<T> convertFunc = inport.GetValueConverter<T>();
-            if (convertFunc != null)
+            bool success = inport.TryGetConvertedValue(out T result);
+            if (success)
             {
-                T value = convertFunc.Invoke();
-                this.value = value;
+                value = result;
                 return;
             }
 

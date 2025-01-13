@@ -16,9 +16,10 @@ namespace Physalia.Flexi
             return false;
         }
 
-        internal override Func<TTo> GetValueConverter<TTo>()
+        internal override bool TryGetConvertedValue<TTo>(out TTo result)
         {
-            return null;
+            result = default;
+            return false;
         }
 
         internal override void SetValueFromInport(Inport inport)
