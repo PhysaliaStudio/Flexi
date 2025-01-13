@@ -2,6 +2,8 @@ namespace Physalia.Flexi
 {
     public class EmptyContext : IEventContext
     {
+        public static EmptyContext Instance { get; } = new EmptyContext();
+
         // Empty Content
     }
 

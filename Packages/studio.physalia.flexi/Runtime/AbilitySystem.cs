@@ -241,14 +241,24 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            bool success = entryLookupTable.TryGetValue(eventContext.GetType(), out EntryHandleTable handleTable);
+            if (eventContext == null)
+            {
+                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! eventContext is null!");
+                return false;
+            }
+
+            Type eventContextType = eventContext.GetType();
+            bool success = entryLookupTable.TryGetValue(eventContextType, out EntryHandleTable handleTable);
             if (!success)
             {
+                // This might not an error, since some event might not be used.
+                Logger.Warn($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! EventContext Type: '{eventContextType}' is not registered!");
                 return false;
             }
 
             if (!handleTable.TryGetHandles(abilityDataSource, out List<EntryHandle> handles))
             {
+                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! AbilityDataSource: '{abilityDataSource}' is not registered!");
                 return false;
             }
 

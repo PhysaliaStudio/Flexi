@@ -1,15 +1,20 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomNormalAttackEntryNode : EntryNode
+    public class CustomNormalAttackEntryNode : EntryNode<CustomNormalAttackEntryNode.Context>
     {
+        public class Context : IEventContext
+        {
+            public CustomUnit attacker;
+            public CustomUnit mainTarget;
+        }
+
         public Outport<CustomUnit> attackerPort;
         public Outport<CustomUnit> targetPort;
 
-        public override bool CanExecute(IEventContext payloadObj)
+        public override bool CanExecute(Context context)
         {
-            var payload = payloadObj as CustomNormalAttackPayload;
-            if (payload != null && payload.attacker != null && payload.mainTarget != null)
+            if (context.attacker != null && context.mainTarget != null)
             {
                 return true;
             }
@@ -19,9 +24,9 @@ namespace Physalia.Flexi.Tests
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<CustomNormalAttackPayload>();
-            attackerPort.SetValue(payload.attacker);
-            targetPort.SetValue(payload.mainTarget);
+            var context = GetPayload<Context>();
+            attackerPort.SetValue(context.attacker);
+            targetPort.SetValue(context.mainTarget);
             return AbilityState.RUNNING;
         }
     }
