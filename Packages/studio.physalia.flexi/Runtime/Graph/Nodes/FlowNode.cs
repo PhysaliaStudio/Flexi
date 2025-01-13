@@ -7,6 +7,11 @@ namespace Physalia.Flexi
         public abstract FlowNode Previous { get; }
         public abstract FlowNode Next { get; }
 
+        /// <summary>
+        /// This property only works when the FlowRunner is in EventTriggerMode.EACH_NODE.
+        /// </summary>
+        public virtual bool ShouldTriggerChainEvents => true;
+
         public AbilityState Run()
         {
             EvaluateInports();
