@@ -413,6 +413,17 @@ namespace Physalia.Flexi.GraphViewEditor
                 });
                 field = toggle;
             }
+            else if (inportData is Inport<byte> inportByte)
+            {
+                var integerField = new IntegerField();
+                integerField.SetValueWithoutNotify(inportByte.DefaultValue);
+                integerField.RegisterValueChangedCallback(evt =>
+                {
+                    inportByte.DefaultValue = (byte)evt.newValue;
+                    window.SetDirty(true);
+                });
+                field = integerField;
+            }
             else if (inportData is Inport<int> inportInt)
             {
                 var integerField = new IntegerField();
@@ -420,6 +431,17 @@ namespace Physalia.Flexi.GraphViewEditor
                 integerField.RegisterValueChangedCallback(evt =>
                 {
                     inportData.DefaultValue = evt.newValue;
+                    window.SetDirty(true);
+                });
+                field = integerField;
+            }
+            else if (inportData is Inport<short> inportShort)
+            {
+                var integerField = new IntegerField();
+                integerField.SetValueWithoutNotify(inportShort.DefaultValue);
+                integerField.RegisterValueChangedCallback(evt =>
+                {
+                    inportData.DefaultValue = (short)evt.newValue;
                     window.SetDirty(true);
                 });
                 field = integerField;
