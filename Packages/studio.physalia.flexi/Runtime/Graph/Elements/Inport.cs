@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi
@@ -57,10 +58,17 @@ namespace Physalia.Flexi
         internal abstract bool TryGetConvertedValue<TTo>(out TTo result);
     }
 
+    public class ListCache
+    {
+        public Type argumentType;
+        public IList list;
+    }
+
     public sealed class Inport<T> : Inport
     {
         private static readonly T globalDefaultValue;
         private T defaultValue;
+        private ListCache listCache;
 
         public override Type ValueType => typeof(T);
         public new T DefaultValue
@@ -77,6 +85,16 @@ namespace Physalia.Flexi
         internal Inport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
             defaultValue = globalDefaultValue;
+
+            bool isListType = ConversionUtility.IsListType(typeof(T));
+            if (isListType)
+            {
+                listCache = new ListCache
+                {
+                    argumentType = typeof(T).GenericTypeArguments[0],
+                    list = ConversionUtility.CreateDefaultInstance<T>() as IList
+                };
+            }
         }
 
         public override bool IsDefaultValueSet()
@@ -111,6 +129,17 @@ namespace Physalia.Flexi
             {
                 T value = genericOutport.GetValue();
                 return value;
+            }
+
+            // Perf: Cache list for optimize
+            if (listCache != null && listCache.argumentType.IsAssignableFrom(outport.ValueType))
+            {
+                IList list = listCache.list;
+                list.Clear();
+
+                object value = outport.GetValueBoxed();
+                list.Add(value);
+                return (T)list;
             }
 
             bool success = outport.TryGetConvertedValue(out T result);

@@ -12,6 +12,8 @@ namespace Physalia.Flexi
 
         }
 
+        internal abstract object GetValueBoxed();
+
         protected override bool CanConnectTo(Port port)
         {
             return port is Inport;
@@ -57,6 +59,11 @@ namespace Physalia.Flexi
         internal Outport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
+        }
+
+        internal override object GetValueBoxed()
+        {
+            return value;
         }
 
         public T GetValue()

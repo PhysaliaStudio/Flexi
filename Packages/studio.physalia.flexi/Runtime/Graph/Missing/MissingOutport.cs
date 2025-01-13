@@ -11,6 +11,11 @@ namespace Physalia.Flexi
 
         }
 
+        internal override object GetValueBoxed()
+        {
+            return null;
+        }
+
         protected override bool CanConnectTo(Port port)
         {
             return false;

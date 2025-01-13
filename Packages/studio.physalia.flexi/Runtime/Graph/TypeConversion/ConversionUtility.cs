@@ -314,7 +314,7 @@ namespace Physalia.Flexi
             return default;
         }
 
-        private static bool IsListType(Type type)
+        public static bool IsListType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IList<>)))
             {
@@ -329,7 +329,7 @@ namespace Physalia.Flexi
             return false;
         }
 
-        private static bool IsEnumerableType(Type type)
+        public static bool IsEnumerableType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IEnumerable<>)))
             {
