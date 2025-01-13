@@ -6,13 +6,13 @@ namespace Physalia.Flexi
     }
 
     [NodeCategory(BuiltInCategory.Entry)]
-    public class StatRefreshEventNode : EntryNode
+    internal class StatRefreshEventNode : EntryNode<StatRefreshEvent>
     {
         public Variable<int> order;
 
-        public override bool CanExecute(IEventContext payloadObj)
+        public override bool CanExecute(StatRefreshEvent context)
         {
-            return payloadObj is StatRefreshEvent;
+            return true;
         }
     }
 }

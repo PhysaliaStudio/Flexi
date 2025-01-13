@@ -26,6 +26,8 @@ namespace Physalia.Flexi
         private readonly Dictionary<int, AbilityFlowOrderList> statRefreshFlowOrderListTable = new(4);
         private readonly List<Ability> _cachedAbilites = new(8);
 
+        private readonly Dictionary<Type, EntryHandleTable> entryLookupTable = new(32);
+
         internal AbilitySystem(IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
         {
             ownerRepository = new StatOwnerRepository();
@@ -93,11 +95,17 @@ namespace Physalia.Flexi
         public void CreateAbilityPool(AbilityDataSource abilityDataSource, int startSize)
         {
             poolManager.CreatePool(abilityDataSource, startSize);
+
+            // Perf: Cache the event listen handles.
+            CacheEntryHandles(abilityDataSource);
         }
 
         public void DestroyAbilityPool(AbilityDataSource abilityDataSource)
         {
             poolManager.DestroyPool(abilityDataSource);
+
+            // Remove cache.
+            RemoveEntryHandles(abilityDataSource);
         }
 
         internal AbilityPool GetAbilityPool(AbilityDataSource abilityDataSource)
@@ -233,29 +241,34 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            // Get a copy for iterating.
-            Ability ability = GetAbility(container);
-
-            Ability copy = null;
-            bool hasAnyEnqueued = false;
-            for (var i = 0; i < ability.Flows.Count; i++)
+            bool success = entryLookupTable.TryGetValue(eventContext.GetType(), out EntryHandleTable handleTable);
+            if (!success)
             {
-                copy ??= GetAbility(container);
-
-                AbilityFlow abilityFlow = copy.Flows[i];
-                int entryIndex = abilityFlow.GetAvailableEntry(eventContext);
-                if (entryIndex != -1)
-                {
-                    hasAnyEnqueued = true;
-                    EnqueueAbilityFlow(abilityFlow, entryIndex, eventContext);
-                    copy = null;
-                }
+                return false;
             }
 
-            ReleaseAbility(ability);
-            if (copy != null)
+            if (!handleTable.TryGetHandles(abilityDataSource, out List<EntryHandle> handles))
             {
-                ReleaseAbility(copy);
+                return false;
+            }
+
+            bool hasAnyEnqueued = false;
+            for (var i = 0; i < handles.Count; i++)
+            {
+                EntryHandle handle = handles[i];
+
+                Ability copy = GetAbility(container);
+                AbilityFlow abilityFlow = copy.Flows[handle.flowIndex];
+                bool isEntryAvailable = abilityFlow.IsEntryAvailable(handle.entryIndex, eventContext);
+                if (isEntryAvailable)
+                {
+                    hasAnyEnqueued = true;
+                    EnqueueAbilityFlow(abilityFlow, handle.entryIndex, eventContext);
+                }
+                else
+                {
+                    ReleaseAbility(copy);
+                }
             }
 
             return hasAnyEnqueued;
@@ -308,47 +321,46 @@ namespace Physalia.Flexi
         {
             actorRepository.OnBeforeCollectModifiersForAll();
 
-            // TODO: 4 layers of for loop! Should we need to optimize?
             IReadOnlyList<Actor> actors = actorRepository.Actors;
             for (var i = 0; i < actors.Count; i++)
             {
                 Actor actor = actors[i];
-                for (var j = 0; j < actor.AbilityDataContainers.Count; j++)
+
+                IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
+                for (var j = 0; j < containers.Count; j++)
                 {
-                    AbilityDataContainer container = actor.AbilityDataContainers[j];
+                    AbilityDataContainer container = containers[j];
 
-                    // Get a copy for iterating.
-                    Ability ability = GetAbility(container);
-
-                    // Iterate all entry nodes to find all StatRefreshEventNode.
-                    for (var indexOfFlow = 0; indexOfFlow < ability.Flows.Count; indexOfFlow++)
+                    bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
+                    if (!success)
                     {
-                        AbilityFlow abilityFlow = ability.Flows[indexOfFlow];
-                        IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
-                        for (var indexOfEntry = 0; indexOfEntry < entryNodes.Count; indexOfEntry++)
-                        {
-                            if (entryNodes[indexOfEntry] is StatRefreshEventNode node)
-                            {
-                                // If found, get another copy and setup the flow.
-                                Ability copy = GetAbility(container.DataSource);
-                                copy.Container = container;
-
-                                AbilityFlow copyFlow = copy.Flows[indexOfFlow];
-                                copyFlow.Reset(indexOfEntry);
-                                copyFlow.SetPayload(STAT_REFRESH_EVENT);
-
-                                // Then add into the correct order list.
-                                int nodeOrder = node.order.Value;
-                                AbilityFlowOrderList orderList = GetStatRefreshFlowOrderList(nodeOrder);
-                                orderList.Add(copyFlow);
-
-                                _cachedAbilites.Add(copy);
-                            }
-                        }
+                        continue;
                     }
 
-                    // Always release the ability copy which only for iterating.
-                    ReleaseAbility(ability);
+                    if (!handleTable.TryGetHandles(container.DataSource, out List<EntryHandle> handles))
+                    {
+                        continue;
+                    }
+
+                    for (var handleIndex = 0; handleIndex < handles.Count; handleIndex++)
+                    {
+                        EntryHandle handle = handles[handleIndex];
+
+                        // Get another copy and setup the flow.
+                        Ability copy = GetAbility(container.DataSource);
+                        copy.Container = container;
+
+                        AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
+                        copyFlow.Reset(handle.entryIndex);
+                        copyFlow.SetPayload(STAT_REFRESH_EVENT);
+
+                        // Then add into the correct order list.
+                        int nodeOrder = handle.order;
+                        AbilityFlowOrderList orderList = GetStatRefreshFlowOrderList(nodeOrder);
+                        orderList.Add(copyFlow);
+
+                        _cachedAbilites.Add(copy);
+                    }
                 }
             }
 
@@ -409,6 +421,58 @@ namespace Physalia.Flexi
         internal void TriggerChoice(IChoiceContext context)
         {
             ChoiceOccurred?.Invoke(context);
+        }
+
+        private void CacheEntryHandles(AbilityDataSource abilityDataSource)
+        {
+            // Get a copy for iterating.
+            Ability ability = GetAbility(abilityDataSource);
+
+            // Iterate all entry nodes to find all StatRefreshEventNode.
+            IReadOnlyList<AbilityFlow> abilityFlows = ability.Flows;
+
+            int flowCount = abilityFlows.Count;
+            for (var indexOfFlow = 0; indexOfFlow < flowCount; indexOfFlow++)
+            {
+                AbilityFlow abilityFlow = abilityFlows[indexOfFlow];
+                IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
+
+                int entryNodeCount = entryNodes.Count;
+                for (var indexOfEntry = 0; indexOfEntry < entryNodeCount; indexOfEntry++)
+                {
+                    Type contextType = entryNodes[indexOfEntry].ContextType;
+                    if (contextType == null)
+                    {
+                        continue;
+                    }
+
+                    if (!entryLookupTable.TryGetValue(contextType, out EntryHandleTable handleTable))
+                    {
+                        handleTable = new EntryHandleTable();
+                        entryLookupTable.Add(contextType, handleTable);
+                    }
+
+                    if (entryNodes[indexOfEntry] is StatRefreshEventNode statRefreshEventNode)
+                    {
+                        handleTable.Add(abilityDataSource, indexOfFlow, indexOfEntry, statRefreshEventNode.order.Value);
+                    }
+                    else
+                    {
+                        handleTable.Add(abilityDataSource, indexOfFlow, indexOfEntry, 0);
+                    }
+                }
+            }
+
+            // Always release the ability copy which only for iterating.
+            ReleaseAbility(ability);
+        }
+
+        private void RemoveEntryHandles(AbilityDataSource abilityDataSource)
+        {
+            foreach (EntryHandleTable handleTable in entryLookupTable.Values)
+            {
+                handleTable.Remove(abilityDataSource);
+            }
         }
     }
 }

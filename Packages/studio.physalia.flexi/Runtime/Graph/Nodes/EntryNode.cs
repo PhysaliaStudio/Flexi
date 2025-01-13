@@ -1,10 +1,30 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public abstract class EntryNode<T> : EntryNode where T : IEventContext
+    {
+        public override Type ContextType => typeof(T);
+
+        public sealed override bool CanExecute(IEventContext contextBase)
+        {
+            if (contextBase != null && contextBase is T context)
+            {
+                return CanExecute(context);
+            }
+
+            return false;
+        }
+
+        public abstract bool CanExecute(T context);
+    }
+
     public abstract class EntryNode : FlowNode
     {
         internal Outport<FlowNode> next;
+
+        public virtual Type ContextType => null;
 
         public override FlowNode Previous => null;
 
@@ -17,13 +37,13 @@ namespace Physalia.Flexi
             }
         }
 
-        internal bool CheckCanExecute(IEventContext payload)
+        internal bool CheckCanExecute(IEventContext contextBase)
         {
             EvaluateInports();
-            return CanExecute(payload);
+            return CanExecute(contextBase);
         }
 
-        public virtual bool CanExecute(IEventContext payload)
+        public virtual bool CanExecute(IEventContext contextBase)
         {
             return false;
         }
