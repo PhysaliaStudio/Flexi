@@ -54,24 +54,24 @@ namespace Physalia.Flexi
             {
                 if (abilityData == null)
                 {
-                    abilityData = CreateAbilityData(this);
+                    abilityData = CreateAbilityData();
                 }
 
                 return abilityData;
             }
         }
 
-        private static AbilityData CreateAbilityData(AbilityAsset abilityAsset)
+        public AbilityData CreateAbilityData()
         {
-            var abilityData = new AbilityData { name = abilityAsset.name };
-            for (var i = 0; i < abilityAsset.blackboard.Count; i++)
+            var abilityData = new AbilityData { name = name };
+            for (var i = 0; i < blackboard.Count; i++)
             {
-                abilityData.blackboard.Add(abilityAsset.blackboard[i].Clone());
+                abilityData.blackboard.Add(blackboard[i].Clone());
             }
 
-            for (var i = 0; i < abilityAsset.graphGroups.Count; i++)
+            for (var i = 0; i < graphGroups.Count; i++)
             {
-                abilityData.graphGroups.Add(abilityAsset.graphGroups[i].Clone());
+                abilityData.graphGroups.Add(graphGroups[i].Clone());
             }
 
             return abilityData;
