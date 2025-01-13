@@ -59,6 +59,16 @@ namespace Physalia.Flexi
             converterBoxedTable.Add(query, converterBoxed);
         }
 
+        public void HandleBoxed(Type fromType, Type toType, Func<object, object> converterBoxed)
+        {
+            var query = new ConversionQuery(fromType, toType);
+            bool success = converterBoxedTable.TryAdd(query, converterBoxed);
+            if (!success)
+            {
+                Logger.Error($"[{nameof(ConversionHandler)}] Converter has already exists! ({fromType.Name} => {toType.Name})");
+            }
+        }
+
         public bool CanConvert<TFrom, TTo>()
         {
             return CanConvert(typeof(TFrom), typeof(TTo));
