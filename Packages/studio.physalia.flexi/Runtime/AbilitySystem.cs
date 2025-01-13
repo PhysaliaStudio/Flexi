@@ -113,14 +113,18 @@ namespace Physalia.Flexi
 
         internal Ability GetAbility(AbilityDataSource abilityDataSource)
         {
-            if (!poolManager.ContainsPool(abilityDataSource))
+            Ability ability = poolManager.GetAbility(abilityDataSource);
+            if (ability != null)
+            {
+                return ability;
+            }
+            else
             {
                 Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityDataSource}. Note that instantiation is <b>VERY</b> expensive!");
                 CreateAbilityPool(abilityDataSource, DEFAULT_ABILITY_POOL_SIZE);
+                ability = poolManager.GetAbility(abilityDataSource);
+                return ability;
             }
-
-            Ability ability = poolManager.GetAbility(abilityDataSource);
-            return ability;
         }
 
         public Ability GetAbility(AbilityDataContainer container)
@@ -139,13 +143,11 @@ namespace Physalia.Flexi
 
         public void ReleaseAbility(Ability ability)
         {
-            if (poolManager.ContainsPool(ability.DataSource))
+            bool success = poolManager.ReleaseAbility(ability);
+            if (!success)
             {
-                poolManager.ReleaseAbility(ability);
-                return;
+                ability.Reset();
             }
-
-            ability.Reset();
         }
 
         internal Ability InstantiateAbility(AbilityDataSource abilityDataSource)
