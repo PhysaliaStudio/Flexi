@@ -5,7 +5,7 @@ namespace Physalia.Flexi
 {
     internal sealed class StatRefreshRunner
     {
-        private readonly List<IAbilityFlow> flows = new();
+        private readonly List<IAbilityFlow> flows = new(16);
 
         internal void AddFlow(IAbilityFlow flow)
         {
