@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class EmptyContext : IEventContext
+    internal class EmptyContext : IEventContext
     {
         public static EmptyContext Instance { get; } = new EmptyContext();
 

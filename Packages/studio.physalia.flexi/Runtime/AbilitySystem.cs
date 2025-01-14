@@ -210,13 +210,13 @@ namespace Physalia.Flexi
             }
         }
 
-        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
+        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext = null)
         {
             IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
             return TryEnqueueAbility(containers, eventContext);
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext)
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext = null)
         {
             bool hasAnyEnqueued = false;
 
@@ -232,7 +232,7 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext)
+        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext = null)
         {
             AbilityDataSource abilityDataSource = container.DataSource;
             if (!abilityDataSource.IsValid)
@@ -241,12 +241,7 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            if (eventContext == null)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! eventContext is null!");
-                return false;
-            }
-
+            eventContext ??= EmptyContext.Instance;
             Type eventContextType = eventContext.GetType();
             bool success = entryLookupTable.TryGetValue(eventContextType, out EntryHandleTable handleTable);
             if (!success)
