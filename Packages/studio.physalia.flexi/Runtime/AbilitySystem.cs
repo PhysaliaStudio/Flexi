@@ -445,7 +445,7 @@ namespace Physalia.Flexi
             for (var indexOfFlow = 0; indexOfFlow < flowCount; indexOfFlow++)
             {
                 AbilityFlow abilityFlow = abilityFlows[indexOfFlow];
-                IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
+                IReadOnlyList<EntryNodeBase> entryNodes = abilityFlow.Graph.EntryNodes;
 
                 int entryNodeCount = entryNodes.Count;
                 for (var indexOfEntry = 0; indexOfEntry < entryNodeCount; indexOfEntry++)

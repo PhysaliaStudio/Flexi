@@ -3,11 +3,18 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public abstract class EntryNode<T> : EntryNode where T : IEventContext
+    public class EmptyContext : IEventContext
+    {
+        public static EmptyContext Instance { get; } = new EmptyContext();
+
+        // Empty Content
+    }
+
+    public abstract class EntryNode<T> : EntryNodeBase where T : IEventContext
     {
         public override Type ContextType => typeof(T);
 
-        public sealed override bool CanExecute(IEventContext contextBase)
+        protected internal sealed override bool CanExecute(IEventContext contextBase)
         {
             if (contextBase != null && contextBase is T context)
             {
@@ -20,11 +27,26 @@ namespace Physalia.Flexi
         public abstract bool CanExecute(T context);
     }
 
-    public abstract class EntryNode : FlowNode
+    public abstract class EntryNode : EntryNodeBase
+    {
+        public sealed override Type ContextType => typeof(EmptyContext);
+
+        protected internal sealed override bool CanExecute(IEventContext contextBase)
+        {
+            if (contextBase != null && contextBase is EmptyContext)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    public abstract class EntryNodeBase : FlowNode
     {
         internal Outport<FlowNode> next;
 
-        public virtual Type ContextType => null;
+        public abstract Type ContextType { get; }
 
         public override FlowNode Previous => null;
 
@@ -43,9 +65,6 @@ namespace Physalia.Flexi
             return CanExecute(contextBase);
         }
 
-        public virtual bool CanExecute(IEventContext contextBase)
-        {
-            return false;
-        }
+        protected internal abstract bool CanExecute(IEventContext contextBase);
     }
 }
