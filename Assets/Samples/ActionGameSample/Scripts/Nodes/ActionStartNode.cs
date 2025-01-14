@@ -1,9 +1,9 @@
 namespace Physalia.Flexi.Samples.ActionGame
 {
     [NodeCategory("Action Game Sample")]
-    public class ActionStartNode : EntryNode
+    public class ActionStartNode : EntryNode<EmptyContext>
     {
-        public override bool CanExecute(IEventContext payload)
+        public override bool CanExecute(EmptyContext context)
         {
             return true;
         }

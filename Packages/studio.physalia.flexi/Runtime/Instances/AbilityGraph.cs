@@ -30,8 +30,15 @@ namespace Physalia.Flexi
 
         public void Reset(int indexOfEntryNode)
         {
-            currentNode = null;
             this.indexOfEntryNode = indexOfEntryNode;
+
+            // Perf: When nodes count are many, for loop may become bottleneck. So we return early if able.
+            if (!isRunning)
+            {
+                return;
+            }
+
+            currentNode = null;
             isRunning = false;
 
             nodeStack.Clear();

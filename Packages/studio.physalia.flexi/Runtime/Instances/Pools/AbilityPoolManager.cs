@@ -69,13 +69,14 @@ namespace Physalia.Flexi
                 return null;
             }
 
-            if (!pools.ContainsKey(abilityDataSource))
+            bool hasPool = pools.TryGetValue(abilityDataSource, out AbilityPool pool);
+            if (!hasPool)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Get pool failed! key: {abilityDataSource} does not exist!");
                 return null;
             }
 
-            return pools[abilityDataSource];
+            return pool;
         }
 
         internal Ability GetAbility(AbilityDataSource abilityDataSource)
@@ -86,32 +87,33 @@ namespace Physalia.Flexi
                 return null;
             }
 
-            if (!pools.ContainsKey(abilityDataSource))
+            bool hasPool = pools.TryGetValue(abilityDataSource, out AbilityPool pool);
+            if (!hasPool)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Get ability failed! key: {abilityDataSource} does not exist!");
                 return null;
             }
 
-            AbilityPool pool = pools[abilityDataSource];
             return pool.Get();
         }
 
-        internal void ReleaseAbility(Ability ability)
+        internal bool ReleaseAbility(Ability ability)
         {
             if (ability == null)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Release ability failed! ability is null!");
-                return;
+                return false;
             }
 
-            if (!pools.ContainsKey(ability.DataSource))
+            bool hasPool = pools.TryGetValue(ability.DataSource, out AbilityPool pool);
+            if (!hasPool)
             {
                 Logger.Error($"[{nameof(AbilityPoolManager)}] Release ability failed! key: {ability.DataSource} does not exist!");
-                return;
+                return false;
             }
 
-            AbilityPool pool = pools[ability.DataSource];
             pool.Release(ability);
+            return true;
         }
     }
 }

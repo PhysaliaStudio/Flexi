@@ -176,24 +176,27 @@ namespace Physalia.Flexi
 
             switch (eventTriggerMode)
             {
+                default:
+                case EventTriggerMode.NEVER:
+                    return;
                 case EventTriggerMode.EACH_NODE:
-                    if (result.type != ExecutionType.NODE_EXECUTION && result.type != ExecutionType.NODE_RESUME)
+                    if (result.type == ExecutionType.NODE_EXECUTION || result.type == ExecutionType.NODE_RESUME)
                     {
-                        return;
+                        if (result.node.ShouldTriggerChainEvents)
+                        {
+                            abilitySystem.TriggerCachedEvents(this);
+                            abilitySystem.RefreshStatsAndModifiers();
+                        }
                     }
                     break;
                 case EventTriggerMode.EACH_FLOW:
-                    if (result.type != ExecutionType.FLOW_FINISH)
+                    if (result.type == ExecutionType.FLOW_FINISH)
                     {
-                        return;
+                        abilitySystem.TriggerCachedEvents(this);
+                        abilitySystem.RefreshStatsAndModifiers();
                     }
                     break;
-                case EventTriggerMode.NEVER:
-                    return;
             }
-
-            abilitySystem.TriggerCachedEvents(this);
-            abilitySystem.RefreshStatsAndModifiers();
         }
 
         public override void Clear()

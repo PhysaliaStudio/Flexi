@@ -137,9 +137,9 @@ namespace Physalia.Flexi.Samples.CardGame
             {
                 await HandleHealEvent(healEvent);
             }
-            else if (gameEvent is DamageEvent damageEvent)
+            else if (gameEvent is DamageContext damageContext)
             {
-                await HandleDamageEvent(damageEvent);
+                await HandleDamageEvent(damageContext);
             }
             else if (gameEvent is UnitSpawnedEvent unitSpawnedEvent)
             {
@@ -179,13 +179,13 @@ namespace Physalia.Flexi.Samples.CardGame
             await UniTask.Delay((int)(popUpNumberFadeTime * 500));
         }
 
-        private async UniTask HandleDamageEvent(DamageEvent damageEvent)
+        private async UniTask HandleDamageEvent(DamageContext context)
         {
-            for (var i = 0; i < damageEvent.targets.Count; i++)
+            for (var i = 0; i < context.targets.Count; i++)
             {
-                Unit unit = damageEvent.targets[i];
+                Unit unit = context.targets[i];
                 UnitAvatar unitAvatar = gameSpace.GetAvatar(unit);
-                unitAvatar.Damage(damageEvent.amount);
+                unitAvatar.Damage(context.amount);
 
                 PopUpNumber popUpNumber = popUpNumberPool.Get();
 
@@ -194,7 +194,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 popUpNumber.GetRectTransform().anchoredPosition = localPoint;
 
                 popUpNumber.Init();
-                popUpNumber.SetNumber(-damageEvent.amount);
+                popUpNumber.SetNumber(-context.amount);
                 popUpNumber.Play(popUpNumberPool, popUpNumberFadeTime);
             }
 

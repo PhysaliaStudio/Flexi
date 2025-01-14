@@ -54,6 +54,16 @@ namespace Physalia.Flexi
             return graph.MoveNext();
         }
 
+        internal bool IsEntryAvailable(int entryIndex, IEventContext context)
+        {
+            if (entryIndex < 0 || entryIndex >= graph.EntryNodes.Count)
+            {
+                return false;
+            }
+
+            return graph.EntryNodes[entryIndex].CheckCanExecute(context);
+        }
+
         internal int GetAvailableEntry(IEventContext payload)
         {
             if (graph.EntryNodes.Count == 0)

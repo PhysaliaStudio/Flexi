@@ -1,14 +1,18 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomActivationNode : EntryNode
+    public class CustomActivationNode : EntryNode<CustomActivationNode.Context>
     {
+        public class Context : IEventContext
+        {
+            public CustomUnit activator;
+        }
+
         public Outport<CustomUnit> activatorPort;
 
-        public override bool CanExecute(IEventContext payloadObj)
+        public override bool CanExecute(Context context)
         {
-            var payload = payloadObj as CustomActivationPayload;
-            if (payload != null && payload.activator != null)
+            if (context.activator != null)
             {
                 return true;
             }
@@ -18,8 +22,8 @@ namespace Physalia.Flexi.Tests
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<CustomActivationPayload>();
-            activatorPort.SetValue(payload.activator);
+            var context = GetPayload<Context>();
+            activatorPort.SetValue(context.activator);
             return AbilityState.RUNNING;
         }
     }

@@ -18,7 +18,7 @@ namespace Physalia.Flexi.Tests
                 Stat stat = list[i].GetStat(CustomStats.HEALTH);
                 stat.CurrentBase -= damage;
 
-                EnqueueEvent(new CustomDamageEvent
+                EnqueueEvent(new CustomDamageEventNode.Context
                 {
                     instigator = instigatorPort.GetValue(),
                     target = list[i],

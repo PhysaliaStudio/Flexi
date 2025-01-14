@@ -1,20 +1,20 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomDamageEventNode : EntryNode
+    public class CustomDamageEventNode : EntryNode<CustomDamageEventNode.Context>
     {
+        public class Context : IEventContext
+        {
+            public CustomUnit instigator;
+            public CustomUnit target;
+        }
+
         public Outport<CustomUnit> instigatorPort;
         public Outport<CustomUnit> targetPort;
 
-        public override bool CanExecute(IEventContext payloadObj)
+        public override bool CanExecute(Context context)
         {
-            var payload = payloadObj as CustomDamageEvent;
-            if (payload == null)
-            {
-                return false;
-            }
-
-            if (payload.target == Actor)
+            if (context.target == Actor)
             {
                 return true;
             }
@@ -24,9 +24,9 @@ namespace Physalia.Flexi.Tests
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<CustomDamageEvent>();
-            instigatorPort.SetValue(payload.instigator);
-            targetPort.SetValue(payload.target);
+            var context = GetPayload<Context>();
+            instigatorPort.SetValue(context.instigator);
+            targetPort.SetValue(context.target);
             return AbilityState.RUNNING;
         }
     }

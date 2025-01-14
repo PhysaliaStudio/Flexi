@@ -1,31 +1,26 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class SystemProcessPayload : IEventContext
+    public class SystemProcessContext : IEventContext
     {
         public Game game;
     }
 
     [NodeCategory("Card Game Sample")]
-    public class SystemProcessEntryNode : EntryNode
+    public class SystemProcessEntryNode : EntryNode<SystemProcessContext>
     {
         public Outport<Game> gamePort;
         public Outport<Player> playerPort;
 
-        public override bool CanExecute(IEventContext payload)
+        public override bool CanExecute(SystemProcessContext context)
         {
-            if (payload is SystemProcessPayload)
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<SystemProcessPayload>();
-            gamePort.SetValue(payload.game);
-            playerPort.SetValue(payload.game.Player);
+            var context = GetPayload<SystemProcessContext>();
+            gamePort.SetValue(context.game);
+            playerPort.SetValue(context.game.Player);
             return AbilityState.RUNNING;
         }
     }

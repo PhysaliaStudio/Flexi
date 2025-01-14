@@ -13,12 +13,12 @@ namespace Physalia.Flexi
         private readonly PoolExpandMethod expandMethod;
 
         private int size;
-        private readonly List<T> remainedInstances = new();
-        private readonly List<T> usingInstances = new();
+        private readonly List<T> allInstances;
+        private readonly HashSet<T> usingInstances;
+        private int rotationIndex;
 
         public int Size => size;
         public int UsingCount => usingInstances.Count;
-        public IReadOnlyList<T> RemainedInstances => remainedInstances;
 
         public ObjectPool(ObjectInstanceFactory<T> factory, int startSize, PoolExpandMethod expandMethod = PoolExpandMethod.OneAtATime)
         {
@@ -26,6 +26,8 @@ namespace Physalia.Flexi
             this.expandMethod = expandMethod;
 
             size = startSize;
+            allInstances = new List<T>(startSize);
+            usingInstances = new HashSet<T>(startSize);
             for (int i = 0; i < startSize; i++)
             {
                 CreateInstance();
@@ -35,13 +37,16 @@ namespace Physalia.Flexi
         private void CreateInstance()
         {
             T instance = factory.Create();
-            remainedInstances.Add(instance);
+            allInstances.Add(instance);
         }
 
         public T Get()
         {
-            if (remainedInstances.Count == 0)
+            if (usingInstances.Count == size)
             {
+                // Directly point to the future first new instance.
+                rotationIndex = size;
+
                 // Create new object by the expand method
                 if (expandMethod == PoolExpandMethod.OneAtATime)
                 {
@@ -59,9 +64,16 @@ namespace Physalia.Flexi
                 }
             }
 
-            T instance = remainedInstances[0];
-            remainedInstances.RemoveAt(0);
+            // Find an instance that is not being used.
+            T instance = allInstances[rotationIndex];
+            while (usingInstances.Contains(instance))
+            {
+                rotationIndex = (rotationIndex + 1) % size;
+                instance = allInstances[rotationIndex];
+            }
+
             usingInstances.Add(instance);
+            rotationIndex = (rotationIndex + 1) % size;
             return instance;
         }
 
@@ -73,30 +85,30 @@ namespace Physalia.Flexi
                 return;
             }
 
-            if (!usingInstances.Contains(instance))
+            bool success = usingInstances.Remove(instance);
+            if (!success)
             {
                 Logger.Error($"[{nameof(ObjectPool<T>)}] The released object is not belong to this pool. Pool Name: '{factory.Name}'");
                 return;
             }
 
             factory.Reset(instance);
-            remainedInstances.Add(instance);
-            usingInstances.Remove(instance);
         }
 
         public void ReleaseAll()
         {
-            while (usingInstances.Count > 0)
+            foreach (T instance in usingInstances)
             {
-                T instance = usingInstances[0];
-                Release(instance);
+                factory.Reset(instance);
             }
+
+            usingInstances.Clear();
         }
 
         public void Clear()
         {
             ReleaseAll();
-            remainedInstances.Clear();
+            allInstances.Clear();
             usingInstances.Clear();
             size = 0;
         }

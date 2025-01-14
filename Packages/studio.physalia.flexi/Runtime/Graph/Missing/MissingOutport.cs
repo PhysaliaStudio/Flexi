@@ -11,14 +11,20 @@ namespace Physalia.Flexi
 
         }
 
+        internal override object GetValueBoxed()
+        {
+            return null;
+        }
+
         protected override bool CanConnectTo(Port port)
         {
             return false;
         }
 
-        internal override Func<TTo> GetValueConverter<TTo>()
+        internal override bool TryGetConvertedValue<TTo>(out TTo result)
         {
-            return null;
+            result = default;
+            return false;
         }
 
         internal override void SetValueFromInport(Inport inport)

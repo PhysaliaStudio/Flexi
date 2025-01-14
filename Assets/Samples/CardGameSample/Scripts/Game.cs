@@ -202,7 +202,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void Start()
         {
-            _ = abilitySystem.TryEnqueueAbility(gameStartProcess, new SystemProcessPayload { game = this });
+            _ = abilitySystem.TryEnqueueAbility(gameStartProcess, new SystemProcessContext { game = this });
             abilitySystem.Run();
         }
 
@@ -239,7 +239,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void SelectCard(Card card)
         {
-            var payload = new PlayCardNode.Payload
+            var context = new PlayCardNode.Context
             {
                 game = this,
                 player = player,
@@ -248,7 +248,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 random = generalRandom,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(card, payload);
+            bool success = abilitySystem.TryEnqueueAbility(card, context);
             if (success)
             {
                 abilitySystem.Run();
@@ -299,7 +299,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void EndTurn()
         {
-            _ = abilitySystem.TryEnqueueAbility(turnEndProcess, new SystemProcessPayload { game = this });
+            _ = abilitySystem.TryEnqueueAbility(turnEndProcess, new SystemProcessContext { game = this });
             abilitySystem.Run();
         }
     }

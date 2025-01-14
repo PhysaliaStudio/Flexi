@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override AbilityState DoLogic()
         {
-            EnqueueEvent(new TurnEndEvent { game = gamePort.GetValue() });
+            EnqueueEvent(new TurnEndContext { game = gamePort.GetValue() });
             return AbilityState.RUNNING;
         }
     }

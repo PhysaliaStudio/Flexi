@@ -77,7 +77,10 @@ namespace Physalia.Flexi
             Func<object, object> dufaultConverter = CreateConverterByDefault<TFrom, TTo>();
             if (dufaultConverter != null)
             {
-                return (value) => (TTo)dufaultConverter(value);
+                // Cache this converter to handler
+                TTo newConverter(TFrom value) => (TTo)dufaultConverter(value);
+                handler.Handle((Func<TFrom, TTo>)newConverter);
+                return newConverter;
             }
 
             return null;
@@ -95,7 +98,10 @@ namespace Physalia.Flexi
             Func<object, object> dufaultConverter = CreateConverterByDefault(fromType, toType);
             if (dufaultConverter != null)
             {
-                return (value) => dufaultConverter(value);
+                // Cache this converter to handler
+                object newConverter(object value) => dufaultConverter(value);
+                handler.HandleBoxed(fromType, toType, newConverter);
+                return newConverter;
             }
 
             return null;
@@ -308,7 +314,7 @@ namespace Physalia.Flexi
             return default;
         }
 
-        private static bool IsListType(Type type)
+        public static bool IsListType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IList<>)))
             {
@@ -323,7 +329,7 @@ namespace Physalia.Flexi
             return false;
         }
 
-        private static bool IsEnumerableType(Type type)
+        public static bool IsEnumerableType(Type type)
         {
             if (type.InstanceOfGenericInterface(typeof(IEnumerable<>)))
             {

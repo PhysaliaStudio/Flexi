@@ -12,6 +12,8 @@ namespace Physalia.Flexi
 
         }
 
+        internal abstract object GetValueBoxed();
+
         protected override bool CanConnectTo(Port port)
         {
             return port is Inport;
@@ -38,7 +40,7 @@ namespace Physalia.Flexi
             return inports;
         }
 
-        internal abstract Func<TTo> GetValueConverter<TTo>();
+        internal abstract bool TryGetConvertedValue<TTo>(out TTo result);
 
         /// <remarks>
         /// This method is used at the border nodes of macros:
@@ -59,6 +61,11 @@ namespace Physalia.Flexi
 
         }
 
+        internal override object GetValueBoxed()
+        {
+            return value;
+        }
+
         public T GetValue()
         {
             return value;
@@ -69,15 +76,17 @@ namespace Physalia.Flexi
             this.value = value;
         }
 
-        internal override Func<TTo> GetValueConverter<TTo>()
+        internal override bool TryGetConvertedValue<TTo>(out TTo result)
         {
             Func<T, TTo> converter = ConversionUtility.GetConverter<T, TTo>();
             if (converter != null)
             {
-                return () => converter(value);
+                result = converter(value);
+                return true;
             }
 
-            return null;
+            result = default;
+            return false;
         }
 
         /// <remarks>
@@ -94,11 +103,10 @@ namespace Physalia.Flexi
                 return;
             }
 
-            Func<T> convertFunc = inport.GetValueConverter<T>();
-            if (convertFunc != null)
+            bool success = inport.TryGetConvertedValue(out T result);
+            if (success)
             {
-                T value = convertFunc.Invoke();
-                this.value = value;
+                value = result;
                 return;
             }
 

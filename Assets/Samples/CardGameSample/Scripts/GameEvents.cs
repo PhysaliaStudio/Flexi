@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class TurnEndEvent : IEventContext
+    public class TurnEndContext : IEventContext
     {
         public Game game;
     }
@@ -40,7 +40,7 @@ namespace Physalia.Flexi.Samples.CardGame
         }
     }
 
-    public class DamageEvent : IEventContext
+    public class DamageContext : IEventContext
     {
         public Unit attacker;
         public IReadOnlyList<Unit> targets;

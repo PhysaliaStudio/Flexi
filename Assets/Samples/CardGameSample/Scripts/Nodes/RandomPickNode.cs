@@ -11,7 +11,7 @@ namespace Physalia.Flexi.Samples.CardGame
         protected override void EvaluateSelf()
         {
             IReadOnlyList<Unit> source = sourcePort.GetValue();
-            var payload = GetPayload<PlayCardNode.Payload>();
+            var payload = GetPayload<PlayCardNode.Context>();
             Unit unit = source.RandomPickOne(payload.random);
             resultPort.SetValue(unit);
         }
