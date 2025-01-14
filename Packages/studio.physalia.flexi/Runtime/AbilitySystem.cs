@@ -246,14 +246,11 @@ namespace Physalia.Flexi
             bool success = entryLookupTable.TryGetValue(eventContextType, out EntryHandleTable handleTable);
             if (!success)
             {
-                // This might not an error, since some event might not be used.
-                Logger.Warn($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! EventContext Type: '{eventContextType}' is not registered!");
                 return false;
             }
 
             if (!handleTable.TryGetHandles(abilityDataSource, out List<EntryHandle> handles))
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! AbilityDataSource: '{abilityDataSource}' is not registered!");
                 return false;
             }
 
