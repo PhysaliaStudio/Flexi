@@ -69,7 +69,7 @@ namespace Physalia.Flexi.Samples.ActionGame
                     AbilitySlot.State state = playerUnit.AbilitySlot.GetState();
                     if (state == AbilitySlot.State.OPEN)
                     {
-                        _ = abilitySystem.TryEnqueueAbility(playerUnit.AbilityDataContainers[0], EmptyContext.Instance);
+                        _ = abilitySystem.TryEnqueueAbility(playerUnit.AbilityDataContainers[0]);
                         abilitySystem.Run();
                     }
                     else if (state == AbilitySlot.State.RECAST)

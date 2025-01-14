@@ -210,13 +210,13 @@ namespace Physalia.Flexi
             }
         }
 
-        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext)
+        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext = null)
         {
             IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
             return TryEnqueueAbility(containers, eventContext);
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext)
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext = null)
         {
             bool hasAnyEnqueued = false;
 
@@ -232,7 +232,7 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext)
+        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext = null)
         {
             AbilityDataSource abilityDataSource = container.DataSource;
             if (!abilityDataSource.IsValid)
@@ -241,24 +241,16 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            if (eventContext == null)
-            {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! eventContext is null!");
-                return false;
-            }
-
+            eventContext ??= EmptyContext.Instance;
             Type eventContextType = eventContext.GetType();
             bool success = entryLookupTable.TryGetValue(eventContextType, out EntryHandleTable handleTable);
             if (!success)
             {
-                // This might not an error, since some event might not be used.
-                Logger.Warn($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! EventContext Type: '{eventContextType}' is not registered!");
                 return false;
             }
 
             if (!handleTable.TryGetHandles(abilityDataSource, out List<EntryHandle> handles))
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! AbilityDataSource: '{abilityDataSource}' is not registered!");
                 return false;
             }
 
@@ -445,7 +437,7 @@ namespace Physalia.Flexi
             for (var indexOfFlow = 0; indexOfFlow < flowCount; indexOfFlow++)
             {
                 AbilityFlow abilityFlow = abilityFlows[indexOfFlow];
-                IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
+                IReadOnlyList<EntryNodeBase> entryNodes = abilityFlow.Graph.EntryNodes;
 
                 int entryNodeCount = entryNodes.Count;
                 for (var indexOfEntry = 0; indexOfEntry < entryNodeCount; indexOfEntry++)

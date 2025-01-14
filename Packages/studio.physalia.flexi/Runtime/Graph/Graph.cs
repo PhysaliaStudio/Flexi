@@ -10,13 +10,13 @@ namespace Physalia.Flexi
         private GraphInputNode graphInputNode;
         private GraphOutputNode graphOutputNode;
 
-        private readonly List<EntryNode> entryNodes = new();
+        private readonly List<EntryNodeBase> entryNodes = new();
         private readonly List<Node> nodes = new();
 
         internal GraphInputNode GraphInputNode => graphInputNode;
         internal GraphOutputNode GraphOutputNode => graphOutputNode;
 
-        public IReadOnlyList<EntryNode> EntryNodes => entryNodes;
+        public IReadOnlyList<EntryNodeBase> EntryNodes => entryNodes;
         public IReadOnlyList<Node> Nodes => nodes;
 
         public bool HasCorrectSubgraphElement()
@@ -99,7 +99,7 @@ namespace Physalia.Flexi
         public void AddNode(Node newNode)
         {
             nodes.Add(newNode);
-            if (newNode is EntryNode entryNode)
+            if (newNode is EntryNodeBase entryNode)
             {
                 entryNodes.Add(entryNode);
             }
@@ -112,7 +112,7 @@ namespace Physalia.Flexi
             bool success = nodes.Remove(node);
             if (success)
             {
-                if (node is EntryNode entryNode)
+                if (node is EntryNodeBase entryNode)
                 {
                     entryNodes.Remove(entryNode);
                 }
