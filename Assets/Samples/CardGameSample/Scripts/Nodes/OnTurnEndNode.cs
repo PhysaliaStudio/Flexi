@@ -1,23 +1,18 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class OnTurnEndNode : EntryNode
+    public class OnTurnEndNode : EntryNode<TurnEndContext>
     {
         public Outport<Game> gamePort;
 
-        public override bool CanExecute(IEventContext context)
+        public override bool CanExecute(TurnEndContext context)
         {
-            if (context is TurnEndEvent)
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         protected override AbilityState DoLogic()
         {
-            var context = GetPayload<TurnEndEvent>();
+            var context = GetPayload<TurnEndContext>();
             gamePort.SetValue(context.game);
             return AbilityState.RUNNING;
         }

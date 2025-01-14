@@ -1,20 +1,17 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class OnDamagedEventNode : EntryNode
+    public class OnDamagedEventNode : EntryNode<DamageContext>
     {
         public Outport<Unit> attackerPort;
 
-        public override bool CanExecute(IEventContext payload)
+        public override bool CanExecute(DamageContext context)
         {
-            if (payload is DamageEvent damageEvent)
+            for (var i = 0; i < context.targets.Count; i++)
             {
-                for (var i = 0; i < damageEvent.targets.Count; i++)
+                if (context.targets[i] == Actor)
                 {
-                    if (damageEvent.targets[i] == Actor)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -23,8 +20,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<DamageEvent>();
-            attackerPort.SetValue(payload.attacker);
+            var context = GetPayload<DamageContext>();
+            attackerPort.SetValue(context.attacker);
             return AbilityState.RUNNING;
         }
     }

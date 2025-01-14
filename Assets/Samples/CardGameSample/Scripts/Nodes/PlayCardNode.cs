@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class PlayCardNode : EntryNode
+    public class PlayCardNode : EntryNode<PlayCardNode.Context>
     {
-        public class Payload : IEventContext
+        public class Context : IEventContext
         {
             public Game game;
             public Player player;
@@ -48,16 +48,10 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        public override bool CanExecute(IEventContext payloadObj)
+        public override bool CanExecute(Context context)
         {
-            var payload = payloadObj as Payload;
-            if (payload == null)
-            {
-                return false;
-            }
-
-            int mana = payload.player.Mana;
-            int cost = payload.card.GetStat(StatId.COST).CurrentValue;
+            int mana = context.player.Mana;
+            int cost = context.card.GetStat(StatId.COST).CurrentValue;
             if (mana < cost)
             {
                 return false;
@@ -68,7 +62,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override AbilityState DoLogic()
         {
-            var payload = GetPayload<Payload>();
+            var context = GetPayload<Context>();
 
             if (state == State.INITIAL)
             {
@@ -80,36 +74,36 @@ namespace Physalia.Flexi.Samples.CardGame
                 else
                 {
                     state = State.COMPLETE;
-                    PayCosts(payload);
+                    PayCosts(context);
                 }
             }
             else if (state == State.SELECTION)
             {
                 state = State.COMPLETE;
-                PayCosts(payload);
+                PayCosts(context);
             }
 
-            gamePort.SetValue(payload.game);
-            playerPort.SetValue(payload.player);
-            unitPort.SetValue(payload.owner);
-            cardPort.SetValue(payload.card);
+            gamePort.SetValue(context.game);
+            playerPort.SetValue(context.player);
+            unitPort.SetValue(context.owner);
+            cardPort.SetValue(context.card);
             return AbilityState.RUNNING;
         }
 
-        private void PayCosts(Payload payload)
+        private void PayCosts(Context context)
         {
-            int cost = payload.card.GetStat(StatId.COST).CurrentValue;
-            payload.player.Mana -= cost;
+            int cost = context.card.GetStat(StatId.COST).CurrentValue;
+            context.player.Mana -= cost;
 
             EnqueueEvent(new ManaChangeEvent
             {
                 modifyValue = -cost,
-                newAmount = payload.player.Mana,
+                newAmount = context.player.Mana,
             });
 
             EnqueueEvent(new PlayCardEvent
             {
-                card = payload.card,
+                card = context.card,
             });
         }
 

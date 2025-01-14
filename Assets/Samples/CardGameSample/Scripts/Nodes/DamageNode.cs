@@ -24,7 +24,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 targets[i].Health -= value;
             }
 
-            EnqueueEvent(new DamageEvent
+            EnqueueEvent(new DamageContext
             {
                 attacker = attacker,
                 targets = new List<Unit>(targets),
