@@ -68,7 +68,7 @@ namespace Physalia.Flexi
     {
         private static readonly T globalDefaultValue;
         private T defaultValue;
-        private ListCache listCache;
+        private readonly ListCache listCache;
 
         public override Type ValueType => typeof(T);
         public new T DefaultValue
@@ -138,7 +138,10 @@ namespace Physalia.Flexi
                 list.Clear();
 
                 object value = outport.GetValueBoxed();
-                list.Add(value);
+                if (value != null)  // TODO: I'm not sure if user want "null => [null]" or "null => []", I choose the latter.
+                {
+                    list.Add(value);
+                }
                 return (T)list;
             }
 

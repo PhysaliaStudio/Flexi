@@ -59,6 +59,7 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.CreateAbilityPool(turnStartEffect, 1);
             abilitySystem.CreateAbilityPool(turnEndEffect, 1);
             abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
+            CacheAllStatusAbility();
 
             gameStartProcess = new List<AbilityDataContainer> {
                 new AbilityDataContainer { DataSource = enemyGenerationEffect },
@@ -75,6 +76,20 @@ namespace Physalia.Flexi.Samples.CardGame
             playArea = CreateStartDeck(heroData);
             playArea.ShuffleDrawPile();
             GameSetUp?.Invoke(heroUnit, playArea);
+        }
+
+        private void CacheAllStatusAbility()
+        {
+            IReadOnlyDictionary<int, StatusData> table = gameDataManager.GetTable<StatusData>();
+            foreach (StatusData statusData in table.Values)
+            {
+                AbilityData abilityData = statusData.AbilityAsset.Data;
+                for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
+                {
+                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
+                    abilitySystem.CreateAbilityPool(abilityDataSource, 2);
+                }
+            }
         }
 
         private void OnEventOccurred(IEventContext context)
