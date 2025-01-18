@@ -50,7 +50,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
             abilitySystem.EventOccurred += OnEventOccurred;
             abilitySystem.ChoiceOccurred += OnChoiceOccurred;
-            abilitySystem.EventResolveMethod = ResolveEvent;
+            //abilitySystem.EventResolveMethod = ResolveEvent;
 
             AbilityDataSource turnStartEffect = gameSetting.turnStartGraph.Data.CreateDataSource(0);
             AbilityDataSource turnEndEffect = gameSetting.turnEndGraph.Data.CreateDataSource(0);
@@ -108,10 +108,10 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private void ResolveEvent(IEventContext context)
         {
-            abilitySystem.TryEnqueueAbility(heroUnit, context);
+            abilitySystem.TryEnqueueAbility(heroUnit.AbilityDataContainers, context);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(enemyUnits[i], context);
+                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityDataContainers, context);
             }
         }
 
@@ -263,7 +263,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 random = generalRandom,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(card, context);
+            bool success = abilitySystem.TryEnqueueAbility(card.AbilityDataContainers, context);
             if (success)
             {
                 abilitySystem.Run();

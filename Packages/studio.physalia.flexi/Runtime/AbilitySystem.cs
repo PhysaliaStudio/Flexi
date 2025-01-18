@@ -3,6 +3,17 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public interface IAbilitySystemWrapper
+    {
+        void ResolveEvent(IEventContext eventContext);
+
+        IReadOnlyList<StatOwner> CollectStatRefreshOwners();
+        IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers();
+
+        void OnBeforeCollectModifiers();
+        void ApplyModifiers();
+    }
+
     public class AbilitySystem
     {
         private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
@@ -11,10 +22,7 @@ namespace Physalia.Flexi
         public event Action<IEventContext> EventOccurred;
         public event Action<IChoiceContext> ChoiceOccurred;
 
-        public Action<IEventContext> EventResolveMethod;
-
-        private readonly StatOwnerRepository ownerRepository;
-        private readonly ActorRepository actorRepository;
+        private readonly IAbilitySystemWrapper wrapper;
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
@@ -28,10 +36,9 @@ namespace Physalia.Flexi
 
         private readonly Dictionary<Type, EntryHandleTable> entryLookupTable = new(32);
 
-        internal AbilitySystem(IStatsRefreshAlgorithm statsRefreshAlgorithm, AbilityFlowRunner runner)
+        internal AbilitySystem(IAbilitySystemWrapper wrapper, AbilityFlowRunner runner)
         {
-            ownerRepository = new StatOwnerRepository();
-            actorRepository = new ActorRepository(statsRefreshAlgorithm);
+            this.wrapper = wrapper;
             this.runner = runner;
             runner.abilitySystem = this;
 
@@ -43,30 +50,6 @@ namespace Physalia.Flexi
         {
             AbilityFlow abilityFlow = flow as AbilityFlow;
             ReleaseAbility(abilityFlow.Ability);
-        }
-
-        internal StatOwner CreateOwner(Actor actor)
-        {
-            StatOwner owner = ownerRepository.CreateOwner();
-            actorRepository.AddActor(owner.Id, actor);
-            return owner;
-        }
-
-        internal void DestroyOwner(Actor actor)
-        {
-            StatOwner owner = actor.Owner;
-            actorRepository.RemoveActor(owner.Id);
-            owner.Destroy();
-        }
-
-        internal Actor GetActor(int id)
-        {
-            return actorRepository.GetActor(id);
-        }
-
-        internal StatOwner GetOwner(int id)
-        {
-            return ownerRepository.GetOwner(id);
         }
 
         public void LoadMacroGraph(string key, MacroAsset macroAsset)
@@ -189,31 +172,9 @@ namespace Physalia.Flexi
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
-                if (EventResolveMethod != null)
-                {
-                    EventResolveMethod.Invoke(eventContext);
-                }
-                else
-                {
-                    EnqueueAbilitiesForAllOwners(eventContext);
-                }
+                wrapper.ResolveEvent(eventContext);
             }
             runner.AfterTriggerEvents();
-        }
-
-        private void EnqueueAbilitiesForAllOwners(IEventContext eventContext)
-        {
-            IReadOnlyList<Actor> actors = actorRepository.Actors;
-            for (var i = 0; i < actors.Count; i++)
-            {
-                _ = TryEnqueueAbility(actors[i], eventContext);
-            }
-        }
-
-        public bool TryEnqueueAbility(Actor actor, IEventContext eventContext = null)
-        {
-            IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
-            return TryEnqueueAbility(containers, eventContext);
         }
 
         public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext = null)
@@ -300,20 +261,23 @@ namespace Physalia.Flexi
 
         public void RefreshStatsAndModifiers()
         {
-            for (var i = 0; i < actorRepository.Actors.Count; i++)
+            // 1. Clear all modifiers and reset all stats.
+            IReadOnlyList<StatOwner> owners = wrapper.CollectStatRefreshOwners();
+            for (var i = 0; i < owners.Count; i++)
             {
-                Actor actor = actorRepository.Actors[i];
-                actor.ClearAllModifiers();
-                actor.ResetAllStats();
+                StatOwner owner = owners[i];
+                owner.ClearAllModifiers();
+                owner.ResetAllStats();
             }
 
-            DoStatRefreshLogicForAllOwners();
-            actorRepository.ApplyModifiersForAll();
-        }
+            // 2. Do user method before collecting modifiers.
+            wrapper.OnBeforeCollectModifiers();
 
-        internal void ApplyModifiers(Actor actor)
-        {
-            actorRepository.ApplyModifiers(actor);
+            // 3. Collect all modifiers from user graphs.
+            DoStatRefreshLogicForAllOwners();
+
+            // 4. Apply all modifiers to stats.
+            wrapper.ApplyModifiers();
         }
 
         /// <remarks>
@@ -321,48 +285,40 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners()
         {
-            actorRepository.OnBeforeCollectModifiersForAll();
-
-            IReadOnlyList<Actor> actors = actorRepository.Actors;
-            for (var i = 0; i < actors.Count; i++)
+            // If no StatRefreshEventNode, just return.
+            bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
+            if (!success)
             {
-                Actor actor = actors[i];
+                return;
+            }
 
-                IReadOnlyList<AbilityDataContainer> containers = actor.AbilityDataContainers;
-                for (var j = 0; j < containers.Count; j++)
+            IReadOnlyList<AbilityDataContainer> containers = wrapper.CollectStatRefreshContainers();
+            for (var i = 0; i < containers.Count; i++)
+            {
+                AbilityDataContainer container = containers[i];
+                if (!handleTable.TryGetHandles(container.DataSource, out List<EntryHandle> handles))
                 {
-                    AbilityDataContainer container = containers[j];
+                    continue;
+                }
 
-                    bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
-                    if (!success)
-                    {
-                        continue;
-                    }
+                for (var handleIndex = 0; handleIndex < handles.Count; handleIndex++)
+                {
+                    EntryHandle handle = handles[handleIndex];
 
-                    if (!handleTable.TryGetHandles(container.DataSource, out List<EntryHandle> handles))
-                    {
-                        continue;
-                    }
+                    // Get another copy and setup the flow.
+                    Ability copy = GetAbility(container.DataSource);
+                    copy.Container = container;
 
-                    for (var handleIndex = 0; handleIndex < handles.Count; handleIndex++)
-                    {
-                        EntryHandle handle = handles[handleIndex];
+                    AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
+                    copyFlow.Reset(handle.entryIndex);
+                    copyFlow.SetPayload(STAT_REFRESH_EVENT);
 
-                        // Get another copy and setup the flow.
-                        Ability copy = GetAbility(container.DataSource);
-                        copy.Container = container;
+                    // Then add into the correct order list.
+                    int nodeOrder = handle.order;
+                    AbilityFlowOrderList orderList = GetStatRefreshFlowOrderList(nodeOrder);
+                    orderList.Add(copyFlow);
 
-                        AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
-                        copyFlow.Reset(handle.entryIndex);
-                        copyFlow.SetPayload(STAT_REFRESH_EVENT);
-
-                        // Then add into the correct order list.
-                        int nodeOrder = handle.order;
-                        AbilityFlowOrderList orderList = GetStatRefreshFlowOrderList(nodeOrder);
-                        orderList.Add(copyFlow);
-
-                        _cachedAbilites.Add(copy);
-                    }
+                    _cachedAbilites.Add(copy);
                 }
             }
 
@@ -371,7 +327,11 @@ namespace Physalia.Flexi
             for (var i = 0; i < statRefreshFlowOrderLists.Count; i++)
             {
                 AbilityFlowOrderList orderList = statRefreshFlowOrderLists[i];
-                RunStatRefreshFlows(orderList);
+                if (orderList.Count > 0)
+                {
+                    RunStatRefreshFlows(orderList);
+                    wrapper.ApplyModifiers();
+                }
             }
 
             // Clean up
@@ -397,18 +357,12 @@ namespace Physalia.Flexi
 
             void RunStatRefreshFlows(AbilityFlowOrderList orderList)
             {
-                if (orderList.Count == 0)
-                {
-                    return;
-                }
-
                 for (var i = 0; i < orderList.Count; i++)
                 {
                     statRefreshRunner.AddFlow(orderList[i]);
                 }
 
                 statRefreshRunner.Start();
-                actorRepository.ApplyModifiersForAll();
             }
 
             void CleaupStatRefreshFlows()

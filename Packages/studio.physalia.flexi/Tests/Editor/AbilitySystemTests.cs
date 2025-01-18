@@ -22,24 +22,6 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void CreateOwner_GetOwnerReturnsTheSameInstance()
-        {
-            var emptyActor = new EmptyActor(abilitySystem);
-            Assert.AreEqual(emptyActor.Owner, abilitySystem.GetOwner(emptyActor.OwnerId));
-            Assert.AreEqual(emptyActor, abilitySystem.GetActor(emptyActor.OwnerId));
-            Assert.AreEqual(true, emptyActor.Owner.Id == emptyActor.OwnerId, "The Id from Owner and Actor is different.");
-        }
-
-        [Test]
-        public void RemoveOwner_GetOwnerReturnsNull()
-        {
-            var emptyActor = new EmptyActor(abilitySystem);
-            abilitySystem.DestroyOwner(emptyActor);
-            Assert.AreEqual(null, abilitySystem.GetOwner(emptyActor.Owner.Id));
-            Assert.AreEqual(null, abilitySystem.GetActor(emptyActor.OwnerId));
-        }
-
-        [Test]
         public void InstantiateAbility_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port

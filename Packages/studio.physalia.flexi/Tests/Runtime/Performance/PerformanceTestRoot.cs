@@ -42,7 +42,7 @@ namespace Physalia.Flexi.Tests
 
             for (var i = 0; i < characters.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(characters[i], null);
+                abilitySystem.TryEnqueueAbility(characters[i].AbilityDataContainers, null);
             }
 
             abilitySystem.Run();
