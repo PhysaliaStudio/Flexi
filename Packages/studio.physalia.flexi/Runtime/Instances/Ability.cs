@@ -23,8 +23,6 @@ namespace Physalia.Flexi
 
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         public IReadOnlyList<AbilityFlow> Flows => abilityFlows;
-
-        public Actor Actor => container?.Actor;
         internal AbilityDataContainer Container { get => container; set => container = value; }
 
         internal Ability(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource)

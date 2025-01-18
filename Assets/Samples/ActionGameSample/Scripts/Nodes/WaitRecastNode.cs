@@ -44,7 +44,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         protected override AbilityState DoLogic()
         {
-            (Actor as Unit).AbilitySlot.SetToRecastState();
+            (Container.Actor as Unit).AbilitySlot.SetToRecastState();
             return AbilityState.PAUSE;
         }
 
@@ -58,7 +58,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             if (resumeContext is RecastContext)
             {
                 received = true;
-                (Actor as Unit).AbilitySlot.SetToDisabledState();
+                (Container.Actor as Unit).AbilitySlot.SetToDisabledState();
                 return AbilityState.RUNNING;
             }
 
@@ -70,7 +70,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             currentTime += Time.deltaTime;
             if (currentTime * 1000 >= milliseconds.Value)
             {
-                (Actor as Unit).AbilitySlot.SetToDisabledState();
+                (Container.Actor as Unit).AbilitySlot.SetToDisabledState();
                 return AbilityState.RUNNING;
             }
 

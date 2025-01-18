@@ -26,7 +26,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             var context = new SingleTargetChoiceContext
             {
-                actor = Actor,
+                actor = Container.Actor,
                 unitType = unitType.Value,
             };
 

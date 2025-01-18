@@ -5,7 +5,7 @@ namespace Physalia.Flexi.Samples.ActionGame
     {
         protected override AbilityState DoLogic()
         {
-            (Actor as Unit).AbilitySlot.SetToDisabledState();
+            (Container.Actor as Unit).AbilitySlot.SetToDisabledState();
             return AbilityState.RUNNING;
         }
     }

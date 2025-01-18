@@ -9,7 +9,7 @@ namespace Physalia.Flexi
         {
             if (Flow != null)
             {
-                actor.SetValue(Actor);
+                actor.SetValue(Container.Actor);
             }
             else
             {

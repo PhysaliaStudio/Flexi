@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override void EvaluateSelf()
         {
-            unitPort.SetValue(Actor as Unit);
+            unitPort.SetValue(Container.Actor as Unit);
         }
     }
 }

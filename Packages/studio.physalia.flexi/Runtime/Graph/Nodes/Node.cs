@@ -35,7 +35,6 @@ namespace Physalia.Flexi
         #region AbilityInstance Members
         public AbilityFlow Flow => flow;
         public Ability Ability => flow?.Ability;
-        public Actor Actor => flow?.Actor;
         public AbilityDataContainer Container => flow?.Ability?.Container;
         #endregion
 
