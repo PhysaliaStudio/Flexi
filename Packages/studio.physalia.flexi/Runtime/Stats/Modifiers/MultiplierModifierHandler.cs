@@ -6,7 +6,7 @@ namespace Physalia.Flexi
     {
         private readonly Dictionary<int, int> sumsCache = new();
 
-        public void RefreshStats(StatOwner owner)
+        public void ApplyModifiers(StatOwner owner)
         {
             for (var i = 0; i < owner.Modifiers.Count; i++)
             {

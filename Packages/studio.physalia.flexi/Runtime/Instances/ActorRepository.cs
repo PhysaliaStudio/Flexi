@@ -53,21 +53,21 @@ namespace Physalia.Flexi
         /// <summary>
         /// This method just total all modifiers by algorithm, so there is no priority issue.
         /// </summary>
-        internal void RefreshStatsForAll()
+        internal void ApplyModifiersForAll()
         {
             for (var i = 0; i < actorList.Count; i++)
             {
-                RefreshStats(actorList[i]);
+                ApplyModifiers(actorList[i]);
             }
         }
 
         /// <summary>
         /// This method just total all modifiers by algorithm, so there is no priority issue.
         /// </summary>
-        internal void RefreshStats(Actor actor)
+        internal void ApplyModifiers(Actor actor)
         {
             actor.ResetAllStats();
-            statsRefreshAlgorithm.RefreshStats(actor);
+            statsRefreshAlgorithm.ApplyModifiers(actor);
         }
     }
 }

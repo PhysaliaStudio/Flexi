@@ -2,6 +2,6 @@ namespace Physalia.Flexi
 {
     public interface IModifierHandler
     {
-        void RefreshStats(StatOwner owner);
+        void ApplyModifiers(StatOwner owner);
     }
 }

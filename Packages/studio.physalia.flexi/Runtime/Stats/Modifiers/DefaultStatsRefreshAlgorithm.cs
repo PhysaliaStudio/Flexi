@@ -15,11 +15,11 @@ namespace Physalia.Flexi
 
         }
 
-        public void RefreshStats(Actor actor)
+        public void ApplyModifiers(Actor actor)
         {
             for (var i = 0; i < handlers.Count; i++)
             {
-                handlers[i].RefreshStats(actor.Owner);
+                handlers[i].ApplyModifiers(actor.Owner);
             }
         }
     }

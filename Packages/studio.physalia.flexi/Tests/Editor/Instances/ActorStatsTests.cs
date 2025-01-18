@@ -27,7 +27,7 @@ namespace Physalia.Flexi.Tests
 
             actor.AddStat(CustomStats.ATTACK, 2);
             actor.GetStat(CustomStats.ATTACK).CurrentBase = 6;
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Stat stat = actor.GetStat(CustomStats.ATTACK);
             Assert.AreEqual(2, stat.OriginalBase);
@@ -42,7 +42,7 @@ namespace Physalia.Flexi.Tests
 
             actor.AddStat(CustomStats.ATTACK, 2);
             actor.GetStat(CustomStats.ATTACK).CurrentBase += 4;
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Stat stat = actor.GetStat(CustomStats.ATTACK);
             Assert.AreEqual(2, stat.OriginalBase);

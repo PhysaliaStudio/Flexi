@@ -28,7 +28,7 @@ namespace Physalia.Flexi.Tests
             var actor = CreateActor();
             actor.RemoveStat(CustomStats.ATTACK);
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.IsNull(actor.GetStat(CustomStats.ATTACK));
             Assert.Pass();
@@ -39,7 +39,7 @@ namespace Physalia.Flexi.Tests
         {
             var actor = CreateActor();
             actor.AppendModifier(new StatModifier(999, 50, StatModifier.Operator.MUL));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.Pass();
         }
@@ -49,7 +49,7 @@ namespace Physalia.Flexi.Tests
         {
             var actor = CreateActor();
             actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.AreEqual(100, actor.GetStat(CustomStats.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, actor.GetStat(CustomStats.MAX_HEALTH).CurrentValue);
@@ -60,7 +60,7 @@ namespace Physalia.Flexi.Tests
         {
             var actor = CreateActor();
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.AreEqual(12, actor.GetStat(CustomStats.ATTACK).CurrentBase);
             Assert.AreEqual(18, actor.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -72,7 +72,7 @@ namespace Physalia.Flexi.Tests
             var actor = CreateActor();
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.AreEqual(12, actor.GetStat(CustomStats.ATTACK).CurrentBase);
             Assert.AreEqual(27, actor.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -85,7 +85,7 @@ namespace Physalia.Flexi.Tests
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
             actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
-            actor.RefreshStats();
+            actor.ApplyModifiers();
 
             Assert.AreEqual(100, actor.GetStat(CustomStats.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, actor.GetStat(CustomStats.MAX_HEALTH).CurrentValue);
@@ -100,8 +100,8 @@ namespace Physalia.Flexi.Tests
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
             actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
             actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
-            actor.RefreshStats();
-            actor.RefreshStats();
+            actor.ApplyModifiers();
+            actor.ApplyModifiers();
 
             Assert.AreEqual(100, actor.GetStat(CustomStats.MAX_HEALTH).CurrentBase);
             Assert.AreEqual(90, actor.GetStat(CustomStats.MAX_HEALTH).CurrentValue);

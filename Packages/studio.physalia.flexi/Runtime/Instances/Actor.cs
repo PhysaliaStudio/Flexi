@@ -107,9 +107,9 @@ namespace Physalia.Flexi
         /// <summary>
         /// This method just total all modifiers by algorithm, so there is no priority issue.
         /// </summary>
-        public void RefreshStats()
+        public void ApplyModifiers()
         {
-            abilitySystem.RefreshStats(this);
+            abilitySystem.ApplyModifiers(this);
         }
 
         internal void ResetAllStats()

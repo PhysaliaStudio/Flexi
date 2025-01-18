@@ -308,12 +308,12 @@ namespace Physalia.Flexi
             }
 
             DoStatRefreshLogicForAllOwners();
-            actorRepository.RefreshStatsForAll();
+            actorRepository.ApplyModifiersForAll();
         }
 
-        internal void RefreshStats(Actor actor)
+        internal void ApplyModifiers(Actor actor)
         {
-            actorRepository.RefreshStats(actor);
+            actorRepository.ApplyModifiers(actor);
         }
 
         /// <remarks>
@@ -408,7 +408,7 @@ namespace Physalia.Flexi
                 }
 
                 statRefreshRunner.Start();
-                actorRepository.RefreshStatsForAll();
+                actorRepository.ApplyModifiersForAll();
             }
 
             void CleaupStatRefreshFlows()
