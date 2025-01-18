@@ -17,14 +17,14 @@ namespace Physalia.Flexi.Samples.CardGame
         public int Health { get => health; set => health = value; }
         public int HealthMax => GetStat(StatId.HEALTH_MAX).CurrentValue;
 
-        public Unit(IUnitData unitData, AbilitySystem abilitySystem) : base(abilitySystem)
+        public Unit(IUnitData unitData)
         {
             this.unitData = unitData;
         }
 
         public override string ToString()
         {
-            return $"{OwnerId}-{Name}";
+            return Name;
         }
 
         public int GetStatusStack(StatusData statusData)

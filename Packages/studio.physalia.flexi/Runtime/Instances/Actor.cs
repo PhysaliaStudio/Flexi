@@ -8,25 +8,18 @@ namespace Physalia.Flexi
     /// </summary>
     public abstract class Actor
     {
-        private readonly AbilitySystem abilitySystem;
         private readonly StatOwner owner;
 
         private readonly List<AbilityDataContainer> abilityDataContainers = new(2);
 
-        public int OwnerId => owner.Id;
         internal StatOwner Owner => owner;
         internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
         public IReadOnlyList<AbilityDataContainer> AbilityDataContainers => abilityDataContainers;
         public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
 
-        public Actor(AbilitySystem abilitySystem)
+        public Actor()
         {
-            this.abilitySystem = abilitySystem;
-        }
 
-        public bool IsValid()
-        {
-            return owner.IsValid();
         }
 
         public void AddStat<TEnum>(TEnum statId, int baseValue) where TEnum : Enum

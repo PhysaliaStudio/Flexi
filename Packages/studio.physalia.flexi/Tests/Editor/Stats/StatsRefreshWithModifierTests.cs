@@ -15,7 +15,7 @@ namespace Physalia.Flexi.Tests
 
         private Actor CreateActor()
         {
-            var actor = new EmptyActor(abilitySystem);
+            var actor = new EmptyActor();
             actor.AddStat(CustomStats.HEALTH, 100);
             actor.AddStat(CustomStats.MAX_HEALTH, 100);
             actor.AddStat(CustomStats.ATTACK, 12);

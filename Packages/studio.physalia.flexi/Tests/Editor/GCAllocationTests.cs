@@ -15,8 +15,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void AddStatAndGetStat_DoesNotAllocate()
         {
-            StatOwnerRepository repository = new StatOwnerRepository();
-            StatOwner owner = repository.CreateOwner();
+            StatOwner owner = new StatOwner();
 
             // Note: The first call to XXXStat allocates CastTo class.
             owner.AddStat(StatId.HealthMax, 2);

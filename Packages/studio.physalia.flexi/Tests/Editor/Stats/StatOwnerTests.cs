@@ -8,8 +8,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void AddStat_OriginalValueIs2_GetStatReturnsNotNullAndBothBaseAndValueAre2()
         {
-            StatOwnerRepository repository = new StatOwnerRepository();
-            StatOwner owner = repository.CreateOwner();
+            StatOwner owner = new StatOwner();
 
             owner.AddStat(11, 2);
 
@@ -23,8 +22,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void AddStat_WithDuplicatedId_LogError()
         {
-            StatOwnerRepository repository = new StatOwnerRepository();
-            StatOwner owner = repository.CreateOwner();
+            StatOwner owner = new StatOwner();
 
             owner.AddStat(11, 2);
             owner.AddStat(11, 2);
@@ -34,8 +32,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RemoveStat_AddedStat_GetStatReturnsNull()
         {
-            StatOwnerRepository repository = new StatOwnerRepository();
-            StatOwner owner = repository.CreateOwner();
+            StatOwner owner = new StatOwner();
 
             owner.AddStat(11, 2);
             owner.RemoveStat(11);
@@ -46,8 +43,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void GetStat_WithNotAddedId_ReturnsNull()
         {
-            StatOwnerRepository repository = new StatOwnerRepository();
-            StatOwner owner = repository.CreateOwner();
+            StatOwner owner = new StatOwner();
 
             Assert.IsNull(owner.GetStat(11));
         }

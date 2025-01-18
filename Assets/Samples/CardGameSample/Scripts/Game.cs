@@ -117,7 +117,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private Player CreatePlayer(HeroData heroData)
         {
-            var player = new Player(abilitySystem);
+            var player = new Player();
             player.AddStat(StatId.MANA_RECOVER, 3);
             player.AddStat(StatId.DRAW, 5);
 
@@ -129,7 +129,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private Unit CreateHeroUnit(HeroData heroData)
         {
-            var unit = new Unit(heroData, abilitySystem);
+            var unit = new Unit(heroData);
             unit.AddStat(StatId.HEALTH_MAX, heroData.StartHealth);
             unit.Health = heroData.StartHealth;
             return unit;
@@ -137,7 +137,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private Unit CreateEnemyUnit(EnemyData enemyData)
         {
-            Unit unit = new Unit(enemyData, abilitySystem);
+            Unit unit = new Unit(enemyData);
             unit.AddStat(StatId.HEALTH_MAX, enemyData.Health);
             unit.AddStat(StatId.ATTACK, enemyData.Attack);
             unit.Health = enemyData.Health;
@@ -184,7 +184,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private Card CreateCard(CardData cardData)
         {
-            Card card = new Card(cardData, abilitySystem);
+            Card card = new Card(cardData);
             card.AddStat(StatId.COST, cardData.Cost);
             if (cardData.AbilityAsset != null)
             {

@@ -36,7 +36,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ActivateInstance()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE);
             unit.AppendAbilityDataContainer(container);
@@ -69,7 +69,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteCustomNodesAndAbilitiy()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -99,7 +99,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiySequence()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -134,7 +134,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalEntryNode_WithConditionSuccess_ExecuteAsExpected()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1" });
             AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.LOG_WHEN_ATTACKED);
             unit.AppendAbilityDataContainer(container);
@@ -151,7 +151,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_ReceivesChoice()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -172,7 +172,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveValidAnswer_EffectOccurred()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -197,7 +197,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveInvalidAnswer_LogErrorAndEffectNotOccurred()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -223,7 +223,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveCancellation()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
@@ -249,7 +249,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
 
@@ -264,7 +264,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_NotReachCondition_ModifierNotAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 
             unit.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
@@ -278,7 +278,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachConditionThenMakeNotReach_ModifierRemovedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
             unit.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
@@ -299,7 +299,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachConditionWhileRunningSystem_ModifierNotAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
@@ -334,7 +334,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void MultiOrderModifiers_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             // Note: We intentionally add the modifier with the reverse order for testing.
@@ -360,7 +360,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ContinuousEventFor2Times_TheAbilityTriggeredTwice()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
@@ -382,7 +382,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
             unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
@@ -416,7 +416,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ChainEffect_MultipleAbilities_TriggeredByCorrectOrder()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
             unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
@@ -441,7 +441,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiy_ForLoop_StatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory(abilitySystem);
+            var unitFactory = new CustomUnitFactory();
             CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
             CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
 

@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Tests
 
         public string Name => data.name;
 
-        public CustomUnit(CustomUnitData data, AbilitySystem abilitySystem) : base(abilitySystem)
+        public CustomUnit(CustomUnitData data)
         {
             this.data = data;
         }

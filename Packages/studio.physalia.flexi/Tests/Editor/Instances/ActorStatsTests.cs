@@ -23,7 +23,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void SetStat_OriginalBaseIs2AndNewBaseIs6_OriginalBaseIs2AndCurrentBaseAndCurrentValueAre6()
         {
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
 
             actor.AddStat(CustomStats.ATTACK, 2);
             actor.GetStat(CustomStats.ATTACK).CurrentBase = 6;
@@ -38,7 +38,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ModifyStat_OriginalBaseIs2AndAdd4_OriginalBaseIs2AndCurrentBaseAndCurrentValueAre6()
         {
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
 
             actor.AddStat(CustomStats.ATTACK, 2);
             actor.GetStat(CustomStats.ATTACK).CurrentBase += 4;
@@ -56,7 +56,7 @@ namespace Physalia.Flexi.Tests
             AbilityData abilityData = CreateAbilityDataWith1Group();
             var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
 
             Assert.AreEqual(1, actor.AbilityDataContainers.Count);
@@ -68,7 +68,7 @@ namespace Physalia.Flexi.Tests
             AbilityData abilityData = CreateAbilityDataWith1Group();
             var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
             actor.RemoveAbilityDataContainer(container);
 
@@ -82,7 +82,7 @@ namespace Physalia.Flexi.Tests
             var container1 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
             var container2 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container1);
             actor.AppendAbilityDataContainer(container2);
             actor.ClearAllAbilityDataContainers();
@@ -96,7 +96,7 @@ namespace Physalia.Flexi.Tests
             AbilityData abilityData = CreateAbilityDataWith1Group();
             var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
 
             Assert.AreEqual(actor, container.Actor);
@@ -108,7 +108,7 @@ namespace Physalia.Flexi.Tests
             AbilityData abilityData = CreateAbilityDataWith1Group();
             var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
             actor.RemoveAbilityDataContainer(container);
 
@@ -122,7 +122,7 @@ namespace Physalia.Flexi.Tests
             var container1 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
             var container2 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
 
-            Actor actor = new EmptyActor(abilitySystem);
+            Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container1);
             actor.AppendAbilityDataContainer(container2);
             actor.ClearAllAbilityDataContainers();

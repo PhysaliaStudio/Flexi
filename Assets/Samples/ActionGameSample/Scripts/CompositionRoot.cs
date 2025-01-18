@@ -39,7 +39,7 @@ namespace Physalia.Flexi.Samples.ActionGame
         private static Unit BuildPlayer(AssetManager assetManager, AbilitySystem abilitySystem)
         {
             UnitAvatar avatar = FindObjectOfType<UnitAvatar>();
-            Unit unit = new Unit(avatar, abilitySystem);
+            Unit unit = new Unit(avatar);
             unit.AddStat(StatId.SPEED, 200);
             unit.AddStat(StatId.CONTROLLABLE, 1);
 

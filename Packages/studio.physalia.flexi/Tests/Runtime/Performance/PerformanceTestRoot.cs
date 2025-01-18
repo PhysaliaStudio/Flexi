@@ -25,7 +25,7 @@ namespace Physalia.Flexi.Tests
             AbilityDataSource abilityDataSource = abilityAsset.Data.CreateDataSource(0);
             for (var i = 0; i < abilityCountPerFrame; i++)
             {
-                var character = new CustomCharacter(abilitySystem);
+                var character = new CustomCharacter();
                 var abilityDataContainer = new AbilityDataContainer { DataSource = abilityDataSource };
                 character.AppendAbilityDataContainer(abilityDataContainer);
 

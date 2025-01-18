@@ -7,14 +7,14 @@ namespace Physalia.Flexi.Samples.CardGame
         public string Name => cardData.Name;
         public string Text => cardData.Text;
 
-        public Card(CardData cardData, AbilitySystem abilitySystem) : base(abilitySystem)
+        public Card(CardData cardData)
         {
             this.cardData = cardData;
         }
 
         public override string ToString()
         {
-            return $"{OwnerId}-{Name}";
+            return Name;
         }
     }
 }

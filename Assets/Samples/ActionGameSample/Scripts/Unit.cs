@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Samples.ActionGame
         public IUnitAvatar Avatar => avatar;
         public AbilitySlot AbilitySlot => abilitySlot;
 
-        public Unit(IUnitAvatar avatar, AbilitySystem abilitySystem) : base(abilitySystem)
+        public Unit(IUnitAvatar avatar)
         {
             this.avatar = avatar;
         }
