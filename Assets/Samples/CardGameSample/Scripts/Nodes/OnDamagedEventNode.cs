@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             for (var i = 0; i < context.targets.Count; i++)
             {
-                if (context.targets[i] == SelfUnit)
+                if (context.targets[i] == Container.Unit)
                 {
                     return true;
                 }

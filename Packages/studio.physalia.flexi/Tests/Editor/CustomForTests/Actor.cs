@@ -10,13 +10,13 @@ namespace Physalia.Flexi.Tests
 
         public void AppendAbilityContainer(AbilityContainer container)
         {
-            container.actor = this;
+            container.Actor = this;
             containers.Add(container);
         }
 
         public void RemoveAbilityContainer(AbilityContainer container)
         {
-            container.actor = null;
+            container.Actor = null;
             containers.Remove(container);
         }
 
@@ -24,7 +24,7 @@ namespace Physalia.Flexi.Tests
         {
             for (var i = 0; i < containers.Count; i++)
             {
-                containers[i].actor = null;
+                containers[i].Actor = null;
             }
             containers.Clear();
         }

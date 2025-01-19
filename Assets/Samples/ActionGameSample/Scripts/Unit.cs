@@ -20,13 +20,13 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         public void AppendAbilityContainer(AbilityContainer container)
         {
-            container.unit = this;
+            container.Unit = this;
             containers.Add(container);
         }
 
         public void RemoveAbilityContainer(AbilityContainer container)
         {
-            container.unit = null;
+            container.Unit = null;
             containers.Remove(container);
         }
 
@@ -34,7 +34,7 @@ namespace Physalia.Flexi.Samples.ActionGame
         {
             for (var i = 0; i < containers.Count; i++)
             {
-                containers[i].unit = null;
+                containers[i].Unit = null;
             }
             containers.Clear();
         }

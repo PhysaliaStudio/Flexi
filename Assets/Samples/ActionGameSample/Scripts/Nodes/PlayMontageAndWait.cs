@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         protected override AbilityState DoLogic()
         {
-            IUnitAvatar avatar = SelfUnit.Avatar;
+            IUnitAvatar avatar = Container.Unit.Avatar;
             if (!avatar.HasMontage(name.Value))
             {
                 return AbilityState.RUNNING;
@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
             if (disableControl.Value)
             {
-                SelfUnit.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
+                Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
             }
 
             avatar.PlayMontage(name.Value);
@@ -25,12 +25,12 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         protected override AbilityState Tick()
         {
-            IUnitAvatar avatar = SelfUnit.Avatar;
+            IUnitAvatar avatar = Container.Unit.Avatar;
             if (avatar.IsMontagePlayedAndFinished(name.Value))
             {
                 if (disableControl.Value)
                 {
-                    SelfUnit.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
+                    Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
                 }
 
                 return AbilityState.RUNNING;

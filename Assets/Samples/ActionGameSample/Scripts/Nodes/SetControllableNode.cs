@@ -9,11 +9,11 @@ namespace Physalia.Flexi.Samples.ActionGame
         {
             if (controllable)
             {
-                SelfUnit.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
+                Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
             }
             else
             {
-                SelfUnit.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
+                Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
             }
             return AbilityState.RUNNING;
         }

@@ -12,11 +12,11 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             if (this is Unit unit)
             {
-                container.unit = unit;
+                container.Unit = unit;
             }
             else if (this is Card card)
             {
-                container.card = card;
+                container.Card = card;
             }
 
             containers.Add(container);

@@ -13,7 +13,7 @@ namespace Physalia.Flexi.Tests
         private AbilityContainer CreateAbilityContainer(AbilityDataSource dataSource)
         {
             abilitySystem.CreateAbilityPool(dataSource, 2);
-            return new AbilityContainer { systemWrapper = wrapper, DataSource = dataSource };
+            return new AbilityContainer { SystemWrapper = wrapper, DataSource = dataSource };
         }
 
         private CustomUnit CreateUnit(CustomUnitData data)

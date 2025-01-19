@@ -12,7 +12,7 @@ namespace Physalia.Flexi.Tests
 
         protected override AbilityState DoLogic()
         {
-            SystemWrapper.TriggerChoice();
+            Container.SystemWrapper.TriggerChoice();
             return AbilityState.PAUSE;
         }
 
