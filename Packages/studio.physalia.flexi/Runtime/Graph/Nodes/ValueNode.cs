@@ -2,6 +2,12 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public abstract class ValueNode<TContainer> : ValueNode
+        where TContainer : AbilityDataContainer
+    {
+        public TContainer Container => GetContainer<TContainer>();
+    }
+
     public abstract class ValueNode : Node
     {
         internal void Evaluate()

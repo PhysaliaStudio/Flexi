@@ -5,32 +5,19 @@ using System.Runtime.CompilerServices;
 namespace Physalia.Flexi
 {
     /// <summary>
-    /// StatOwner is a container of stats and abilities.
+    /// StatOwner is a container of stats and modifiers.
     /// </summary>
     public class StatOwner
     {
-        private readonly int id;
-        private readonly StatOwnerRepository repository;
-
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<StatModifier> modifiers = new();
 
-        private bool isValid = true;
+        public IReadOnlyDictionary<int, Stat> Stats => stats;
+        public IReadOnlyList<StatModifier> Modifiers => modifiers;
 
-        public int Id => id;
-
-        internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<StatModifier> Modifiers => modifiers;
-
-        internal StatOwner(int id, StatOwnerRepository repository)
+        public StatOwner()
         {
-            this.id = id;
-            this.repository = repository;
-        }
 
-        public bool IsValid()
-        {
-            return isValid;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -55,7 +42,7 @@ namespace Physalia.Flexi
         {
             if (stats.ContainsKey(statId))
             {
-                Logger.Error($"Create stat failed! Owner {id} already has stat {statId}");
+                Logger.Error($"Add stat failed! Owner already has stat: {statId}");
                 return;
             }
 
@@ -83,6 +70,11 @@ namespace Physalia.Flexi
             modifiers.Add(modifier);
         }
 
+        public void AppendModifiers(IReadOnlyList<StatModifier> modifiers)
+        {
+            this.modifiers.AddRange(modifiers);
+        }
+
         public void RemoveModifier(StatModifier modifier)
         {
             modifiers.Remove(modifier);
@@ -99,12 +91,6 @@ namespace Physalia.Flexi
             {
                 stat.CurrentValue = stat.CurrentBase;
             }
-        }
-
-        public void Destroy()
-        {
-            isValid = false;
-            repository.RemoveOwner(this);
         }
     }
 }

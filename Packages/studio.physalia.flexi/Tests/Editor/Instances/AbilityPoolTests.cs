@@ -11,6 +11,7 @@ namespace Physalia.Flexi.Tests
         public void SetUp()
         {
             AbilitySystemBuilder builder = new AbilitySystemBuilder();
+            builder.SetWrapper(new AbilitySystemWrapperMock());
             abilitySystem = builder.Build();
         }
 

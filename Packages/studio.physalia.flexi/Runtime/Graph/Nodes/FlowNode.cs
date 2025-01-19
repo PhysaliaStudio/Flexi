@@ -2,6 +2,12 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public abstract class FlowNode<TContainer> : FlowNode
+        where TContainer : AbilityDataContainer
+    {
+        public TContainer Container => GetContainer<TContainer>();
+    }
+
     public abstract class FlowNode : Node
     {
         public abstract FlowNode Previous { get; }
@@ -59,12 +65,6 @@ namespace Physalia.Flexi
         protected void PushSelf()
         {
             Flow?.Push(this);
-        }
-
-        protected AbilityState WaitAndChoice(IChoiceContext context)
-        {
-            Flow.System?.TriggerChoice(context);
-            return AbilityState.PAUSE;
         }
 
         protected void EnqueueEvent(IEventContext eventContext)

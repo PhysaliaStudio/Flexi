@@ -10,13 +10,17 @@ namespace Physalia.Flexi
         // Empty Content
     }
 
-    public abstract class EntryNode<T> : EntryNodeBase where T : IEventContext
+    public abstract class EntryNode<TContainer, TEventContext> : EntryNodeBase
+        where TContainer : AbilityDataContainer
+        where TEventContext : IEventContext
     {
-        public override Type ContextType => typeof(T);
+        public TContainer Container => GetContainer<TContainer>();
+
+        public override Type ContextType => typeof(TEventContext);
 
         protected internal sealed override bool CanExecute(IEventContext contextBase)
         {
-            if (contextBase != null && contextBase is T context)
+            if (contextBase != null && contextBase is TEventContext context)
             {
                 return CanExecute(context);
             }
@@ -24,11 +28,14 @@ namespace Physalia.Flexi
             return false;
         }
 
-        public abstract bool CanExecute(T context);
+        public abstract bool CanExecute(TEventContext context);
     }
 
-    public abstract class EntryNode : EntryNodeBase
+    public abstract class EntryNode<TContainer> : EntryNodeBase
+        where TContainer : AbilityDataContainer
     {
+        public TContainer Container => GetContainer<TContainer>();
+
         public sealed override Type ContextType => typeof(EmptyContext);
 
         protected internal sealed override bool CanExecute(IEventContext contextBase)

@@ -1,11 +1,5 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class SingleTargetChoiceContext : IChoiceContext
-    {
-        public Actor actor;
-        public UnitType unitType;
-    }
-
     public class SingleTargetAnswerContext : IResumeContext
     {
         public Unit unit;
@@ -24,13 +18,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override AbilityState DoLogic()
         {
-            var context = new SingleTargetChoiceContext
-            {
-                actor = Actor,
-                unitType = unitType.Value,
-            };
-
-            return WaitAndChoice(context);
+            Container.Game.StartSingleTargetChoice(Container.Card, unitType.Value);
+            return AbilityState.PAUSE;
         }
 
         public override bool CheckNodeContext(IResumeContext resumeContext)

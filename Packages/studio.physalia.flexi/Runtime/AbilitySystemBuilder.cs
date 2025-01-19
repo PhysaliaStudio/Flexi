@@ -2,14 +2,14 @@ namespace Physalia.Flexi
 {
     public class AbilitySystemBuilder
     {
-        private IStatsRefreshAlgorithm statsRefreshAlgorithm;
+        private IAbilitySystemWrapper wrapper;
         private AbilityFlowRunner runner;
 
         public AbilitySystem Build()
         {
-            if (statsRefreshAlgorithm == null)
+            if (wrapper == null)
             {
-                statsRefreshAlgorithm = new DefaultStatsRefreshAlgorithm();
+                throw new System.ArgumentException("IAbilitySystemWrapper is not set.");
             }
 
             if (runner == null)
@@ -19,12 +19,12 @@ namespace Physalia.Flexi
 
             Logger.Info($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");
 
-            return new AbilitySystem(statsRefreshAlgorithm, runner);
+            return new AbilitySystem(wrapper, runner);
         }
 
-        public void SetModifierAlgorithm(IStatsRefreshAlgorithm statsRefreshAlgorithm)
+        public void SetWrapper(IAbilitySystemWrapper wrapper)
         {
-            this.statsRefreshAlgorithm = statsRefreshAlgorithm;
+            this.wrapper = wrapper;
         }
 
         public void SetRunner(AbilityFlowRunner runner)

@@ -44,9 +44,8 @@ namespace Physalia.Flexi.Samples.CardGame
             view.AddGameEvent(payload);
         }
 
-        private void OnChoiceOccurred(Card card, IChoiceContext context)
+        private void OnChoiceOccurred(Card card)
         {
-            Debug.Log($"!!!!!!!!!! Choice Occurred => {context.GetType().Name}");
             var selectionData = new SelectionData
             {
                 isTargetless = false,

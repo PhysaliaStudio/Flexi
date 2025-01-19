@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class Player : Actor
+    public class Player : Entity
     {
         private int mana;
         private int coin;
@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public int Mana { get => mana; set => mana = value; }
         public int Coin { get => coin; set => coin = value; }
 
-        public Player(AbilitySystem abilitySystem) : base(abilitySystem)
+        public Player()
         {
 
         }

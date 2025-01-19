@@ -2,6 +2,12 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public abstract class ProcessNode<TContainer> : ProcessNode
+        where TContainer : AbilityDataContainer
+    {
+        public TContainer Container => GetContainer<TContainer>();
+    }
+
     public abstract class ProcessNode : FlowNode
     {
         internal Inport<FlowNode> previous;

@@ -8,43 +8,43 @@ namespace Physalia.Flexi.Samples.ActionGame
     [NodeCategory("Action Game Sample")]
     public class WaitRecastNode : FlowNode
     {
-        public Inport<FlowNode> previous;
-        public Outport<FlowNode> successNode;
-        public Outport<FlowNode> timeoutNode;
+        public Inport<Flexi.FlowNode> previous;
+        public Outport<Flexi.FlowNode> successNode;
+        public Outport<Flexi.FlowNode> timeoutNode;
         public Variable<int> milliseconds;
 
         private float currentTime;
         private bool received;
 
-        public override FlowNode Previous
+        public override Flexi.FlowNode Previous
         {
             get
             {
                 IReadOnlyList<Port> connections = previous.GetConnections();
-                return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
             }
         }
 
-        public override FlowNode Next
+        public override Flexi.FlowNode Next
         {
             get
             {
                 if (received)
                 {
                     IReadOnlyList<Port> connections = successNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
                 }
                 else
                 {
                     IReadOnlyList<Port> connections = timeoutNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
                 }
             }
         }
 
         protected override AbilityState DoLogic()
         {
-            (Actor as Unit).AbilitySlot.SetToRecastState();
+            Container.Unit.AbilitySlot.SetToRecastState();
             return AbilityState.PAUSE;
         }
 
@@ -58,7 +58,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             if (resumeContext is RecastContext)
             {
                 received = true;
-                (Actor as Unit).AbilitySlot.SetToDisabledState();
+                Container.Unit.AbilitySlot.SetToDisabledState();
                 return AbilityState.RUNNING;
             }
 
@@ -70,7 +70,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             currentTime += Time.deltaTime;
             if (currentTime * 1000 >= milliseconds.Value)
             {
-                (Actor as Unit).AbilitySlot.SetToDisabledState();
+                Container.Unit.AbilitySlot.SetToDisabledState();
                 return AbilityState.RUNNING;
             }
 

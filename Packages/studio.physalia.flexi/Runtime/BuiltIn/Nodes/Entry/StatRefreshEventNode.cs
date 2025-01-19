@@ -6,7 +6,7 @@ namespace Physalia.Flexi
     }
 
     [NodeCategory(BuiltInCategory.Entry)]
-    internal class StatRefreshEventNode : EntryNode<StatRefreshEvent>
+    internal class StatRefreshEventNode : EntryNode<AbilityDataContainer, StatRefreshEvent>
     {
         public Variable<int> order;
 

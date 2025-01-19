@@ -1,27 +1,43 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class GameSystem
+    public class GameSystem : MonoBehaviour
     {
-        private readonly GameDataManager gameDataManager;
-        private readonly AbilitySystem abilitySystem;
-        private readonly GameSetting gameSetting;
+        [SerializeField]
+        private GameSetting gameSetting;
 
+        private AssetManager assetManager;
+        private GameDataManager gameDataManager;
         private GamePresenter gamePresenter;
 
-        public GameSystem(GameDataManager gameDataManager, AbilitySystem abilitySystem, GameSetting gameSetting)
+        private void Awake()
         {
-            this.gameDataManager = gameDataManager;
-            this.abilitySystem = abilitySystem;
-            this.gameSetting = gameSetting;
+            LoadAllGameData();
+
+            DOTween.Init();
+            BuildGame();
+            StartGame();
         }
 
-        public void BuildGame()
+        private void LoadAllGameData()
         {
-            var game = new Game(gameSetting, gameDataManager, abilitySystem);
-            GameView gameView = Object.FindObjectOfType<GameView>();
+            assetManager = new AssetManager("Flexi/CardGameSample");
+            gameDataManager = new GameDataManager(assetManager);
+
+            gameDataManager.LoadAllData<CardData>("GameData/Cards");
+            gameDataManager.LoadAllData<HeroData>("GameData/Heroes");
+            gameDataManager.LoadAllData<EnemyData>("GameData/Enemies");
+            gameDataManager.LoadAllData<EnemyGroupData>("GameData/EnemyGroups");
+            gameDataManager.LoadAllData<StatusData>("GameData/Statuses");
+        }
+
+        private void BuildGame()
+        {
+            var game = new Game(assetManager, gameDataManager, gameSetting);
+            GameView gameView = FindObjectOfType<GameView>();
             gamePresenter = new GamePresenter(game, gameView);
 
             gamePresenter.Initialize();
@@ -31,12 +47,12 @@ namespace Physalia.Flexi.Samples.CardGame
             gamePresenter.SetUp(randomHeroData);
         }
 
-        public void StartGame()
+        private void StartGame()
         {
             gamePresenter.Start();
         }
 
-        public void Update()
+        private void Update()
         {
             if (gamePresenter == null)
             {
