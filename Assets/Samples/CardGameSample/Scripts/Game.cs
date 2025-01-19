@@ -8,16 +8,18 @@ namespace Physalia.Flexi.Samples.CardGame
         IReadOnlyList<Unit> Enemies { get; }
     }
 
-    public class Game : IUnitRepository
+    public class Game : IAbilitySystemWrapper, IUnitRepository
     {
         public event Action<Unit, PlayArea> GameSetUp;
         public event Action<Card> CardSelected;
         public event Action<object> GameEventReceived;
         public event Action<Card, IChoiceContext> ChoiceOccurred;
 
-        private readonly GameSetting gameSetting;
+        private readonly AssetManager assetManager;
         private readonly GameDataManager gameDataManager;
+        private readonly GameSetting gameSetting;
         private readonly AbilitySystem abilitySystem;
+        private readonly DefaultModifierHandler modifierHandler = new();
 
         private readonly Random generalRandom = new();
         private readonly HashSet<EnemyGroupData> groupDatas = new();
@@ -29,15 +31,27 @@ namespace Physalia.Flexi.Samples.CardGame
         private Unit heroUnit;
         private PlayArea playArea;
         private readonly List<Unit> enemyUnits = new();
+        private readonly List<Card> cards = new();
 
         public Player Player => player;
         public IReadOnlyList<Unit> Enemies => enemyUnits;
 
-        public Game(GameSetting gameSetting, GameDataManager gameDataManager, AbilitySystem abilitySystem)
+        public Game(AssetManager assetManager, GameDataManager gameDataManager, GameSetting gameSetting)
         {
-            this.gameSetting = gameSetting;
+            this.assetManager = assetManager;
             this.gameDataManager = gameDataManager;
-            this.abilitySystem = abilitySystem;
+            this.gameSetting = gameSetting;
+
+            var builder = new AbilitySystemBuilder();
+            builder.SetWrapper(this);
+            abilitySystem = builder.Build();
+
+            MacroAsset[] macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");
+            for (var i = 0; i < macroAssets.Length; i++)
+            {
+                MacroAsset macroAsset = macroAssets[i];
+                abilitySystem.LoadMacroGraph(macroAsset.name, macroAsset);
+            }
         }
 
         public void SetUp(HeroData heroData)
@@ -106,14 +120,50 @@ namespace Physalia.Flexi.Samples.CardGame
             GameEventReceived?.Invoke(context);
         }
 
-        private void ResolveEvent(IEventContext context)
+        #region Implement IAbilitySystemWrapper
+        public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
         {
-            abilitySystem.TryEnqueueAbility(heroUnit.AbilityContainers, context);
+            abilitySystem.TryEnqueueAbility(heroUnit.AbilityContainers, eventContext);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityContainers, context);
+                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityContainers, eventContext);
             }
         }
+
+        public IReadOnlyList<StatOwner> CollectStatRefreshOwners()
+        {
+            var result = new List<StatOwner>();
+            result.Add(heroUnit);
+            result.AddRange(enemyUnits);
+            result.AddRange(cards);
+            return result;
+        }
+
+        public IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers()
+        {
+            var result = new List<AbilityDataContainer>();
+            result.AddRange(heroUnit.AbilityContainers);
+            for (var i = 0; i < enemyUnits.Count; i++)
+            {
+                result.AddRange(enemyUnits[i].AbilityContainers);
+            }
+            for (var i = 0; i < cards.Count; i++)
+            {
+                result.AddRange(cards[i].AbilityContainers);
+            }
+            return result;
+        }
+
+        public void OnBeforeCollectModifiers()
+        {
+
+        }
+
+        public void ApplyModifiers(StatOwner statOwner)
+        {
+            modifierHandler.ApplyModifiers(statOwner);
+        }
+        #endregion
 
         private Player CreatePlayer(HeroData heroData)
         {
@@ -175,6 +225,7 @@ namespace Physalia.Flexi.Samples.CardGame
             for (var i = 0; i < startCardDatas.Count; i++)
             {
                 Card card = CreateCard(startCardDatas[i]);
+                cards.Add(card);
                 startCards.Add(card);
             }
 

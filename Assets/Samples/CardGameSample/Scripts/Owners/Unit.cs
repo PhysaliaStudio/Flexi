@@ -2,13 +2,11 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class Unit : StatOwner
+    public class Unit : Entity
     {
         private readonly IUnitData unitData;
         private readonly Dictionary<StatusData, int> statusTable = new();
         private readonly Dictionary<AbilityDataSource, AbilityContainer> sourceToContainerTable = new();
-
-        private readonly List<AbilityContainer> containers = new();
 
         private int health;
 
@@ -19,8 +17,6 @@ namespace Physalia.Flexi.Samples.CardGame
         public int Health { get => health; set => health = value; }
         public int HealthMax => GetStat(StatId.HEALTH_MAX).CurrentValue;
 
-        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
-
         public Unit(IUnitData unitData)
         {
             this.unitData = unitData;
@@ -29,27 +25,6 @@ namespace Physalia.Flexi.Samples.CardGame
         public override string ToString()
         {
             return Name;
-        }
-
-        public void AppendAbilityContainer(AbilityContainer container)
-        {
-            container.unit = this;
-            containers.Add(container);
-        }
-
-        public void RemoveAbilityContainer(AbilityContainer container)
-        {
-            container.CleanUp();
-            containers.Remove(container);
-        }
-
-        public void ClearAbilityContainers()
-        {
-            for (var i = 0; i < containers.Count; i++)
-            {
-                containers[i].CleanUp();
-            }
-            containers.Clear();
         }
 
         public int GetStatusStack(StatusData statusData)

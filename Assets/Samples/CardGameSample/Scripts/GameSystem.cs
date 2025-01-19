@@ -5,22 +5,22 @@ namespace Physalia.Flexi.Samples.CardGame
 {
     public class GameSystem
     {
+        private readonly AssetManager assetManager;
         private readonly GameDataManager gameDataManager;
-        private readonly AbilitySystem abilitySystem;
         private readonly GameSetting gameSetting;
 
         private GamePresenter gamePresenter;
 
-        public GameSystem(GameDataManager gameDataManager, AbilitySystem abilitySystem, GameSetting gameSetting)
+        public GameSystem(AssetManager assetManager, GameDataManager gameDataManager, GameSetting gameSetting)
         {
+            this.assetManager = assetManager;
             this.gameDataManager = gameDataManager;
-            this.abilitySystem = abilitySystem;
             this.gameSetting = gameSetting;
         }
 
         public void BuildGame()
         {
-            var game = new Game(gameSetting, gameDataManager, abilitySystem);
+            var game = new Game(assetManager, gameDataManager, gameSetting);
             GameView gameView = Object.FindObjectOfType<GameView>();
             gamePresenter = new GamePresenter(game, gameView);
 

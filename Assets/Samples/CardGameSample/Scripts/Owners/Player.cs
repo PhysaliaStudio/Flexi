@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class Player : StatOwner
+    public class Player : Entity
     {
         private int mana;
         private int coin;
