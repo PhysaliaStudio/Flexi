@@ -1,93 +1,32 @@
-using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    /// <summary>
-    /// Actor is a wrapper class of <see cref="StatOwner"/>, which is used for inheritance.
-    /// </summary>
-    public abstract class Actor
+    public abstract class Actor : StatOwner
     {
-        private readonly StatOwner owner;
+        private readonly List<AbilityContainer> containers = new(2);
 
-        private readonly List<AbilityDataContainer> abilityDataContainers = new(2);
+        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
 
-        internal StatOwner Owner => owner;
-        internal IReadOnlyDictionary<int, Stat> Stats => owner.Stats;
-        public IReadOnlyList<AbilityDataContainer> AbilityDataContainers => abilityDataContainers;
-        public IReadOnlyList<StatModifier> Modifiers => owner.Modifiers;
-
-        public Actor()
+        public void AppendAbilityContainer(AbilityContainer container)
         {
-
+            container.actor = this;
+            containers.Add(container);
         }
 
-        public void AddStat<TEnum>(TEnum statId, int baseValue) where TEnum : Enum
+        public void RemoveAbilityContainer(AbilityContainer container)
         {
-            owner.AddStat(statId, baseValue);
+            container.actor = null;
+            containers.Remove(container);
         }
 
-        public void RemoveStat<TEnum>(TEnum statId) where TEnum : Enum
+        public void ClearAllAbilityContainers()
         {
-            owner.RemoveStat(statId);
-        }
-
-        public Stat GetStat<TEnum>(TEnum statId) where TEnum : Enum
-        {
-            return owner.GetStat(statId);
-        }
-
-        public void AddStat(int statId, int baseValue)
-        {
-            owner.AddStat(statId, baseValue);
-        }
-
-        public void RemoveStat(int statId)
-        {
-            owner.RemoveStat(statId);
-        }
-
-        public Stat GetStat(int statId)
-        {
-            return owner.GetStat(statId);
-        }
-
-        public void AppendAbilityDataContainer(AbilityDataContainer container)
-        {
-            abilityDataContainers.Add(container);
-        }
-
-        public bool RemoveAbilityDataContainer(AbilityDataContainer container)
-        {
-            return abilityDataContainers.Remove(container);
-        }
-
-        public void ClearAllAbilityDataContainers()
-        {
-            abilityDataContainers.Clear();
-        }
-
-        public void AppendModifier(StatModifier modifier)
-        {
-            owner.AppendModifier(modifier);
-        }
-
-        public void AppendModifiers(IReadOnlyList<StatModifier> modifiers)
-        {
-            for (var i = 0; i < modifiers.Count; i++)
+            for (var i = 0; i < containers.Count; i++)
             {
-                owner.AppendModifier(modifiers[i]);
+                containers[i].actor = null;
             }
-        }
-
-        public void RemoveModifier(StatModifier modifier)
-        {
-            owner.RemoveModifier(modifier);
-        }
-
-        public void ClearAllModifiers()
-        {
-            owner.ClearAllModifiers();
+            containers.Clear();
         }
 
         /// <summary>
@@ -96,11 +35,6 @@ namespace Physalia.Flexi.Tests
         public void ApplyModifiers()
         {
             // TODO
-        }
-
-        internal void ResetAllStats()
-        {
-            owner.ResetAllStats();
         }
     }
 }
