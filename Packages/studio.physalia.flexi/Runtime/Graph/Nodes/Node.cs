@@ -35,8 +35,25 @@ namespace Physalia.Flexi
         #region AbilityInstance Members
         public AbilityFlow Flow => flow;
         public Ability Ability => flow?.Ability;
-        public AbilityDataContainer Container => flow?.Ability?.Container;
         #endregion
+
+        internal TContainer GetContainer<TContainer>() where TContainer : AbilityDataContainer
+        {
+            AbilityDataContainer baseContainer = flow?.Ability?.Container;
+            if (baseContainer == null)
+            {
+                Logger.Error($"{GetType().Name}: container is null");
+                return null;
+            }
+
+            if (baseContainer is TContainer container)
+            {
+                return container;
+            }
+
+            Logger.Error($"{GetType().Name}: Expect container is type: {typeof(TContainer).Name}, but is {baseContainer.GetType().Name}");
+            return null;
+        }
 
         internal void AddInport(string name, Inport inport)
         {

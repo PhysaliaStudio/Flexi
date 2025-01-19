@@ -14,26 +14,7 @@ namespace Physalia.Flexi
         where TContainer : AbilityDataContainer
         where TEventContext : IEventContext
     {
-        public new TContainer Container
-        {
-            get
-            {
-                AbilityDataContainer baseContainer = base.Container;
-                if (baseContainer == null)
-                {
-                    Logger.Error($"{GetType().Name}: container is null");
-                    return null;
-                }
-
-                if (baseContainer is TContainer container)
-                {
-                    return container;
-                }
-
-                Logger.Error($"{GetType().Name}: Expect container is type: {typeof(TContainer).Name}, but is {baseContainer.GetType().Name}");
-                return null;
-            }
-        }
+        public TContainer Container => GetContainer<TContainer>();
 
         public override Type ContextType => typeof(TEventContext);
 
@@ -53,26 +34,7 @@ namespace Physalia.Flexi
     public abstract class EntryNode<TContainer> : EntryNodeBase
         where TContainer : AbilityDataContainer
     {
-        public new TContainer Container
-        {
-            get
-            {
-                AbilityDataContainer baseContainer = base.Container;
-                if (baseContainer == null)
-                {
-                    Logger.Error($"{GetType().Name}: container is null");
-                    return null;
-                }
-
-                if (baseContainer is TContainer container)
-                {
-                    return container;
-                }
-
-                Logger.Error($"{GetType().Name}: Expect container is type: {typeof(TContainer).Name}, but is {baseContainer.GetType().Name}");
-                return null;
-            }
-        }
+        public TContainer Container => GetContainer<TContainer>();
 
         public sealed override Type ContextType => typeof(EmptyContext);
 
