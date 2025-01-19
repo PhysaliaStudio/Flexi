@@ -1,6 +1,6 @@
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
-    [NodeCategory(BuiltInCategory.Common)]
+    [NodeCategoryForTests]
     public class ActorNode : ValueNode
     {
         public Outport<Actor> actor;
@@ -9,7 +9,7 @@ namespace Physalia.Flexi
         {
             if (Flow != null)
             {
-                actor.SetValue(Container.Actor);
+                actor.SetValue(Actor);
             }
             else
             {

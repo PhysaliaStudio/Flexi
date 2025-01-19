@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         protected override AbilityState DoLogic()
         {
-            AbilitySlot slot = (Container.Actor as Unit).AbilitySlot;
+            AbilitySlot slot = SelfUnit.AbilitySlot;
             switch (state.Value)
             {
                 case AbilitySlot.State.OPEN:

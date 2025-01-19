@@ -14,7 +14,7 @@ namespace Physalia.Flexi.Tests
 
         public override bool CanExecute(Context context)
         {
-            if (context.target == Container.Actor)
+            if (context.target == Actor)
             {
                 return true;
             }

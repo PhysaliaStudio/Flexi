@@ -10,13 +10,36 @@ namespace Physalia.Flexi
         // Empty Content
     }
 
-    public abstract class EntryNode<T> : EntryNodeBase where T : IEventContext
+    public abstract class EntryNode<TContainer, TEventContext> : EntryNodeBase
+        where TContainer : AbilityDataContainer
+        where TEventContext : IEventContext
     {
-        public override Type ContextType => typeof(T);
+        public new TContainer Container
+        {
+            get
+            {
+                AbilityDataContainer baseContainer = base.Container;
+                if (baseContainer == null)
+                {
+                    Logger.Error($"{GetType().Name}: container is null");
+                    return null;
+                }
+
+                if (baseContainer is TContainer container)
+                {
+                    return container;
+                }
+
+                Logger.Error($"{GetType().Name}: Expect container is type: {typeof(TContainer).Name}, but is {baseContainer.GetType().Name}");
+                return null;
+            }
+        }
+
+        public override Type ContextType => typeof(TEventContext);
 
         protected internal sealed override bool CanExecute(IEventContext contextBase)
         {
-            if (contextBase != null && contextBase is T context)
+            if (contextBase != null && contextBase is TEventContext context)
             {
                 return CanExecute(context);
             }
@@ -24,11 +47,33 @@ namespace Physalia.Flexi
             return false;
         }
 
-        public abstract bool CanExecute(T context);
+        public abstract bool CanExecute(TEventContext context);
     }
 
-    public abstract class EntryNode : EntryNodeBase
+    public abstract class EntryNode<TContainer> : EntryNodeBase
+        where TContainer : AbilityDataContainer
     {
+        public new TContainer Container
+        {
+            get
+            {
+                AbilityDataContainer baseContainer = base.Container;
+                if (baseContainer == null)
+                {
+                    Logger.Error($"{GetType().Name}: container is null");
+                    return null;
+                }
+
+                if (baseContainer is TContainer container)
+                {
+                    return container;
+                }
+
+                Logger.Error($"{GetType().Name}: Expect container is type: {typeof(TContainer).Name}, but is {baseContainer.GetType().Name}");
+                return null;
+            }
+        }
+
         public sealed override Type ContextType => typeof(EmptyContext);
 
         protected internal sealed override bool CanExecute(IEventContext contextBase)

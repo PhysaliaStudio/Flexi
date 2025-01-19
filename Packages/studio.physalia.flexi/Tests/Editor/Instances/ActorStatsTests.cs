@@ -54,7 +54,7 @@ namespace Physalia.Flexi.Tests
         public void AppendAbilityDataContainer_OriginalContainersCountIs0_ContainersCountReturns1()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
@@ -66,7 +66,7 @@ namespace Physalia.Flexi.Tests
         public void RemoveAbilityDataContainer_OriginalContainersCountIs1_ContainersCountReturns0()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
@@ -79,8 +79,8 @@ namespace Physalia.Flexi.Tests
         public void ClearAllAbilityDataContainers_OriginalContainersCountIs2_ContainersCountReturns0()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container1 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
-            var container2 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container1 = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container2 = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container1);
@@ -94,41 +94,41 @@ namespace Physalia.Flexi.Tests
         public void AppendAbilityDataContainer_ContainerActorReturnsOwner()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
 
-            Assert.AreEqual(actor, container.Actor);
+            Assert.AreEqual(actor, container.actor);
         }
 
         [Test]
         public void RemoveAbilityDataContainer_ContainerActorReturnsNull()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container);
             actor.RemoveAbilityDataContainer(container);
 
-            Assert.AreEqual(null, container.Actor);
+            Assert.AreEqual(null, container.actor);
         }
 
         [Test]
         public void ClearAllAbilityDataContainers_EachContainerActorReturnsNull()
         {
             AbilityData abilityData = CreateAbilityDataWith1Group();
-            var container1 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
-            var container2 = new AbilityDataContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container1 = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
+            var container2 = new AbilityContainer { DataSource = abilityData.CreateDataSource(0) };
 
             Actor actor = new EmptyActor();
             actor.AppendAbilityDataContainer(container1);
             actor.AppendAbilityDataContainer(container2);
             actor.ClearAllAbilityDataContainers();
 
-            Assert.AreEqual(null, container1.Actor);
-            Assert.AreEqual(null, container2.Actor);
+            Assert.AreEqual(null, container1.actor);
+            Assert.AreEqual(null, container2.actor);
         }
     }
 }

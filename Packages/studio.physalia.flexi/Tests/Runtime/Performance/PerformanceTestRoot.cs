@@ -26,8 +26,8 @@ namespace Physalia.Flexi.Tests
             for (var i = 0; i < abilityCountPerFrame; i++)
             {
                 var character = new CustomCharacter();
-                var abilityDataContainer = new AbilityDataContainer { DataSource = abilityDataSource };
-                character.AppendAbilityDataContainer(abilityDataContainer);
+                var abilityDataContainer = new AbilityContainer { DataSource = abilityDataSource };
+                character.AppendAbilityContainer(abilityDataContainer);
 
                 characters.Add(character);
             }
@@ -42,7 +42,7 @@ namespace Physalia.Flexi.Tests
 
             for (var i = 0; i < characters.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(characters[i].AbilityDataContainers, null);
+                abilitySystem.TryEnqueueAbility(characters[i].AbilityContainers, null);
             }
 
             abilitySystem.Run();

@@ -54,22 +54,16 @@ namespace Physalia.Flexi
 
         public void AppendAbilityDataContainer(AbilityDataContainer container)
         {
-            container.Actor = this;
             abilityDataContainers.Add(container);
         }
 
         public bool RemoveAbilityDataContainer(AbilityDataContainer container)
         {
-            container.Actor = null;
             return abilityDataContainers.Remove(container);
         }
 
         public void ClearAllAbilityDataContainers()
         {
-            for (var i = 0; i < abilityDataContainers.Count; i++)
-            {
-                abilityDataContainers[i].Actor = null;
-            }
             abilityDataContainers.Clear();
         }
 

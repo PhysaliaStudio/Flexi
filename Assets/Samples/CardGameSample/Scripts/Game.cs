@@ -275,7 +275,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             if (context is SingleTargetChoiceContext singleTargetChoiceContext)
             {
-                Card card = singleTargetChoiceContext.actor as Card;
+                Card card = singleTargetChoiceContext.card;
                 if (card != null)
                 {
                     ChoiceOccurred?.Invoke(card, context);
