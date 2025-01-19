@@ -4,12 +4,7 @@ namespace Physalia.Flexi.Tests
 {
     public class AbilitySystemWrapperDefault : IAbilitySystemWrapper
     {
-        private readonly List<IModifierHandler> handlers = new()
-        {
-            new AddendModifierHandler(),
-            new MultiplierModifierHandler(),
-        };
-
+        private readonly DefaultModifierHandler modifierHandler = new();
         private readonly List<Actor> actors = new();
 
         public void AppendActor(Actor actor)
@@ -48,16 +43,9 @@ namespace Physalia.Flexi.Tests
 
         }
 
-        public void ApplyModifiers()
+        public void ApplyModifiers(StatOwner statOwner)
         {
-            for (var i = 0; i < actors.Count; i++)
-            {
-                actors[i].ResetAllStats();
-                for (var j = 0; j < handlers.Count; j++)
-                {
-                    handlers[j].ApplyModifiers(actors[i]);
-                }
-            }
+            modifierHandler.ApplyModifiers(statOwner);
         }
         #endregion
     }

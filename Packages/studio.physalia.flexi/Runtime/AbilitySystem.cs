@@ -11,7 +11,7 @@ namespace Physalia.Flexi
         IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers();
 
         void OnBeforeCollectModifiers();
-        void ApplyModifiers();
+        void ApplyModifiers(StatOwner statOwner);
     }
 
     public class AbilitySystem
@@ -273,17 +273,26 @@ namespace Physalia.Flexi
             // 2. Do user method before collecting modifiers.
             wrapper.OnBeforeCollectModifiers();
 
-            // 3. Collect all modifiers from user graphs.
-            DoStatRefreshLogicForAllOwners();
+            // 3. Do apply all modifiers first, to promise it's at least run once.
+            for (var i = 0; i < owners.Count; i++)
+            {
+                ApplyStatOwnerModifiers(owners[i]);
+            }
 
-            // 4. Apply all modifiers to stats.
-            wrapper.ApplyModifiers();
+            // 4. Iterate all containers, and ApplyStatOwnerModifiers layer by layer.
+            DoStatRefreshLogicForAllOwners(owners, wrapper.CollectStatRefreshContainers());
+        }
+
+        public void ApplyStatOwnerModifiers(StatOwner statOwner)
+        {
+            statOwner.ResetAllStats();
+            wrapper.ApplyModifiers(statOwner);
         }
 
         /// <remarks>
         /// StatRefresh does not run with other events and abilities. It runs in another line.
         /// </remarks>
-        private void DoStatRefreshLogicForAllOwners()
+        private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityDataContainer> containers)
         {
             // If no StatRefreshEventNode, just return.
             bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
@@ -292,7 +301,6 @@ namespace Physalia.Flexi
                 return;
             }
 
-            IReadOnlyList<AbilityDataContainer> containers = wrapper.CollectStatRefreshContainers();
             for (var i = 0; i < containers.Count; i++)
             {
                 AbilityDataContainer container = containers[i];
@@ -330,7 +338,10 @@ namespace Physalia.Flexi
                 if (orderList.Count > 0)
                 {
                     RunStatRefreshFlows(orderList);
-                    wrapper.ApplyModifiers();
+                    for (var ownerIndex = 0; ownerIndex < owners.Count; ownerIndex++)
+                    {
+                        ApplyStatOwnerModifiers(owners[ownerIndex]);
+                    }
                 }
             }
 

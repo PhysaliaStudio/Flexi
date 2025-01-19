@@ -24,7 +24,7 @@ namespace Physalia.Flexi.Tests
             throw new System.NotImplementedException();
         }
 
-        public void ApplyModifiers()
+        public void ApplyModifiers(StatOwner statOwner)
         {
             throw new System.NotImplementedException();
         }
