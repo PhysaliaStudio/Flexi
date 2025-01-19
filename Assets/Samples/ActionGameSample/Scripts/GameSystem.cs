@@ -59,6 +59,11 @@ namespace Physalia.Flexi.Samples.ActionGame
         }
 
         #region Implement IAbilitySystemWrapper
+        public void OnEventReceived(IEventContext eventContext)
+        {
+
+        }
+
         public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
         {
             abilitySystem.TryEnqueueAbility(playerUnit.AbilityContainers, eventContext);

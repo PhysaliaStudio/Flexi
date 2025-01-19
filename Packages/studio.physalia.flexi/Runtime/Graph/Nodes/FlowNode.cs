@@ -86,12 +86,6 @@ namespace Physalia.Flexi
             Flow?.Push(this);
         }
 
-        protected AbilityState WaitAndChoice(IChoiceContext context)
-        {
-            Flow.System?.TriggerChoice(context);
-            return AbilityState.PAUSE;
-        }
-
         protected void EnqueueEvent(IEventContext eventContext)
         {
             Flow.System?.EnqueueEvent(eventContext);

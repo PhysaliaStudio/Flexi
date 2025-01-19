@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         private readonly IUnitData unitData;
         private readonly Dictionary<StatusData, int> statusTable = new();
-        private readonly Dictionary<AbilityDataSource, AbilityContainer> sourceToContainerTable = new();
+        private readonly Dictionary<StatusData, AbilityContainer> statusToContainerTable = new();
 
         private int health;
 
@@ -40,14 +40,8 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        public void AddAbilityStack(StatusData statusData, int stack)
+        public void AddStatusStack(StatusData statusData, int stack)
         {
-            if (stack <= 0)
-            {
-                Logger.Warn($"[{nameof(Unit)}] AddAbilityStack failed! Given stack is less or equal to 0 (stack = {stack})");
-                return;
-            }
-
             if (statusTable.ContainsKey(statusData))
             {
                 statusTable[statusData] += stack;
@@ -55,44 +49,39 @@ namespace Physalia.Flexi.Samples.CardGame
             else
             {
                 statusTable.Add(statusData, stack);
-
-                AbilityData abilityData = statusData.AbilityAsset.Data;
-                for (var i = 0; i < abilityData.graphGroups.Count; i++)
-                {
-                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                    var container = new AbilityContainer { DataSource = abilityDataSource };
-                    sourceToContainerTable.Add(abilityDataSource, container);
-                    AppendAbilityContainer(container);
-                }
             }
         }
 
-        public void RemoveAbilityStack(StatusData statusData, int stack)
+        public void RemoveStatusStack(StatusData statusData, int stack)
         {
-            if (stack <= 0)
-            {
-                Logger.Warn($"[{nameof(Unit)}] RemoveAbilityStack failed! Given stack is less or equal to 0 (stack = {stack})");
-                return;
-            }
-
             if (statusTable.ContainsKey(statusData))
             {
                 statusTable[statusData] -= stack;
                 if (statusTable[statusData] <= 0)
                 {
                     statusTable.Remove(statusData);
-
-                    AbilityData abilityData = statusData.AbilityAsset.Data;
-                    for (var i = 0; i < abilityData.graphGroups.Count; i++)
-                    {
-                        AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                        bool success = sourceToContainerTable.Remove(abilityDataSource, out AbilityContainer container);
-                        if (success)
-                        {
-                            RemoveAbilityContainer(container);
-                        }
-                    }
                 }
+            }
+        }
+
+        public void AppendStatusContainer(StatusData statusData, AbilityContainer container)
+        {
+            if (statusToContainerTable.ContainsKey(statusData))
+            {
+                Logger.Warn($"[{nameof(Unit)}] AppendStatusContainer failed! StatusData already has a container (statusData = {statusData})");
+                return;
+            }
+
+            statusToContainerTable.Add(statusData, container);
+            AppendAbilityContainer(container);
+        }
+
+        public void RemoveStatusContainer(StatusData statusData)
+        {
+            bool success = statusToContainerTable.Remove(statusData, out AbilityContainer container);
+            if (success)
+            {
+                RemoveAbilityContainer(container);
             }
         }
     }

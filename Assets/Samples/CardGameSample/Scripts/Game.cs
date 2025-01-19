@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
@@ -13,7 +14,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public event Action<Unit, PlayArea> GameSetUp;
         public event Action<Card> CardSelected;
         public event Action<object> GameEventReceived;
-        public event Action<Card, IChoiceContext> ChoiceOccurred;
+        public event Action<Card> ChoiceOccurred;
 
         private readonly AssetManager assetManager;
         private readonly GameDataManager gameDataManager;
@@ -21,11 +22,11 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly AbilitySystem abilitySystem;
         private readonly DefaultModifierHandler modifierHandler = new();
 
-        private readonly Random generalRandom = new();
+        private readonly System.Random generalRandom = new();
         private readonly HashSet<EnemyGroupData> groupDatas = new();
 
-        private List<AbilityDataContainer> gameStartProcess;
-        private List<AbilityDataContainer> turnEndProcess;
+        private List<AbilityContainer> gameStartProcess;
+        private List<AbilityContainer> turnEndProcess;
 
         private Player player;
         private Unit heroUnit;
@@ -62,10 +63,6 @@ namespace Physalia.Flexi.Samples.CardGame
                 groupDatas.Add(groupData);
             }
 
-            abilitySystem.EventOccurred += OnEventOccurred;
-            abilitySystem.ChoiceOccurred += OnChoiceOccurred;
-            //abilitySystem.EventResolveMethod = ResolveEvent;
-
             AbilityDataSource turnStartEffect = gameSetting.turnStartGraph.Data.CreateDataSource(0);
             AbilityDataSource turnEndEffect = gameSetting.turnEndGraph.Data.CreateDataSource(0);
             AbilityDataSource enemyGenerationEffect = gameSetting.enemyGenerationGraph.Data.CreateDataSource(0);
@@ -75,14 +72,14 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
             CacheAllStatusAbility();
 
-            gameStartProcess = new List<AbilityDataContainer> {
-                new AbilityDataContainer { DataSource = enemyGenerationEffect },
-                new AbilityDataContainer { DataSource = turnStartEffect },
+            gameStartProcess = new List<AbilityContainer> {
+                new(this, enemyGenerationEffect),
+                new(this, turnStartEffect),
             };
-            turnEndProcess = new List<AbilityDataContainer> {
-                new AbilityDataContainer { DataSource = turnEndEffect },
-                new AbilityDataContainer { DataSource = enemyGenerationEffect },
-                new AbilityDataContainer { DataSource = turnStartEffect },
+            turnEndProcess = new List<AbilityContainer> {
+                new(this, turnEndEffect),
+                new(this, enemyGenerationEffect),
+                new(this, turnStartEffect),
             };
 
             player = CreatePlayer(heroData);
@@ -106,21 +103,21 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        private void OnEventOccurred(IEventContext context)
+        #region Implement IAbilitySystemWrapper
+        public void OnEventReceived(IEventContext eventContext)
         {
-            if (context is PlayCardEvent playCardEvent)
+            if (eventContext is PlayCardEvent playCardEvent)
             {
                 playArea.MoveCardFromHandToDiscardPile(playCardEvent.card);
             }
-            else if (context is DeathEvent deathEvent)
+            else if (eventContext is DeathEvent deathEvent)
             {
                 enemyUnits.Remove(deathEvent.target);
             }
 
-            GameEventReceived?.Invoke(context);
+            GameEventReceived?.Invoke(eventContext);
         }
 
-        #region Implement IAbilitySystemWrapper
         public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
         {
             abilitySystem.TryEnqueueAbility(heroUnit.AbilityContainers, eventContext);
@@ -200,7 +197,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    var container = new AbilityContainer { DataSource = abilityDataSource };
+                    var container = new AbilityContainer(this, abilityDataSource);
                     unit.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
@@ -243,7 +240,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    var container = new AbilityContainer { DataSource = abilityDataSource };
+                    var container = new AbilityContainer(this, abilityDataSource);
                     card.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
@@ -322,15 +319,12 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        private void OnChoiceOccurred(IChoiceContext context)
+        public void StartSingleTargetChoice(Card card, UnitType unitType)
         {
-            if (context is SingleTargetChoiceContext singleTargetChoiceContext)
+            if (card != null)
             {
-                Card card = singleTargetChoiceContext.card;
-                if (card != null)
-                {
-                    ChoiceOccurred?.Invoke(card, context);
-                }
+                Debug.Log($"!!!!!!!!!! Start Single Choice");
+                ChoiceOccurred?.Invoke(card);
             }
         }
 
@@ -353,14 +347,40 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void ApplyStatus(Unit unit, int statusId, int stack)
         {
+            if (stack <= 0)
+            {
+                Logger.Warn($"ApplyStatus failed! Given stack is less or equal to 0 (stack = {stack})");
+                return;
+            }
+
             StatusData statusData = gameDataManager.GetData<StatusData>(statusId);
-            unit.AddAbilityStack(statusData, stack);
+            if (unit.GetStatusStack(statusData) == 0)
+            {
+                AbilityData abilityData = statusData.AbilityAsset.Data;
+                if (abilityData.graphGroups.Count > 0)
+                {
+                    AbilityDataSource abilityDataSource = abilityData.CreateDataSource(0);
+                    var container = new AbilityContainer(this, abilityDataSource);
+                    unit.AppendStatusContainer(statusData, container);
+                }
+            }
+            unit.AddStatusStack(statusData, stack);
         }
 
         public void RemoveStatus(Unit unit, int statusId, int stack)
         {
+            if (stack <= 0)
+            {
+                Logger.Warn($"RemoveStatus failed! Given stack is less or equal to 0 (stack = {stack})");
+                return;
+            }
+
             StatusData statusData = gameDataManager.GetData<StatusData>(statusId);
-            unit.RemoveAbilityStack(statusData, stack);
+            unit.RemoveStatusStack(statusData, stack);
+            if (unit.GetStatusStack(statusData) == 0)
+            {
+                unit.RemoveStatusContainer(statusData);
+            }
         }
 
         public void EndTurn()

@@ -5,6 +5,7 @@ namespace Physalia.Flexi
 {
     public interface IAbilitySystemWrapper
     {
+        void OnEventReceived(IEventContext eventContext);
         void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext);
 
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
@@ -18,9 +19,6 @@ namespace Physalia.Flexi
     {
         private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
-
-        public event Action<IEventContext> EventOccurred;
-        public event Action<IChoiceContext> ChoiceOccurred;
 
         private readonly IAbilitySystemWrapper wrapper;
         private readonly AbilityFlowRunner runner;
@@ -158,7 +156,7 @@ namespace Physalia.Flexi
         public void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
-            EventOccurred?.Invoke(eventContext);
+            wrapper.OnEventReceived(eventContext);
         }
 
         internal void TriggerCachedEvents(AbilityFlowRunner runner)
@@ -383,11 +381,6 @@ namespace Physalia.Flexi
                     statRefreshFlowOrderLists[i].Clear();
                 }
             }
-        }
-
-        internal void TriggerChoice(IChoiceContext context)
-        {
-            ChoiceOccurred?.Invoke(context);
         }
 
         private void CacheEntryHandles(AbilityDataSource abilityDataSource)

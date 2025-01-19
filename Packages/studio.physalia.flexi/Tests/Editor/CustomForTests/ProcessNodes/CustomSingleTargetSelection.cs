@@ -1,10 +1,5 @@
 namespace Physalia.Flexi.Tests
 {
-    public class CustomSingleTargetChoiseContext : IChoiceContext
-    {
-        public CustomUnit target;
-    }
-
     public class CustomSingleTargetAnswerContext : IResumeContext
     {
         public CustomUnit target;
@@ -17,7 +12,8 @@ namespace Physalia.Flexi.Tests
 
         protected override AbilityState DoLogic()
         {
-            return WaitAndChoice(new CustomSingleTargetChoiseContext());
+            SystemWrapper.TriggerChoice();
+            return AbilityState.PAUSE;
         }
 
         public override bool CheckNodeContext(IResumeContext resumeContext)

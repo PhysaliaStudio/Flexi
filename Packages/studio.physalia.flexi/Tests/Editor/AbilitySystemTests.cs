@@ -13,7 +13,7 @@ namespace Physalia.Flexi.Tests
         private AbilityContainer CreateAbilityContainer(AbilityDataSource dataSource)
         {
             abilitySystem.CreateAbilityPool(dataSource, 2);
-            return new AbilityContainer { DataSource = dataSource };
+            return new AbilityContainer { systemWrapper = wrapper, DataSource = dataSource };
         }
 
         private CustomUnit CreateUnit(CustomUnitData data)
@@ -166,14 +166,14 @@ namespace Physalia.Flexi.Tests
             AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
-            IChoiceContext choiceContext = null;
-            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+            bool choiceTriggered = false;
+            wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
             bool success = abilitySystem.TryEnqueueAbility(container, context);
             abilitySystem.Run();
 
             Assert.AreEqual(true, success);
-            Assert.IsNotNull(choiceContext);
+            Assert.AreEqual(true, choiceTriggered);
             Assert.AreEqual(6, unit2.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
         }
 
@@ -186,14 +186,14 @@ namespace Physalia.Flexi.Tests
             AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
-            IChoiceContext choiceContext = null;
-            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+            bool choiceTriggered = false;
+            wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
             bool success = abilitySystem.TryEnqueueAbility(container, context);
             abilitySystem.Run();
 
             Assert.AreEqual(true, success);
-            Assert.IsNotNull(choiceContext);
+            Assert.AreEqual(true, choiceTriggered);
 
             var answerContext = new CustomSingleTargetAnswerContext { target = unit2 };
             abilitySystem.Resume(answerContext);
@@ -210,14 +210,14 @@ namespace Physalia.Flexi.Tests
             AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
-            IChoiceContext choiceContext = null;
-            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+            bool choiceTriggered = false;
+            wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
             bool success = abilitySystem.TryEnqueueAbility(container, context);
             abilitySystem.Run();
 
             Assert.AreEqual(true, success);
-            Assert.IsNotNull(choiceContext);
+            Assert.AreEqual(true, choiceTriggered);
 
             var answerContext = new CustomSingleTargetAnswerContext { target = null };
             abilitySystem.Resume(answerContext);
@@ -235,14 +235,14 @@ namespace Physalia.Flexi.Tests
             AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
-            IChoiceContext choiceContext = null;
-            abilitySystem.ChoiceOccurred += context => choiceContext = context;
+            bool choiceTriggered = false;
+            wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
             bool success = abilitySystem.TryEnqueueAbility(container, context);
             abilitySystem.Run();
 
             Assert.AreEqual(true, success);
-            Assert.IsNotNull(choiceContext);
+            Assert.AreEqual(true, choiceTriggered);
 
             abilitySystem.Resume(new CustomCancellation());
 

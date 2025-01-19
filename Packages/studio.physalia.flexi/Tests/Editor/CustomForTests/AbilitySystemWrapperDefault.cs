@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
     public class AbilitySystemWrapperDefault : IAbilitySystemWrapper
     {
+        public event Action ChoiceTriggered;
+
         private readonly DefaultModifierHandler modifierHandler = new();
         private readonly List<Actor> actors = new();
 
@@ -12,7 +15,17 @@ namespace Physalia.Flexi.Tests
             actors.Add(actor);
         }
 
+        public void TriggerChoice()
+        {
+            ChoiceTriggered?.Invoke();
+        }
+
         #region Implement IAbilitySystemWrapper
+        public void OnEventReceived(IEventContext eventContext)
+        {
+
+        }
+
         public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
         {
             for (var i = 0; i < actors.Count; i++)
