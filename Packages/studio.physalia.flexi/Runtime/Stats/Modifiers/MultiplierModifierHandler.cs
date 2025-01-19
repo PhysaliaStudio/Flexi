@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class MultiplierModifierHandler : IModifierHandler
+    public class MultiplierModifierHandler
     {
         private readonly Dictionary<int, int> sumsCache = new();
 
