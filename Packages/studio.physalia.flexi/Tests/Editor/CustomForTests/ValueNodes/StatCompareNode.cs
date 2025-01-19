@@ -1,6 +1,6 @@
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
-    [NodeCategory(BuiltInCategory.Stats)]
+    [NodeCategoryForTests]
     public class StatCompareNode : ValueNode
     {
         public Inport<Actor> actorPort;

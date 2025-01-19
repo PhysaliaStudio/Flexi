@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
     /// <summary>
     /// Actor is a wrapper class of <see cref="StatOwner"/>, which is used for inheritance.

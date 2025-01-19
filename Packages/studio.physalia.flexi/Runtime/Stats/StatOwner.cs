@@ -12,10 +12,10 @@ namespace Physalia.Flexi
         private readonly Dictionary<int, Stat> stats = new();
         private readonly List<StatModifier> modifiers = new();
 
-        internal IReadOnlyDictionary<int, Stat> Stats => stats;
-        internal IReadOnlyList<StatModifier> Modifiers => modifiers;
+        public IReadOnlyDictionary<int, Stat> Stats => stats;
+        public IReadOnlyList<StatModifier> Modifiers => modifiers;
 
-        internal StatOwner()
+        public StatOwner()
         {
 
         }

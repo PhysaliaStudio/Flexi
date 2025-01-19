@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
-    [NodeCategory(BuiltInCategory.Stats)]
+    [NodeCategoryForTests]
     public class ConditionalModifierNode : ProcessNode
     {
         public Inport<IReadOnlyList<Actor>> actorsPort;

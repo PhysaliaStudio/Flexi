@@ -108,10 +108,10 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private void ResolveEvent(IEventContext context)
         {
-            abilitySystem.TryEnqueueAbility(heroUnit.AbilityDataContainers, context);
+            abilitySystem.TryEnqueueAbility(heroUnit.AbilityContainers, context);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityDataContainers, context);
+                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityContainers, context);
             }
         }
 
@@ -150,8 +150,8 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    var container = new AbilityDataContainer { DataSource = abilityDataSource };
-                    unit.AppendAbilityDataContainer(container);
+                    var container = new AbilityContainer { DataSource = abilityDataSource };
+                    unit.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
                     {
@@ -192,8 +192,8 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-                    var container = new AbilityDataContainer { DataSource = abilityDataSource };
-                    card.AppendAbilityDataContainer(container);
+                    var container = new AbilityContainer { DataSource = abilityDataSource };
+                    card.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityDataSource))
                     {
@@ -263,7 +263,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 random = generalRandom,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(card.AbilityDataContainers, context);
+            bool success = abilitySystem.TryEnqueueAbility(card.AbilityContainers, context);
             if (success)
             {
                 abilitySystem.Run();

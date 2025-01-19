@@ -1,18 +1,42 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Physalia.Flexi.Samples.ActionGame
 {
-    public class Unit : Actor
+    public class Unit : StatOwner
     {
         private readonly IUnitAvatar avatar;
         private readonly AbilitySlot abilitySlot = new();
+        private readonly List<AbilityContainer> containers = new();
 
         public IUnitAvatar Avatar => avatar;
         public AbilitySlot AbilitySlot => abilitySlot;
+        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
 
         public Unit(IUnitAvatar avatar)
         {
             this.avatar = avatar;
+        }
+
+        public void AppendAbilityContainer(AbilityContainer container)
+        {
+            container.unit = this;
+            containers.Add(container);
+        }
+
+        public void RemoveAbilityContainer(AbilityContainer container)
+        {
+            container.unit = null;
+            containers.Remove(container);
+        }
+
+        public void ClearAbilityContainers()
+        {
+            for (var i = 0; i < containers.Count; i++)
+            {
+                containers[i].unit = null;
+            }
+            containers.Clear();
         }
 
         public bool IsControllable()

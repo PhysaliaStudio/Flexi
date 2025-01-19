@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
     public class DefaultStatsRefreshAlgorithm : IStatsRefreshAlgorithm
     {

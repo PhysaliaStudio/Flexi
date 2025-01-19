@@ -1,4 +1,4 @@
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
     public interface IStatsRefreshAlgorithm
     {
