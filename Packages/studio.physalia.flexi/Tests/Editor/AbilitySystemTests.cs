@@ -6,19 +6,32 @@ namespace Physalia.Flexi.Tests
 {
     public class IntegrationTests
     {
+        private AbilitySystemWrapperDefault wrapper;
         private AbilitySystem abilitySystem;
+        private CustomUnitFactory unitFactory;
 
-        private AbilityDataContainer CreateAbilityDataContainer(AbilityDataSource dataSource)
+        private AbilityContainer CreateAbilityContainer(AbilityDataSource dataSource)
         {
             abilitySystem.CreateAbilityPool(dataSource, 2);
-            return new AbilityDataContainer { DataSource = dataSource };
+            return new AbilityContainer { DataSource = dataSource };
+        }
+
+        private CustomUnit CreateUnit(CustomUnitData data)
+        {
+            CustomUnit unit = unitFactory.Create(data);
+            wrapper.AppendActor(unit);
+            return unit;
         }
 
         [SetUp]
         public void SetUp()
         {
+            wrapper = new AbilitySystemWrapperDefault();
             AbilitySystemBuilder builder = new AbilitySystemBuilder();
+            builder.SetWrapper(wrapper);
             abilitySystem = builder.Build();
+
+            unitFactory = new CustomUnitFactory();
         }
 
         [Test]
@@ -36,10 +49,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ActivateInstance()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE);
-            unit.AppendAbilityDataContainer(container);
+            CustomUnit unit = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE);
+            unit.AppendAbilityContainer(container);
 
             bool success1 = abilitySystem.TryEnqueueAbility(container);
             abilitySystem.Run();
@@ -57,7 +69,7 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.HELLO_WORLD);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
             _ = abilitySystem.TryEnqueueAbility(container);
             abilitySystem.Run();
 
@@ -69,11 +81,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteCustomNodesAndAbilitiy()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK);
             var context1 = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -99,12 +110,11 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiySequence()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container1 = CreateAbilityDataContainer(CustomAbility.ATTACK_DECREASE);
-            AbilityDataContainer container2 = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK);
+            AbilityContainer container1 = CreateAbilityContainer(CustomAbility.ATTACK_DECREASE);
+            AbilityContainer container2 = CreateAbilityContainer(CustomAbility.NORAML_ATTACK);
             var context1 = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -134,10 +144,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalEntryNode_WithConditionSuccess_ExecuteAsExpected()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { name = "Mob1" });
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.LOG_WHEN_ATTACKED);
-            unit.AppendAbilityDataContainer(container);
+            CustomUnit unit = CreateUnit(new CustomUnitData { name = "Mob1" });
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.LOG_WHEN_ATTACKED);
+            unit.AppendAbilityContainer(container);
 
             var context = new CustomDamageEventNode.Context { target = unit };
             bool success = abilitySystem.TryEnqueueAbility(container, context);
@@ -151,11 +160,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_ReceivesChoice()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK_SELECTION);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -172,11 +180,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveValidAnswer_EffectOccurred()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK_SELECTION);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -197,11 +204,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveInvalidAnswer_LogErrorAndEffectNotOccurred()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK_SELECTION);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -223,11 +229,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void TargetSelectionAbilitiy_GiveCancellation()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 2, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 2, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK_SELECTION);
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.NORAML_ATTACK_SELECTION);
             var context = new CustomActivationNode.Context { activator = unit1 };
 
             IChoiceContext choiceContext = null;
@@ -249,11 +254,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
 
-            unit.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
+            unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
             abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Modifiers.Count);
@@ -264,10 +268,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_NotReachCondition_ModifierNotAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            unit.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
+            unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
             abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Modifiers.Count);
@@ -278,10 +281,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachConditionThenMakeNotReach_ModifierRemovedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
-            unit.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
+            unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
             abilitySystem.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Modifiers.Count);
@@ -299,12 +301,11 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ConditionalModifier_ReachConditionWhileRunningSystem_ModifierNotAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
 
-            AbilityDataContainer normalAttack = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK);
+            AbilityContainer normalAttack = CreateAbilityContainer(CustomAbility.NORAML_ATTACK);
             var context1 = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -334,14 +335,13 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void MultiOrderModifiers_ReachCondition_ModifierAppendedAndStatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
             // Note: We intentionally add the modifier with the reverse order for testing.
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_GREATER_THAN_5));
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE_WHEN_GREATER_THAN_5));
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
 
-            AbilityDataContainer normalAttack = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK);
+            AbilityContainer normalAttack = CreateAbilityContainer(CustomAbility.NORAML_ATTACK);
             var context = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -360,11 +360,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ContinuousEventFor2Times_TheAbilityTriggeredTwice()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            AbilityDataContainer container = CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
-            unit2.AppendAbilityDataContainer(container);
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
+            AbilityContainer container = CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED);
+            unit2.AppendAbilityContainer(container);
 
             for (var i = 0; i < 2; i++)
             {
@@ -382,12 +381,11 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ChainEffect_TriggerAnotherAbilityFromNodeByEvent_StatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
 
-            AbilityDataContainer normalAttack = CreateAbilityDataContainer(CustomAbility.NORAML_ATTACK);
+            AbilityContainer normalAttack = CreateAbilityContainer(CustomAbility.NORAML_ATTACK);
             var context1 = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -416,13 +414,12 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ChainEffect_MultipleAbilities_TriggeredByCorrectOrder()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 64, attack = 1, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 10, attack = 1, });
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
-            unit2.AppendAbilityDataContainer(CreateAbilityDataContainer(CustomAbility.COUNTER_ATTACK));
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 64, attack = 1, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 10, attack = 1, });
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE_WHEN_DAMAGED));
+            unit2.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.COUNTER_ATTACK));
 
-            AbilityDataContainer normalAttack5Times = CreateAbilityDataContainer(CustomAbility.NORMAL_ATTACK_5_TIMES);
+            AbilityContainer normalAttack5Times = CreateAbilityContainer(CustomAbility.NORMAL_ATTACK_5_TIMES);
             var context = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit1,
@@ -441,11 +438,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiy_ForLoop_StatsAreCorrect()
         {
-            var unitFactory = new CustomUnitFactory();
-            CustomUnit unit1 = unitFactory.Create(new CustomUnitData { health = 25, attack = 3, });
-            CustomUnit unit2 = unitFactory.Create(new CustomUnitData { health = 6, attack = 4, });
+            CustomUnit unit1 = CreateUnit(new CustomUnitData { health = 25, attack = 3, });
+            CustomUnit unit2 = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
-            AbilityDataContainer normalAttack5Times = CreateAbilityDataContainer(CustomAbility.NORMAL_ATTACK_5_TIMES);
+            AbilityContainer normalAttack5Times = CreateAbilityContainer(CustomAbility.NORMAL_ATTACK_5_TIMES);
             var context = new CustomNormalAttackEntryNode.Context
             {
                 attacker = unit2,
@@ -464,7 +460,7 @@ namespace Physalia.Flexi.Tests
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
-            AbilityDataContainer source = CreateAbilityDataContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER);
+            AbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER);
             _ = abilitySystem.TryEnqueueAbility(source);
             abilitySystem.Run();
 
@@ -478,7 +474,7 @@ namespace Physalia.Flexi.Tests
             var macro = CustomAbility.HELLO_WORLD_MACRO;
             abilitySystem.LoadMacroGraph(macro.name, macro);
 
-            AbilityDataContainer source = CreateAbilityDataContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
+            AbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
             _ = abilitySystem.TryEnqueueAbility(source);
             abilitySystem.Run();
 
@@ -493,8 +489,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiy_ThrowException_ShouldAbortImmediately()
         {
-            AbilityDataContainer throwException = CreateAbilityDataContainer(CustomAbility.THROW_EXCEPTION);
-            AbilityDataContainer helloWorld = CreateAbilityDataContainer(CustomAbility.HELLO_WORLD);
+            AbilityContainer throwException = CreateAbilityContainer(CustomAbility.THROW_EXCEPTION);
+            AbilityContainer helloWorld = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
 
             _ = abilitySystem.TryEnqueueAbility(throwException);
             _ = abilitySystem.TryEnqueueAbility(helloWorld);
@@ -511,7 +507,7 @@ namespace Physalia.Flexi.Tests
             AbilityDataSource helloWorld = CustomAbility.HELLO_WORLD;
             abilitySystem.CreateAbilityPool(helloWorld, 4);
 
-            var container = new AbilityDataContainer { DataSource = helloWorld };
+            var container = new AbilityContainer { DataSource = helloWorld };
             _ = abilitySystem.TryEnqueueAbility(container);
             abilitySystem.Run();
 
