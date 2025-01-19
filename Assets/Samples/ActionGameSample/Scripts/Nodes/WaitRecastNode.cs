@@ -21,7 +21,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             get
             {
                 IReadOnlyList<Port> connections = previous.GetConnections();
-                return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
             }
         }
 
@@ -32,12 +32,12 @@ namespace Physalia.Flexi.Samples.ActionGame
                 if (received)
                 {
                     IReadOnlyList<Port> connections = successNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
                 }
                 else
                 {
                     IReadOnlyList<Port> connections = timeoutNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
                 }
             }
         }
