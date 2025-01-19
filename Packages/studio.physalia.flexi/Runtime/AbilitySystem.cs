@@ -5,7 +5,7 @@ namespace Physalia.Flexi
 {
     public interface IAbilitySystemWrapper
     {
-        void ResolveEvent(IEventContext eventContext);
+        void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext);
 
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
         IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers();
@@ -172,7 +172,7 @@ namespace Physalia.Flexi
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
-                wrapper.ResolveEvent(eventContext);
+                wrapper.ResolveEvent(this, eventContext);
             }
             runner.AfterTriggerEvents();
         }
