@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Physalia.Flexi.Samples.ActionGame
 {
-    public class CompositionRoot : MonoBehaviour, IAbilitySystemWrapper
+    public class GameSystem : MonoBehaviour, IAbilitySystemWrapper
     {
         private AssetManager assetManager;
         private AbilitySystem abilitySystem;

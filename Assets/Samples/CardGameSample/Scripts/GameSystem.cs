@@ -1,27 +1,43 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class GameSystem
+    public class GameSystem : MonoBehaviour
     {
-        private readonly AssetManager assetManager;
-        private readonly GameDataManager gameDataManager;
-        private readonly GameSetting gameSetting;
+        [SerializeField]
+        private GameSetting gameSetting;
 
+        private AssetManager assetManager;
+        private GameDataManager gameDataManager;
         private GamePresenter gamePresenter;
 
-        public GameSystem(AssetManager assetManager, GameDataManager gameDataManager, GameSetting gameSetting)
+        private void Awake()
         {
-            this.assetManager = assetManager;
-            this.gameDataManager = gameDataManager;
-            this.gameSetting = gameSetting;
+            LoadAllGameData();
+
+            DOTween.Init();
+            BuildGame();
+            StartGame();
         }
 
-        public void BuildGame()
+        private void LoadAllGameData()
+        {
+            assetManager = new AssetManager("Flexi/CardGameSample");
+            gameDataManager = new GameDataManager(assetManager);
+
+            gameDataManager.LoadAllData<CardData>("GameData/Cards");
+            gameDataManager.LoadAllData<HeroData>("GameData/Heroes");
+            gameDataManager.LoadAllData<EnemyData>("GameData/Enemies");
+            gameDataManager.LoadAllData<EnemyGroupData>("GameData/EnemyGroups");
+            gameDataManager.LoadAllData<StatusData>("GameData/Statuses");
+        }
+
+        private void BuildGame()
         {
             var game = new Game(assetManager, gameDataManager, gameSetting);
-            GameView gameView = Object.FindObjectOfType<GameView>();
+            GameView gameView = FindObjectOfType<GameView>();
             gamePresenter = new GamePresenter(game, gameView);
 
             gamePresenter.Initialize();
@@ -31,12 +47,12 @@ namespace Physalia.Flexi.Samples.CardGame
             gamePresenter.SetUp(randomHeroData);
         }
 
-        public void StartGame()
+        private void StartGame()
         {
             gamePresenter.Start();
         }
 
-        public void Update()
+        private void Update()
         {
             if (gamePresenter == null)
             {
