@@ -28,13 +28,5 @@ namespace Physalia.Flexi.Tests
             }
             containers.Clear();
         }
-
-        /// <summary>
-        /// This method just total all modifiers by algorithm, so there is no priority issue.
-        /// </summary>
-        public void ApplyModifiers()
-        {
-            // TODO
-        }
     }
 }
