@@ -70,6 +70,11 @@ namespace Physalia.Flexi
             modifiers.Add(modifier);
         }
 
+        public void AppendModifiers(IReadOnlyList<StatModifier> modifiers)
+        {
+            this.modifiers.AddRange(modifiers);
+        }
+
         public void RemoveModifier(StatModifier modifier)
         {
             modifiers.Remove(modifier);
