@@ -7,7 +7,7 @@ namespace Physalia.Flexi
     {
         private static readonly int NODE_ID = -2;
 
-        internal Inport<FlowNode> previous;
+        public Inport<FlowNode> previous;
 
         public GraphOutputNode()
         {

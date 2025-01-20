@@ -9,6 +9,6 @@ namespace Physalia.Flexi
     /// </summary>
     internal sealed class Missing
     {
-        internal static readonly Type TYPE = typeof(Missing);
+        public static readonly Type TYPE = typeof(Missing);
     }
 }

@@ -280,7 +280,7 @@ namespace Physalia.Flexi
             DoStatRefreshLogicForAllOwners(owners, wrapper.CollectStatRefreshContainers());
         }
 
-        public void ApplyStatOwnerModifiers(StatOwner statOwner)
+        internal void ApplyStatOwnerModifiers(StatOwner statOwner)
         {
             statOwner.ResetAllStats();
             wrapper.ApplyModifiers(statOwner);

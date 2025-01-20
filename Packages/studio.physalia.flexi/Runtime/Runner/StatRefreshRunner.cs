@@ -7,12 +7,12 @@ namespace Physalia.Flexi
     {
         private readonly List<IAbilityFlow> flows = new(16);
 
-        internal void AddFlow(IAbilityFlow flow)
+        public void AddFlow(IAbilityFlow flow)
         {
             flows.Add(flow);
         }
 
-        internal void Start()
+        public void Start()
         {
             for (var i = 0; i < flows.Count; i++)
             {
@@ -28,7 +28,7 @@ namespace Physalia.Flexi
             }
 
             // Since no flow should be paused, every flows will be finished. Directly clear the list.
-            Clear();
+            flows.Clear();
         }
 
         private bool HandleStepResult(StepResult result)
@@ -47,11 +47,6 @@ namespace Physalia.Flexi
                         return true;
                     }
             }
-        }
-
-        internal void Clear()
-        {
-            flows.Clear();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Physalia.Flexi
     {
         public override Type ValueType => Missing.TYPE;
 
-        internal MissingInport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
+        public MissingInport(Node node, string name, bool isDynamic) : base(node, name, isDynamic)
         {
 
         }

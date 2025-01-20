@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Physalia.Flexi.Samples.CardGame
 {
@@ -68,7 +69,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             if (statusToContainerTable.ContainsKey(statusData))
             {
-                Logger.Warn($"[{nameof(Unit)}] AppendStatusContainer failed! StatusData already has a container (statusData = {statusData})");
+                Debug.LogWarning($"[{nameof(Unit)}] AppendStatusContainer failed! StatusData already has a container (statusData = {statusData})");
                 return;
             }
 

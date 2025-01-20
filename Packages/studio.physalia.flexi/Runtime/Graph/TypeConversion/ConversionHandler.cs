@@ -10,7 +10,7 @@ namespace Physalia.Flexi
 
     internal class ConversionHandler : IConversionHandler
     {
-        private struct ConversionQuery : IEquatable<ConversionQuery>
+        private readonly struct ConversionQuery : IEquatable<ConversionQuery>
         {
             public readonly Type fromType;
             public readonly Type toType;
@@ -28,7 +28,7 @@ namespace Physalia.Flexi
 
             public override bool Equals(object obj)
             {
-                if (!(obj is ConversionQuery))
+                if (obj is not ConversionQuery)
                 {
                     return false;
                 }

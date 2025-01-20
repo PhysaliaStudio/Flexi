@@ -349,7 +349,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             if (stack <= 0)
             {
-                Logger.Warn($"ApplyStatus failed! Given stack is less or equal to 0 (stack = {stack})");
+                Debug.LogWarning($"ApplyStatus failed! Given stack is less or equal to 0 (stack = {stack})");
                 return;
             }
 
@@ -371,7 +371,7 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             if (stack <= 0)
             {
-                Logger.Warn($"RemoveStatus failed! Given stack is less or equal to 0 (stack = {stack})");
+                Debug.LogWarning($"RemoveStatus failed! Given stack is less or equal to 0 (stack = {stack})");
                 return;
             }
 

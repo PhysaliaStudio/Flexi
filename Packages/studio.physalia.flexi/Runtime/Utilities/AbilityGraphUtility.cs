@@ -4,7 +4,7 @@ namespace Physalia.Flexi
 {
     internal static class AbilityGraphUtility
     {
-        internal static AbilityGraph Deserialize(string graphName, string graphJson, MacroLibrary macroLibrary = null)
+        public static AbilityGraph Deserialize(string graphName, string graphJson, MacroLibrary macroLibrary = null)
         {
             if (string.IsNullOrEmpty(graphJson))
             {
@@ -38,13 +38,13 @@ namespace Physalia.Flexi
             return graph;
         }
 
-        internal static string Serialize(AbilityGraph abilityGraph)
+        public static string Serialize(AbilityGraph abilityGraph)
         {
             string json = JsonConvert.SerializeObject(abilityGraph);
             return json;
         }
 
-        internal static bool HasMissingElement(this AbilityGraph graph)
+        public static bool HasMissingElement(this AbilityGraph graph)
         {
             foreach (Node node in graph.Nodes)
             {

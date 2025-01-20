@@ -5,29 +5,29 @@ namespace Physalia.Flexi
 {
     internal static class PortCreationExtensions
     {
-        internal static Inport CreateInport<T>(this Node node, string portName, bool isDynamic = false)
+        public static Inport CreateInport<T>(this Node node, string portName, bool isDynamic = false)
         {
             return CreateInportWithArgumentType(node, typeof(T), portName, isDynamic);
         }
 
-        internal static Outport CreateOutport<T>(this Node node, string portName, bool isDynamic = false)
+        public static Outport CreateOutport<T>(this Node node, string portName, bool isDynamic = false)
         {
             return CreateOutportWithArgumentType(node, typeof(T), portName, isDynamic);
         }
 
-        internal static Inport CreateInportWithArgumentType(this Node node, Type portType, string portName, bool isDynamic = false)
+        public static Inport CreateInportWithArgumentType(this Node node, Type portType, string portName, bool isDynamic = false)
         {
             Type inportType = typeof(Inport<>).MakeGenericType(portType);
             return CreateInportWithPortType(node, inportType, portName, isDynamic);
         }
 
-        internal static Outport CreateOutportWithArgumentType(this Node node, Type portType, string portName, bool isDynamic = false)
+        public static Outport CreateOutportWithArgumentType(this Node node, Type portType, string portName, bool isDynamic = false)
         {
             Type outportType = typeof(Outport<>).MakeGenericType(portType);
             return CreateOutportWithPortType(node, outportType, portName, isDynamic);
         }
 
-        internal static Inport CreateInportWithPortType(this Node node, Type portType, string portName, bool isDynamic = false)
+        public static Inport CreateInportWithPortType(this Node node, Type portType, string portName, bool isDynamic = false)
         {
             if (node.GetPort(portName) != null)
             {
@@ -42,7 +42,7 @@ namespace Physalia.Flexi
             return inport;
         }
 
-        internal static Outport CreateOutportWithPortType(this Node node, Type portType, string portName, bool isDynamic = false)
+        public static Outport CreateOutportWithPortType(this Node node, Type portType, string portName, bool isDynamic = false)
         {
             if (node.GetPort(portName) != null)
             {

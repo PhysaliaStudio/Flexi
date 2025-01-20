@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Physalia.Flexi
 {
-    public static class Logger
+    internal static class Logger
     {
         public static void Info(string message)
         {

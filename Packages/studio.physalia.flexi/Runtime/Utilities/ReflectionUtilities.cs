@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace Physalia.Flexi
 {
-    public static class ReflectionUtilities
+    internal static class ReflectionUtilities
     {
         private static Assembly[] assembliesCache;
 

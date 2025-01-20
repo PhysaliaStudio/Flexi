@@ -9,12 +9,12 @@ namespace Physalia.Flexi
         public Vector2 position;
         public List<PortData> portDatas = new();
 
-        internal GraphInputData()
+        public GraphInputData()
         {
 
         }
 
-        internal GraphInputData(GraphInputNode node)
+        public GraphInputData(GraphInputNode node)
         {
             position = node.position;
 
@@ -33,12 +33,12 @@ namespace Physalia.Flexi
         public Vector2 position;
         public List<PortData> portDatas = new();
 
-        internal GraphOutputData()
+        public GraphOutputData()
         {
 
         }
 
-        internal GraphOutputData(GraphOutputNode node)
+        public GraphOutputData(GraphOutputNode node)
         {
             position = node.position;
 

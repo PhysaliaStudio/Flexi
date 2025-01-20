@@ -9,7 +9,7 @@ namespace Physalia.Flexi
     /// Class to cast to type <see cref="T"/>
     /// </summary>
     /// <typeparam name="T">Target type</typeparam>
-    public static class CastTo<T>
+    internal static class CastTo<T>
     {
         private static class Cache<S>
         {

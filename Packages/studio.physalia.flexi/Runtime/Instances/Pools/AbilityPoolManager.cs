@@ -7,18 +7,18 @@ namespace Physalia.Flexi
         private readonly AbilitySystem abilitySystem;
         private readonly Dictionary<AbilityHandle, AbilityPool> pools;
 
-        internal AbilityPoolManager(AbilitySystem abilitySystem, int capacity = 0)
+        public AbilityPoolManager(AbilitySystem abilitySystem, int capacity = 0)
         {
             this.abilitySystem = abilitySystem;
             pools = new Dictionary<AbilityHandle, AbilityPool>(capacity);
         }
 
-        internal bool ContainsPool(AbilityHandle abilityHandle)
+        public bool ContainsPool(AbilityHandle abilityHandle)
         {
             return pools.ContainsKey(abilityHandle);
         }
 
-        internal void CreatePool(AbilityHandle abilityHandle, int startSize)
+        public void CreatePool(AbilityHandle abilityHandle, int startSize)
         {
             if (abilityHandle == null)
             {
@@ -43,7 +43,7 @@ namespace Physalia.Flexi
             pools.Add(abilityHandle, pool);
         }
 
-        internal void DestroyPool(AbilityHandle abilityHandle)
+        public void DestroyPool(AbilityHandle abilityHandle)
         {
             if (abilityHandle == null)
             {
@@ -61,7 +61,7 @@ namespace Physalia.Flexi
             pools.Remove(abilityHandle);
         }
 
-        internal AbilityPool GetPool(AbilityHandle abilityHandle)
+        public AbilityPool GetPool(AbilityHandle abilityHandle)
         {
             if (abilityHandle == null)
             {
@@ -79,7 +79,7 @@ namespace Physalia.Flexi
             return pool;
         }
 
-        internal Ability GetAbility(AbilityHandle abilityHandle)
+        public Ability GetAbility(AbilityHandle abilityHandle)
         {
             if (abilityHandle == null)
             {
@@ -97,7 +97,7 @@ namespace Physalia.Flexi
             return pool.Get();
         }
 
-        internal bool ReleaseAbility(Ability ability)
+        public bool ReleaseAbility(Ability ability)
         {
             if (ability == null)
             {
