@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.ActionGame
 {
     [NodeCategory("Action Game Sample")]
-    public class ActionStartNode : EntryNode
+    public class ActionStartNode : DefaultEntryNode
     {
         protected override AbilityState DoLogic()
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomAttackDecreaseNode : ProcessNode
+    public class CustomAttackDecreaseNode : DefaultProcessNode
     {
         public Inport<List<CustomUnit>> targets;
         public Inport<int> baseValue;

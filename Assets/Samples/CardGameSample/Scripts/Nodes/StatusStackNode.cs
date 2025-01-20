@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class StatusStackNode : ValueNode
+    public class StatusStackNode : DefaultValueNode
     {
         public Inport<Game> gamePort;
         public Inport<Unit> unitPort;

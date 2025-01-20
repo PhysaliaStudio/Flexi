@@ -11,7 +11,7 @@ namespace Physalia.Flexi.Samples.CardGame
     }
 
     [NodeCategory("Card Game Sample")]
-    public class SingleTargetNode : ProcessNode
+    public class SingleTargetNode : DefaultProcessNode
     {
         public Outport<Unit> target;
         public Variable<UnitType> unitType;

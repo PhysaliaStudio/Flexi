@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
     }
 
     [NodeCategory("Card Game Sample")]
-    public class SystemProcessEntryNode : EntryNode<SystemProcessContext>
+    public class SystemProcessEntryNode : DefaultEntryNode<SystemProcessContext>
     {
         public Outport<Game> gamePort;
         public Outport<Player> playerPort;

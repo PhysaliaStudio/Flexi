@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class ActorNode : ValueNode
+    public class ActorNode : DefaultValueNode
     {
         public Outport<Actor> actor;
 

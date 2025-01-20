@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class PauseNode : ProcessNode
+    public class PauseNode : DefaultProcessNode
     {
         protected override AbilityState DoLogic()
         {

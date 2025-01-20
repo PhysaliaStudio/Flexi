@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class OnDamagedEventNode : EntryNode<DamageContext>
+    public class OnDamagedEventNode : DefaultEntryNode<DamageContext>
     {
         public Outport<Unit> attackerPort;
 

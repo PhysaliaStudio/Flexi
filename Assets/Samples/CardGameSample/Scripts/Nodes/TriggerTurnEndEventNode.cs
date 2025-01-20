@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class TriggerTurnEndEventNode : ProcessNode
+    public class TriggerTurnEndEventNode : DefaultProcessNode
     {
         public Inport<Game> gamePort;
 

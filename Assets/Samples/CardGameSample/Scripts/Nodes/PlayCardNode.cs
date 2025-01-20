@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class PlayCardNode : EntryNode<PlayCardNode.Context>
+    public class PlayCardNode : DefaultEntryNode<PlayCardNode.Context>
     {
         public class Context : IEventContext
         {
@@ -20,7 +20,7 @@ namespace Physalia.Flexi.Samples.CardGame
             INITIAL, SELECTION, COMPLETE,
         }
 
-        public Outport<Flexi.FlowNode> selectionPort;
+        public Outport<FlowNode> selectionPort;
         public Outport<Game> gamePort;
         public Outport<Player> playerPort;
         public Outport<Unit> unitPort;
@@ -28,14 +28,14 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private State state = State.INITIAL;
 
-        public override Flexi.FlowNode Next
+        public override FlowNode Next
         {
             get
             {
                 if (state == State.SELECTION)
                 {
                     IReadOnlyList<Port> connections = selectionPort.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
                 }
                 else if (state == State.COMPLETE)
                 {

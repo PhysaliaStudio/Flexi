@@ -6,38 +6,38 @@ namespace Physalia.Flexi.Samples.ActionGame
     public class RecastContext : IResumeContext { }
 
     [NodeCategory("Action Game Sample")]
-    public class WaitRecastNode : FlowNode
+    public class WaitRecastNode : DefaultFlowNode
     {
-        public Inport<Flexi.FlowNode> previous;
-        public Outport<Flexi.FlowNode> successNode;
-        public Outport<Flexi.FlowNode> timeoutNode;
+        public Inport<FlowNode> previous;
+        public Outport<FlowNode> successNode;
+        public Outport<FlowNode> timeoutNode;
         public Variable<int> milliseconds;
 
         private float currentTime;
         private bool received;
 
-        public override Flexi.FlowNode Previous
+        public override FlowNode Previous
         {
             get
             {
                 IReadOnlyList<Port> connections = previous.GetConnections();
-                return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
+                return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }
 
-        public override Flexi.FlowNode Next
+        public override FlowNode Next
         {
             get
             {
                 if (received)
                 {
                     IReadOnlyList<Port> connections = successNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
                 }
                 else
                 {
                     IReadOnlyList<Port> connections = timeoutNode.GetConnections();
-                    return connections.Count > 0 ? connections[0].Node as Flexi.FlowNode : null;
+                    return connections.Count > 0 ? connections[0].Node as FlowNode : null;
                 }
             }
         }

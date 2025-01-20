@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class OnTurnEndNode : EntryNode<TurnEndContext>
+    public class OnTurnEndNode : DefaultEntryNode<TurnEndContext>
     {
         public Outport<Game> gamePort;
 

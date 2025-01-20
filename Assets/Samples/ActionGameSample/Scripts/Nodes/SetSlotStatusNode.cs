@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.ActionGame
 {
     [NodeCategory("Action Game Sample")]
-    public class SetSlotStatusNode : ProcessNode
+    public class SetSlotStatusNode : DefaultProcessNode
     {
         public Variable<AbilitySlot.State> state;
         public Variable<int> cooldownMilliseconds;

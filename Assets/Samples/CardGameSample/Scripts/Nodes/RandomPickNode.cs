@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class RandomPickNode : ValueNode
+    public class RandomPickNode : DefaultValueNode
     {
         public Inport<IReadOnlyList<Unit>> sourcePort;
         public Outport<Unit> resultPort;
