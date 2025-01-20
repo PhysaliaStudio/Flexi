@@ -88,7 +88,7 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            bool result = graph.EntryNodes[0] is StatRefreshEventNode;
+            bool result = graph.EntryNodes[0] is OnCollectModifierNode;
             return result;
         }
 

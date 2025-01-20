@@ -17,7 +17,6 @@ namespace Physalia.Flexi
 
     public class AbilitySystem
     {
-        private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
         private readonly IAbilitySystemWrapper wrapper;
@@ -292,8 +291,8 @@ namespace Physalia.Flexi
         /// </remarks>
         private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityDataContainer> containers)
         {
-            // If no StatRefreshEventNode, just return.
-            bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
+            // If no OnCollectModifierNode, just return.
+            bool success = entryLookupTable.TryGetValue(typeof(OnCollectModifierNode.Context), out EntryHandleTable handleTable);
             if (!success)
             {
                 return;
@@ -317,7 +316,7 @@ namespace Physalia.Flexi
 
                     AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
                     copyFlow.Reset(handle.entryIndex);
-                    copyFlow.SetPayload(STAT_REFRESH_EVENT);
+                    copyFlow.SetPayload(OnCollectModifierNode.Context.Instance);
 
                     // Then add into the correct order list.
                     int nodeOrder = handle.order;
@@ -412,7 +411,7 @@ namespace Physalia.Flexi
                         entryLookupTable.Add(contextType, handleTable);
                     }
 
-                    if (entryNodes[indexOfEntry] is StatRefreshEventNode statRefreshEventNode)
+                    if (entryNodes[indexOfEntry] is OnCollectModifierNode statRefreshEventNode)
                     {
                         handleTable.Add(abilityHandle, indexOfFlow, indexOfEntry, statRefreshEventNode.order.Value);
                     }
