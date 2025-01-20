@@ -4,11 +4,11 @@ namespace Physalia.Flexi.Tests
 {
     internal static class AbilityTestHelper
     {
-        internal static AbilityDataSource CreateValidDataSource()
+        internal static AbilityHandle CreateValidHandle()
         {
             var abilityData = new AbilityData();
             abilityData.graphGroups.Add(new AbilityGraphGroup());
-            return abilityData.CreateDataSource(0);
+            return abilityData.CreateHandle(0);
         }
 
         internal static AbilityData CreateSingleGraphData(string json)
@@ -25,10 +25,10 @@ namespace Physalia.Flexi.Tests
             };
         }
 
-        internal static void AppendGraphToSource(AbilityDataSource abilityDataSource, string json)
+        internal static void AppendGraphToSource(AbilityHandle abilityHandle, string json)
         {
-            AbilityData abilityData = abilityDataSource.AbilityData;
-            int groupIndex = abilityDataSource.GroupIndex;
+            AbilityData abilityData = abilityHandle.Data;
+            int groupIndex = abilityHandle.GroupIndex;
             abilityData.graphGroups[groupIndex].graphs.Add(json);
         }
     }

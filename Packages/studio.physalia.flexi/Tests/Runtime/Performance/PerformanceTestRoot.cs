@@ -22,11 +22,11 @@ namespace Physalia.Flexi.Tests
             var builder = new AbilitySystemBuilder();
             abilitySystem = builder.Build();
 
-            AbilityDataSource abilityDataSource = abilityAsset.Data.CreateDataSource(0);
+            AbilityHandle abilityHandle = abilityAsset.Data.CreateHandle(0);
             for (var i = 0; i < abilityCountPerFrame; i++)
             {
                 var character = new CustomCharacter();
-                var abilityDataContainer = new AbilityContainer { DataSource = abilityDataSource };
+                var abilityDataContainer = new AbilityContainer { Handle = abilityHandle };
                 character.AppendAbilityContainer(abilityDataContainer);
 
                 characters.Add(character);

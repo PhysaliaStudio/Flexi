@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public readonly struct AbilityDataSource : IEquatable<AbilityDataSource>, IEqualityComparer<AbilityDataSource>
+    public readonly struct AbilityHandle : IEquatable<AbilityHandle>, IEqualityComparer<AbilityHandle>
     {
         private readonly AbilityData abilityData;
         private readonly int groupIndex;
 
-        public readonly AbilityData AbilityData => abilityData;
+        public readonly AbilityData Data => abilityData;
         public readonly int GroupIndex => groupIndex;
         public bool IsValid => abilityData != null && groupIndex >= 0 && groupIndex < abilityData.graphGroups.Count;
         public AbilityGraphGroup GraphGroup => IsValid ? abilityData.graphGroups[groupIndex] : null;
 
-        public AbilityDataSource(AbilityData abilityData, int groupIndex)
+        public AbilityHandle(AbilityData abilityData, int groupIndex)
         {
             this.abilityData = abilityData;
             this.groupIndex = groupIndex;
@@ -23,15 +23,15 @@ namespace Physalia.Flexi
         {
             if (!IsValid)
             {
-                return "Invalid Source";
+                return $"Handle[{abilityData?.name}][{groupIndex}][Invalid]";
             }
 
-            return $"Source({abilityData.name}-{groupIndex})";
+            return $"Handle[{abilityData.name}][{groupIndex}]";
         }
 
         public override bool Equals(object obj)
         {
-            return obj is AbilityDataSource other && Equals(this, other);
+            return obj is AbilityHandle other && Equals(this, other);
         }
 
         public override int GetHashCode()
@@ -39,27 +39,27 @@ namespace Physalia.Flexi
             return GetHashCode(this);
         }
 
-        public bool Equals(AbilityDataSource other)
+        public bool Equals(AbilityHandle other)
         {
-            return AbilityData == other.AbilityData && GroupIndex == other.GroupIndex;
+            return Data == other.Data && GroupIndex == other.GroupIndex;
         }
 
-        public bool Equals(AbilityDataSource x, AbilityDataSource y)
+        public bool Equals(AbilityHandle x, AbilityHandle y)
         {
-            return x.AbilityData == y.AbilityData && x.GroupIndex == y.GroupIndex;
+            return x.Data == y.Data && x.GroupIndex == y.GroupIndex;
         }
 
-        public int GetHashCode(AbilityDataSource obj)
+        public int GetHashCode(AbilityHandle obj)
         {
-            return obj.AbilityData.GetHashCode() ^ obj.GroupIndex.GetHashCode();
+            return obj.Data.GetHashCode() ^ obj.GroupIndex.GetHashCode();
         }
 
-        public static bool operator ==(AbilityDataSource left, AbilityDataSource right)
+        public static bool operator ==(AbilityHandle left, AbilityHandle right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(AbilityDataSource left, AbilityDataSource right)
+        public static bool operator !=(AbilityHandle left, AbilityHandle right)
         {
             return !left.Equals(right);
         }

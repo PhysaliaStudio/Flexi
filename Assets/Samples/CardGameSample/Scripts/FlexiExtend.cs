@@ -8,10 +8,10 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public Game Game => game;
 
-        public AbilityContainer(Game game, AbilityDataSource dataSource)
+        public AbilityContainer(Game game, AbilityHandle handle)
         {
             this.game = game;
-            DataSource = dataSource;
+            Handle = handle;
         }
 
         public void CleanUp()

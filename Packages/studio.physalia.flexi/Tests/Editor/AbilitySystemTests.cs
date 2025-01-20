@@ -10,10 +10,10 @@ namespace Physalia.Flexi.Tests
         private AbilitySystem abilitySystem;
         private CustomUnitFactory unitFactory;
 
-        private AbilityContainer CreateAbilityContainer(AbilityDataSource dataSource)
+        private AbilityContainer CreateAbilityContainer(AbilityHandle handle)
         {
-            abilitySystem.CreateAbilityPool(dataSource, 2);
-            return new AbilityContainer { SystemWrapper = wrapper, DataSource = dataSource };
+            abilitySystem.CreateAbilityPool(handle, 2);
+            return new AbilityContainer { SystemWrapper = wrapper, Handle = handle };
         }
 
         private CustomUnit CreateUnit(CustomUnitData data)
@@ -504,10 +504,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiy_AbilityIsPoolized_NormallyFinished_AbilitiesShouldBeReleased()
         {
-            AbilityDataSource helloWorld = CustomAbility.HELLO_WORLD;
+            AbilityHandle helloWorld = CustomAbility.HELLO_WORLD;
             abilitySystem.CreateAbilityPool(helloWorld, 4);
 
-            var container = new AbilityContainer { DataSource = helloWorld };
+            var container = new AbilityContainer { Handle = helloWorld };
             _ = abilitySystem.TryEnqueueAbility(container);
             abilitySystem.Run();
 

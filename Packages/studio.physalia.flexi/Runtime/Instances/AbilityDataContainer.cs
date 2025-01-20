@@ -2,8 +2,8 @@ namespace Physalia.Flexi
 {
     public class AbilityDataContainer
     {
-        private AbilityDataSource dataSource;
+        private AbilityHandle handle;
 
-        public AbilityDataSource DataSource { get => dataSource; set => dataSource = value; }
+        public AbilityHandle Handle { get => handle; set => handle = value; }
     }
 }

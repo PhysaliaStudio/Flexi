@@ -49,9 +49,9 @@ namespace Physalia.Flexi.Samples.ActionGame
             AbilityData abilityData = abilityAsset.Data;
             for (var i = 0; i < abilityData.graphGroups.Count; i++)
             {
-                AbilityDataSource abilityDataSource = abilityData.CreateDataSource(i);
-                var container = new AbilityContainer { DataSource = abilityDataSource };
-                abilitySystem.CreateAbilityPool(abilityDataSource, 2);
+                AbilityHandle abilityHandle = abilityData.CreateHandle(i);
+                var container = new AbilityContainer { Handle = abilityHandle };
+                abilitySystem.CreateAbilityPool(abilityHandle, 2);
                 unit.AppendAbilityContainer(container);
             }
 

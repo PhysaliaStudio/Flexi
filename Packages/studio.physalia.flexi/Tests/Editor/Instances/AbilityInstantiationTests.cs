@@ -18,89 +18,89 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void InstantiateAbility_SystemReturnsTheAbilitySystem()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             Assert.AreEqual(abilitySystem, ability.System);
         }
 
         [Test]
         public void InstantiateAbility_DataReturnsTheSourceData()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
-            Assert.AreEqual(abilityDataSource, ability.DataSource);
-            Assert.AreEqual(abilityDataSource.AbilityData, ability.Data);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            Assert.AreEqual(abilityHandle, ability.Handle);
+            Assert.AreEqual(abilityHandle.Data, ability.Data);
         }
 
         [Test]
         public void InstantiateAbility_Contains3Variables_VariableCountIs3()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "a" });
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "b" });
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "c" });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "a" });
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "b" });
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "c" });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             Assert.AreEqual(3, ability.Blackboard.Count);
         }
 
         [Test]
         public void InstantiateAbility_ContainsVariableWithEmptyKey_LogWarning()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable());
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable());
 
-            _ = abilitySystem.InstantiateAbility(abilityDataSource);
+            _ = abilitySystem.InstantiateAbility(abilityHandle);
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]
         public void InstantiateAbility_ContainsVariableWithWhiteSpaceKey_LogWarning()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = " " });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = " " });
 
-            _ = abilitySystem.InstantiateAbility(abilityDataSource);
+            _ = abilitySystem.InstantiateAbility(abilityHandle);
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]
         public void InstantiateAbility_ContainsVariablesA5AndA3_LogWarning()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
 
-            _ = abilitySystem.InstantiateAbility(abilityDataSource);
+            _ = abilitySystem.InstantiateAbility(abilityHandle);
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
         [Test]
         public void InstantiateAbility_ContainsVariablesA5AndA3_GetVariableWithAReturns5()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             Assert.AreEqual(5, ability.GetVariable("A"));
         }
 
         [Test]
         public void GetVariableWithA_ContainsVariableA42_Returns42()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             Assert.AreEqual(42, ability.GetVariable("A"));
         }
 
         [Test]
         public void GetVariableWithA_NoSuchKey_Returns0AndLogWarning()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
 
             Assert.AreEqual(0, ability.GetVariable("A"));
             TestUtilities.LogAssertAnyString(LogType.Warning);
@@ -109,10 +109,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void OverrideVariableAWith99_TheOriginalValueIs42_GetVariableWithAReturns99()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilityDataSource.AbilityData.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             ability.OverrideVariable("A", 99);
 
             Assert.AreEqual(99, ability.GetVariable("A"));
@@ -121,9 +121,9 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void OverrideVariableAWith99_NoMatchKey_GetVariableWithAReturns99AndLogWarning()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             ability.OverrideVariable("A", 99);
 
             Assert.AreEqual(99, ability.GetVariable("A"));
@@ -133,22 +133,22 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void InstantiateAbility_Contains2GraphJsons_FlowCountIs2()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
+            AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             Assert.AreEqual(2, ability.Flows.Count);
         }
 
         [Test]
         public void InstantiateAbility_AbilityOfEachFlowReturnsTheSourceAbility()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
-            AbilityTestHelper.AppendGraphToSource(abilityDataSource, "");
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
+            AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 Assert.AreEqual(ability, ability.Flows[i].Ability);

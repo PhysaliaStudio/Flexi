@@ -18,10 +18,10 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void CreatePoolWithSize10_SizeReturns10()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 10);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 10);
 
-            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityHandle);
             Assert.AreEqual(10, pool.Size);
             Assert.AreEqual(0, pool.UsingCount);
         }
@@ -29,15 +29,15 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void GetAbility4Times_PoolSizeIs10_SizeReturns10AndUsingCountReturns4()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 10);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 10);
 
             for (int i = 0; i < 4; i++)
             {
-                _ = abilitySystem.GetAbility(abilityDataSource);
+                _ = abilitySystem.GetAbility(abilityHandle);
             }
 
-            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityHandle);
             Assert.AreEqual(10, pool.Size);
             Assert.AreEqual(4, pool.UsingCount);
         }
@@ -45,13 +45,13 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void GetAbility4TimesAndRelease2Times_PoolSizeIs10_SizeReturns10AndUsingCountReturns2()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 10);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 10);
 
             var list = new List<Ability>();
             for (int i = 0; i < 4; i++)
             {
-                Ability ability = abilitySystem.GetAbility(abilityDataSource);
+                Ability ability = abilitySystem.GetAbility(abilityHandle);
                 list.Add(ability);
             }
 
@@ -60,7 +60,7 @@ namespace Physalia.Flexi.Tests
                 abilitySystem.ReleaseAbility(list[i]);
             }
 
-            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityHandle);
             Assert.AreEqual(10, pool.Size);
             Assert.AreEqual(2, pool.UsingCount);
         }
@@ -68,15 +68,15 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void GetAbility14Times_StartPoolSizeIs10_SizeReturns14AndUsingCountReturns14()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 10);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 10);
 
             for (int i = 0; i < 14; i++)
             {
-                _ = abilitySystem.GetAbility(abilityDataSource);
+                _ = abilitySystem.GetAbility(abilityHandle);
             }
 
-            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityHandle);
             Assert.AreEqual(14, pool.Size);
             Assert.AreEqual(14, pool.UsingCount);
         }
@@ -91,18 +91,18 @@ namespace Physalia.Flexi.Tests
             startNode.next.Connect(pauseNode.previous);
 
             // Create an ability data with 3 flows
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             string json = AbilityGraphUtility.Serialize(abilityGraph);
             for (var i = 0; i < 3; i++)
             {
-                AbilityTestHelper.AppendGraphToSource(abilityDataSource, json);
+                AbilityTestHelper.AppendGraphToSource(abilityHandle, json);
             }
 
             // Poolize the ability
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
+            abilitySystem.CreateAbilityPool(abilityHandle, 1);
 
             // Get an ability, manually run it and return it
-            Ability ability = abilitySystem.GetAbility(abilityDataSource);
+            Ability ability = abilitySystem.GetAbility(abilityHandle);
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 AbilityFlow flow = ability.Flows[i];
@@ -112,7 +112,7 @@ namespace Physalia.Flexi.Tests
             abilitySystem.ReleaseAbility(ability);
 
             // Assert
-            AbilityPool pool = abilitySystem.GetAbilityPool(abilityDataSource);
+            AbilityPool pool = abilitySystem.GetAbilityPool(abilityHandle);
             Assert.AreEqual(0, pool.UsingCount);
 
             for (var i = 0; i < ability.Flows.Count; i++)
@@ -125,33 +125,33 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void AppendPoolizedAbilityToActor_UsingCountIs1()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 1);
 
-            _ = abilitySystem.GetAbility(abilityDataSource);
-            Assert.AreEqual(1, abilitySystem.GetAbilityPool(abilityDataSource).UsingCount);
+            _ = abilitySystem.GetAbility(abilityHandle);
+            Assert.AreEqual(1, abilitySystem.GetAbilityPool(abilityHandle).UsingCount);
         }
 
         [Test]
         public void AppendPoolizedAbilityToActorAndRelease_UsingCountIs0()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 1);
 
-            Ability ability = abilitySystem.GetAbility(abilityDataSource);
+            Ability ability = abilitySystem.GetAbility(abilityHandle);
             abilitySystem.ReleaseAbility(ability);
 
-            Assert.AreEqual(0, abilitySystem.GetAbilityPool(abilityDataSource).UsingCount);
+            Assert.AreEqual(0, abilitySystem.GetAbilityPool(abilityHandle).UsingCount);
         }
 
         [Test]
         public void ReleaseAbility_AbilityHasContainer_ContainerShouldBeNull()
         {
-            AbilityDataSource abilityDataSource = AbilityTestHelper.CreateValidDataSource();
-            abilitySystem.CreateAbilityPool(abilityDataSource, 1);
+            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
+            abilitySystem.CreateAbilityPool(abilityHandle, 1);
 
-            var container = new AbilityDataContainer { DataSource = abilityDataSource };
-            Ability ability = abilitySystem.GetAbility(abilityDataSource);
+            var container = new AbilityDataContainer { Handle = abilityHandle };
+            Ability ability = abilitySystem.GetAbility(abilityHandle);
             ability.Container = container;
             abilitySystem.ReleaseAbility(ability);
 
