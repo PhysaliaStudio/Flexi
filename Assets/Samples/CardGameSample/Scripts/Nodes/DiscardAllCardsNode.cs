@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Samples.CardGame
     }
 
     [NodeCategory("Card Game Sample")]
-    public class DiscardAllCardsNode : ProcessNode
+    public class DiscardAllCardsNode : DefaultProcessNode
     {
         public Inport<Game> gamePort;
 

@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Samples.ActionGame
 {
     [NodeCategory("Action Game Sample")]
-    public class PlayMontageAndWait : ProcessNode
+    public class PlayMontageAndWait : DefaultProcessNode
     {
         public Variable<string> name;
         public Variable<bool> disableControl;

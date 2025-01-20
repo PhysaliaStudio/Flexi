@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class HealNode : ProcessNode
+    public class HealNode : DefaultProcessNode
     {
         public Inport<IReadOnlyList<Unit>> targetsPort;
         public Inport<int> valuePort;

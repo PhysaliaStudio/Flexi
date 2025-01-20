@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomActivationNode : EntryNode<CustomActivationNode.Context>
+    public class CustomActivationNode : DefaultEntryNode<CustomActivationNode.Context>
     {
         public class Context : IEventContext
         {

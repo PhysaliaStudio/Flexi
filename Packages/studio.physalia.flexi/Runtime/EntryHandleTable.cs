@@ -4,24 +4,24 @@ namespace Physalia.Flexi
 {
     internal class EntryHandleTable
     {
-        private readonly Dictionary<AbilityDataSource, List<EntryHandle>> entryHandles = new(16);
+        private readonly Dictionary<AbilityHandle, List<EntryHandle>> entryHandles = new(16);
 
-        public bool TryGetHandles(AbilityDataSource abilityDataSource, out List<EntryHandle> handles)
+        public bool TryGetHandles(AbilityHandle abilityHandle, out List<EntryHandle> handles)
         {
-            return entryHandles.TryGetValue(abilityDataSource, out handles);
+            return entryHandles.TryGetValue(abilityHandle, out handles);
         }
 
-        public void Add(AbilityDataSource abilityDataSource, int flowIndex, int entryIndex, int order)
+        public void Add(AbilityHandle abilityHandle, int flowIndex, int entryIndex, int order)
         {
-            if (!entryHandles.TryGetValue(abilityDataSource, out var handles))
+            if (!entryHandles.TryGetValue(abilityHandle, out var handles))
             {
                 handles = new List<EntryHandle>(4);
-                entryHandles.Add(abilityDataSource, handles);
+                entryHandles.Add(abilityHandle, handles);
             }
 
             var newHandle = new EntryHandle
             {
-                abilityDataSource = abilityDataSource,
+                abilityHandle = abilityHandle,
                 flowIndex = flowIndex,
                 entryIndex = entryIndex,
                 order = order,
@@ -33,9 +33,9 @@ namespace Physalia.Flexi
             }
         }
 
-        public void Remove(AbilityDataSource abilityDataSource)
+        public void Remove(AbilityHandle abilityHandle)
         {
-            _ = entryHandles.Remove(abilityDataSource);
+            _ = entryHandles.Remove(abilityHandle);
         }
     }
 }

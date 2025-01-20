@@ -3,7 +3,7 @@ using Physalia.Flexi;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class PlayerNode : ValueNode
+    public class PlayerNode : DefaultValueNode
     {
         public Inport<Player> playerPort;
         public Outport<int> manaRecoverPort;

@@ -98,7 +98,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 default:
                     HandleOtherNodeStyles(node);
                     break;
-                case EntryNodeBase:
+                case EntryNode:
                     AddToClassList(USS_CLASS_ENTRY_NODE);
                     break;
                 case SubgraphNode:

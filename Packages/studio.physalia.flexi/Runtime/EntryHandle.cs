@@ -5,7 +5,7 @@ namespace Physalia.Flexi
 {
     internal struct EntryHandle : IEquatable<EntryHandle>, IEqualityComparer<EntryHandle>
     {
-        public AbilityDataSource abilityDataSource;
+        public AbilityHandle abilityHandle;
         public int flowIndex;
         public int entryIndex;
         public int order;
@@ -22,7 +22,7 @@ namespace Physalia.Flexi
 
         public readonly bool Equals(EntryHandle x, EntryHandle y)
         {
-            return x.abilityDataSource == y.abilityDataSource &&
+            return x.abilityHandle == y.abilityHandle &&
                    x.flowIndex == y.flowIndex &&
                    x.entryIndex == y.entryIndex &&
                    x.order == y.order;
@@ -35,7 +35,7 @@ namespace Physalia.Flexi
 
         public readonly int GetHashCode(EntryHandle obj)
         {
-            return HashCode.Combine(obj.abilityDataSource, obj.flowIndex, obj.entryIndex, obj.order);
+            return HashCode.Combine(obj.abilityHandle, obj.flowIndex, obj.entryIndex, obj.order);
         }
 
         public static bool operator ==(EntryHandle left, EntryHandle right)

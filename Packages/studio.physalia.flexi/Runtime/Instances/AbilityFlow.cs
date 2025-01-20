@@ -12,8 +12,6 @@ namespace Physalia.Flexi
         private readonly Ability ability;
         private readonly AbilityGraph graph;
 
-        public object userData;
-
         private IEventContext payload;
 
         public AbilitySystem System => system;
@@ -61,37 +59,6 @@ namespace Physalia.Flexi
             }
 
             return graph.EntryNodes[entryIndex].CheckCanExecute(context);
-        }
-
-        internal int GetAvailableEntry(IEventContext payload)
-        {
-            if (graph.EntryNodes.Count == 0)
-            {
-                return -1;
-            }
-
-            IReadOnlyList<EntryNodeBase> entryNodes = graph.EntryNodes;
-            for (var i = 0; i < entryNodes.Count; i++)
-            {
-                bool success = entryNodes[i].CheckCanExecute(payload);
-                if (success)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        internal bool CanStatRefresh()
-        {
-            if (graph.EntryNodes.Count == 0)
-            {
-                return false;
-            }
-
-            bool result = graph.EntryNodes[0] is StatRefreshEventNode;
-            return result;
         }
 
         internal void Push(FlowNode flowNode)

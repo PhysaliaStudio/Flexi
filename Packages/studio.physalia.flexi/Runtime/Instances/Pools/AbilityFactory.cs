@@ -3,19 +3,19 @@ namespace Physalia.Flexi
     internal class AbilityFactory : ObjectInstanceFactory<Ability>
     {
         private readonly AbilitySystem abilitySystem;
-        private readonly AbilityDataSource abilityDataSource;
+        private readonly AbilityHandle abilityHandle;
 
-        public override string Name => abilityDataSource.ToString();
+        public override string Name => abilityHandle.ToString();
 
-        public AbilityFactory(AbilitySystem abilitySystem, AbilityDataSource abilityDataSource)
+        public AbilityFactory(AbilitySystem abilitySystem, AbilityHandle abilityHandle)
         {
             this.abilitySystem = abilitySystem;
-            this.abilityDataSource = abilityDataSource;
+            this.abilityHandle = abilityHandle;
         }
 
         public override Ability Create()
         {
-            Ability ability = abilitySystem.InstantiateAbility(abilityDataSource);
+            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
             return ability;
         }
 

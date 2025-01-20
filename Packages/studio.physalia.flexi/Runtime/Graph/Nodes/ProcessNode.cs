@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     public abstract class ProcessNode<TContainer> : ProcessNode
-        where TContainer : AbilityDataContainer
+        where TContainer : AbilityContainer
     {
         public TContainer Container => GetContainer<TContainer>();
     }

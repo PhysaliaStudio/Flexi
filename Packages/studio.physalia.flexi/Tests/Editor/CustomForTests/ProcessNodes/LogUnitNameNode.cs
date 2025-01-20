@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class LogCharacterNameNode : ProcessNode
+    public class LogCharacterNameNode : DefaultProcessNode
     {
         public Inport<CustomUnit> character;
 

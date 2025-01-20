@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class StatCompareNode : ValueNode
+    public class StatCompareNode : DefaultValueNode
     {
         public Inport<Actor> actorPort;
         public Outport<bool> resultPort;

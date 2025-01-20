@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Tests
     }
 
     [NodeCategoryForTests]
-    public class CustomSingleTargetSelection : ProcessNode
+    public class CustomSingleTargetSelection : DefaultProcessNode
     {
         public Outport<CustomUnit> targetPort;
 

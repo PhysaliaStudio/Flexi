@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Tests
 {
-    public class AttackUpModifierNode : ProcessNode
+    public class AttackUpModifierNode : DefaultProcessNode
     {
         protected override AbilityState DoLogic()
         {

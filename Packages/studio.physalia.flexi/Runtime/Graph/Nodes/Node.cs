@@ -37,9 +37,9 @@ namespace Physalia.Flexi
         public Ability Ability => flow?.Ability;
         #endregion
 
-        internal TContainer GetContainer<TContainer>() where TContainer : AbilityDataContainer
+        internal TContainer GetContainer<TContainer>() where TContainer : AbilityContainer
         {
-            AbilityDataContainer baseContainer = flow?.Ability?.Container;
+            AbilityContainer baseContainer = flow?.Ability?.Container;
             if (baseContainer == null)
             {
                 Logger.Error($"{GetType().Name}: container is null");

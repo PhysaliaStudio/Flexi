@@ -4,7 +4,7 @@ namespace Physalia.Flexi.Tests
 {
     public static class CustomAbility
     {
-        public static AbilityDataSource THROW_EXCEPTION
+        public static AbilityHandle THROW_EXCEPTION
         {
             get
             {
@@ -12,7 +12,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource HELLO_WORLD
+        public static AbilityHandle HELLO_WORLD
         {
             get
             {
@@ -20,7 +20,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource HELLO_WORLD_MACRO_CALLER
+        public static AbilityHandle HELLO_WORLD_MACRO_CALLER
         {
             get
             {
@@ -28,7 +28,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource HELLO_WORLD_MACRO_CALLER_5_TIMES
+        public static AbilityHandle HELLO_WORLD_MACRO_CALLER_5_TIMES
         {
             get
             {
@@ -44,7 +44,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource HELLO_WORLD_MISSING_ELEMENTS
+        public static AbilityHandle HELLO_WORLD_MISSING_ELEMENTS
         {
             get
             {
@@ -52,7 +52,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource NORAML_ATTACK
+        public static AbilityHandle NORAML_ATTACK
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource NORAML_ATTACK_SELECTION
+        public static AbilityHandle NORAML_ATTACK_SELECTION
         {
             get
             {
@@ -68,7 +68,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource NORMAL_ATTACK_5_TIMES
+        public static AbilityHandle NORMAL_ATTACK_5_TIMES
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource ATTACK_DECREASE
+        public static AbilityHandle ATTACK_DECREASE
         {
             get
             {
@@ -84,7 +84,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource ATTACK_DOUBLE
+        public static AbilityHandle ATTACK_DOUBLE
         {
             get
             {
@@ -92,7 +92,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource ATTACK_UP_WHEN_LOW_HEALTH
+        public static AbilityHandle ATTACK_UP_WHEN_LOW_HEALTH
         {
             get
             {
@@ -100,7 +100,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource ATTACK_DOUBLE_WHEN_DAMAGED
+        public static AbilityHandle ATTACK_DOUBLE_WHEN_DAMAGED
         {
             get
             {
@@ -108,7 +108,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource ATTACK_DOUBLE_WHEN_GREATER_THAN_5
+        public static AbilityHandle ATTACK_DOUBLE_WHEN_GREATER_THAN_5
         {
             get
             {
@@ -116,7 +116,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource LOG_WHEN_ATTACKED
+        public static AbilityHandle LOG_WHEN_ATTACKED
         {
             get
             {
@@ -124,7 +124,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource COUNTER_ATTACK
+        public static AbilityHandle COUNTER_ATTACK
         {
             get
             {
@@ -132,7 +132,7 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityDataSource POISON
+        public static AbilityHandle POISON
         {
             get
             {
@@ -140,12 +140,12 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        private static AbilityDataSource LoadAbilityAsset(string fileName)
+        private static AbilityHandle LoadAbilityAsset(string fileName)
         {
             var asset = Resources.Load<AbilityAsset>(fileName);
             AbilityData data = asset.Data;
-            AbilityDataSource dataSource = data.CreateDataSource(0);
-            return dataSource;
+            AbilityHandle handle = data.CreateHandle(0);
+            return handle;
         }
 
         private static MacroAsset ReadMacroAsset(string fileName)

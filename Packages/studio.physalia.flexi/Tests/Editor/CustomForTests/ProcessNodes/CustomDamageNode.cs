@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomDamageNode : ProcessNode
+    public class CustomDamageNode : DefaultProcessNode
     {
         public Inport<CustomUnit> instigatorPort;
         public Inport<List<CustomUnit>> targets;

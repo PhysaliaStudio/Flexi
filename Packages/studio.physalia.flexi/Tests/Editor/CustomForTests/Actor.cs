@@ -4,17 +4,17 @@ namespace Physalia.Flexi.Tests
 {
     public abstract class Actor : StatOwner
     {
-        private readonly List<AbilityContainer> containers = new(2);
+        private readonly List<DefaultAbilityContainer> containers = new(2);
 
-        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
+        public IReadOnlyList<DefaultAbilityContainer> AbilityContainers => containers;
 
-        public void AppendAbilityContainer(AbilityContainer container)
+        public void AppendAbilityContainer(DefaultAbilityContainer container)
         {
             container.Actor = this;
             containers.Add(container);
         }
 
-        public void RemoveAbilityContainer(AbilityContainer container)
+        public void RemoveAbilityContainer(DefaultAbilityContainer container)
         {
             container.Actor = null;
             containers.Remove(container);

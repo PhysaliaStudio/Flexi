@@ -7,24 +7,24 @@ namespace Physalia.Flexi.Samples.ActionGame
     {
         private readonly IUnitAvatar avatar;
         private readonly AbilitySlot abilitySlot = new();
-        private readonly List<AbilityContainer> containers = new();
+        private readonly List<DefaultAbilityContainer> containers = new();
 
         public IUnitAvatar Avatar => avatar;
         public AbilitySlot AbilitySlot => abilitySlot;
-        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
+        public IReadOnlyList<DefaultAbilityContainer> AbilityContainers => containers;
 
         public Unit(IUnitAvatar avatar)
         {
             this.avatar = avatar;
         }
 
-        public void AppendAbilityContainer(AbilityContainer container)
+        public void AppendAbilityContainer(DefaultAbilityContainer container)
         {
             container.Unit = this;
             containers.Add(container);
         }
 
-        public void RemoveAbilityContainer(AbilityContainer container)
+        public void RemoveAbilityContainer(DefaultAbilityContainer container)
         {
             container.Unit = null;
             containers.Remove(container);

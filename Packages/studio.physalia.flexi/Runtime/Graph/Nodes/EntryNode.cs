@@ -10,8 +10,8 @@ namespace Physalia.Flexi
         // Empty Content
     }
 
-    public abstract class EntryNode<TContainer, TEventContext> : EntryNodeBase
-        where TContainer : AbilityDataContainer
+    public abstract class EntryNode<TContainer, TEventContext> : EntryNode
+        where TContainer : AbilityContainer
         where TEventContext : IEventContext
     {
         public TContainer Container => GetContainer<TContainer>();
@@ -31,8 +31,8 @@ namespace Physalia.Flexi
         public abstract bool CanExecute(TEventContext context);
     }
 
-    public abstract class EntryNode<TContainer> : EntryNodeBase
-        where TContainer : AbilityDataContainer
+    public abstract class EntryNode<TContainer> : EntryNode
+        where TContainer : AbilityContainer
     {
         public TContainer Container => GetContainer<TContainer>();
 
@@ -49,7 +49,7 @@ namespace Physalia.Flexi
         }
     }
 
-    public abstract class EntryNodeBase : FlowNode
+    public abstract class EntryNode : FlowNode
     {
         internal Outport<FlowNode> next;
 

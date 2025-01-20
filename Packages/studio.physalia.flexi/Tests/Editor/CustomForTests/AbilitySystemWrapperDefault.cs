@@ -41,9 +41,9 @@ namespace Physalia.Flexi.Tests
             return result;
         }
 
-        public IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers()
+        public IReadOnlyList<AbilityContainer> CollectStatRefreshContainers()
         {
-            var result = new List<AbilityDataContainer>();
+            var result = new List<AbilityContainer>();
             for (var i = 0; i < actors.Count; i++)
             {
                 result.AddRange(actors[i].AbilityContainers);

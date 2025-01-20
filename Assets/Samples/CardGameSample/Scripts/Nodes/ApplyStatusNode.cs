@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Samples.CardGame
 {
     [NodeCategory("Card Game Sample")]
-    public class ApplyStatusNode : ProcessNode
+    public class ApplyStatusNode : DefaultProcessNode
     {
         public Inport<Game> gamePort;
         public Inport<IReadOnlyList<Unit>> targetsPort;

@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         private readonly IUnitData unitData;
         private readonly Dictionary<StatusData, int> statusTable = new();
-        private readonly Dictionary<StatusData, AbilityContainer> statusToContainerTable = new();
+        private readonly Dictionary<StatusData, DefaultAbilityContainer> statusToContainerTable = new();
 
         private int health;
 
@@ -64,7 +64,7 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        public void AppendStatusContainer(StatusData statusData, AbilityContainer container)
+        public void AppendStatusContainer(StatusData statusData, DefaultAbilityContainer container)
         {
             if (statusToContainerTable.ContainsKey(statusData))
             {
@@ -78,7 +78,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void RemoveStatusContainer(StatusData statusData)
         {
-            bool success = statusToContainerTable.Remove(statusData, out AbilityContainer container);
+            bool success = statusToContainerTable.Remove(statusData, out DefaultAbilityContainer container);
             if (success)
             {
                 RemoveAbilityContainer(container);

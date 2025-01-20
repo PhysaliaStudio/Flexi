@@ -9,9 +9,4 @@ namespace Physalia.Flexi
     {
 
     }
-
-    public interface IChoiceContext
-    {
-
-    }
 }

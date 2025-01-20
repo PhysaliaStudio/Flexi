@@ -1,7 +1,7 @@
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class CustomDamageEventNode : EntryNode<CustomDamageEventNode.Context>
+    public class CustomDamageEventNode : DefaultEntryNode<CustomDamageEventNode.Context>
     {
         public class Context : IEventContext
         {

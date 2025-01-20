@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace Physalia.Flexi.Tests
 {
+    [HideFromSearchWindow]
+    internal sealed class EmptyNode : Node
+    {
+
+    }
+
     public class NodeTests
     {
         [Test]

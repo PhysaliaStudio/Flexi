@@ -9,7 +9,7 @@ namespace Physalia.Flexi
         void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext);
 
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
-        IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers();
+        IReadOnlyList<AbilityContainer> CollectStatRefreshContainers();
 
         void OnBeforeCollectModifiers();
         void ApplyModifiers(StatOwner statOwner);
@@ -17,7 +17,6 @@ namespace Physalia.Flexi
 
     public class AbilitySystem
     {
-        private static readonly StatRefreshEvent STAT_REFRESH_EVENT = new();
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
         private readonly IAbilitySystemWrapper wrapper;
@@ -68,64 +67,64 @@ namespace Physalia.Flexi
             return graph;
         }
 
-        public bool HasAbilityPool(AbilityDataSource abilityDataSource)
+        public bool HasAbilityPool(AbilityHandle abilityHandle)
         {
-            return poolManager.ContainsPool(abilityDataSource);
+            return poolManager.ContainsPool(abilityHandle);
         }
 
-        public void CreateAbilityPool(AbilityDataSource abilityDataSource, int startSize)
+        public void CreateAbilityPool(AbilityHandle abilityHandle, int startSize)
         {
-            poolManager.CreatePool(abilityDataSource, startSize);
+            poolManager.CreatePool(abilityHandle, startSize);
 
             // Perf: Cache the event listen handles.
-            CacheEntryHandles(abilityDataSource);
+            CacheEntryHandles(abilityHandle);
         }
 
-        public void DestroyAbilityPool(AbilityDataSource abilityDataSource)
+        public void DestroyAbilityPool(AbilityHandle abilityHandle)
         {
-            poolManager.DestroyPool(abilityDataSource);
+            poolManager.DestroyPool(abilityHandle);
 
             // Remove cache.
-            RemoveEntryHandles(abilityDataSource);
+            RemoveEntryHandles(abilityHandle);
         }
 
-        internal AbilityPool GetAbilityPool(AbilityDataSource abilityDataSource)
+        internal AbilityPool GetAbilityPool(AbilityHandle abilityHandle)
         {
-            return poolManager.GetPool(abilityDataSource);
+            return poolManager.GetPool(abilityHandle);
         }
 
         internal Ability GetAbility(AbilityData abilityData, int groupIndex)
         {
-            AbilityDataSource abilityDataSource = abilityData.CreateDataSource(groupIndex);
-            return GetAbility(abilityDataSource);
+            AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+            return GetAbility(abilityHandle);
         }
 
-        internal Ability GetAbility(AbilityDataSource abilityDataSource)
+        internal Ability GetAbility(AbilityHandle abilityHandle)
         {
-            Ability ability = poolManager.GetAbility(abilityDataSource);
+            Ability ability = poolManager.GetAbility(abilityHandle);
             if (ability != null)
             {
                 return ability;
             }
             else
             {
-                Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityDataSource}. Note that instantiation is <b>VERY</b> expensive!");
-                CreateAbilityPool(abilityDataSource, DEFAULT_ABILITY_POOL_SIZE);
-                ability = poolManager.GetAbility(abilityDataSource);
+                Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityHandle}. Note that instantiation is <b>VERY</b> expensive!");
+                CreateAbilityPool(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
+                ability = poolManager.GetAbility(abilityHandle);
                 return ability;
             }
         }
 
-        public Ability GetAbility(AbilityDataContainer container)
+        public Ability GetAbility(AbilityContainer container)
         {
-            AbilityDataSource abilityDataSource = container.DataSource;
-            if (!abilityDataSource.IsValid)
+            AbilityHandle abilityHandle = container.Handle;
+            if (!abilityHandle.IsValid)
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] GetAbility failed! container.DataSource is invalid!");
+                Logger.Error($"[{nameof(AbilitySystem)}] GetAbility failed! container.Handle is invalid!");
                 return null;
             }
 
-            Ability ability = GetAbility(abilityDataSource);
+            Ability ability = GetAbility(abilityHandle);
             ability.Container = container;
             return ability;
         }
@@ -139,9 +138,9 @@ namespace Physalia.Flexi
             }
         }
 
-        internal Ability InstantiateAbility(AbilityDataSource abilityDataSource)
+        internal Ability InstantiateAbility(AbilityHandle abilityHandle)
         {
-            var ability = new Ability(this, abilityDataSource);
+            var ability = new Ability(this, abilityHandle);
             ability.Initialize();
             return ability;
         }
@@ -175,7 +174,7 @@ namespace Physalia.Flexi
             runner.AfterTriggerEvents();
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityContainer> containers, IEventContext eventContext = null)
         {
             bool hasAnyEnqueued = false;
 
@@ -191,12 +190,12 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(AbilityContainer container, IEventContext eventContext = null)
         {
-            AbilityDataSource abilityDataSource = container.DataSource;
-            if (!abilityDataSource.IsValid)
+            AbilityHandle abilityHandle = container.Handle;
+            if (!abilityHandle.IsValid)
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! container.DataSource is invalid!");
+                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! container.Handle is invalid!");
                 return false;
             }
 
@@ -208,7 +207,7 @@ namespace Physalia.Flexi
                 return false;
             }
 
-            if (!handleTable.TryGetHandles(abilityDataSource, out List<EntryHandle> handles))
+            if (!handleTable.TryGetHandles(abilityHandle, out List<EntryHandle> handles))
             {
                 return false;
             }
@@ -290,10 +289,10 @@ namespace Physalia.Flexi
         /// <remarks>
         /// StatRefresh does not run with other events and abilities. It runs in another line.
         /// </remarks>
-        private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityDataContainer> containers)
+        private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityContainer> containers)
         {
-            // If no StatRefreshEventNode, just return.
-            bool success = entryLookupTable.TryGetValue(typeof(StatRefreshEvent), out EntryHandleTable handleTable);
+            // If no OnCollectModifierNode, just return.
+            bool success = entryLookupTable.TryGetValue(typeof(OnCollectModifierNode.Context), out EntryHandleTable handleTable);
             if (!success)
             {
                 return;
@@ -301,8 +300,8 @@ namespace Physalia.Flexi
 
             for (var i = 0; i < containers.Count; i++)
             {
-                AbilityDataContainer container = containers[i];
-                if (!handleTable.TryGetHandles(container.DataSource, out List<EntryHandle> handles))
+                AbilityContainer container = containers[i];
+                if (!handleTable.TryGetHandles(container.Handle, out List<EntryHandle> handles))
                 {
                     continue;
                 }
@@ -312,12 +311,12 @@ namespace Physalia.Flexi
                     EntryHandle handle = handles[handleIndex];
 
                     // Get another copy and setup the flow.
-                    Ability copy = GetAbility(container.DataSource);
+                    Ability copy = GetAbility(container.Handle);
                     copy.Container = container;
 
                     AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
                     copyFlow.Reset(handle.entryIndex);
-                    copyFlow.SetPayload(STAT_REFRESH_EVENT);
+                    copyFlow.SetPayload(OnCollectModifierNode.Context.Instance);
 
                     // Then add into the correct order list.
                     int nodeOrder = handle.order;
@@ -383,10 +382,10 @@ namespace Physalia.Flexi
             }
         }
 
-        private void CacheEntryHandles(AbilityDataSource abilityDataSource)
+        private void CacheEntryHandles(AbilityHandle abilityHandle)
         {
             // Get a copy for iterating.
-            Ability ability = GetAbility(abilityDataSource);
+            Ability ability = GetAbility(abilityHandle);
 
             // Iterate all entry nodes to find all StatRefreshEventNode.
             IReadOnlyList<AbilityFlow> abilityFlows = ability.Flows;
@@ -395,7 +394,7 @@ namespace Physalia.Flexi
             for (var indexOfFlow = 0; indexOfFlow < flowCount; indexOfFlow++)
             {
                 AbilityFlow abilityFlow = abilityFlows[indexOfFlow];
-                IReadOnlyList<EntryNodeBase> entryNodes = abilityFlow.Graph.EntryNodes;
+                IReadOnlyList<EntryNode> entryNodes = abilityFlow.Graph.EntryNodes;
 
                 int entryNodeCount = entryNodes.Count;
                 for (var indexOfEntry = 0; indexOfEntry < entryNodeCount; indexOfEntry++)
@@ -412,13 +411,13 @@ namespace Physalia.Flexi
                         entryLookupTable.Add(contextType, handleTable);
                     }
 
-                    if (entryNodes[indexOfEntry] is StatRefreshEventNode statRefreshEventNode)
+                    if (entryNodes[indexOfEntry] is OnCollectModifierNode statRefreshEventNode)
                     {
-                        handleTable.Add(abilityDataSource, indexOfFlow, indexOfEntry, statRefreshEventNode.order.Value);
+                        handleTable.Add(abilityHandle, indexOfFlow, indexOfEntry, statRefreshEventNode.order.Value);
                     }
                     else
                     {
-                        handleTable.Add(abilityDataSource, indexOfFlow, indexOfEntry, 0);
+                        handleTable.Add(abilityHandle, indexOfFlow, indexOfEntry, 0);
                     }
                 }
             }
@@ -427,11 +426,11 @@ namespace Physalia.Flexi
             ReleaseAbility(ability);
         }
 
-        private void RemoveEntryHandles(AbilityDataSource abilityDataSource)
+        private void RemoveEntryHandles(AbilityHandle abilityHandle)
         {
             foreach (EntryHandleTable handleTable in entryLookupTable.Values)
             {
-                handleTable.Remove(abilityDataSource);
+                handleTable.Remove(abilityHandle);
             }
         }
     }

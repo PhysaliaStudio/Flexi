@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: AttackUpWhenLowHealth
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons: []
   graphGroups:
   - graphs:
-    - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":284761,"_position":{"x":56.0,"y":186.0},"_type":"Physalia.Flexi.StatRefreshEventNode"},{"_id":534912,"_position":{"x":497.0,"y":201.0},"_type":"Physalia.Flexi.Tests.ConditionalModifierNode","modifiers":[{"statId":11,"op":1,"value":2}]},{"_id":995143,"_position":{"x":252.0,"y":346.0},"_type":"Physalia.Flexi.Tests.StatCompareNode","statId":1,"op":3,"value":3},{"_id":325630,"_position":{"x":65.0,"y":284.0},"_type":"Physalia.Flexi.Tests.ActorNode"}],"edges":[{"id1":284761,"port1":"next","id2":534912,"port2":"previous"},{"id1":325630,"port1":"actor","id2":534912,"port2":"actorsPort"},{"id1":995143,"port1":"resultPort","id2":534912,"port2":"enabledPort"},{"id1":325630,"port1":"actor","id2":995143,"port2":"actorPort"}]}'
+    - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":284761,"_position":{"x":56.0,"y":186.0},"_type":"Physalia.Flexi.OnCollectModifierNode"},{"_id":534912,"_position":{"x":497.0,"y":201.0},"_type":"Physalia.Flexi.Tests.ConditionalModifierNode","modifiers":[{"statId":11,"op":1,"value":2}]},{"_id":995143,"_position":{"x":252.0,"y":346.0},"_type":"Physalia.Flexi.Tests.StatCompareNode","statId":1,"op":3,"value":3},{"_id":325630,"_position":{"x":65.0,"y":284.0},"_type":"Physalia.Flexi.Tests.ActorNode"}],"edges":[{"id1":284761,"port1":"next","id2":534912,"port2":"previous"},{"id1":325630,"port1":"actor","id2":534912,"port2":"actorsPort"},{"id1":995143,"port1":"resultPort","id2":534912,"port2":"enabledPort"},{"id1":325630,"port1":"actor","id2":995143,"port2":"actorPort"}]}'

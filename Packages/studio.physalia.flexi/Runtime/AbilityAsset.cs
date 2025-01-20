@@ -13,10 +13,6 @@ namespace Physalia.Flexi
     {
         [SerializeField]
         private List<BlackboardVariable> blackboard = new();
-        [Obsolete]
-        [HideInInspector]
-        [SerializeField]
-        private List<string> graphJsons = new();
         [HideInInspector]
         [SerializeField]
         private List<AbilityGraphGroup> graphGroups = new();
@@ -44,8 +40,6 @@ namespace Physalia.Flexi
             }
         }
 
-        [Obsolete]
-        internal List<string> GraphJsons => graphJsons;
         internal List<AbilityGraphGroup> GraphGroups => graphGroups;
 
         public AbilityData Data

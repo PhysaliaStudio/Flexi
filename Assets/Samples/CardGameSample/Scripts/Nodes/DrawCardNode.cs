@@ -13,7 +13,7 @@ namespace Physalia.Flexi.Samples.CardGame
     }
 
     [NodeCategory("Card Game Sample")]
-    public class DrawCardNode : ProcessNode
+    public class DrawCardNode : DefaultProcessNode
     {
         public Inport<Game> gamePort;
         public Inport<int> countPort;

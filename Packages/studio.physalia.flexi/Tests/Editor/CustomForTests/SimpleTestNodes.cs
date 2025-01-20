@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Tests
     }
 
     [NodeCategoryForTests]
-    public class TestProcessNode : ProcessNode
+    public class TestProcessNode : DefaultProcessNode
     {
         public Inport<int> input;
         public Outport<int> output;

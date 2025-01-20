@@ -50,14 +50,14 @@ namespace Physalia.Flexi
             blackboard.Add(new BlackboardVariable { key = key, value = value });
         }
 
-        public AbilityDataSource CreateDataSource(int groupIndex)
+        public AbilityHandle CreateHandle(int groupIndex)
         {
             if (groupIndex < 0 || groupIndex >= graphGroups.Count)
             {
                 throw new IndexOutOfRangeException();
             }
 
-            return new AbilityDataSource(this, groupIndex);
+            return new AbilityHandle(this, groupIndex);
         }
     }
 }
