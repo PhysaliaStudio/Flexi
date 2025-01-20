@@ -12,8 +12,6 @@ namespace Physalia.Flexi
         private readonly Ability ability;
         private readonly AbilityGraph graph;
 
-        public object userData;
-
         private IEventContext payload;
 
         public AbilitySystem System => system;
