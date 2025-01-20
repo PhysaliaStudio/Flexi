@@ -9,7 +9,7 @@ namespace Physalia.Flexi
         void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext);
 
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
-        IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers();
+        IReadOnlyList<AbilityContainer> CollectStatRefreshContainers();
 
         void OnBeforeCollectModifiers();
         void ApplyModifiers(StatOwner statOwner);
@@ -115,7 +115,7 @@ namespace Physalia.Flexi
             }
         }
 
-        public Ability GetAbility(AbilityDataContainer container)
+        public Ability GetAbility(AbilityContainer container)
         {
             AbilityHandle abilityHandle = container.Handle;
             if (!abilityHandle.IsValid)
@@ -174,7 +174,7 @@ namespace Physalia.Flexi
             runner.AfterTriggerEvents();
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityDataContainer> containers, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityContainer> containers, IEventContext eventContext = null)
         {
             bool hasAnyEnqueued = false;
 
@@ -190,7 +190,7 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(AbilityDataContainer container, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(AbilityContainer container, IEventContext eventContext = null)
         {
             AbilityHandle abilityHandle = container.Handle;
             if (!abilityHandle.IsValid)
@@ -289,7 +289,7 @@ namespace Physalia.Flexi
         /// <remarks>
         /// StatRefresh does not run with other events and abilities. It runs in another line.
         /// </remarks>
-        private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityDataContainer> containers)
+        private void DoStatRefreshLogicForAllOwners(IReadOnlyList<StatOwner> owners, IReadOnlyList<AbilityContainer> containers)
         {
             // If no OnCollectModifierNode, just return.
             bool success = entryLookupTable.TryGetValue(typeof(OnCollectModifierNode.Context), out EntryHandleTable handleTable);
@@ -300,7 +300,7 @@ namespace Physalia.Flexi
 
             for (var i = 0; i < containers.Count; i++)
             {
-                AbilityDataContainer container = containers[i];
+                AbilityContainer container = containers[i];
                 if (!handleTable.TryGetHandles(container.Handle, out List<EntryHandle> handles))
                 {
                     continue;

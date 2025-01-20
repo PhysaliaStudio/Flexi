@@ -11,7 +11,7 @@ namespace Physalia.Flexi
     }
 
     public abstract class EntryNode<TContainer, TEventContext> : EntryNode
-        where TContainer : AbilityDataContainer
+        where TContainer : AbilityContainer
         where TEventContext : IEventContext
     {
         public TContainer Container => GetContainer<TContainer>();
@@ -32,7 +32,7 @@ namespace Physalia.Flexi
     }
 
     public abstract class EntryNode<TContainer> : EntryNode
-        where TContainer : AbilityDataContainer
+        where TContainer : AbilityContainer
     {
         public TContainer Container => GetContainer<TContainer>();
 

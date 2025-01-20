@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Samples.CardGame
 {
-    public class AbilityContainer : AbilityDataContainer
+    public class DefaultAbilityContainer : AbilityContainer
     {
         private readonly Game game;
         public Unit Unit;
@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public Game Game => game;
 
-        public AbilityContainer(Game game, AbilityHandle handle)
+        public DefaultAbilityContainer(Game game, AbilityHandle handle)
         {
             this.game = game;
             Handle = handle;
@@ -21,22 +21,22 @@ namespace Physalia.Flexi.Samples.CardGame
         }
     }
 
-    public abstract class EntryNode<TEventContext> : EntryNode<AbilityContainer, TEventContext> where TEventContext : IEventContext
+    public abstract class EntryNode<TEventContext> : EntryNode<DefaultAbilityContainer, TEventContext> where TEventContext : IEventContext
     {
 
     }
 
-    public abstract class ProcessNode : ProcessNode<AbilityContainer>
+    public abstract class ProcessNode : ProcessNode<DefaultAbilityContainer>
     {
 
     }
 
-    public abstract class FlowNode : FlowNode<AbilityContainer>
+    public abstract class FlowNode : FlowNode<DefaultAbilityContainer>
     {
 
     }
 
-    public abstract class ValueNode : ValueNode<AbilityContainer>
+    public abstract class ValueNode : ValueNode<DefaultAbilityContainer>
     {
 
     }

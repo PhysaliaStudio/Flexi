@@ -150,7 +150,7 @@ namespace Physalia.Flexi.Tests
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             abilitySystem.CreateAbilityPool(abilityHandle, 1);
 
-            var container = new AbilityContainer { Handle = abilityHandle };
+            var container = new DefaultAbilityContainer { Handle = abilityHandle };
             Ability ability = abilitySystem.GetAbility(abilityHandle);
             ability.Container = container;
             abilitySystem.ReleaseAbility(ability);

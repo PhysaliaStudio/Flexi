@@ -14,7 +14,7 @@ namespace Physalia.Flexi.Tests
             throw new System.NotImplementedException();
         }
 
-        public IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers()
+        public IReadOnlyList<AbilityContainer> CollectStatRefreshContainers()
         {
             throw new System.NotImplementedException();
         }

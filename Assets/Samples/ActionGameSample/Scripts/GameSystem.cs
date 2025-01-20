@@ -50,7 +50,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             for (var i = 0; i < abilityData.graphGroups.Count; i++)
             {
                 AbilityHandle abilityHandle = abilityData.CreateHandle(i);
-                var container = new AbilityContainer { Handle = abilityHandle };
+                var container = new DefaultAbilityContainer { Handle = abilityHandle };
                 abilitySystem.CreateAbilityPool(abilityHandle, 2);
                 unit.AppendAbilityContainer(container);
             }
@@ -76,9 +76,9 @@ namespace Physalia.Flexi.Samples.ActionGame
             return result;
         }
 
-        public IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers()
+        public IReadOnlyList<AbilityContainer> CollectStatRefreshContainers()
         {
-            var result = new List<AbilityDataContainer>();
+            var result = new List<AbilityContainer>();
             result.AddRange(playerUnit.AbilityContainers);
             return result;
         }

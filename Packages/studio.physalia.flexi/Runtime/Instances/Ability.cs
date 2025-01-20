@@ -15,7 +15,7 @@ namespace Physalia.Flexi
         private readonly Dictionary<string, BlackboardVariable> variableTable = new();
         private readonly List<AbilityFlow> abilityFlows = new();
 
-        private AbilityDataContainer container;
+        private AbilityContainer container;
 
         public AbilitySystem System => abilitySystem;
         public AbilityData Data => abilityHandle.Data;
@@ -23,7 +23,7 @@ namespace Physalia.Flexi
 
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         public IReadOnlyList<AbilityFlow> Flows => abilityFlows;
-        internal AbilityDataContainer Container { get => container; set => container = value; }
+        internal AbilityContainer Container { get => container; set => container = value; }
 
         internal Ability(AbilitySystem abilitySystem, AbilityHandle abilityHandle)
         {

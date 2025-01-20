@@ -26,7 +26,7 @@ namespace Physalia.Flexi.Tests
             for (var i = 0; i < abilityCountPerFrame; i++)
             {
                 var character = new CustomCharacter();
-                var abilityDataContainer = new AbilityContainer { Handle = abilityHandle };
+                var abilityDataContainer = new DefaultAbilityContainer { Handle = abilityHandle };
                 character.AppendAbilityContainer(abilityDataContainer);
 
                 characters.Add(character);

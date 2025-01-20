@@ -25,8 +25,8 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly System.Random generalRandom = new();
         private readonly HashSet<EnemyGroupData> groupDatas = new();
 
-        private List<AbilityContainer> gameStartProcess;
-        private List<AbilityContainer> turnEndProcess;
+        private List<DefaultAbilityContainer> gameStartProcess;
+        private List<DefaultAbilityContainer> turnEndProcess;
 
         private Player player;
         private Unit heroUnit;
@@ -72,11 +72,11 @@ namespace Physalia.Flexi.Samples.CardGame
             abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
             CacheAllStatusAbility();
 
-            gameStartProcess = new List<AbilityContainer> {
+            gameStartProcess = new List<DefaultAbilityContainer> {
                 new(this, enemyGenerationEffect),
                 new(this, turnStartEffect),
             };
-            turnEndProcess = new List<AbilityContainer> {
+            turnEndProcess = new List<DefaultAbilityContainer> {
                 new(this, turnEndEffect),
                 new(this, enemyGenerationEffect),
                 new(this, turnStartEffect),
@@ -136,9 +136,9 @@ namespace Physalia.Flexi.Samples.CardGame
             return result;
         }
 
-        public IReadOnlyList<AbilityDataContainer> CollectStatRefreshContainers()
+        public IReadOnlyList<AbilityContainer> CollectStatRefreshContainers()
         {
-            var result = new List<AbilityDataContainer>();
+            var result = new List<AbilityContainer>();
             result.AddRange(heroUnit.AbilityContainers);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
@@ -197,7 +197,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
-                    var container = new AbilityContainer(this, abilityHandle);
+                    var container = new DefaultAbilityContainer(this, abilityHandle);
                     unit.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityHandle))
@@ -240,7 +240,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
-                    var container = new AbilityContainer(this, abilityHandle);
+                    var container = new DefaultAbilityContainer(this, abilityHandle);
                     card.AppendAbilityContainer(container);
 
                     if (!abilitySystem.HasAbilityPool(abilityHandle))
@@ -360,7 +360,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 if (abilityData.graphGroups.Count > 0)
                 {
                     AbilityHandle abilityHandle = abilityData.CreateHandle(0);
-                    var container = new AbilityContainer(this, abilityHandle);
+                    var container = new DefaultAbilityContainer(this, abilityHandle);
                     unit.AppendStatusContainer(statusData, container);
                 }
             }

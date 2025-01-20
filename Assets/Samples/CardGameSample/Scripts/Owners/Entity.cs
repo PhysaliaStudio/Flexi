@@ -4,11 +4,11 @@ namespace Physalia.Flexi.Samples.CardGame
 {
     public class Entity : StatOwner
     {
-        private readonly List<AbilityContainer> containers = new();
+        private readonly List<DefaultAbilityContainer> containers = new();
 
-        public IReadOnlyList<AbilityContainer> AbilityContainers => containers;
+        public IReadOnlyList<DefaultAbilityContainer> AbilityContainers => containers;
 
-        public void AppendAbilityContainer(AbilityContainer container)
+        public void AppendAbilityContainer(DefaultAbilityContainer container)
         {
             if (this is Unit unit)
             {
@@ -22,7 +22,7 @@ namespace Physalia.Flexi.Samples.CardGame
             containers.Add(container);
         }
 
-        public void RemoveAbilityContainer(AbilityContainer container)
+        public void RemoveAbilityContainer(DefaultAbilityContainer container)
         {
             container.CleanUp();
             containers.Remove(container);

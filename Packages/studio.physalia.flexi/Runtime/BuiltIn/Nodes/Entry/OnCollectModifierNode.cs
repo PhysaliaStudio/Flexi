@@ -1,7 +1,7 @@
 namespace Physalia.Flexi
 {
     [NodeCategory(BuiltInCategory.Entry)]
-    internal class OnCollectModifierNode : EntryNode<AbilityDataContainer, OnCollectModifierNode.Context>
+    internal class OnCollectModifierNode : EntryNode<AbilityContainer, OnCollectModifierNode.Context>
     {
         public sealed class Context : IEventContext
         {
