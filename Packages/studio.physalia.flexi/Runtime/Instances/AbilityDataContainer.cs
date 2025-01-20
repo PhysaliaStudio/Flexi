@@ -1,6 +1,6 @@
 namespace Physalia.Flexi
 {
-    public class AbilityDataContainer
+    public abstract class AbilityDataContainer
     {
         private AbilityHandle handle;
 
