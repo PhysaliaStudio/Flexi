@@ -15,7 +15,7 @@ namespace Physalia.Flexi
         private readonly Stack<Graph> graphStack = new();
 
         public FlowNode Current => currentNode;
-        public EntryNodeBase EntryNodeAssigned
+        public EntryNode EntryNodeAssigned
         {
             get
             {

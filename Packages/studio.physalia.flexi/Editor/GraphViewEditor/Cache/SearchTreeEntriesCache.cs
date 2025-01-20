@@ -152,7 +152,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 return customIcon;
             }
 
-            if (typeof(EntryNodeBase).IsAssignableFrom(nodeType))
+            if (typeof(EntryNode).IsAssignableFrom(nodeType))
             {
                 return entryNodeMenuIcon;
             }

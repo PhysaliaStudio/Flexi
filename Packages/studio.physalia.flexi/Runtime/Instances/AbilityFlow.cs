@@ -70,7 +70,7 @@ namespace Physalia.Flexi
                 return -1;
             }
 
-            IReadOnlyList<EntryNodeBase> entryNodes = graph.EntryNodes;
+            IReadOnlyList<EntryNode> entryNodes = graph.EntryNodes;
             for (var i = 0; i < entryNodes.Count; i++)
             {
                 bool success = entryNodes[i].CheckCanExecute(payload);
