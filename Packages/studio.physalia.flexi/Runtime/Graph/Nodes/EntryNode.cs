@@ -32,7 +32,7 @@ namespace Physalia.Flexi
 
         protected sealed override AbilityState DoLogic()
         {
-            TEventContext context = Flow.Payload is TEventContext eventContext ? eventContext : default;
+            TEventContext context = Flow.EventContext is TEventContext eventContext ? eventContext : default;
             return OnExecute(context);
         }
 

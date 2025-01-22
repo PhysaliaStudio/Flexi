@@ -225,7 +225,7 @@ namespace Physalia.Flexi
         private void EnqueueAbilityFlow(AbilityFlow flow, int entryIndex, IEventContext eventContext)
         {
             flow.Reset(entryIndex);
-            flow.SetPayload(eventContext);
+            flow.SetEventContext(eventContext);
             runner.AddFlow(flow);
         }
 
@@ -304,7 +304,7 @@ namespace Physalia.Flexi
 
                     AbilityFlow copyFlow = copy.Flows[handle.flowIndex];
                     copyFlow.Reset(handle.entryIndex);
-                    copyFlow.SetPayload(OnCollectModifierNode.Context.Instance);
+                    copyFlow.SetEventContext(OnCollectModifierNode.Context.Instance);
 
                     // Then add into the correct order list.
                     int nodeOrder = handle.order;
