@@ -19,7 +19,7 @@ namespace Physalia.Flexi
         internal Inport<FlowNode> previous;
         internal Outport<FlowNode> next;
 
-        public override FlowNode Next
+        public sealed override FlowNode Next
         {
             get
             {
