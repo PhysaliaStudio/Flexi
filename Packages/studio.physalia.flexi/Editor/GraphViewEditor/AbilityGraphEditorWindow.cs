@@ -83,9 +83,13 @@ namespace Physalia.Flexi.GraphViewEditor
         private ObjectField objectField;
 
         private AbilityGraphView graphView;
+        private VisualElement abilityAssetInspector;
+        private VisualElement macroAssetInspector;
+
         private AbilityFlowMenu abilityFlowMenu;
         private NodeInspector nodeInspector;
         private BlackboardInspector blackboardInspector;
+
         private bool isDirty;
 
         [MenuItem(EditorConst.MenuFolder + "Ability Editor &1", priority = 1000)]
@@ -168,6 +172,8 @@ namespace Physalia.Flexi.GraphViewEditor
             Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
+            abilityAssetInspector = rootVisualElement.Query<VisualElement>("ability-asset-inspector").First();
+            macroAssetInspector = rootVisualElement.Query<VisualElement>("macro-asset-inspector").First();
             SetUpAbilityFlowMenu();
             SetUpNodeInspector();
             SetUpBlackboardInspector();
@@ -297,6 +303,18 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
 
                 return false;
+            }
+
+            switch (asset)
+            {
+                case AbilityAsset:
+                    abilityAssetInspector.visible = true;
+                    macroAssetInspector.visible = false;
+                    break;
+                case MacroAsset:
+                    abilityAssetInspector.visible = false;
+                    macroAssetInspector.visible = true;
+                    break;
             }
 
             HideNodeInspector();
