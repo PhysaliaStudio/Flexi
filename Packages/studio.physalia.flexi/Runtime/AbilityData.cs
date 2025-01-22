@@ -9,14 +9,14 @@ namespace Physalia.Flexi
     [Serializable]
     public class AbilityGraphGroup
     {
-        public List<string> graphs = new();
+        public List<string> jsons = new();
 
         internal AbilityGraphGroup Clone()
         {
             var clone = new AbilityGraphGroup();
-            for (var i = 0; i < graphs.Count; i++)
+            for (var i = 0; i < jsons.Count; i++)
             {
-                clone.graphs.Add(graphs[i]);
+                clone.jsons.Add(jsons[i]);
             }
 
             return clone;

@@ -54,9 +54,9 @@ namespace Physalia.Flexi
             }
 
             AbilityGraphGroup group = abilityHandle.GraphGroup;
-            for (var i = 0; i < group.graphs.Count; i++)
+            for (var i = 0; i < group.jsons.Count; i++)
             {
-                string json = group.graphs[i];
+                string json = group.jsons[i];
                 AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, flexiCore.MacroLibrary);
                 var abilityFlow = new AbilityFlow(flexiCore, this, graph);
                 abilityFlows.Add(abilityFlow);

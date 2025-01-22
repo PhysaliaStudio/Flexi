@@ -62,7 +62,7 @@ namespace Physalia.Flexi
                 return;
             }
 
-            if (string.IsNullOrEmpty(asset.Text))
+            if (string.IsNullOrEmpty(asset.Json))
             {
                 cachedPreview = new GUIContent();
                 return;
@@ -71,7 +71,7 @@ namespace Physalia.Flexi
             string text;
             try
             {
-                text = IndentJson(asset.Text);
+                text = IndentJson(asset.Json);
                 if (text.Length >= MAX_CHARACTERS)
                 {
                     text = text.Substring(0, MAX_CHARACTERS) + "...\n\n<...etc...>";

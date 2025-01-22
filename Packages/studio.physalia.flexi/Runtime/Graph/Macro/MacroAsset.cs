@@ -7,18 +7,8 @@ namespace Physalia.Flexi
     {
         [SerializeField]
         [HideInInspector]
-        private string text;
+        private string json;
 
-        internal string Text
-        {
-            get
-            {
-                return text;
-            }
-            set
-            {
-                text = value;
-            }
-        }
+        internal string Json { get => json; set => json = value; }
     }
 }
