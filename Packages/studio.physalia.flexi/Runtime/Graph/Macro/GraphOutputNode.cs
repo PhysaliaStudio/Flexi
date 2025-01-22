@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-
 namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
-    internal class GraphOutputNode : FlowNode
+    internal class GraphOutputNode : BaseProcessNode
     {
         private static readonly int NODE_ID = -2;
 

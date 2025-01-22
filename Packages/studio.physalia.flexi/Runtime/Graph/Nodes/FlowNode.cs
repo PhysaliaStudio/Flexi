@@ -41,10 +41,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected virtual AbilityState DoLogic()
-        {
-            return AbilityState.RUNNING;
-        }
+        private protected abstract AbilityState DoLogic();
 
         public AbilityState Resume(IResumeContext resumeContext)
         {

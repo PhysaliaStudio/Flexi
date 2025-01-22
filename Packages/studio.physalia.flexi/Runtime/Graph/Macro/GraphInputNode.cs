@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
-    internal class GraphInputNode : FlowNode
+    internal class GraphInputNode : BaseProcessNode
     {
         private static readonly int NODE_ID = -1;
 

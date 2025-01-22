@@ -8,7 +8,13 @@ namespace Physalia.Flexi
         public TContainer Container => GetContainer<TContainer>();
     }
 
-    public abstract class ProcessNode : FlowNode
+    public abstract class BaseProcessNode<TContainer> : BaseProcessNode
+        where TContainer : AbilityContainer
+    {
+        public TContainer Container => GetContainer<TContainer>();
+    }
+
+    public abstract class ProcessNode : BaseProcessNode
     {
         internal Inport<FlowNode> previous;
         internal Outport<FlowNode> next;
@@ -21,8 +27,11 @@ namespace Physalia.Flexi
                 return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }
+    }
 
-        protected sealed override AbilityState DoLogic()
+    public abstract class BaseProcessNode : FlowNode
+    {
+        private protected sealed override AbilityState DoLogic()
         {
             return OnExecute();
         }

@@ -30,7 +30,7 @@ namespace Physalia.Flexi
 
         public abstract bool CanExecute(TEventContext context);
 
-        protected sealed override AbilityState DoLogic()
+        private protected sealed override AbilityState DoLogic()
         {
             TEventContext context = Flow.EventContext is TEventContext eventContext ? eventContext : default;
             return OnExecute(context);
@@ -56,7 +56,7 @@ namespace Physalia.Flexi
             return false;
         }
 
-        protected sealed override AbilityState DoLogic()
+        private protected sealed override AbilityState DoLogic()
         {
             return OnExecute();
         }
