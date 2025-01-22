@@ -16,16 +16,6 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void InstantiateAbility_SystemReturnsTheAbilitySystem()
-        {
-            AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            var abilityFactory = new AbilityFactory(flexiCore, abilityHandle);
-            Ability ability = abilityFactory.Create();
-
-            Assert.AreEqual(flexiCore, ability.Core);
-        }
-
-        [Test]
         public void InstantiateAbility_DataReturnsTheSourceData()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();

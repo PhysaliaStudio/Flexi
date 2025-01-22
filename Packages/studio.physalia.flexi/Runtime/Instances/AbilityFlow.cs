@@ -14,7 +14,7 @@ namespace Physalia.Flexi
 
         private IEventContext payload;
 
-        public FlexiCore Core => flexiCore;
+        internal FlexiCore Core => flexiCore;
         internal Ability Ability => ability;
         internal AbilityGraph Graph => graph;
 

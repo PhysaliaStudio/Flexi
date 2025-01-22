@@ -17,7 +17,6 @@ namespace Physalia.Flexi
 
         private AbilityContainer container;
 
-        public FlexiCore Core => flexiCore;
         public AbilityData Data => abilityHandle.Data;
         public AbilityHandle Handle => abilityHandle;
 
