@@ -21,11 +21,6 @@ namespace Physalia.Flexi.Samples.ActionGame
 
     }
 
-    public abstract class DefaultFlowNode : FlowNode<DefaultAbilityContainer>
-    {
-
-    }
-
     public abstract class DefaultValueNode : ValueNode<DefaultAbilityContainer>
     {
 

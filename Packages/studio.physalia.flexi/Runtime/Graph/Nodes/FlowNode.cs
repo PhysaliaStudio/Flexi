@@ -2,12 +2,6 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public abstract class FlowNode<TContainer> : FlowNode
-        where TContainer : AbilityContainer
-    {
-        public TContainer Container => GetContainer<TContainer>();
-    }
-
     public abstract class FlowNode : Node
     {
         public abstract FlowNode Next { get; }
@@ -16,6 +10,12 @@ namespace Physalia.Flexi
         /// This property only works when the FlowRunner is in EventTriggerMode.EACH_NODE.
         /// </summary>
         public virtual bool ShouldTriggerChainEvents => true;
+
+        // Note: FlowNode shouldn't be inherited outside of this assembly
+        internal FlowNode()
+        {
+
+        }
 
         public AbilityState Run()
         {

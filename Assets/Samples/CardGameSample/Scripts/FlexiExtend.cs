@@ -40,11 +40,6 @@ namespace Physalia.Flexi.Samples.CardGame
 
     }
 
-    public abstract class DefaultFlowNode : FlowNode<DefaultAbilityContainer>
-    {
-
-    }
-
     public abstract class DefaultValueNode : ValueNode<DefaultAbilityContainer>
     {
 
