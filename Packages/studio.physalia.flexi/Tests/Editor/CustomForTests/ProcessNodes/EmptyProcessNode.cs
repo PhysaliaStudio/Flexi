@@ -1,6 +1,6 @@
-namespace Physalia.Flexi
+namespace Physalia.Flexi.Tests
 {
-    [NodeCategory(BuiltInCategory.Common)]
+    [NodeCategoryForTests]
     public sealed class EmptyProcessNode : ProcessNode
     {
 
