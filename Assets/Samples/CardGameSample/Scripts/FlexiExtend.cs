@@ -1,3 +1,5 @@
+using System;
+
 namespace Physalia.Flexi.Samples.CardGame
 {
     public class DefaultAbilityContainer : AbilityContainer
@@ -7,6 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Card Card;
 
         public Game Game => game;
+        public Random Random => game.Random;
 
         public DefaultAbilityContainer(Game game, AbilityHandle handle)
         {

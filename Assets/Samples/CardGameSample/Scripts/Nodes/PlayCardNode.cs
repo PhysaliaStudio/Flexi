@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi.Samples.CardGame
@@ -12,7 +11,6 @@ namespace Physalia.Flexi.Samples.CardGame
             public Player player;
             public Unit owner;
             public Card card;
-            public Random random;
         }
 
         private enum State

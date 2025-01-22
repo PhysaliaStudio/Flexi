@@ -36,6 +36,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public Player Player => player;
         public IReadOnlyList<Unit> Enemies => enemyUnits;
+        public System.Random Random => generalRandom;
 
         public Game(AssetManager assetManager, GameDataManager gameDataManager, GameSetting gameSetting)
         {
@@ -308,7 +309,6 @@ namespace Physalia.Flexi.Samples.CardGame
                 player = player,
                 owner = heroUnit,
                 card = card,
-                random = generalRandom,
             };
 
             bool success = flexiCore.TryEnqueueAbility(card.AbilityContainers, context);

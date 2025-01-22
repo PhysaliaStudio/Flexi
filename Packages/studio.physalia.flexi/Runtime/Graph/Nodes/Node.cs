@@ -314,16 +314,6 @@ namespace Physalia.Flexi
             }
         }
 
-        public T GetPayload<T>() where T : class
-        {
-            if (flow == null)
-            {
-                return null;
-            }
-
-            return flow.Payload as T;
-        }
-
         public virtual bool CheckNodeContext(IResumeContext resumeContext)
         {
             return false;
