@@ -15,7 +15,8 @@ namespace Physalia.Flexi
 
         public override Ability Create()
         {
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var ability = new Ability(abilitySystem, abilityHandle);
+            ability.Initialize();
             return ability;
         }
 

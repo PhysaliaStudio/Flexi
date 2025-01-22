@@ -19,7 +19,9 @@ namespace Physalia.Flexi.Tests
         public void InstantiateAbility_SystemReturnsTheAbilitySystem()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(abilitySystem, ability.System);
         }
 
@@ -27,7 +29,9 @@ namespace Physalia.Flexi.Tests
         public void InstantiateAbility_DataReturnsTheSourceData()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(abilityHandle, ability.Handle);
             Assert.AreEqual(abilityHandle.Data, ability.Data);
         }
@@ -40,7 +44,9 @@ namespace Physalia.Flexi.Tests
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "b" });
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "c" });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(3, ability.Blackboard.Count);
         }
 
@@ -50,7 +56,9 @@ namespace Physalia.Flexi.Tests
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             abilityHandle.Data.blackboard.Add(new BlackboardVariable());
 
-            _ = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            _ = abilityFactory.Create();
+
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
@@ -60,7 +68,9 @@ namespace Physalia.Flexi.Tests
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = " " });
 
-            _ = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            _ = abilityFactory.Create();
+
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
@@ -71,7 +81,9 @@ namespace Physalia.Flexi.Tests
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
 
-            _ = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            _ = abilityFactory.Create();
+
             TestUtilities.LogAssertAnyString(LogType.Warning);
         }
 
@@ -82,7 +94,9 @@ namespace Physalia.Flexi.Tests
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 5 });
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 3 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(5, ability.GetVariable("A"));
         }
 
@@ -92,7 +106,9 @@ namespace Physalia.Flexi.Tests
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(42, ability.GetVariable("A"));
         }
 
@@ -100,7 +116,8 @@ namespace Physalia.Flexi.Tests
         public void GetVariableWithA_NoSuchKey_Returns0AndLogWarning()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
 
             Assert.AreEqual(0, ability.GetVariable("A"));
             TestUtilities.LogAssertAnyString(LogType.Warning);
@@ -112,7 +129,8 @@ namespace Physalia.Flexi.Tests
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
             abilityHandle.Data.blackboard.Add(new BlackboardVariable { key = "A", value = 42 });
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
             ability.OverrideVariable("A", 99);
 
             Assert.AreEqual(99, ability.GetVariable("A"));
@@ -123,7 +141,8 @@ namespace Physalia.Flexi.Tests
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
             ability.OverrideVariable("A", 99);
 
             Assert.AreEqual(99, ability.GetVariable("A"));
@@ -137,7 +156,9 @@ namespace Physalia.Flexi.Tests
             AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
             AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             Assert.AreEqual(2, ability.Flows.Count);
         }
 
@@ -148,7 +169,9 @@ namespace Physalia.Flexi.Tests
             AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
             AbilityTestHelper.AppendGraphToSource(abilityHandle, "");
 
-            Ability ability = abilitySystem.InstantiateAbility(abilityHandle);
+            var abilityFactory = new AbilityFactory(abilitySystem, abilityHandle);
+            Ability ability = abilityFactory.Create();
+
             for (var i = 0; i < ability.Flows.Count; i++)
             {
                 Assert.AreEqual(ability, ability.Flows[i].Ability);

@@ -38,7 +38,8 @@ namespace Physalia.Flexi.Tests
         public void InstantiateAbility_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port
-            _ = abilitySystem.InstantiateAbility(CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            var abilityFactory = new AbilityFactory(abilitySystem, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            _ = abilityFactory.Create();
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
             TestUtilities.LogAssertAnyString(LogType.Error);

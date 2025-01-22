@@ -24,7 +24,7 @@ namespace Physalia.Flexi
         internal IEventContext Payload => payload;
         public FlowNode Current => graph.Current;
 
-        internal AbilityFlow(AbilitySystem system, AbilityGraph graph, Ability ability)
+        internal AbilityFlow(AbilitySystem system, Ability ability, AbilityGraph graph)
         {
             this.system = system;
             this.ability = ability;

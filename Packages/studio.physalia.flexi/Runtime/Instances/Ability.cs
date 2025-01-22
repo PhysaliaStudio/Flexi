@@ -58,7 +58,8 @@ namespace Physalia.Flexi
             for (var i = 0; i < group.graphs.Count; i++)
             {
                 string json = group.graphs[i];
-                AbilityFlow abilityFlow = abilitySystem.InstantiateAbilityFlow(this, json);
+                AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, abilitySystem.MacroLibrary);
+                var abilityFlow = new AbilityFlow(abilitySystem, this, graph);
                 abilityFlows.Add(abilityFlow);
             }
         }

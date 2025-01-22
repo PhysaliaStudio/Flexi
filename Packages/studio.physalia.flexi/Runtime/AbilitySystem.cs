@@ -33,6 +33,8 @@ namespace Physalia.Flexi
 
         private readonly Dictionary<Type, EntryHandleTable> entryLookupTable = new(32);
 
+        internal MacroLibrary MacroLibrary => macroLibrary;
+
         internal AbilitySystem(IAbilitySystemWrapper wrapper, AbilityFlowRunner runner)
         {
             this.wrapper = wrapper;
@@ -136,20 +138,6 @@ namespace Physalia.Flexi
             {
                 ability.Reset();
             }
-        }
-
-        internal Ability InstantiateAbility(AbilityHandle abilityHandle)
-        {
-            var ability = new Ability(this, abilityHandle);
-            ability.Initialize();
-            return ability;
-        }
-
-        internal AbilityFlow InstantiateAbilityFlow(Ability ability, string json)
-        {
-            AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, macroLibrary);
-            AbilityFlow flow = new AbilityFlow(this, graph, ability);
-            return flow;
         }
 
         public void EnqueueEvent(IEventContext eventContext)
