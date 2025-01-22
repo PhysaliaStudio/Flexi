@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Combo
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons: []
   graphGroups:
-  - graphs:
+  - jsons:
     - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":167580,"_position":{"x":73.0,"y":80.0},"_type":"Physalia.Flexi.Samples.ActionGame.ActionStartNode"},{"_id":331278,"_position":{"x":195.0,"y":80.0},"_type":"Physalia.Flexi.Samples.ActionGame.PlayMontageAndWait","name":"Combo1","disableControl":true},{"_id":71975,"_position":{"x":378.0,"y":240.0},"_type":"Physalia.Flexi.Samples.ActionGame.PlayMontageAndWait","name":"Combo2","disableControl":true},{"_id":139184,"_position":{"x":378.0,"y":385.0},"_type":"Physalia.Flexi.Samples.ActionGame.PlayMontageAndWait","name":"Combo3","disableControl":true},{"_id":119947,"_position":{"x":175.0,"y":240.0},"_type":"Physalia.Flexi.Samples.ActionGame.WaitRecastNode","milliseconds":500},{"_id":540549,"_position":{"x":175.0,"y":385.0},"_type":"Physalia.Flexi.Samples.ActionGame.WaitRecastNode","milliseconds":500},{"_id":304382,"_position":{"x":666.0,"y":303.0},"_type":"Physalia.Flexi.Samples.ActionGame.SetSlotStatusNode","state":3,"cooldownMilliseconds":1500}],"edges":[{"id1":167580,"port1":"next","id2":331278,"port2":"previous"},{"id1":331278,"port1":"next","id2":119947,"port2":"previous"},{"id1":119947,"port1":"successNode","id2":71975,"port2":"previous"},{"id1":119947,"port1":"timeoutNode","id2":304382,"port2":"previous"},{"id1":71975,"port1":"next","id2":540549,"port2":"previous"},{"id1":540549,"port1":"successNode","id2":139184,"port2":"previous"},{"id1":540549,"port1":"timeoutNode","id2":304382,"port2":"previous"},{"id1":139184,"port1":"next","id2":304382,"port2":"previous"}]}'

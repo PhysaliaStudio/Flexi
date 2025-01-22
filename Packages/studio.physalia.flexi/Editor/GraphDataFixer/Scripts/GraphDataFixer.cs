@@ -21,7 +21,7 @@ namespace Physalia.Flexi.GraphDataFixer
             {
                 if (assets[i] is MacroAsset macroAsset)
                 {
-                    bool success = Validate(macroAsset.Text, result);
+                    bool success = Validate(macroAsset.Json, result);
                     if (!success && !result.invalidAssets.Contains(assets[i]))
                     {
                         result.invalidAssets.Add(assets[i]);
@@ -32,9 +32,9 @@ namespace Physalia.Flexi.GraphDataFixer
                     for (var groupIndex = 0; groupIndex < abilityAsset.GraphGroups.Count; groupIndex++)
                     {
                         AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
-                        for (var graphIndex = 0; graphIndex < group.graphs.Count; graphIndex++)
+                        for (var graphIndex = 0; graphIndex < group.jsons.Count; graphIndex++)
                         {
-                            bool success = Validate(group.graphs[graphIndex], result);
+                            bool success = Validate(group.jsons[graphIndex], result);
                             if (!success && !result.invalidAssets.Contains(assets[i]))
                             {
                                 result.invalidAssets.Add(assets[i]);
@@ -83,16 +83,16 @@ namespace Physalia.Flexi.GraphDataFixer
             {
                 if (assets[i] is MacroAsset macroAsset)
                 {
-                    macroAsset.Text = Fix(macroAsset.Text, fixTable);
+                    macroAsset.Json = Fix(macroAsset.Json, fixTable);
                 }
                 else if (assets[i] is AbilityAsset abilityAsset)
                 {
                     for (var groupIndex = 0; groupIndex < abilityAsset.GraphGroups.Count; groupIndex++)
                     {
                         AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
-                        for (var graphIndex = 0; graphIndex < group.graphs.Count; graphIndex++)
+                        for (var graphIndex = 0; graphIndex < group.jsons.Count; graphIndex++)
                         {
-                            group.graphs[graphIndex] = Fix(group.graphs[graphIndex], fixTable);
+                            group.jsons[graphIndex] = Fix(group.jsons[graphIndex], fixTable);
                         }
                     }
                 }

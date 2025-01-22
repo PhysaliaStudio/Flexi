@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: SimpleExecution
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons:
-  - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":114260,"_position":{"x":115.0,"y":95.0},"_type":"Physalia.Flexi.StartNode"},{"_id":446274,"_position":{"x":271.0,"y":95.0},"_type":"Physalia.Flexi.PerformanceTests.CustomDoSomethingNode"},{"_id":943176,"_position":{"x":127.0,"y":208.0},"_type":"Physalia.Flexi.IntegerNode","value":0}],"edges":[{"id1":114260,"port1":"next","id2":446274,"port2":"previous"},{"id1":943176,"port1":"output","id2":446274,"port2":"inport"}]}'
+  graphGroups:
+  - jsons:
+    - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":114260,"_position":{"x":115.0,"y":95.0},"_type":"Physalia.Flexi.StartNode"},{"_id":446274,"_position":{"x":271.0,"y":95.0},"_type":"Physalia.Flexi.PerformanceTests.CustomDoSomethingNode"},{"_id":943176,"_position":{"x":127.0,"y":208.0},"_type":"Physalia.Flexi.IntegerNode","value":0}],"edges":[{"id1":114260,"port1":"next","id2":446274,"port2":"previous"},{"id1":943176,"port1":"output","id2":446274,"port2":"inport"}]}'

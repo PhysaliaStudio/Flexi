@@ -93,9 +93,9 @@ namespace Physalia.Flexi.NodeSearcher
                 AbilityAsset abilityAsset = AssetDatabase.LoadAssetAtPath<AbilityAsset>(assetPath);
                 for (int j = 0; j < abilityAsset.GraphGroups.Count; j++)
                 {
-                    for (int k = 0; k < abilityAsset.GraphGroups[j].graphs.Count; k++)
+                    for (int k = 0; k < abilityAsset.GraphGroups[j].jsons.Count; k++)
                     {
-                        if (abilityAsset.GraphGroups[j].graphs[k].Contains(nodeName))
+                        if (abilityAsset.GraphGroups[j].jsons[k].Contains(nodeName))
                         {
                             results.Add(new ResultItem
                             {

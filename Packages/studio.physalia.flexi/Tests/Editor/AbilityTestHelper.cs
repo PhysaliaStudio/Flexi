@@ -19,7 +19,7 @@ namespace Physalia.Flexi.Tests
                 {
                     new AbilityGraphGroup()
                     {
-                        graphs = new List<string>{ json }
+                        jsons = new List<string>{ json }
                     }
                 }
             };
@@ -29,7 +29,7 @@ namespace Physalia.Flexi.Tests
         {
             AbilityData abilityData = abilityHandle.Data;
             int groupIndex = abilityHandle.GroupIndex;
-            abilityData.graphGroups[groupIndex].graphs.Add(json);
+            abilityData.graphGroups[groupIndex].jsons.Add(json);
         }
     }
 }

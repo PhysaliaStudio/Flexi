@@ -290,7 +290,7 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 for (var i = 0; i < abilityAsset.GraphGroups.Count; i++)
                 {
-                    if (abilityAsset.GraphGroups[i].graphs.Count > 0)
+                    if (abilityAsset.GraphGroups[i].jsons.Count > 0)
                     {
                         return true;
                     }
@@ -336,12 +336,12 @@ namespace Physalia.Flexi.GraphViewEditor
                     }
 
                     // Validate graphIndex
-                    if (graphIndex < 0 || graphIndex >= abilityAsset.GraphGroups[groupIndex].graphs.Count)
+                    if (graphIndex < 0 || graphIndex >= abilityAsset.GraphGroups[groupIndex].jsons.Count)
                     {
                         graphIndex = 0;
                     }
 
-                    if (graphIndex >= abilityAsset.GraphGroups[groupIndex].graphs.Count)
+                    if (graphIndex >= abilityAsset.GraphGroups[groupIndex].jsons.Count)
                     {
                         groupIndex = -1;
                         graphIndex = -1;
@@ -352,14 +352,14 @@ namespace Physalia.Flexi.GraphViewEditor
                     }
 
                     blackboardInspector.SetBlackboard(abilityAsset.Blackboard);
-                    string graphJson = abilityAsset.GraphGroups[groupIndex].graphs[graphIndex];
+                    string graphJson = abilityAsset.GraphGroups[groupIndex].jsons[graphIndex];
                     abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     break;
                 case MacroAsset macroAsset:
                     groupIndex = 0;
                     graphIndex = 0;
                     blackboardInspector.SetBlackboard(null);
-                    abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
+                    abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Json, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
                     {
                         abilityGraph.EnsureSubgraphInOutNodes();
@@ -456,7 +456,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void CopyMacroAsset(MacroAsset source, MacroAsset destination)
         {
-            destination.Text = source.Text;
+            destination.Json = source.Json;
         }
 
         private bool IsBlankAsset(GraphAsset graphAsset)
@@ -548,7 +548,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             var group = new AbilityGraphGroup();
-            group.graphs.Add("");
+            group.jsons.Add("");
             abilityAsset.GraphGroups.Add(group);
 
             currentGroupIndex = abilityAsset.GraphGroups.Count - 1;
@@ -556,7 +556,7 @@ namespace Physalia.Flexi.GraphViewEditor
             SetDirty(true);
             RefreshFlowMenu();
 
-            string graphJson = group.graphs[currentGraphIndex];
+            string graphJson = group.jsons[currentGraphIndex];
             AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
@@ -601,7 +601,7 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             AbilityGraphGroup group = abilityAsset.GraphGroups[currentGroupIndex];
-            if (group.graphs.Count == 0)
+            if (group.jsons.Count == 0)
             {
                 currentGroupIndex = -1;
                 currentGraphIndex = -1;
@@ -613,7 +613,7 @@ namespace Physalia.Flexi.GraphViewEditor
             currentGraphIndex = 0;
             RefreshFlowMenu();
 
-            string graphJson = group.graphs[currentGraphIndex];
+            string graphJson = group.jsons[currentGraphIndex];
             AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
@@ -631,14 +631,14 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
 
                 AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
-                group.graphs.Add("");
+                group.jsons.Add("");
 
                 currentGroupIndex = groupIndex;
-                currentGraphIndex = group.graphs.Count - 1;
+                currentGraphIndex = group.jsons.Count - 1;
                 SetDirty(true);
                 RefreshFlowMenu();
 
-                string graphJson = group.graphs[currentGraphIndex];
+                string graphJson = group.jsons[currentGraphIndex];
                 AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                 AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
                 SetUpGraphView(graphView);
@@ -655,7 +655,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
 
                 AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
-                if (graphIndex < 0 || graphIndex >= group.graphs.Count)
+                if (graphIndex < 0 || graphIndex >= group.jsons.Count)
                 {
                     return;
                 }
@@ -670,7 +670,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 currentGraphIndex = graphIndex;
                 RefreshFlowMenu();
 
-                string graphJson = group.graphs[currentGraphIndex];
+                string graphJson = group.jsons[currentGraphIndex];
                 AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                 AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
                 SetUpGraphView(graphView);
@@ -687,30 +687,30 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
 
                 AbilityGraphGroup group = abilityAsset.GraphGroups[groupIndex];
-                if (graphIndex < 0 || graphIndex >= group.graphs.Count)
+                if (graphIndex < 0 || graphIndex >= group.jsons.Count)
                 {
                     return;
                 }
 
-                group.graphs.RemoveAt(graphIndex);
+                group.jsons.RemoveAt(graphIndex);
                 SetDirty(true);
                 RefreshFlowMenu();
 
                 ShowNotification(new GUIContent($"Flow {groupIndex}-{graphIndex} is deleted!"));
 
-                if (group.graphs.Count == 0)
+                if (group.jsons.Count == 0)
                 {
                     currentGraphIndex = -1;
                     RemoveGraphView();
                 }
                 else
                 {
-                    if (currentGraphIndex >= group.graphs.Count)
+                    if (currentGraphIndex >= group.jsons.Count)
                     {
-                        currentGraphIndex = group.graphs.Count - 1;
+                        currentGraphIndex = group.jsons.Count - 1;
                     }
 
-                    string graphJson = group.graphs[currentGraphIndex];
+                    string graphJson = group.jsons[currentGraphIndex];
                     AbilityGraph abilityGraph = AbilityGraphUtility.Deserialize(abilityAsset.name, graphJson, MacroLibraryCache.Get());
                     AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
                     SetUpGraphView(graphView);
@@ -728,7 +728,7 @@ namespace Physalia.Flexi.GraphViewEditor
             var graphCountPerGroup = new int[abilityAsset.GraphGroups.Count];
             for (var i = 0; i < abilityAsset.GraphGroups.Count; i++)
             {
-                graphCountPerGroup[i] = abilityAsset.GraphGroups[i].graphs.Count;
+                graphCountPerGroup[i] = abilityAsset.GraphGroups[i].jsons.Count;
             }
 
             abilityFlowMenu.Refresh(currentGroupIndex, currentGraphIndex, graphCountPerGroup);
@@ -758,10 +758,10 @@ namespace Physalia.Flexi.GraphViewEditor
                 case AbilityAsset abilityAsset:
                     abilityAsset.Blackboard = blackboardInspector.GetBlackboard();
                     string json = AbilityGraphUtility.Serialize(abilityGraph);
-                    abilityAsset.GraphGroups[groupIndex].graphs[graphIndex] = json;
+                    abilityAsset.GraphGroups[groupIndex].jsons[graphIndex] = json;
                     break;
                 case MacroAsset macroAsset:
-                    macroAsset.Text = AbilityGraphUtility.Serialize(abilityGraph);
+                    macroAsset.Json = AbilityGraphUtility.Serialize(abilityGraph);
                     break;
             }
 
@@ -777,7 +777,7 @@ namespace Physalia.Flexi.GraphViewEditor
             AbilityAsset newAsset = CreateInstance<AbilityAsset>();
             newAsset.name = "NewAbility";
             newAsset.GraphGroups.Add(new AbilityGraphGroup());
-            newAsset.GraphGroups[0].graphs.Add("");
+            newAsset.GraphGroups[0].jsons.Add("");
 
             SetUpGraphView(new AbilityGraphView(this));
 
@@ -792,7 +792,7 @@ namespace Physalia.Flexi.GraphViewEditor
             // Create new asset in memory, and add an empty graph
             MacroAsset newAsset = CreateInstance<MacroAsset>();
             newAsset.name = "NewMacro";
-            newAsset.Text = "";
+            newAsset.Json = "";
 
             AbilityGraph graph = new AbilityGraph();
             graph.EnsureSubgraphInOutNodes();

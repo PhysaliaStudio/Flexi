@@ -53,7 +53,7 @@ namespace Physalia.Flexi
 
         public void LoadMacroGraph(string key, MacroAsset macroAsset)
         {
-            macroLibrary.Add(key, macroAsset.Text);
+            macroLibrary.Add(key, macroAsset.Json);
         }
 
         internal AbilityGraph GetMacroGraph(string key)

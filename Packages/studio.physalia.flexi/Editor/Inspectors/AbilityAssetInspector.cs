@@ -94,9 +94,9 @@ namespace Physalia.Flexi
                 return;
             }
 
-            for (var i = 0; i < group.graphs.Count; i++)
+            for (var i = 0; i < group.jsons.Count; i++)
             {
-                GUIContent content = CreateJsonPreview(group.graphs[i]);
+                GUIContent content = CreateJsonPreview(group.jsons[i]);
                 cachedPreviews.Add(content);
             }
         }

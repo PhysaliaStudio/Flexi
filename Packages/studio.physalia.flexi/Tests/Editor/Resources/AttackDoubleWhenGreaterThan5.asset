@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: []
   graphGroups:
-  - graphs:
+  - jsons:
     - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":540507,"_position":{"x":149.0,"y":107.0},"_type":"Physalia.Flexi.OnCollectModifierNode","order":1},{"_id":120779,"_position":{"x":590.0,"y":122.0},"_type":"Physalia.Flexi.Tests.ConditionalModifierNode","modifiers":[{"statId":11,"value":100,"op":2}]},{"_id":688793,"_position":{"x":345.0,"y":267.0},"_type":"Physalia.Flexi.Tests.StatCompareNode","statId":11,"op":4,"value":5},{"_id":493443,"_position":{"x":158.0,"y":205.0},"_type":"Physalia.Flexi.Tests.ActorNode"}],"edges":[{"id1":540507,"port1":"next","id2":120779,"port2":"previous"},{"id1":493443,"port1":"actor","id2":120779,"port2":"actorsPort"},{"id1":688793,"port1":"resultPort","id2":120779,"port2":"enabledPort"},{"id1":493443,"port1":"actor","id2":688793,"port2":"actorPort"}]}'

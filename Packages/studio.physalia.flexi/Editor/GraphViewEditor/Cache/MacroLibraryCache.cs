@@ -33,7 +33,7 @@ namespace Physalia.Flexi.GraphViewEditor
             {
                 string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
                 MacroAsset macroAsset = AssetDatabase.LoadAssetAtPath<MacroAsset>(assetPath);
-                macroLibrary.Add(macroAsset.name, macroAsset.Text);
+                macroLibrary.Add(macroAsset.name, macroAsset.Json);
             }
         }
     }

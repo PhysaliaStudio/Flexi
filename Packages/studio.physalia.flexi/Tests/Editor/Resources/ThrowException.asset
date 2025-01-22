@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: ThrowException
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons: []
   graphGroups:
-  - graphs:
+  - jsons:
     - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":872216,"_position":{"x":121.0,"y":77.0},"_type":"Physalia.Flexi.StartNode"},{"_id":962731,"_position":{"x":273.0,"y":77.0},"_type":"Physalia.Flexi.Tests.CustomExceptionNode"},{"_id":176137,"_position":{"x":498.0,"y":77.0},"_type":"Physalia.Flexi.LogNode"},{"_id":344545,"_position":{"x":238.0,"y":178.0},"_type":"Physalia.Flexi.StringNode","text":"You
       should not see this."}],"edges":[{"id1":872216,"port1":"next","id2":962731,"port2":"previous"},{"id1":962731,"port1":"next","id2":176137,"port2":"previous"},{"id1":344545,"port1":"output","id2":176137,"port2":"text"}]}'
