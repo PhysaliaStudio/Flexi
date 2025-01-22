@@ -7,8 +7,6 @@ namespace Physalia.Flexi.Tests
     {
         private int pauseCount = 0;
 
-        public override FlowNode Previous => throw new System.NotImplementedException();
-
         public override FlowNode Next => throw new System.NotImplementedException();
 
         public void SetPauseCount(int pauseCount)

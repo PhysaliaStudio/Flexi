@@ -99,10 +99,7 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(startNode, graph.EntryNodes[0]);
 
             Assert.AreEqual(damageNode, startNode.Next);
-            Assert.AreEqual(startNode, damageNode.Previous);
-
             Assert.AreEqual(logNode, damageNode.Next);
-            Assert.AreEqual(damageNode, logNode.Previous);
 
             Assert.AreEqual(filterNode.owners, damageNode.targets.GetConnections()[0]);
             Assert.AreEqual(intNode.output, damageNode.baseValue.GetConnections()[0]);
@@ -169,10 +166,7 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(startNode2, graph.EntryNodes[1]);
 
             Assert.AreEqual(logNode1, startNode1.Next);
-            Assert.AreEqual(startNode1, logNode1.Previous);
-
             Assert.AreEqual(logNode2, startNode2.Next);
-            Assert.AreEqual(startNode2, logNode2.Previous);
         }
 
         [Test]
@@ -201,7 +195,6 @@ namespace Physalia.Flexi.Tests
             Assert.AreEqual(startNode, graph.EntryNodes[0]);
 
             Assert.AreEqual(logNode, startNode.Next);
-            Assert.AreEqual(startNode, logNode.Previous);
 
             var missingPort = stringNode.GetOutport("value") as MissingOutport;
             Assert.NotNull(missingPort);

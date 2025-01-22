@@ -10,15 +10,6 @@ namespace Physalia.Flexi
         internal Outport<FlowNode> truePort;
         internal Outport<FlowNode> falsePort;
 
-        public override FlowNode Previous
-        {
-            get
-            {
-                IReadOnlyList<Port> connections = previousPort.GetConnections();
-                return connections.Count > 0 ? connections[0].Node as FlowNode : null;
-            }
-        }
-
         public override FlowNode Next
         {
             get

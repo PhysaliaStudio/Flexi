@@ -14,8 +14,6 @@ namespace Physalia.Flexi
             id = NODE_ID;
         }
 
-        public override FlowNode Previous => null;
-
         public override FlowNode Next
         {
             get
