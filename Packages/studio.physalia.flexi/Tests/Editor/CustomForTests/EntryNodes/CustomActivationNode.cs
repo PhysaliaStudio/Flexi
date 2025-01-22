@@ -20,9 +20,8 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute(Context context)
         {
-            var context = GetPayload<Context>();
             activatorPort.SetValue(context.activator);
             return AbilityState.RUNNING;
         }

@@ -60,10 +60,8 @@ namespace Physalia.Flexi.Samples.CardGame
             return true;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute(Context context)
         {
-            var context = GetPayload<Context>();
-
             if (state == State.INITIAL)
             {
                 if (selectionPort.GetConnections().Count > 0)
