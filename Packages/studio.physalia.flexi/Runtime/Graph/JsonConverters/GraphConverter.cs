@@ -73,7 +73,7 @@ namespace Physalia.Flexi
             }
 
             // Create the node
-            graph.AddGraphInputNode();
+            graph.EnsureSubgraphInputNode();
 
             // Setup
             GraphInputData inputData = token.ToObject<GraphInputData>();
@@ -103,7 +103,7 @@ namespace Physalia.Flexi
             }
 
             // Create the node
-            graph.AddGraphOutputNode();
+            graph.EnsureSubgraphOutputNode();
 
             // Setup
             GraphOutputData outputData = token.ToObject<GraphOutputData>();

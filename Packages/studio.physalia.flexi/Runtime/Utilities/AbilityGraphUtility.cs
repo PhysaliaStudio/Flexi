@@ -12,10 +12,7 @@ namespace Physalia.Flexi
             }
 
             AbilityGraph graph = JsonConvert.DeserializeObject<AbilityGraph>(graphJson);
-            if (macroLibrary != null)
-            {
-                macroLibrary.SetUpMacroNodes(graph);
-            }
+            macroLibrary?.SetUpMacroNodes(graph);
 
             // Log missing elements
             foreach (Node node in graph.Nodes)

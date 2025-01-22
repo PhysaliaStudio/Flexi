@@ -205,7 +205,7 @@ namespace Physalia.Flexi.Tests
         public void SerializeMacro_Empty()
         {
             Graph graph = new Graph();
-            graph.AddSubgraphInOutNodes();
+            graph.EnsureSubgraphInOutNodes();
 
             var expected =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
@@ -239,7 +239,7 @@ namespace Physalia.Flexi.Tests
         public void SerializeMacro_WithCustomPorts()
         {
             Graph graph = new Graph();
-            graph.AddSubgraphInOutNodes();
+            graph.EnsureSubgraphInOutNodes();
 
             graph.GraphInputNode.position = new Vector2(1f, 2f);
             graph.GraphOutputNode.position = new Vector2(8f, 4f);
@@ -291,7 +291,7 @@ namespace Physalia.Flexi.Tests
         public void SerializeMacro_WithEdges()
         {
             Graph graph = new Graph();
-            graph.AddSubgraphInOutNodes();
+            graph.EnsureSubgraphInOutNodes();
 
             graph.GraphInputNode.CreateOutport<int>("test1", true);
             graph.GraphOutputNode.CreateInport<int>("test2", true);

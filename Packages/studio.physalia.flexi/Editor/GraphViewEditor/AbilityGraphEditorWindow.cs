@@ -362,7 +362,7 @@ namespace Physalia.Flexi.GraphViewEditor
                     abilityGraph = AbilityGraphUtility.Deserialize(macroAsset.name, macroAsset.Text, MacroLibraryCache.Get());
                     if (!abilityGraph.HasCorrectSubgraphElement())
                     {
-                        abilityGraph.AddSubgraphInOutNodes();
+                        abilityGraph.EnsureSubgraphInOutNodes();
                         abilityGraph.GraphInputNode.position = new Vector2(0, 250);
                         abilityGraph.GraphOutputNode.position = new Vector2(500, 250);
                     }
@@ -795,7 +795,7 @@ namespace Physalia.Flexi.GraphViewEditor
             newAsset.Text = "";
 
             AbilityGraph graph = new AbilityGraph();
-            graph.AddSubgraphInOutNodes();
+            graph.EnsureSubgraphInOutNodes();
             graph.GraphInputNode.position = new Vector2(0, 250);
             graph.GraphOutputNode.position = new Vector2(500, 250);
 

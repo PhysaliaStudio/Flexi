@@ -29,50 +29,20 @@ namespace Physalia.Flexi
             return graphInputNode != null || graphOutputNode != null;
         }
 
-        public void AddSubgraphInOutNodes()
+        internal void EnsureSubgraphInOutNodes()
         {
-            AddGraphInputNode();
-            AddGraphOutputNode();
+            EnsureSubgraphInputNode();
+            EnsureSubgraphOutputNode();
         }
 
-        internal void AddGraphInputNode()
+        internal void EnsureSubgraphInputNode()
         {
-            if (graphInputNode == null)
-            {
-                graphInputNode = NodeFactory.Create<GraphInputNode>();
-            }
+            graphInputNode ??= NodeFactory.Create<GraphInputNode>();
         }
 
-        internal void AddGraphOutputNode()
+        internal void EnsureSubgraphOutputNode()
         {
-            if (graphOutputNode == null)
-            {
-                graphOutputNode = NodeFactory.Create<GraphOutputNode>();
-            }
-        }
-
-        public void RemoveGraphInOutNodes()
-        {
-            RemoveGraphInputNode();
-            RemoveGraphOutputNode();
-        }
-
-        internal void RemoveGraphInputNode()
-        {
-            if (graphInputNode != null)
-            {
-                graphInputNode.DisconnectAllPorts();
-                graphInputNode = null;
-            }
-        }
-
-        internal void RemoveGraphOutputNode()
-        {
-            if (graphOutputNode != null)
-            {
-                graphOutputNode.DisconnectAllPorts();
-                graphOutputNode = null;
-            }
+            graphOutputNode ??= NodeFactory.Create<GraphOutputNode>();
         }
 
         public T AddNewNode<T>() where T : Node, new()
@@ -128,26 +98,6 @@ namespace Physalia.Flexi
         public bool HasNode()
         {
             return graphInputNode != null || graphOutputNode != null || nodes.Count > 0;
-        }
-
-        internal Node GetFirstNode()
-        {
-            if (graphInputNode != null)
-            {
-                return graphInputNode;
-            }
-
-            if (nodes.Count > 0)
-            {
-                return nodes[0];
-            }
-
-            if (graphOutputNode != null)
-            {
-                return graphOutputNode;
-            }
-
-            return null;
         }
 
         public Node GetNode(int id)
