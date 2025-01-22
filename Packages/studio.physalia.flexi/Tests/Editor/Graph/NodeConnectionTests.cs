@@ -71,7 +71,6 @@ namespace Physalia.Flexi.Tests
             node1.next.Connect(node2.previous);
 
             Assert.AreEqual(node2, node1.Next);
-            Assert.AreEqual(node1, node2.Previous);
         }
 
         [Test]
@@ -81,7 +80,6 @@ namespace Physalia.Flexi.Tests
             RelayNode node2 = NodeFactory.Create<RelayNode>();
             node1.previous.Connect(node2.next);
 
-            Assert.AreEqual(node2, node1.Previous);
             Assert.AreEqual(node1, node2.Next);
         }
     }

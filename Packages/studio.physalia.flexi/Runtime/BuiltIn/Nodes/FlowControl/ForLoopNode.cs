@@ -17,15 +17,6 @@ namespace Physalia.Flexi
         private bool isIncrement;
         private int index;
 
-        public override FlowNode Previous
-        {
-            get
-            {
-                IReadOnlyList<Port> connections = previousPort.GetConnections();
-                return connections.Count > 0 ? connections[0].Node as FlowNode : null;
-            }
-        }
-
         public override FlowNode Next
         {
             get

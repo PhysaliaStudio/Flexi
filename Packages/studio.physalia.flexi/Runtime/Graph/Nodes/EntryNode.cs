@@ -55,8 +55,6 @@ namespace Physalia.Flexi
 
         public abstract Type ContextType { get; }
 
-        public override FlowNode Previous => null;
-
         public override FlowNode Next
         {
             get
