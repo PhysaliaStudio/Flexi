@@ -10,8 +10,8 @@ namespace Physalia.Flexi.Tests
             var forLoopNode = NodeFactory.Create<ForLoopNode>();
             var startIntNode = NodeFactory.Create<IntegerNode>();
             var endIntNode = NodeFactory.Create<IntegerNode>();
-            var loopBodyNode = NodeFactory.Create<RelayNode>();
-            var completedNode = NodeFactory.Create<RelayNode>();
+            var loopBodyNode = NodeFactory.Create<EmptyProcessNode>();
+            var completedNode = NodeFactory.Create<EmptyProcessNode>();
 
             forLoopNode.startIndexPort.Connect(startIntNode.output);
             forLoopNode.endIndexPort.Connect(endIntNode.output);
@@ -41,8 +41,8 @@ namespace Physalia.Flexi.Tests
             var forLoopNode = NodeFactory.Create<ForLoopNode>();
             var startIntNode = NodeFactory.Create<IntegerNode>();
             var endIntNode = NodeFactory.Create<IntegerNode>();
-            var loopBodyNode = NodeFactory.Create<RelayNode>();
-            var completedNode = NodeFactory.Create<RelayNode>();
+            var loopBodyNode = NodeFactory.Create<EmptyProcessNode>();
+            var completedNode = NodeFactory.Create<EmptyProcessNode>();
 
             forLoopNode.startIndexPort.Connect(startIntNode.output);
             forLoopNode.endIndexPort.Connect(endIntNode.output);
@@ -72,8 +72,8 @@ namespace Physalia.Flexi.Tests
             var forLoopNode = NodeFactory.Create<ForLoopNode>();
             var startIntNode = NodeFactory.Create<IntegerNode>();
             var endIntNode = NodeFactory.Create<IntegerNode>();
-            var loopBodyNode = NodeFactory.Create<RelayNode>();
-            var completedNode = NodeFactory.Create<RelayNode>();
+            var loopBodyNode = NodeFactory.Create<EmptyProcessNode>();
+            var completedNode = NodeFactory.Create<EmptyProcessNode>();
 
             forLoopNode.startIndexPort.Connect(startIntNode.output);
             forLoopNode.endIndexPort.Connect(endIntNode.output);
@@ -95,8 +95,8 @@ namespace Physalia.Flexi.Tests
             var forLoopNode = NodeFactory.Create<ForLoopNode>();
             var startIntNode = NodeFactory.Create<IntegerNode>();
             var endIntNode = NodeFactory.Create<IntegerNode>();
-            var loopBodyNode = NodeFactory.Create<RelayNode>();
-            var completedNode = NodeFactory.Create<RelayNode>();
+            var loopBodyNode = NodeFactory.Create<EmptyProcessNode>();
+            var completedNode = NodeFactory.Create<EmptyProcessNode>();
 
             forLoopNode.startIndexPort.Connect(startIntNode.output);
             forLoopNode.endIndexPort.Connect(endIntNode.output);
@@ -131,8 +131,8 @@ namespace Physalia.Flexi.Tests
             var forLoopNode = NodeFactory.Create<ForLoopNode>();
             var startIntNode = NodeFactory.Create<IntegerNode>();
             var endIntNode = NodeFactory.Create<IntegerNode>();
-            var loopBodyNode = NodeFactory.Create<RelayNode>();
-            var completedNode = NodeFactory.Create<RelayNode>();
+            var loopBodyNode = NodeFactory.Create<EmptyProcessNode>();
+            var completedNode = NodeFactory.Create<EmptyProcessNode>();
 
             forLoopNode.startIndexPort.Connect(startIntNode.output);
             forLoopNode.endIndexPort.Connect(endIntNode.output);

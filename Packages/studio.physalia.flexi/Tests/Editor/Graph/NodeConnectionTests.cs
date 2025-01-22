@@ -66,8 +66,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ProcessNode_SetNext()
         {
-            RelayNode node1 = NodeFactory.Create<RelayNode>();
-            RelayNode node2 = NodeFactory.Create<RelayNode>();
+            EmptyProcessNode node1 = NodeFactory.Create<EmptyProcessNode>();
+            EmptyProcessNode node2 = NodeFactory.Create<EmptyProcessNode>();
             node1.next.Connect(node2.previous);
 
             Assert.AreEqual(node2, node1.Next);
@@ -76,8 +76,8 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ProcessNode_SetPrevious()
         {
-            RelayNode node1 = NodeFactory.Create<RelayNode>();
-            RelayNode node2 = NodeFactory.Create<RelayNode>();
+            EmptyProcessNode node1 = NodeFactory.Create<EmptyProcessNode>();
+            EmptyProcessNode node2 = NodeFactory.Create<EmptyProcessNode>();
             node1.previous.Connect(node2.next);
 
             Assert.AreEqual(node1, node2.Next);

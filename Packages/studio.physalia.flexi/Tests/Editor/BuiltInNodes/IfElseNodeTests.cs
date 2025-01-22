@@ -11,7 +11,7 @@ namespace Physalia.Flexi.Tests
             var trueNode = NodeFactory.Create<TrueNode>();
             ifElseNode.conditionPort.Connect(trueNode.value);
 
-            var ifTrueNode = NodeFactory.Create<RelayNode>();
+            var ifTrueNode = NodeFactory.Create<EmptyProcessNode>();
             ifElseNode.truePort.Connect(ifTrueNode.previous);
 
             ifElseNode.Run();  // This triggers EvaluateInputs()
@@ -25,7 +25,7 @@ namespace Physalia.Flexi.Tests
             var falseNode = NodeFactory.Create<FalseNode>();
             ifElseNode.conditionPort.Connect(falseNode.value);
 
-            var ifFalseNode = NodeFactory.Create<RelayNode>();
+            var ifFalseNode = NodeFactory.Create<EmptyProcessNode>();
             ifElseNode.falsePort.Connect(ifFalseNode.previous);
 
             ifElseNode.Run();  // This triggers EvaluateInputs()
