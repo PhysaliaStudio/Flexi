@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public class AbilityEventQueue
+    internal class AbilityEventQueue
     {
         private readonly List<IEventContext> eventList = new();
         private int currentIndex = -1;
