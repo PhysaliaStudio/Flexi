@@ -208,11 +208,6 @@ namespace Physalia.Flexi.GraphViewEditor
             }
         }
 
-        public override Port InstantiatePort(Orientation orientation, Direction direction, Capacity capacity, Type type)
-        {
-            return new PortView(orientation, direction, capacity, type);
-        }
-
         private void CreatePorts()
         {
             foreach (PortData portData in nodeData.Ports)
