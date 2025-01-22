@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    public class AbilitySystemWrapperDefault : IAbilitySystemWrapper
+    public class CustomFlexiCoreWrapper : IFlexiCoreWrapper
     {
         public event Action ChoiceTriggered;
 
@@ -20,17 +20,17 @@ namespace Physalia.Flexi.Tests
             ChoiceTriggered?.Invoke();
         }
 
-        #region Implement IAbilitySystemWrapper
+        #region Implement IFlexiCoreWrapper
         public void OnEventReceived(IEventContext eventContext)
         {
 
         }
 
-        public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
+        public void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext)
         {
             for (var i = 0; i < actors.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(actors[i].AbilityContainers, eventContext);
+                flexiCore.TryEnqueueAbility(actors[i].AbilityContainers, eventContext);
             }
         }
 

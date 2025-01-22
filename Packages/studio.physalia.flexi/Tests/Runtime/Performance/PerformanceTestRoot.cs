@@ -12,15 +12,15 @@ namespace Physalia.Flexi.Tests
         [SerializeField]
         private int abilityCountPerFrame = 50;
 
-        private AbilitySystem abilitySystem;
+        private FlexiCore flexiCore;
         private readonly List<CustomCharacter> characters = new();
 
         private void Awake()
         {
             Assert.IsNotNull(abilityAsset);
 
-            var builder = new AbilitySystemBuilder();
-            abilitySystem = builder.Build();
+            var builder = new FlexiCoreBuilder();
+            flexiCore = builder.Build();
 
             AbilityHandle abilityHandle = abilityAsset.Data.CreateHandle(0);
             for (var i = 0; i < abilityCountPerFrame; i++)
@@ -37,15 +37,15 @@ namespace Physalia.Flexi.Tests
         {
             for (var i = 0; i < characters.Count; i++)
             {
-                abilitySystem.RefreshStatsAndModifiers();
+                flexiCore.RefreshStatsAndModifiers();
             }
 
             for (var i = 0; i < characters.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(characters[i].AbilityContainers, null);
+                flexiCore.TryEnqueueAbility(characters[i].AbilityContainers, null);
             }
 
-            abilitySystem.Run();
+            flexiCore.Run();
         }
     }
 }

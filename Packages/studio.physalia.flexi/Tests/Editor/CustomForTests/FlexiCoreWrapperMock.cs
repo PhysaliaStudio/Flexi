@@ -2,14 +2,14 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    public class AbilitySystemWrapperMock : IAbilitySystemWrapper
+    public class FlexiCoreWrapperMock : IFlexiCoreWrapper
     {
         public void OnEventReceived(IEventContext eventContext)
         {
             throw new System.NotImplementedException();
         }
 
-        public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
+        public void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext)
         {
             throw new System.NotImplementedException();
         }

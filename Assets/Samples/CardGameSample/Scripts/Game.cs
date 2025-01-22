@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         IReadOnlyList<Unit> Enemies { get; }
     }
 
-    public class Game : IAbilitySystemWrapper, IUnitRepository
+    public class Game : IFlexiCoreWrapper, IUnitRepository
     {
         public event Action<Unit, PlayArea> GameSetUp;
         public event Action<Card> CardSelected;
@@ -19,7 +19,7 @@ namespace Physalia.Flexi.Samples.CardGame
         private readonly AssetManager assetManager;
         private readonly GameDataManager gameDataManager;
         private readonly GameSetting gameSetting;
-        private readonly AbilitySystem abilitySystem;
+        private readonly FlexiCore flexiCore;
         private readonly DefaultModifierHandler modifierHandler = new();
 
         private readonly System.Random generalRandom = new();
@@ -43,15 +43,15 @@ namespace Physalia.Flexi.Samples.CardGame
             this.gameDataManager = gameDataManager;
             this.gameSetting = gameSetting;
 
-            var builder = new AbilitySystemBuilder();
+            var builder = new FlexiCoreBuilder();
             builder.SetWrapper(this);
-            abilitySystem = builder.Build();
+            flexiCore = builder.Build();
 
             MacroAsset[] macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");
             for (var i = 0; i < macroAssets.Length; i++)
             {
                 MacroAsset macroAsset = macroAssets[i];
-                abilitySystem.LoadMacroGraph(macroAsset.name, macroAsset);
+                flexiCore.LoadMacroGraph(macroAsset.name, macroAsset);
             }
         }
 
@@ -67,9 +67,9 @@ namespace Physalia.Flexi.Samples.CardGame
             AbilityHandle turnEndEffect = gameSetting.turnEndGraph.Data.CreateHandle(0);
             AbilityHandle enemyGenerationEffect = gameSetting.enemyGenerationGraph.Data.CreateHandle(0);
 
-            abilitySystem.CreateAbilityPool(turnStartEffect, 1);
-            abilitySystem.CreateAbilityPool(turnEndEffect, 1);
-            abilitySystem.CreateAbilityPool(enemyGenerationEffect, 1);
+            flexiCore.CreateAbilityPool(turnStartEffect, 1);
+            flexiCore.CreateAbilityPool(turnEndEffect, 1);
+            flexiCore.CreateAbilityPool(enemyGenerationEffect, 1);
             CacheAllStatusAbility();
 
             gameStartProcess = new List<DefaultAbilityContainer> {
@@ -98,12 +98,12 @@ namespace Physalia.Flexi.Samples.CardGame
                 for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
                 {
                     AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
-                    abilitySystem.CreateAbilityPool(abilityHandle, 2);
+                    flexiCore.CreateAbilityPool(abilityHandle, 2);
                 }
             }
         }
 
-        #region Implement IAbilitySystemWrapper
+        #region Implement IFlexiCoreWrapper
         public void OnEventReceived(IEventContext eventContext)
         {
             if (eventContext is PlayCardEvent playCardEvent)
@@ -118,12 +118,12 @@ namespace Physalia.Flexi.Samples.CardGame
             GameEventReceived?.Invoke(eventContext);
         }
 
-        public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
+        public void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext)
         {
-            abilitySystem.TryEnqueueAbility(heroUnit.AbilityContainers, eventContext);
+            flexiCore.TryEnqueueAbility(heroUnit.AbilityContainers, eventContext);
             for (var i = 0; i < enemyUnits.Count; i++)
             {
-                abilitySystem.TryEnqueueAbility(enemyUnits[i].AbilityContainers, eventContext);
+                flexiCore.TryEnqueueAbility(enemyUnits[i].AbilityContainers, eventContext);
             }
         }
 
@@ -200,9 +200,9 @@ namespace Physalia.Flexi.Samples.CardGame
                     var container = new DefaultAbilityContainer(this, abilityHandle);
                     unit.AppendAbilityContainer(container);
 
-                    if (!abilitySystem.HasAbilityPool(abilityHandle))
+                    if (!flexiCore.HasAbilityPool(abilityHandle))
                     {
-                        abilitySystem.CreateAbilityPool(abilityHandle, 2);
+                        flexiCore.CreateAbilityPool(abilityHandle, 2);
                     }
                 }
             }
@@ -243,9 +243,9 @@ namespace Physalia.Flexi.Samples.CardGame
                     var container = new DefaultAbilityContainer(this, abilityHandle);
                     card.AppendAbilityContainer(container);
 
-                    if (!abilitySystem.HasAbilityPool(abilityHandle))
+                    if (!flexiCore.HasAbilityPool(abilityHandle))
                     {
-                        abilitySystem.CreateAbilityPool(abilityHandle, 2);
+                        flexiCore.CreateAbilityPool(abilityHandle, 2);
                     }
                 }
             }
@@ -265,8 +265,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void Start()
         {
-            _ = abilitySystem.TryEnqueueAbility(gameStartProcess, new SystemProcessContext { game = this });
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(gameStartProcess, new SystemProcessContext { game = this });
+            flexiCore.Run();
         }
 
         public IReadOnlyList<Unit> RandomGenerateEnemyGroup()
@@ -311,10 +311,10 @@ namespace Physalia.Flexi.Samples.CardGame
                 random = generalRandom,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(card.AbilityContainers, context);
+            bool success = flexiCore.TryEnqueueAbility(card.AbilityContainers, context);
             if (success)
             {
-                abilitySystem.Run();
+                flexiCore.Run();
                 CardSelected?.Invoke(card);
             }
         }
@@ -330,12 +330,12 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void SelectTarget(Unit unit)
         {
-            abilitySystem.Resume(new SingleTargetAnswerContext { unit = unit });
+            flexiCore.Resume(new SingleTargetAnswerContext { unit = unit });
         }
 
         public void CancelSelection()
         {
-            abilitySystem.Resume(new CancellationContext());
+            flexiCore.Resume(new CancellationContext());
         }
 
         public int GetUnitStatusStack(Unit unit, int statusId)
@@ -385,8 +385,8 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void EndTurn()
         {
-            _ = abilitySystem.TryEnqueueAbility(turnEndProcess, new SystemProcessContext { game = this });
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(turnEndProcess, new SystemProcessContext { game = this });
+            flexiCore.Run();
         }
     }
 }

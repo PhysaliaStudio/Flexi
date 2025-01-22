@@ -20,7 +20,7 @@ namespace Physalia.Flexi
         internal event Action<IAbilityFlow> FlowFinished;
         internal event Action<StepResult> StepExecuted;
 
-        internal AbilitySystem abilitySystem;
+        internal FlexiCore flexiCore;
 
         protected EventTriggerMode eventTriggerMode = EventTriggerMode.EACH_NODE;
 

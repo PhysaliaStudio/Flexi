@@ -4,12 +4,12 @@ namespace Physalia.Flexi
 {
     internal class AbilityPoolManager
     {
-        private readonly AbilitySystem abilitySystem;
+        private readonly FlexiCore flexiCore;
         private readonly Dictionary<AbilityHandle, AbilityPool> pools;
 
-        public AbilityPoolManager(AbilitySystem abilitySystem, int capacity = 0)
+        public AbilityPoolManager(FlexiCore flexiCore, int capacity = 0)
         {
-            this.abilitySystem = abilitySystem;
+            this.flexiCore = flexiCore;
             pools = new Dictionary<AbilityHandle, AbilityPool>(capacity);
         }
 
@@ -38,7 +38,7 @@ namespace Physalia.Flexi
                 return;
             }
 
-            var factory = new AbilityFactory(abilitySystem, abilityHandle);
+            var factory = new AbilityFactory(flexiCore, abilityHandle);
             var pool = new AbilityPool(factory, startSize);
             pools.Add(abilityHandle, pool);
         }

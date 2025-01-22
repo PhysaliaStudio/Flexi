@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace Physalia.Flexi.Samples.ActionGame
 {
-    public class GameSystem : MonoBehaviour, IAbilitySystemWrapper
+    public class GameSystem : MonoBehaviour, IFlexiCoreWrapper
     {
         private AssetManager assetManager;
-        private AbilitySystem abilitySystem;
+        private FlexiCore flexiCore;
         private readonly DefaultModifierHandler modifierHandler = new();
 
         private Unit playerUnit;
@@ -14,31 +14,31 @@ namespace Physalia.Flexi.Samples.ActionGame
         private void Awake()
         {
             assetManager = new AssetManager("Flexi/ActionGameSample");
-            abilitySystem = CreateAbilitySystem(this, assetManager);
-            playerUnit = BuildPlayer(assetManager, abilitySystem);
+            flexiCore = CreateFlexiCore(this, assetManager);
+            playerUnit = BuildPlayer(assetManager, flexiCore);
 
             AbilitySlotView slotView = FindObjectOfType<AbilitySlotView>();
             slotView.SetUnit(playerUnit);
         }
 
-        private static AbilitySystem CreateAbilitySystem(IAbilitySystemWrapper wrapper, AssetManager assetManager)
+        private static FlexiCore CreateFlexiCore(IFlexiCoreWrapper wrapper, AssetManager assetManager)
         {
-            var builder = new AbilitySystemBuilder();
+            var builder = new FlexiCoreBuilder();
             builder.SetWrapper(wrapper);
             builder.SetRunner(new RealTimeFlowRunner());
-            AbilitySystem abilitySystem = builder.Build();
+            FlexiCore flexiCore = builder.Build();
 
             MacroAsset[] macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");
             for (var i = 0; i < macroAssets.Length; i++)
             {
                 MacroAsset macroAsset = macroAssets[i];
-                abilitySystem.LoadMacroGraph(macroAsset.name, macroAsset);
+                flexiCore.LoadMacroGraph(macroAsset.name, macroAsset);
             }
 
-            return abilitySystem;
+            return flexiCore;
         }
 
-        private static Unit BuildPlayer(AssetManager assetManager, AbilitySystem abilitySystem)
+        private static Unit BuildPlayer(AssetManager assetManager, FlexiCore flexiCore)
         {
             UnitAvatar avatar = FindObjectOfType<UnitAvatar>();
             Unit unit = new Unit(avatar);
@@ -51,22 +51,22 @@ namespace Physalia.Flexi.Samples.ActionGame
             {
                 AbilityHandle abilityHandle = abilityData.CreateHandle(i);
                 var container = new DefaultAbilityContainer { Handle = abilityHandle };
-                abilitySystem.CreateAbilityPool(abilityHandle, 2);
+                flexiCore.CreateAbilityPool(abilityHandle, 2);
                 unit.AppendAbilityContainer(container);
             }
 
             return unit;
         }
 
-        #region Implement IAbilitySystemWrapper
+        #region Implement IFlexiCoreWrapper
         public void OnEventReceived(IEventContext eventContext)
         {
 
         }
 
-        public void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext)
+        public void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext)
         {
-            abilitySystem.TryEnqueueAbility(playerUnit.AbilityContainers, eventContext);
+            flexiCore.TryEnqueueAbility(playerUnit.AbilityContainers, eventContext);
         }
 
         public IReadOnlyList<StatOwner> CollectStatRefreshOwners()
@@ -107,18 +107,18 @@ namespace Physalia.Flexi.Samples.ActionGame
                     AbilitySlot.State state = playerUnit.AbilitySlot.GetState();
                     if (state == AbilitySlot.State.OPEN)
                     {
-                        _ = abilitySystem.TryEnqueueAbility(playerUnit.AbilityContainers[0]);
-                        abilitySystem.Run();
+                        _ = flexiCore.TryEnqueueAbility(playerUnit.AbilityContainers[0]);
+                        flexiCore.Run();
                     }
                     else if (state == AbilitySlot.State.RECAST)
                     {
-                        abilitySystem.Resume(new RecastContext());
+                        flexiCore.Resume(new RecastContext());
                     }
                 }
             }
 
             playerUnit.Tick();
-            abilitySystem.Tick();
+            flexiCore.Tick();
         }
     }
 }

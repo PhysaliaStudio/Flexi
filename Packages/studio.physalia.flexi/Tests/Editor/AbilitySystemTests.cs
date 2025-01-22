@@ -6,14 +6,14 @@ namespace Physalia.Flexi.Tests
 {
     public class IntegrationTests
     {
-        private AbilitySystemWrapperDefault wrapper;
-        private AbilitySystem abilitySystem;
+        private CustomFlexiCoreWrapper wrapper;
+        private FlexiCore flexiCore;
         private CustomUnitFactory unitFactory;
 
         private DefaultAbilityContainer CreateAbilityContainer(AbilityHandle handle)
         {
-            abilitySystem.CreateAbilityPool(handle, 2);
-            return new DefaultAbilityContainer { SystemWrapper = wrapper, Handle = handle };
+            flexiCore.CreateAbilityPool(handle, 2);
+            return new DefaultAbilityContainer { CoreWrapper = wrapper, Handle = handle };
         }
 
         private CustomUnit CreateUnit(CustomUnitData data)
@@ -26,10 +26,10 @@ namespace Physalia.Flexi.Tests
         [SetUp]
         public void SetUp()
         {
-            wrapper = new AbilitySystemWrapperDefault();
-            AbilitySystemBuilder builder = new AbilitySystemBuilder();
+            wrapper = new CustomFlexiCoreWrapper();
+            FlexiCoreBuilder builder = new FlexiCoreBuilder();
             builder.SetWrapper(wrapper);
-            abilitySystem = builder.Build();
+            flexiCore = builder.Build();
 
             unitFactory = new CustomUnitFactory();
         }
@@ -38,7 +38,7 @@ namespace Physalia.Flexi.Tests
         public void InstantiateAbility_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port
-            var abilityFactory = new AbilityFactory(abilitySystem, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            var abilityFactory = new AbilityFactory(flexiCore, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
             _ = abilityFactory.Create();
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
@@ -54,14 +54,14 @@ namespace Physalia.Flexi.Tests
             DefaultAbilityContainer container = CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE);
             unit.AppendAbilityContainer(container);
 
-            bool success1 = abilitySystem.TryEnqueueAbility(container);
-            abilitySystem.Run();
+            bool success1 = flexiCore.TryEnqueueAbility(container);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success1);
             Assert.AreEqual(4, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            bool success2 = abilitySystem.TryEnqueueAbility(container);
-            abilitySystem.Run();
+            bool success2 = flexiCore.TryEnqueueAbility(container);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success2);
             Assert.AreEqual(8, unit.GetStat(CustomStats.ATTACK).CurrentValue);
@@ -71,8 +71,8 @@ namespace Physalia.Flexi.Tests
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
             DefaultAbilityContainer container = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
-            _ = abilitySystem.TryEnqueueAbility(container);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container);
+            flexiCore.Run();
 
             // Check if the instance can do the same thing
             LogAssert.Expect(LogType.Log, "Hello");
@@ -98,11 +98,11 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit1,
             };
 
-            _ = abilitySystem.TryEnqueueAbility(container, context1);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container, context1);
+            flexiCore.Run();
 
-            _ = abilitySystem.TryEnqueueAbility(container, context2);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container, context2);
+            flexiCore.Run();
 
             Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(21, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -128,14 +128,14 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit1,
             };
 
-            _ = abilitySystem.TryEnqueueAbility(container1, context1);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container1, context1);
+            flexiCore.Run();
 
-            _ = abilitySystem.TryEnqueueAbility(container2, context1);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container2, context1);
+            flexiCore.Run();
 
-            _ = abilitySystem.TryEnqueueAbility(container2, context2);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container2, context2);
+            flexiCore.Run();
 
             Assert.AreEqual(2, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
             Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -150,8 +150,8 @@ namespace Physalia.Flexi.Tests
             unit.AppendAbilityContainer(container);
 
             var context = new CustomDamageEventNode.Context { target = unit };
-            bool success = abilitySystem.TryEnqueueAbility(container, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(container, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             LogAssert.Expect(LogType.Log, "I'm damaged!");
@@ -170,8 +170,8 @@ namespace Physalia.Flexi.Tests
             bool choiceTriggered = false;
             wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
-            bool success = abilitySystem.TryEnqueueAbility(container, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(container, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(true, choiceTriggered);
@@ -190,14 +190,14 @@ namespace Physalia.Flexi.Tests
             bool choiceTriggered = false;
             wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
-            bool success = abilitySystem.TryEnqueueAbility(container, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(container, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(true, choiceTriggered);
 
             var answerContext = new CustomSingleTargetAnswerContext { target = unit2 };
-            abilitySystem.Resume(answerContext);
+            flexiCore.Resume(answerContext);
 
             Assert.AreEqual(4, unit2.GetStat(CustomStats.HEALTH).CurrentValue);
         }
@@ -214,14 +214,14 @@ namespace Physalia.Flexi.Tests
             bool choiceTriggered = false;
             wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
-            bool success = abilitySystem.TryEnqueueAbility(container, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(container, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(true, choiceTriggered);
 
             var answerContext = new CustomSingleTargetAnswerContext { target = null };
-            abilitySystem.Resume(answerContext);
+            flexiCore.Resume(answerContext);
 
             TestUtilities.LogAssertAnyString(LogType.Error);
             Assert.AreEqual(6, unit2.GetStat(CustomStats.HEALTH).CurrentValue);  // Damage should not occur
@@ -239,13 +239,13 @@ namespace Physalia.Flexi.Tests
             bool choiceTriggered = false;
             wrapper.ChoiceTriggered += () => choiceTriggered = true;
 
-            bool success = abilitySystem.TryEnqueueAbility(container, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(container, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(true, choiceTriggered);
 
-            abilitySystem.Resume(new CustomCancellation());
+            flexiCore.Resume(new CustomCancellation());
 
             // Nothing happened
             Assert.AreEqual(25, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -259,7 +259,7 @@ namespace Physalia.Flexi.Tests
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
 
             unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
-            abilitySystem.RefreshStatsAndModifiers();
+            flexiCore.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Modifiers.Count);
             Assert.AreEqual(3, unit.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -272,7 +272,7 @@ namespace Physalia.Flexi.Tests
             CustomUnit unit = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
 
             unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
-            abilitySystem.RefreshStatsAndModifiers();
+            flexiCore.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Modifiers.Count);
             Assert.AreEqual(6, unit.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -285,14 +285,14 @@ namespace Physalia.Flexi.Tests
             CustomUnit unit = CreateUnit(new CustomUnitData { health = 6, attack = 4, });
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 3;
             unit.AppendAbilityContainer(CreateAbilityContainer(CustomAbility.ATTACK_UP_WHEN_LOW_HEALTH));
-            abilitySystem.RefreshStatsAndModifiers();
+            flexiCore.RefreshStatsAndModifiers();
 
             Assert.AreEqual(1, unit.Modifiers.Count);
             Assert.AreEqual(3, unit.GetStat(CustomStats.HEALTH).CurrentValue);
             Assert.AreEqual(6, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
             unit.GetStat(CustomStats.HEALTH).CurrentBase = 6;
-            abilitySystem.RefreshStatsAndModifiers();
+            flexiCore.RefreshStatsAndModifiers();
 
             Assert.AreEqual(0, unit.Modifiers.Count);
             Assert.AreEqual(6, unit.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -319,11 +319,11 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit1,
             };
 
-            bool success1 = abilitySystem.TryEnqueueAbility(normalAttack, context1);
-            abilitySystem.Run();
+            bool success1 = flexiCore.TryEnqueueAbility(normalAttack, context1);
+            flexiCore.Run();
 
-            bool success2 = abilitySystem.TryEnqueueAbility(normalAttack, context2);
-            abilitySystem.Run();
+            bool success2 = flexiCore.TryEnqueueAbility(normalAttack, context2);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success1);
             Assert.AreEqual(true, success2);
@@ -349,8 +349,8 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit2,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(normalAttack, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(normalAttack, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(2, unit2.Modifiers.Count);
@@ -368,13 +368,13 @@ namespace Physalia.Flexi.Tests
 
             for (var i = 0; i < 2; i++)
             {
-                abilitySystem.TryEnqueueAbility(container, new CustomDamageEventNode.Context
+                flexiCore.TryEnqueueAbility(container, new CustomDamageEventNode.Context
                 {
                     instigator = unit1,
                     target = unit2,
                 });
             }
-            abilitySystem.Run();
+            flexiCore.Run();
 
             Assert.AreEqual(16, unit2.GetStat(CustomStats.ATTACK).CurrentValue);
         }
@@ -399,11 +399,11 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit1,
             };
 
-            bool success1 = abilitySystem.TryEnqueueAbility(normalAttack, context1);
-            abilitySystem.Run();
+            bool success1 = flexiCore.TryEnqueueAbility(normalAttack, context1);
+            flexiCore.Run();
 
-            bool success2 = abilitySystem.TryEnqueueAbility(normalAttack, context2);
-            abilitySystem.Run();
+            bool success2 = flexiCore.TryEnqueueAbility(normalAttack, context2);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success1);
             Assert.AreEqual(true, success2);
@@ -427,8 +427,8 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit2,
             };
 
-            bool success = abilitySystem.TryEnqueueAbility(normalAttack5Times, context);
-            abilitySystem.Run();
+            bool success = flexiCore.TryEnqueueAbility(normalAttack5Times, context);
+            flexiCore.Run();
 
             Assert.AreEqual(true, success);
             Assert.AreEqual(2, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
@@ -449,8 +449,8 @@ namespace Physalia.Flexi.Tests
                 mainTarget = unit1,
             };
 
-            _ = abilitySystem.TryEnqueueAbility(normalAttack5Times, context);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(normalAttack5Times, context);
+            flexiCore.Run();
 
             Assert.AreEqual(5, unit1.GetStat(CustomStats.HEALTH).CurrentValue);
         }
@@ -459,11 +459,11 @@ namespace Physalia.Flexi.Tests
         public void ExecuteAbilitiy_Macro()
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
-            abilitySystem.LoadMacroGraph(macro.name, macro);
+            flexiCore.LoadMacroGraph(macro.name, macro);
 
             DefaultAbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER);
-            _ = abilitySystem.TryEnqueueAbility(source);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(source);
+            flexiCore.Run();
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "end");
@@ -473,11 +473,11 @@ namespace Physalia.Flexi.Tests
         public void ExecuteAbilitiy_LoopMacro5Times()
         {
             var macro = CustomAbility.HELLO_WORLD_MACRO;
-            abilitySystem.LoadMacroGraph(macro.name, macro);
+            flexiCore.LoadMacroGraph(macro.name, macro);
 
             DefaultAbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
-            _ = abilitySystem.TryEnqueueAbility(source);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(source);
+            flexiCore.Run();
 
             LogAssert.Expect(LogType.Log, "Hello World!");
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -493,9 +493,9 @@ namespace Physalia.Flexi.Tests
             DefaultAbilityContainer throwException = CreateAbilityContainer(CustomAbility.THROW_EXCEPTION);
             DefaultAbilityContainer helloWorld = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
 
-            _ = abilitySystem.TryEnqueueAbility(throwException);
-            _ = abilitySystem.TryEnqueueAbility(helloWorld);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(throwException);
+            _ = flexiCore.TryEnqueueAbility(helloWorld);
+            flexiCore.Run();
 
             LogAssert.Expect(LogType.Exception, "Exception: This is for testing");
             LogAssert.Expect(LogType.Log, "Hello");
@@ -506,13 +506,13 @@ namespace Physalia.Flexi.Tests
         public void ExecuteAbilitiy_AbilityIsPoolized_NormallyFinished_AbilitiesShouldBeReleased()
         {
             AbilityHandle helloWorld = CustomAbility.HELLO_WORLD;
-            abilitySystem.CreateAbilityPool(helloWorld, 4);
+            flexiCore.CreateAbilityPool(helloWorld, 4);
 
             var container = new DefaultAbilityContainer { Handle = helloWorld };
-            _ = abilitySystem.TryEnqueueAbility(container);
-            abilitySystem.Run();
+            _ = flexiCore.TryEnqueueAbility(container);
+            flexiCore.Run();
 
-            Assert.AreEqual(0, abilitySystem.GetAbilityPool(helloWorld).UsingCount);
+            Assert.AreEqual(0, flexiCore.GetAbilityPool(helloWorld).UsingCount);
         }
     }
 }

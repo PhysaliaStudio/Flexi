@@ -68,7 +68,7 @@ namespace Physalia.Flexi
 
         protected void EnqueueEvent(IEventContext eventContext)
         {
-            Flow.System?.EnqueueEvent(eventContext);
+            Flow.Core?.EnqueueEvent(eventContext);
         }
     }
 }

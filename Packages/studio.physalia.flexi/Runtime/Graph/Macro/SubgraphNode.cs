@@ -46,7 +46,7 @@ namespace Physalia.Flexi
                 state = State.ENTERED;
 
                 // Get graph
-                macroGraph = Flow.System.GetMacroGraph(key);
+                macroGraph = Flow.Core.GetMacroGraph(key);
                 for (var i = 0; i < macroGraph.Nodes.Count; i++)
                 {
                     macroGraph.Nodes[i].flow = Flow;

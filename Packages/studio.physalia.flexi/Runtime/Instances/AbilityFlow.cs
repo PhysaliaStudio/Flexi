@@ -8,13 +8,13 @@ namespace Physalia.Flexi
     /// </summary>
     public sealed class AbilityFlow : IAbilityFlow
     {
-        private readonly AbilitySystem system;
+        private readonly FlexiCore flexiCore;
         private readonly Ability ability;
         private readonly AbilityGraph graph;
 
         private IEventContext payload;
 
-        public AbilitySystem System => system;
+        public FlexiCore Core => flexiCore;
         internal Ability Ability => ability;
         internal AbilityGraph Graph => graph;
 
@@ -24,9 +24,9 @@ namespace Physalia.Flexi
         internal IEventContext Payload => payload;
         public FlowNode Current => graph.Current;
 
-        internal AbilityFlow(AbilitySystem system, Ability ability, AbilityGraph graph)
+        internal AbilityFlow(FlexiCore flexiCore, Ability ability, AbilityGraph graph)
         {
-            this.system = system;
+            this.flexiCore = flexiCore;
             this.ability = ability;
             this.graph = graph;
 

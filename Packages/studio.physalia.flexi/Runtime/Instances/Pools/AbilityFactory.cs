@@ -2,20 +2,20 @@ namespace Physalia.Flexi
 {
     internal class AbilityFactory : ObjectInstanceFactory<Ability>
     {
-        private readonly AbilitySystem abilitySystem;
+        private readonly FlexiCore flexiCore;
         private readonly AbilityHandle abilityHandle;
 
         public override string Name => abilityHandle.ToString();
 
-        public AbilityFactory(AbilitySystem abilitySystem, AbilityHandle abilityHandle)
+        public AbilityFactory(FlexiCore flexiCore, AbilityHandle abilityHandle)
         {
-            this.abilitySystem = abilitySystem;
+            this.flexiCore = flexiCore;
             this.abilityHandle = abilityHandle;
         }
 
         public override Ability Create()
         {
-            var ability = new Ability(abilitySystem, abilityHandle);
+            var ability = new Ability(flexiCore, abilityHandle);
             ability.Initialize();
             return ability;
         }

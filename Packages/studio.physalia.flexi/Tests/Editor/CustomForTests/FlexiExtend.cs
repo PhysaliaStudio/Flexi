@@ -2,7 +2,7 @@ namespace Physalia.Flexi.Tests
 {
     public class DefaultAbilityContainer : AbilityContainer
     {
-        public AbilitySystemWrapperDefault SystemWrapper;
+        public CustomFlexiCoreWrapper CoreWrapper;
         public Actor Actor;
     }
 

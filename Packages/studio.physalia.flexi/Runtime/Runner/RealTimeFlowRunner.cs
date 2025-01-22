@@ -31,7 +31,7 @@ namespace Physalia.Flexi
             // If there is no flow at start, trigger cached events to see if there's any new flow.
             if (flows.Count == 0)
             {
-                abilitySystem.TriggerCachedEvents(this);
+                flexiCore.TriggerCachedEvents(this);
             }
 
             for (var i = 0; i < flows.Count; i++)
@@ -190,7 +190,7 @@ namespace Physalia.Flexi
 
         private void TriggerEvent(StepResult result)
         {
-            if (abilitySystem == null)
+            if (flexiCore == null)
             {
                 return;
             }
@@ -205,16 +205,16 @@ namespace Physalia.Flexi
                     {
                         if (result.node.ShouldTriggerChainEvents)
                         {
-                            abilitySystem.TriggerCachedEvents(this);
-                            abilitySystem.RefreshStatsAndModifiers();
+                            flexiCore.TriggerCachedEvents(this);
+                            flexiCore.RefreshStatsAndModifiers();
                         }
                     }
                     break;
                 case EventTriggerMode.EACH_FLOW:
                     if (result.type == ExecutionType.FLOW_FINISH)
                     {
-                        abilitySystem.TriggerCachedEvents(this);
-                        abilitySystem.RefreshStatsAndModifiers();
+                        flexiCore.TriggerCachedEvents(this);
+                        flexiCore.RefreshStatsAndModifiers();
                     }
                     break;
             }

@@ -34,7 +34,7 @@ namespace Physalia.Flexi
             IAbilityFlow flow = Peek();
             if (flow == null)
             {
-                abilitySystem.TriggerCachedEvents(this);
+                flexiCore.TriggerCachedEvents(this);
             }
 
             flow = Peek();
@@ -169,7 +169,7 @@ namespace Physalia.Flexi
 
         private void TriggerEvent(StepResult result)
         {
-            if (abilitySystem == null)
+            if (flexiCore == null)
             {
                 return;
             }
@@ -184,16 +184,16 @@ namespace Physalia.Flexi
                     {
                         if (result.node.ShouldTriggerChainEvents)
                         {
-                            abilitySystem.TriggerCachedEvents(this);
-                            abilitySystem.RefreshStatsAndModifiers();
+                            flexiCore.TriggerCachedEvents(this);
+                            flexiCore.RefreshStatsAndModifiers();
                         }
                     }
                     break;
                 case EventTriggerMode.EACH_FLOW:
                     if (result.type == ExecutionType.FLOW_FINISH)
                     {
-                        abilitySystem.TriggerCachedEvents(this);
-                        abilitySystem.RefreshStatsAndModifiers();
+                        flexiCore.TriggerCachedEvents(this);
+                        flexiCore.RefreshStatsAndModifiers();
                     }
                     break;
             }

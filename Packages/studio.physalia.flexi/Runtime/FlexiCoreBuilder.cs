@@ -1,15 +1,15 @@
 namespace Physalia.Flexi
 {
-    public class AbilitySystemBuilder
+    public class FlexiCoreBuilder
     {
-        private IAbilitySystemWrapper wrapper;
+        private IFlexiCoreWrapper wrapper;
         private AbilityFlowRunner runner;
 
-        public AbilitySystem Build()
+        public FlexiCore Build()
         {
             if (wrapper == null)
             {
-                throw new System.ArgumentException("IAbilitySystemWrapper is not set.");
+                throw new System.ArgumentException($"{nameof(IFlexiCoreWrapper)} is not set.");
             }
 
             if (runner == null)
@@ -17,12 +17,12 @@ namespace Physalia.Flexi
                 runner = new LifoQueueRunner();
             }
 
-            Logger.Info($"[{nameof(AbilitySystemBuilder)}] Runner Type: {runner.GetType().Name}");
+            Logger.Info($"[{nameof(FlexiCoreBuilder)}] Runner Type: {runner.GetType().Name}");
 
-            return new AbilitySystem(wrapper, runner);
+            return new FlexiCore(wrapper, runner);
         }
 
-        public void SetWrapper(IAbilitySystemWrapper wrapper)
+        public void SetWrapper(IFlexiCoreWrapper wrapper)
         {
             this.wrapper = wrapper;
         }

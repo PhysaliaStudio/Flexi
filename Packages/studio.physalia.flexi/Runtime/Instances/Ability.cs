@@ -3,12 +3,12 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     /// <summary>
-    /// Ability is an instance of <see cref="AbilityData"/>, which is created by <see cref="AbilitySystem"/>,
+    /// Ability is an instance of <see cref="AbilityData"/>, which is created by <see cref="FlexiCore"/>,
     /// and is a container of <see cref="AbilityFlow"/> and <see cref="BlackboardVariable"/>.
     /// </summary>
     public class Ability
     {
-        private readonly AbilitySystem abilitySystem;
+        private readonly FlexiCore flexiCore;
         private readonly AbilityHandle abilityHandle;
 
         private readonly List<BlackboardVariable> variableList = new();
@@ -17,7 +17,7 @@ namespace Physalia.Flexi
 
         private AbilityContainer container;
 
-        public AbilitySystem System => abilitySystem;
+        public FlexiCore Core => flexiCore;
         public AbilityData Data => abilityHandle.Data;
         public AbilityHandle Handle => abilityHandle;
 
@@ -25,9 +25,9 @@ namespace Physalia.Flexi
         public IReadOnlyList<AbilityFlow> Flows => abilityFlows;
         internal AbilityContainer Container { get => container; set => container = value; }
 
-        internal Ability(AbilitySystem abilitySystem, AbilityHandle abilityHandle)
+        internal Ability(FlexiCore flexiCore, AbilityHandle abilityHandle)
         {
-            this.abilitySystem = abilitySystem;
+            this.flexiCore = flexiCore;
             this.abilityHandle = abilityHandle;
         }
 
@@ -58,8 +58,8 @@ namespace Physalia.Flexi
             for (var i = 0; i < group.graphs.Count; i++)
             {
                 string json = group.graphs[i];
-                AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, abilitySystem.MacroLibrary);
-                var abilityFlow = new AbilityFlow(abilitySystem, this, graph);
+                AbilityGraph graph = AbilityGraphUtility.Deserialize("", json, flexiCore.MacroLibrary);
+                var abilityFlow = new AbilityFlow(flexiCore, this, graph);
                 abilityFlows.Add(abilityFlow);
             }
         }
@@ -97,7 +97,7 @@ namespace Physalia.Flexi
         }
 
         /// <summary>
-        /// Reset will be called when released. See <see cref="AbilitySystem.ReleaseAbility"/>.
+        /// Reset will be called when released. See <see cref="FlexiCore.ReleaseAbility"/>.
         /// </summary>
         internal void Reset()
         {

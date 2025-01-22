@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public interface IAbilitySystemWrapper
+    public interface IFlexiCoreWrapper
     {
         void OnEventReceived(IEventContext eventContext);
-        void ResolveEvent(AbilitySystem abilitySystem, IEventContext eventContext);
+        void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext);
 
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
         IReadOnlyList<AbilityContainer> CollectStatRefreshContainers();
@@ -15,11 +15,11 @@ namespace Physalia.Flexi
         void ApplyModifiers(StatOwner statOwner);
     }
 
-    public class AbilitySystem
+    public class FlexiCore
     {
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
-        private readonly IAbilitySystemWrapper wrapper;
+        private readonly IFlexiCoreWrapper wrapper;
         private readonly AbilityFlowRunner runner;
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
@@ -35,11 +35,11 @@ namespace Physalia.Flexi
 
         internal MacroLibrary MacroLibrary => macroLibrary;
 
-        internal AbilitySystem(IAbilitySystemWrapper wrapper, AbilityFlowRunner runner)
+        internal FlexiCore(IFlexiCoreWrapper wrapper, AbilityFlowRunner runner)
         {
             this.wrapper = wrapper;
             this.runner = runner;
-            runner.abilitySystem = this;
+            runner.flexiCore = this;
 
             poolManager = new(this);
             runner.FlowFinished += OnFlowFinished;
@@ -61,7 +61,7 @@ namespace Physalia.Flexi
             bool success = macroLibrary.TryGetValue(key, out string macroJson);
             if (!success)
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] Get macro failed! key: {key}");
+                Logger.Error($"[{nameof(FlexiCore)}] Get macro failed! key: {key}");
                 return null;
             }
 
@@ -110,7 +110,7 @@ namespace Physalia.Flexi
             }
             else
             {
-                Logger.Warn($"[{nameof(AbilitySystem)}] Create pool with {abilityHandle}. Note that instantiation is <b>VERY</b> expensive!");
+                Logger.Warn($"[{nameof(FlexiCore)}] Create pool with {abilityHandle}. Note that instantiation is <b>VERY</b> expensive!");
                 CreateAbilityPool(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
                 ability = poolManager.GetAbility(abilityHandle);
                 return ability;
@@ -122,7 +122,7 @@ namespace Physalia.Flexi
             AbilityHandle abilityHandle = container.Handle;
             if (!abilityHandle.IsValid)
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] GetAbility failed! container.Handle is invalid!");
+                Logger.Error($"[{nameof(FlexiCore)}] GetAbility failed! container.Handle is invalid!");
                 return null;
             }
 
@@ -183,7 +183,7 @@ namespace Physalia.Flexi
             AbilityHandle abilityHandle = container.Handle;
             if (!abilityHandle.IsValid)
             {
-                Logger.Error($"[{nameof(AbilitySystem)}] TryEnqueueAbility failed! container.Handle is invalid!");
+                Logger.Error($"[{nameof(FlexiCore)}] TryEnqueueAbility failed! container.Handle is invalid!");
                 return false;
             }
 

@@ -19,7 +19,7 @@ namespace Physalia.Flexi
             {
                 if (node is MissingNode missingNode)
                 {
-                    Logger.Error($"[{nameof(AbilitySystem)}] Detect a missing node! assetName: {graphName}, nodeType: {missingNode.TypeFullName}");
+                    Logger.Error($"[{nameof(FlexiCore)}] Detect a missing node! assetName: {graphName}, nodeType: {missingNode.TypeFullName}");
                     continue;
                 }
 
@@ -27,7 +27,7 @@ namespace Physalia.Flexi
                 {
                     if (port is IIsMissing)
                     {
-                        Logger.Error($"[{nameof(AbilitySystem)}] Detect connection to a missing port! assetName: {graphName}, nodeType: {node.GetType().Name}, portName: {port.Name}");
+                        Logger.Error($"[{nameof(FlexiCore)}] Detect connection to a missing port! assetName: {graphName}, nodeType: {node.GetType().Name}, portName: {port.Name}");
                     }
                 }
             }
