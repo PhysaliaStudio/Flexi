@@ -317,8 +317,6 @@ namespace Physalia.Flexi.GraphViewEditor
                     break;
             }
 
-            HideNodeInspector();
-
             AbilityGraph abilityGraph;
             switch (asset)
             {
@@ -788,7 +786,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void NewGraphView()
         {
-            HideNodeInspector();
+            abilityAssetInspector.visible = true;
+            macroAssetInspector.visible = false;
+
             blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
             // Create new asset in memory, and add an empty graph
@@ -804,7 +804,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void NewMacroGraphView()
         {
-            HideNodeInspector();
+            abilityAssetInspector.visible = false;
+            macroAssetInspector.visible = true;
+
             blackboardInspector.SetBlackboard(null);
 
             // Create new asset in memory, and add an empty graph
