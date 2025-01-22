@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Tests
             return AbilityState.PAUSE;
         }
 
-        public override bool CheckNodeContext(IResumeContext resumeContext)
+        public override bool CanResume(IResumeContext resumeContext)
         {
             if (resumeContext is CustomCancellation)
             {

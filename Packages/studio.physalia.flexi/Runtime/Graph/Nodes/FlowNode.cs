@@ -43,7 +43,12 @@ namespace Physalia.Flexi
 
         private protected abstract AbilityState DoLogic();
 
-        public AbilityState Resume(IResumeContext resumeContext)
+        public virtual bool CanResume(IResumeContext resumeContext)
+        {
+            return false;
+        }
+
+        internal AbilityState Resume(IResumeContext resumeContext)
         {
             return ResumeLogic(resumeContext);
         }
