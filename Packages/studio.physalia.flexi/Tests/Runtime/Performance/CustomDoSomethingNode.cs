@@ -6,7 +6,7 @@ namespace Physalia.Flexi.PerformanceTests
         public Inport<int> inport;
         public Outport<int> outport;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             outport.SetValue(inport.GetValue());
             return AbilityState.RUNNING;

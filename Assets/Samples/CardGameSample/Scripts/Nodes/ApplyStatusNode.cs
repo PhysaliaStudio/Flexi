@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<int> stackPort;
         public Variable<int> statusId;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Game game = gamePort.GetValue();
             IReadOnlyList<Unit> targets = targetsPort.GetValue();

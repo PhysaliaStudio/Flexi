@@ -32,7 +32,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             // If this node has already finished before, reset for restarting.
             // This may happen when looping.

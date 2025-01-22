@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.ActionGame
         public Variable<string> name;
         public Variable<bool> disableControl;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             IUnitAvatar avatar = Container.Unit.Avatar;
             if (!avatar.HasMontage(name.Value))

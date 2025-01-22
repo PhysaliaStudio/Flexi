@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Outport<Unit> target;
         public Variable<UnitType> unitType;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Container.Game.StartSingleTargetChoice(Container.Card, unitType.Value);
             return AbilityState.PAUSE;

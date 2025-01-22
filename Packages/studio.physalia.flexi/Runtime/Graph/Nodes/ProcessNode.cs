@@ -21,5 +21,15 @@ namespace Physalia.Flexi
                 return connections.Count > 0 ? connections[0].Node as FlowNode : null;
             }
         }
+
+        protected sealed override AbilityState DoLogic()
+        {
+            return OnExecute();
+        }
+
+        protected virtual AbilityState OnExecute()
+        {
+            return AbilityState.RUNNING;
+        }
     }
 }

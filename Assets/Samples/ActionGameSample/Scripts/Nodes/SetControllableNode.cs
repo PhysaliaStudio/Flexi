@@ -5,7 +5,7 @@ namespace Physalia.Flexi.Samples.ActionGame
     {
         public Variable<bool> controllable;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             if (controllable)
             {

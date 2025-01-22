@@ -18,7 +18,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<Game> gamePort;
         public Inport<int> countPort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Game game = gamePort.GetValue();
             int count = countPort.GetValue();
