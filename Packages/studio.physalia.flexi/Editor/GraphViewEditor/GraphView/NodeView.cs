@@ -333,7 +333,8 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             string portName = GetPortPrettyName(inportData.Name);
             Type portType = inportData.ValueType;
-            var portView = new PortView(Orientation.Horizontal, Direction.Input, Capacity.Multi, portType) { portName = portName };
+            Capacity capacity = inportData.ValueType == typeof(FlowNode) ? Capacity.Multi : Capacity.Single;
+            var portView = new PortView(Orientation.Horizontal, Direction.Input, capacity, portType) { portName = portName };
 
             VisualElement inputField = CreateInputField(inportData);
             inputPortToFieldTable.Add(portView, inputField);
@@ -358,7 +359,8 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             string portName = GetPortPrettyName(outport.Name);
             Type portType = outport.ValueType;
-            var portView = new PortView(Orientation.Horizontal, Direction.Output, Capacity.Multi, portType) { portName = portName };
+            Capacity capacity = outport.ValueType == typeof(FlowNode) ? Capacity.Single : Capacity.Multi;
+            var portView = new PortView(Orientation.Horizontal, Direction.Output, capacity, portType) { portName = portName };
 
             if (index == -1)
             {
