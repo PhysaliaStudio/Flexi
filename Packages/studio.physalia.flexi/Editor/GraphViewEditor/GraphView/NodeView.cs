@@ -72,7 +72,7 @@ namespace Physalia.Flexi.GraphViewEditor
                     });
                     evt.menu.AppendSeparator();
                     break;
-                case SubgraphNode:
+                case MacroNode:
                 case GraphInputNode:
                 case GraphOutputNode:
                     break;
@@ -101,7 +101,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 case EntryNode:
                     AddToClassList(USS_CLASS_ENTRY_NODE);
                     break;
-                case SubgraphNode:
+                case MacroNode:
                 case GraphInputNode:
                 case GraphOutputNode:
                     AddToClassList(USS_CLASS_MACRO_NODE);
@@ -123,8 +123,8 @@ namespace Physalia.Flexi.GraphViewEditor
                 default:
                     title = GetNodeName(node.GetType());
                     break;
-                case SubgraphNode subgraphNode:
-                    title = subgraphNode.key;
+                case MacroNode macroNode:
+                    title = macroNode.key;
                     break;
                 case TrueNode:
                     title = "TRUE";
@@ -380,7 +380,7 @@ namespace Physalia.Flexi.GraphViewEditor
         {
             // TODO: Disable input fields for subgraph nodes for now, since I didn't find the solution.
             var box = new VisualElement();
-            if (inportData.Node is SubgraphNode)
+            if (inportData.Node is MacroNode)
             {
                 box.AddToClassList(USS_CLASS_INPUT_FIELD_HIDDEN);
                 return box;

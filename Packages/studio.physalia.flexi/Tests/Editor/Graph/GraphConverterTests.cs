@@ -331,18 +331,18 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void Serialize_WithSubgraphNode()
+        public void Serialize_WithMacroNode()
         {
             Graph graph = new Graph();
-            SubgraphNode subgraphNode = graph.AddNewNode<SubgraphNode>();
-            subgraphNode.key = "1234";
+            MacroNode macroNode = graph.AddNewNode<MacroNode>();
+            macroNode.key = "1234";
 
             // Intentionally change node id for easier test
-            subgraphNode.id = 1;
+            macroNode.id = 1;
 
             var expected =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.MacroNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -350,22 +350,22 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void Deserialize_WithSubgraphNode()
+        public void Deserialize_WithMacroNode()
         {
             var json =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
-                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
+                "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.MacroNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[]}";
 
             Graph graph = JsonConvert.DeserializeObject<Graph>(json);
 
-            var subgraphNode = graph.GetNode(1) as SubgraphNode;
-            Assert.NotNull(subgraphNode);
-            Assert.AreEqual("1234", subgraphNode.key);
+            var macroNode = graph.GetNode(1) as MacroNode;
+            Assert.NotNull(macroNode);
+            Assert.AreEqual("1234", macroNode.key);
         }
 
         [Test]
-        public void Serialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
+        public void Serialize_WithMacroNodeWithCustomPorts_TheEdgesShouldBeCorrect()
         {
             var macroJson =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
@@ -378,19 +378,19 @@ namespace Physalia.Flexi.Tests
 
             Graph graph = new Graph();
             IntegerNode integerNode = graph.AddNewNode<IntegerNode>();
-            SubgraphNode subgraphNode = macroLibrary.AddMacroNode(graph, "1234");
+            MacroNode macroNode = macroLibrary.AddMacroNode(graph, "1234");
 
-            Inport test1 = subgraphNode.GetInport("test1");
+            Inport test1 = macroNode.GetInport("test1");
             integerNode.output.Connect(test1);
 
             // Intentionally change node id for easier test
             integerNode.id = 1;
-            subgraphNode.id = 2;
+            macroNode.id = 2;
 
             var expected =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.MacroNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
 
             string json = JsonConvert.SerializeObject(graph);
@@ -398,12 +398,12 @@ namespace Physalia.Flexi.Tests
         }
 
         [Test]
-        public void Deserialize_WithSubgraphNodeWithCustomPorts_TheEdgesShouldBeCorrect()
+        public void Deserialize_WithMacroNodeWithCustomPorts_TheEdgesShouldBeCorrect()
         {
             var graphJson =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
                 "\"nodes\":[{\"_id\":1,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.IntegerNode\",\"value\":0}," +
-                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.SubgraphNode\",\"key\":\"1234\"}]," +
+                "{\"_id\":2,\"_position\":{\"x\":0.0,\"y\":0.0},\"_type\":\"Physalia.Flexi.MacroNode\",\"key\":\"1234\"}]," +
                 "\"edges\":[{\"id1\":1,\"port1\":\"output\",\"id2\":2,\"port2\":\"test1\"}]}";
             var macroJson =
                 "{\"_type\":\"Physalia.Flexi.Graph\"," +
@@ -417,9 +417,9 @@ namespace Physalia.Flexi.Tests
             Graph graph = JsonConvert.DeserializeObject<Graph>(graphJson);
             macroLibrary.SetUpMacroNodes(graph);
 
-            var subgraphNode = graph.GetNode(2) as SubgraphNode;
-            Inport test1 = subgraphNode.GetInport("test1");
-            Outport test2 = subgraphNode.GetOutport("test2");
+            var macroNode = graph.GetNode(2) as MacroNode;
+            Inport test1 = macroNode.GetInport("test1");
+            Outport test2 = macroNode.GetOutport("test2");
             Assert.NotNull(test1, "The port 'test1' was not created.");
             Assert.NotNull(test2, "The port 'test2' was not created.");
 

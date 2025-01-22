@@ -6,7 +6,7 @@ namespace Physalia.Flexi
 {
     public class MacroLibrary : Dictionary<string, string>
     {
-        public SubgraphNode AddMacroNode(Graph graph, string macroKey)
+        public MacroNode AddMacroNode(Graph graph, string macroKey)
         {
             bool success = TryGetValue(macroKey, out string macroJson);
             if (!success)
@@ -15,7 +15,7 @@ namespace Physalia.Flexi
                 return null;
             }
 
-            SubgraphNode node = graph.AddNewNode<SubgraphNode>();
+            MacroNode node = graph.AddNewNode<MacroNode>();
             node.key = macroKey;
 
             Graph macro = JsonConvert.DeserializeObject<Graph>(macroJson);
@@ -44,7 +44,7 @@ namespace Physalia.Flexi
             IReadOnlyList<Node> nodes = graph.Nodes;
             for (var i = 0; i < nodes.Count; i++)
             {
-                if (nodes[i] is SubgraphNode macroNode)
+                if (nodes[i] is MacroNode macroNode)
                 {
                     bool success = TryGetValue(macroNode.key, out string macroJson);
                     if (!success)
