@@ -139,7 +139,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
         public void CreateMacroNode(MacroLibrary macroLibrary, string macroKey, Vector2 position)
         {
-            SubgraphNode node = macroLibrary.AddMacroNode(abilityGraph, macroKey);
+            MacroNode node = macroLibrary.AddMacroNode(abilityGraph, macroKey);
             node.position = position;
             _ = CreateNodeView(node);
         }

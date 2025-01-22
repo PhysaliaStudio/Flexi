@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
-    public sealed class SubgraphNode : ProcessNode
+    public sealed class MacroNode : ProcessNode
     {
         private enum State { STANDBY, ENTERED, EXITED }
 

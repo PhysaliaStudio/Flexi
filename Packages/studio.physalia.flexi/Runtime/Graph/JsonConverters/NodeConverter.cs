@@ -36,10 +36,10 @@ namespace Physalia.Flexi
             }
 
             // Custom Fields
-            if (node is SubgraphNode subgraphNode)
+            if (node is MacroNode macroNode)
             {
-                JToken token = jsonObject[nameof(SubgraphNode.key)];
-                subgraphNode.key = token.ToObject<string>();
+                JToken token = jsonObject[nameof(MacroNode.key)];
+                macroNode.key = token.ToObject<string>();
             }
             else
             {
@@ -148,10 +148,10 @@ namespace Physalia.Flexi
             writer.WriteValue(nodeType.FullName);
 
             // Custom Fields
-            if (value is SubgraphNode subgraphNode)
+            if (value is MacroNode macroNode)
             {
-                writer.WritePropertyName(nameof(SubgraphNode.key));
-                serializer.Serialize(writer, subgraphNode.key);
+                writer.WritePropertyName(nameof(MacroNode.key));
+                serializer.Serialize(writer, macroNode.key);
             }
             else
             {
