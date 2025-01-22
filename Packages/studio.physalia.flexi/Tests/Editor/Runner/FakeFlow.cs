@@ -30,7 +30,7 @@ namespace Physalia.Flexi.Tests
             return AbilityState.RUNNING;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             if (pauseCount > 0)
             {

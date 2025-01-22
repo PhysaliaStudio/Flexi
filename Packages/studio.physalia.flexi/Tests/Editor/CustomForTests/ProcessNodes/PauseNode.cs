@@ -13,7 +13,7 @@ namespace Physalia.Flexi.Tests
             return true;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             return AbilityState.RUNNING;
         }

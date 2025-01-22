@@ -44,7 +44,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             return resumeContext is RecastContext;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is RecastContext)
             {

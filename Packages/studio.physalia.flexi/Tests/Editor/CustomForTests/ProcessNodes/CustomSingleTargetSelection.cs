@@ -34,7 +34,7 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is CustomCancellation)
             {

@@ -37,7 +37,7 @@ namespace Physalia.Flexi.Samples.CardGame
             return false;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is CancellationContext)
             {

@@ -50,10 +50,10 @@ namespace Physalia.Flexi
 
         internal AbilityState Resume(IResumeContext resumeContext)
         {
-            return ResumeLogic(resumeContext);
+            return OnResume(resumeContext);
         }
 
-        protected virtual AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected virtual AbilityState OnResume(IResumeContext resumeContext)
         {
             return AbilityState.RUNNING;
         }
