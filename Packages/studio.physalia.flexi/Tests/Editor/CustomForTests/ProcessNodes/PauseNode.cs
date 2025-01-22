@@ -8,12 +8,12 @@ namespace Physalia.Flexi.Tests
             return AbilityState.PAUSE;
         }
 
-        public override bool CheckNodeContext(IResumeContext resumeContext)
+        public override bool CanResume(IResumeContext resumeContext)
         {
             return true;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             return AbilityState.RUNNING;
         }

@@ -17,10 +17,10 @@ namespace Physalia.Flexi
 
         }
 
-        internal AbilityState Run()
+        internal AbilityState Execute()
         {
             EvaluateInports();
-            return DoLogic();
+            return ExecuteInternal();
         }
 
         private protected void EvaluateInports()
@@ -41,14 +41,19 @@ namespace Physalia.Flexi
             }
         }
 
-        private protected abstract AbilityState DoLogic();
+        private protected abstract AbilityState ExecuteInternal();
 
-        public AbilityState Resume(IResumeContext resumeContext)
+        public virtual bool CanResume(IResumeContext resumeContext)
         {
-            return ResumeLogic(resumeContext);
+            return false;
         }
 
-        protected virtual AbilityState ResumeLogic(IResumeContext resumeContext)
+        internal AbilityState Resume(IResumeContext resumeContext)
+        {
+            return OnResume(resumeContext);
+        }
+
+        protected virtual AbilityState OnResume(IResumeContext resumeContext)
         {
             return AbilityState.RUNNING;
         }

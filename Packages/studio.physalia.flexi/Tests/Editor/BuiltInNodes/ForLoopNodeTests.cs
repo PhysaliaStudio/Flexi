@@ -24,13 +24,13 @@ namespace Physalia.Flexi.Tests
             // In loop
             for (var i = 0; i < 10; i++)
             {
-                forLoopNode.Run();
+                forLoopNode.Execute();
                 Assert.AreEqual(loopBodyNode, forLoopNode.Next, "Expected to go to loop body but failed");
                 Assert.AreEqual(i, forLoopNode.indexPort.GetValue());
             }
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(10, forLoopNode.indexPort.GetValue());
         }
@@ -55,13 +55,13 @@ namespace Physalia.Flexi.Tests
             // In loop
             for (var i = 9; i >= 0; i--)
             {
-                forLoopNode.Run();
+                forLoopNode.Execute();
                 Assert.AreEqual(loopBodyNode, forLoopNode.Next, "Expected to go to loop body but failed");
                 Assert.AreEqual(i, forLoopNode.indexPort.GetValue());
             }
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(-1, forLoopNode.indexPort.GetValue());
         }
@@ -84,7 +84,7 @@ namespace Physalia.Flexi.Tests
             endIntNode.value.Value = 5;
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(5, forLoopNode.indexPort.GetValue());  // The index does not increment because the loop never run
         }
@@ -109,18 +109,18 @@ namespace Physalia.Flexi.Tests
             // In loop
             for (var i = 0; i < 10; i++)
             {
-                forLoopNode.Run();
+                forLoopNode.Execute();
                 Assert.AreEqual(loopBodyNode, forLoopNode.Next, "Expected to go to loop body but failed");
                 Assert.AreEqual(i, forLoopNode.indexPort.GetValue());
             }
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(10, forLoopNode.indexPort.GetValue());
 
             // Run Again
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(10, forLoopNode.indexPort.GetValue());
         }
@@ -145,13 +145,13 @@ namespace Physalia.Flexi.Tests
             // In loop
             for (var i = 0; i < 10; i++)
             {
-                forLoopNode.Run();
+                forLoopNode.Execute();
                 Assert.AreEqual(loopBodyNode, forLoopNode.Next, "Expected to go to loop body but failed");
                 Assert.AreEqual(i, forLoopNode.indexPort.GetValue());
             }
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(10, forLoopNode.indexPort.GetValue());
 
@@ -160,13 +160,13 @@ namespace Physalia.Flexi.Tests
             // In loop
             for (var i = 0; i < 10; i++)
             {
-                forLoopNode.Run();
+                forLoopNode.Execute();
                 Assert.AreEqual(loopBodyNode, forLoopNode.Next, "Expected to go to loop body but failed");
                 Assert.AreEqual(i, forLoopNode.indexPort.GetValue());
             }
 
             // Out loop
-            forLoopNode.Run();
+            forLoopNode.Execute();
             Assert.AreEqual(completedNode, forLoopNode.Next, "Expected to go to completed but failed");
             Assert.AreEqual(10, forLoopNode.indexPort.GetValue());
         }

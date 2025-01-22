@@ -314,11 +314,6 @@ namespace Physalia.Flexi
             }
         }
 
-        public virtual bool CheckNodeContext(IResumeContext resumeContext)
-        {
-            return false;
-        }
-
         protected internal virtual void Reset()
         {
 

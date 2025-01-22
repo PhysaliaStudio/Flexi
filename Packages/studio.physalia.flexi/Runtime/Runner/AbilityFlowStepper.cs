@@ -47,7 +47,7 @@ namespace Physalia.Flexi
             AbilityState state;
             try
             {
-                state = node.Run();
+                state = node.Execute();
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace Physalia.Flexi
         {
             FlowNode node = flow.Current;
 
-            bool success = node.CheckNodeContext(resumeContext);
+            bool success = node.CanResume(resumeContext);
             if (!success)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);

@@ -14,7 +14,7 @@ namespace Physalia.Flexi.Tests
             this.pauseCount = pauseCount;
         }
 
-        public override bool CheckNodeContext(IResumeContext resumeContext)
+        public override bool CanResume(IResumeContext resumeContext)
         {
             return true;
         }
@@ -30,7 +30,7 @@ namespace Physalia.Flexi.Tests
             return AbilityState.RUNNING;
         }
 
-        protected override AbilityState ResumeLogic(IResumeContext resumeContext)
+        protected override AbilityState OnResume(IResumeContext resumeContext)
         {
             if (pauseCount > 0)
             {

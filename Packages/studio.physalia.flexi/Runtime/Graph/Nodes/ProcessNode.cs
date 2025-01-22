@@ -31,7 +31,7 @@ namespace Physalia.Flexi
 
     public abstract class BaseProcessNode : FlowNode
     {
-        private protected sealed override AbilityState DoLogic()
+        private protected sealed override AbilityState ExecuteInternal()
         {
             return OnExecute();
         }
