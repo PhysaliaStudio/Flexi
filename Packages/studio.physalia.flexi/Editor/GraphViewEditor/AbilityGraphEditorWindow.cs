@@ -43,7 +43,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private static readonly string NEW_MACRO_BUTTON_NAME = "new-macro-button";
 
         private static readonly string ABILITY_FLOW_MENU_PARENT_NAME = "ability-flow-menu-parent";
-        private static readonly string NODE_INSPECTOR_PARENT_NAME = "node-inspector-parent";
+        private static readonly string MACRO_INSPECTOR_PARENT_NAME = "macro-inspector-parent";
         private static readonly string BLACKBOARD_INSPECTOR_PARENT_NAME = "blackboard-inspector-parent";
         private static readonly string GRAPH_VIEW_PARENT_NAME = "graph-view-parent";
         private static readonly string GRAPH_VIEW_NAME = "graph-view";
@@ -57,7 +57,7 @@ namespace Physalia.Flexi.GraphViewEditor
         [SerializeField]
         private VisualTreeAsset abilityFlowMenuAsset;
         [SerializeField]
-        private VisualTreeAsset nodeInspectorAsset;
+        private VisualTreeAsset macroInspectorAsset;
         [SerializeField]
         private VisualTreeAsset portListViewItemAsset;
 
@@ -83,9 +83,13 @@ namespace Physalia.Flexi.GraphViewEditor
         private ObjectField objectField;
 
         private AbilityGraphView graphView;
+        private VisualElement abilityAssetInspector;
+        private VisualElement macroAssetInspector;
+
         private AbilityFlowMenu abilityFlowMenu;
-        private NodeInspector nodeInspector;
+        private MacroInspector macroInspector;
         private BlackboardInspector blackboardInspector;
+
         private bool isDirty;
 
         [MenuItem(EditorConst.MenuFolder + "Ability Editor &1", priority = 1000)]
@@ -168,6 +172,8 @@ namespace Physalia.Flexi.GraphViewEditor
             Button newMacroButton = rootVisualElement.Query<Button>(NEW_MACRO_BUTTON_NAME).First();
             newMacroButton.clicked += () => OnNewButtonClicked(true);
 
+            abilityAssetInspector = rootVisualElement.Query<VisualElement>("ability-asset-inspector").First();
+            macroAssetInspector = rootVisualElement.Query<VisualElement>("macro-asset-inspector").First();
             SetUpAbilityFlowMenu();
             SetUpNodeInspector();
             SetUpBlackboardInspector();
@@ -213,10 +219,10 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
             }
 
-            if (nodeInspectorAsset == null)
+            if (macroInspectorAsset == null)
             {
-                nodeInspectorAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "NodeInspector.uxml");
-                if (nodeInspectorAsset == null)
+                macroInspectorAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(folderPath + "NodeInspector.uxml");
+                if (macroInspectorAsset == null)
                 {
                     return false;
                 }
@@ -262,9 +268,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void SetUpNodeInspector()
         {
-            VisualElement nodeInspectorParent = rootVisualElement.Query<VisualElement>(NODE_INSPECTOR_PARENT_NAME).First();
-            nodeInspector = new NodeInspector(this, nodeInspectorAsset, portListViewItemAsset);
-            nodeInspectorParent.Add(nodeInspector);
+            VisualElement macroInspectorParent = rootVisualElement.Query<VisualElement>(MACRO_INSPECTOR_PARENT_NAME).First();
+            macroInspector = new MacroInspector(this, macroInspectorAsset, portListViewItemAsset);
+            macroInspectorParent.Add(macroInspector);
         }
 
         private void SetUpBlackboardInspector()
@@ -272,16 +278,6 @@ namespace Physalia.Flexi.GraphViewEditor
             VisualElement blackboardInspectorParent = rootVisualElement.Query<VisualElement>(BLACKBOARD_INSPECTOR_PARENT_NAME).First();
             blackboardInspector = new BlackboardInspector(this, blackboardInspectorAsset, blackboardItemAsset);
             blackboardInspectorParent.Add(blackboardInspector);
-        }
-
-        public void ShowNodeInspector(NodeView nodeView)
-        {
-            nodeInspector.SetNodeView(nodeView);
-        }
-
-        public void HideNodeInspector()
-        {
-            nodeInspector.SetNodeView(null);
         }
 
         private bool LoadFile(GraphAsset asset, int groupIndex, int graphIndex)
@@ -299,7 +295,17 @@ namespace Physalia.Flexi.GraphViewEditor
                 return false;
             }
 
-            HideNodeInspector();
+            switch (asset)
+            {
+                case AbilityAsset:
+                    abilityAssetInspector.visible = true;
+                    macroAssetInspector.visible = false;
+                    break;
+                case MacroAsset:
+                    abilityAssetInspector.visible = false;
+                    macroAssetInspector.visible = true;
+                    break;
+            }
 
             AbilityGraph abilityGraph;
             switch (asset)
@@ -371,6 +377,11 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(abilityGraph, this);
             SetUpGraphView(graphView);
+            if (asset is MacroAsset)
+            {
+                macroInspector.SetMacroGraphView(graphView);
+            }
+
             ResetAssetState(asset, groupIndex, graphIndex);
             return true;
         }
@@ -770,7 +781,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void NewGraphView()
         {
-            HideNodeInspector();
+            abilityAssetInspector.visible = true;
+            macroAssetInspector.visible = false;
+
             blackboardInspector.SetBlackboard(new List<BlackboardVariable>());
 
             // Create new asset in memory, and add an empty graph
@@ -786,7 +799,9 @@ namespace Physalia.Flexi.GraphViewEditor
 
         private void NewMacroGraphView()
         {
-            HideNodeInspector();
+            abilityAssetInspector.visible = false;
+            macroAssetInspector.visible = true;
+
             blackboardInspector.SetBlackboard(null);
 
             // Create new asset in memory, and add an empty graph
@@ -801,6 +816,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             AbilityGraphView graphView = AbilityGraphView.Create(graph, this);
             SetUpGraphView(graphView);
+            macroInspector.SetMacroGraphView(graphView);
 
             ResetAssetState(newAsset, 0, 0);
         }
