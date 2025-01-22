@@ -24,6 +24,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private readonly Dictionary<NodeData, NodeView> nodeTable = new();
         private Vector2 lastContextPosition;
 
+        public AbilityGraph Data => abilityGraph;
         public Vector2 LastContextPosition => lastContextPosition;
 
         public AbilityGraphView(AbilityGraphEditorWindow window) : this(new AbilityGraph(), window)
@@ -156,6 +157,15 @@ namespace Physalia.Flexi.GraphViewEditor
             return nodeView;
         }
 
+        public NodeView GetNodeView(NodeData nodeData)
+        {
+            if (nodeTable.TryGetValue(nodeData, out NodeView nodeView))
+            {
+                return nodeView;
+            }
+            return null;
+        }
+
         private NodeView CreateNodeView(NodeData nodeData)
         {
             var nodeView = new NodeView(nodeData, window, this);
@@ -248,38 +258,6 @@ namespace Physalia.Flexi.GraphViewEditor
                 }
             }
             return compatiblePorts;
-        }
-
-        public override void AddToSelection(ISelectable selectable)
-        {
-            base.AddToSelection(selectable);
-            if (selection.Count == 1 && selection[0] is NodeView nodeView)
-            {
-                window.ShowNodeInspector(nodeView);
-            }
-            else
-            {
-                window.HideNodeInspector();
-            }
-        }
-
-        public override void RemoveFromSelection(ISelectable selectable)
-        {
-            base.RemoveFromSelection(selectable);
-            if (selection.Count == 1 && selection[0] is NodeView nodeView)
-            {
-                window.ShowNodeInspector(nodeView);
-            }
-            else
-            {
-                window.HideNodeInspector();
-            }
-        }
-
-        public override void ClearSelection()
-        {
-            base.ClearSelection();
-            window.HideNodeInspector();
         }
 
         public void PastePartialGraph(PartialGraph partialGraph, Vector2 localMousePosition)
