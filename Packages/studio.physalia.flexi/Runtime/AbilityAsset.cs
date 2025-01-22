@@ -46,16 +46,12 @@ namespace Physalia.Flexi
         {
             get
             {
-                if (abilityData == null)
-                {
-                    abilityData = CreateAbilityData();
-                }
-
+                abilityData ??= CreateInstance();
                 return abilityData;
             }
         }
 
-        public AbilityData CreateAbilityData()
+        private AbilityData CreateInstance()
         {
             var abilityData = new AbilityData { name = name };
             for (var i = 0; i < blackboard.Count; i++)

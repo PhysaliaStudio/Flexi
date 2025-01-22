@@ -59,5 +59,25 @@ namespace Physalia.Flexi
 
             return new AbilityHandle(this, groupIndex);
         }
+
+        public AbilityData Clone()
+        {
+            var clone = new AbilityData
+            {
+                name = name,
+            };
+
+            for (var i = 0; i < blackboard.Count; i++)
+            {
+                clone.blackboard.Add(blackboard[i].Clone());
+            }
+
+            for (var i = 0; i < graphGroups.Count; i++)
+            {
+                clone.graphGroups.Add(graphGroups[i].Clone());
+            }
+
+            return clone;
+        }
     }
 }

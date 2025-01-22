@@ -8,7 +8,7 @@ namespace Physalia.Flexi
         public string key = "";
         public int value;
 
-        public BlackboardVariable Clone()
+        internal BlackboardVariable Clone()
         {
             return new BlackboardVariable
             {
