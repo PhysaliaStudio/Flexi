@@ -37,8 +37,8 @@ namespace Physalia.Flexi
             {
                 default:
                     return false;
-                case ExecutionType.NODE_EXECUTION:
-                    if (result.state != ResultState.SUCCESS)
+                case ExecutionType.NodeExecution:
+                    if (result.state != ResultState.Success)
                     {
                         return false;
                     }

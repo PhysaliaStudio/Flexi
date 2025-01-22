@@ -22,15 +22,15 @@ namespace Physalia.Flexi
 
         public enum ExecutionType
         {
-            NODE_EXECUTION,
-            NODE_RESUME,
-            NODE_TICK,
-            FLOW_FINISH,
+            NodeExecution,
+            NodeResume,
+            NodeTick,
+            FlowFinish,
         }
 
         public enum ResultState
         {
-            SUCCESS, FAILED, ABORT, PAUSE
+            Success, Fail, Abort, Pause
         }
 
         public static StepResult ExecuteStep(IAbilityFlow flow)
@@ -39,7 +39,7 @@ namespace Physalia.Flexi
             {
                 // The graph is empty or has already reached the final node.
                 // We keep it until resolving all flows pushed, and dequeue it at here.
-                return new StepResult(flow, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS);
+                return new StepResult(flow, null, ExecutionType.FlowFinish, ResultState.Success);
             }
 
             FlowNode node = flow.Current;
@@ -57,15 +57,15 @@ namespace Physalia.Flexi
 
             if (state == FlowState.Abort)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.ABORT);
+                return new StepResult(flow, node, ExecutionType.NodeExecution, ResultState.Abort);
             }
             else if (state == FlowState.Pause)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.PAUSE);
+                return new StepResult(flow, node, ExecutionType.NodeExecution, ResultState.Pause);
             }
             else
             {
-                return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.SUCCESS);
+                return new StepResult(flow, node, ExecutionType.NodeExecution, ResultState.Success);
             }
         }
 
@@ -76,7 +76,7 @@ namespace Physalia.Flexi
             bool success = node.CanResume(resumeContext);
             if (!success)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
+                return new StepResult(flow, node, ExecutionType.NodeResume, ResultState.Fail);
             }
 
             FlowState state;
@@ -92,15 +92,15 @@ namespace Physalia.Flexi
 
             if (state == FlowState.Abort)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.ABORT);
+                return new StepResult(flow, node, ExecutionType.NodeResume, ResultState.Abort);
             }
             else if (state == FlowState.Pause)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.PAUSE);
+                return new StepResult(flow, node, ExecutionType.NodeResume, ResultState.Pause);
             }
             else
             {
-                return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.SUCCESS);
+                return new StepResult(flow, node, ExecutionType.NodeResume, ResultState.Success);
             }
         }
 
@@ -121,15 +121,15 @@ namespace Physalia.Flexi
 
             if (state == FlowState.Abort)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.ABORT);
+                return new StepResult(flow, node, ExecutionType.NodeTick, ResultState.Abort);
             }
             else if (state == FlowState.Pause)
             {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.PAUSE);
+                return new StepResult(flow, node, ExecutionType.NodeTick, ResultState.Pause);
             }
             else
             {
-                return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.SUCCESS);
+                return new StepResult(flow, node, ExecutionType.NodeTick, ResultState.Success);
             }
         }
     }

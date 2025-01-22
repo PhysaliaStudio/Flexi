@@ -165,13 +165,13 @@ namespace Physalia.Flexi.Tests
             runner.Start();
 
             var expected = new List<StepResult> {
-                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
-                new StepResult(flowB, flowB[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, flowB[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, flowB[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, null, ExecutionType.FlowFinish, ResultState.Success),
+                new StepResult(flowB, flowB[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, flowB[1], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, flowB[2], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, null, ExecutionType.FlowFinish, ResultState.Success),
             };
             TestUtilities.AreListEqual(expected, record);
         }
@@ -201,12 +201,12 @@ namespace Physalia.Flexi.Tests
             runner.Start();
 
             var expected = new List<StepResult> {
-                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, flowB[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, flowB[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowB, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, flowB[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, flowB[1], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowB, null, ExecutionType.FlowFinish, ResultState.Success),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, null, ExecutionType.FlowFinish, ResultState.Success),
             };
             TestUtilities.AreListEqual(expected, record);
         }
@@ -226,8 +226,8 @@ namespace Physalia.Flexi.Tests
             runner.Start();
 
             var expected = new List<StepResult> {
-                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
+                new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeExecution, ResultState.Pause),
             };
             TestUtilities.AreListEqual(expected, record);
         }
@@ -248,11 +248,11 @@ namespace Physalia.Flexi.Tests
             runner.Resume(null);
 
             var expected = new List<StepResult> {
-                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeExecution, ResultState.Pause),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeResume, ResultState.Success),
+                new StepResult(flowA, flowA[2], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, null, ExecutionType.FlowFinish, ResultState.Success),
             };
 
             TestUtilities.AreListEqual(expected, record);
@@ -275,12 +275,12 @@ namespace Physalia.Flexi.Tests
             runner.Resume(null);
 
             var expected = new List<StepResult> {
-                new StepResult(flowA, flowA[0], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_EXECUTION, ResultState.PAUSE),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.PAUSE),
-                new StepResult(flowA, flowA[1], ExecutionType.NODE_RESUME, ResultState.SUCCESS),
-                new StepResult(flowA, flowA[2], ExecutionType.NODE_EXECUTION, ResultState.SUCCESS),
-                new StepResult(flowA, null, ExecutionType.FLOW_FINISH, ResultState.SUCCESS),
+                new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeExecution, ResultState.Pause),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeResume, ResultState.Pause),
+                new StepResult(flowA, flowA[1], ExecutionType.NodeResume, ResultState.Success),
+                new StepResult(flowA, flowA[2], ExecutionType.NodeExecution, ResultState.Success),
+                new StepResult(flowA, null, ExecutionType.FlowFinish, ResultState.Success),
             };
 
             TestUtilities.AreListEqual(expected, record);

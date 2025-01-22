@@ -154,25 +154,25 @@ namespace Physalia.Flexi
 
             switch (result.type)
             {
-                case ExecutionType.NODE_EXECUTION:
-                case ExecutionType.NODE_RESUME:
-                case ExecutionType.NODE_TICK:
-                    if (result.state == ResultState.FAILED)
+                case ExecutionType.NodeExecution:
+                case ExecutionType.NodeResume:
+                case ExecutionType.NodeTick:
+                    if (result.state == ResultState.Fail)
                     {
                         keepRunning = false;
                         break;
                     }
-                    else if (result.state == ResultState.ABORT)
+                    else if (result.state == ResultState.Abort)
                     {
                         keepRunning = false;
                         removeFlow = true;
                     }
-                    else if (result.state == ResultState.PAUSE)
+                    else if (result.state == ResultState.Pause)
                     {
                         keepRunning = false;
                     }
                     break;
-                case ExecutionType.FLOW_FINISH:
+                case ExecutionType.FlowFinish:
                     keepRunning = false;
                     removeFlow = true;
                     break;
@@ -201,7 +201,7 @@ namespace Physalia.Flexi
                 case EventTriggerMode.NEVER:
                     return;
                 case EventTriggerMode.EACH_NODE:
-                    if (result.type == ExecutionType.NODE_EXECUTION || result.type == ExecutionType.NODE_RESUME)
+                    if (result.type == ExecutionType.NodeExecution || result.type == ExecutionType.NodeResume)
                     {
                         if (result.node.ShouldTriggerChainEvents)
                         {
@@ -211,7 +211,7 @@ namespace Physalia.Flexi
                     }
                     break;
                 case EventTriggerMode.EACH_FLOW:
-                    if (result.type == ExecutionType.FLOW_FINISH)
+                    if (result.type == ExecutionType.FlowFinish)
                     {
                         flexiCore.TriggerCachedEvents(this);
                         flexiCore.RefreshStatsAndModifiers();

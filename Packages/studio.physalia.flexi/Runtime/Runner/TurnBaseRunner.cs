@@ -63,7 +63,7 @@ namespace Physalia.Flexi
 
             IAbilityFlow flow = Peek();
             StepResult result = ResumeStep(flow, resumeContext);
-            if (result.state == ResultState.FAILED)
+            if (result.state == ResultState.Fail)
             {
                 Logger.Error($"[{nameof(TurnBaseRunner)}] Failed to resume runner! The resume context is invalid, NodeType: {flow.Current.GetType()}");
             }
@@ -133,26 +133,26 @@ namespace Physalia.Flexi
 
             switch (result.type)
             {
-                case ExecutionType.NODE_EXECUTION:
-                case ExecutionType.NODE_RESUME:
-                case ExecutionType.NODE_TICK:
-                    if (result.state == ResultState.FAILED)
+                case ExecutionType.NodeExecution:
+                case ExecutionType.NodeResume:
+                case ExecutionType.NodeTick:
+                    if (result.state == ResultState.Fail)
                     {
                         keepRunning = false;
                     }
-                    else if (result.state == ResultState.ABORT)
+                    else if (result.state == ResultState.Abort)
                     {
                         runningFlows.Remove(result.flow);
                         IAbilityFlow flow = DequeueFlow();
                         NotifyFlowFinished(flow);
                     }
-                    else if (result.state == ResultState.PAUSE)
+                    else if (result.state == ResultState.Pause)
                     {
                         keepRunning = false;
                         runningState = RunningState.PAUSE;
                     }
                     break;
-                case ExecutionType.FLOW_FINISH:
+                case ExecutionType.FlowFinish:
                     {
                         runningFlows.Remove(result.flow);
                         IAbilityFlow flow = DequeueFlow();
@@ -180,7 +180,7 @@ namespace Physalia.Flexi
                 case EventTriggerMode.NEVER:
                     return;
                 case EventTriggerMode.EACH_NODE:
-                    if (result.type == ExecutionType.NODE_EXECUTION || result.type == ExecutionType.NODE_RESUME)
+                    if (result.type == ExecutionType.NodeExecution || result.type == ExecutionType.NodeResume)
                     {
                         if (result.node.ShouldTriggerChainEvents)
                         {
@@ -190,7 +190,7 @@ namespace Physalia.Flexi
                     }
                     break;
                 case EventTriggerMode.EACH_FLOW:
-                    if (result.type == ExecutionType.FLOW_FINISH)
+                    if (result.type == ExecutionType.FlowFinish)
                     {
                         flexiCore.TriggerCachedEvents(this);
                         flexiCore.RefreshStatsAndModifiers();
