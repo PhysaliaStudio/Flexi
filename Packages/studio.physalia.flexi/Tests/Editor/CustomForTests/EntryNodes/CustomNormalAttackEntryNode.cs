@@ -22,11 +22,11 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState OnExecute(Context context)
+        protected override FlowState OnExecute(Context context)
         {
             attackerPort.SetValue(context.attacker);
             targetPort.SetValue(context.mainTarget);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

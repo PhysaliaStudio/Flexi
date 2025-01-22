@@ -5,7 +5,7 @@ namespace Physalia.Flexi.Samples.ActionGame
     {
         public Variable<bool> controllable;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             if (controllable)
             {
@@ -15,7 +15,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             {
                 Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 0;
             }
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

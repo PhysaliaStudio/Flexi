@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Tests
         public Inport<bool> enabledPort;
         public Variable<List<StatModifier>> modifiers;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             IReadOnlyList<Actor> owners = actorsPort.GetValue();
             if (enabledPort.GetValue())
@@ -20,7 +20,7 @@ namespace Physalia.Flexi.Tests
                 }
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

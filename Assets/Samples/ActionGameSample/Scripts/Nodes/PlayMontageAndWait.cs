@@ -6,12 +6,12 @@ namespace Physalia.Flexi.Samples.ActionGame
         public Variable<string> name;
         public Variable<bool> disableControl;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             IUnitAvatar avatar = Container.Unit.Avatar;
             if (!avatar.HasMontage(name.Value))
             {
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
             if (disableControl.Value)
@@ -20,10 +20,10 @@ namespace Physalia.Flexi.Samples.ActionGame
             }
 
             avatar.PlayMontage(name.Value);
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
-        protected override AbilityState Tick()
+        protected override FlowState Tick()
         {
             IUnitAvatar avatar = Container.Unit.Avatar;
             if (avatar.IsMontagePlayedAndFinished(name.Value))
@@ -33,10 +33,10 @@ namespace Physalia.Flexi.Samples.ActionGame
                     Container.Unit.GetStat(StatId.CONTROLLABLE).CurrentBase = 1;
                 }
 
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
     }
 }

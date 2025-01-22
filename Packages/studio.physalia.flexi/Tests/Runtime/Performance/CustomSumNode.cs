@@ -8,11 +8,11 @@ namespace Physalia.Flexi.PerformanceTests
         public Inport<int> b;
         public Outport<int> sumPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             int sum = a.GetValue() + b.GetValue();
             sumPort.SetValue(sum);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

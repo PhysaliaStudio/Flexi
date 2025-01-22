@@ -7,10 +7,10 @@ namespace Physalia.Flexi
     {
         public Inport<string> text;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Debug.Log(text.GetValue());
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

@@ -58,7 +58,7 @@ namespace Physalia.Flexi.Samples.CardGame
             return true;
         }
 
-        protected override AbilityState OnExecute(Context context)
+        protected override FlowState OnExecute(Context context)
         {
             if (state == State.INITIAL)
             {
@@ -83,7 +83,7 @@ namespace Physalia.Flexi.Samples.CardGame
             playerPort.SetValue(context.player);
             unitPort.SetValue(context.owner);
             cardPort.SetValue(context.card);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
 
         private void PayCosts(Context context)

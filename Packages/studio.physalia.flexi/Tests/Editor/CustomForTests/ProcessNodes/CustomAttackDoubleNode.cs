@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Tests
     {
         public Inport<List<Actor>> targetsPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             List<Actor> targets = targetsPort.GetValue();
             for (var i = 0; i < targets.Count; i++)
@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Tests
                 stat.CurrentBase *= 2;
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

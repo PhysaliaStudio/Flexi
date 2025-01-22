@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<int> stackPort;
         public Variable<int> statusId;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Game game = gamePort.GetValue();
             IReadOnlyList<Unit> targets = targetsPort.GetValue();
@@ -21,7 +21,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 game.RemoveStatus(targets[i], statusId.Value, stack);
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

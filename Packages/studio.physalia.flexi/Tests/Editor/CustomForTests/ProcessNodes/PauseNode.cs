@@ -3,9 +3,9 @@ namespace Physalia.Flexi.Tests
     [NodeCategoryForTests]
     public class PauseNode : DefaultProcessNode
     {
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         public override bool CanResume(IResumeContext resumeContext)
@@ -13,9 +13,9 @@ namespace Physalia.Flexi.Tests
             return true;
         }
 
-        protected override AbilityState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(IResumeContext resumeContext)
         {
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

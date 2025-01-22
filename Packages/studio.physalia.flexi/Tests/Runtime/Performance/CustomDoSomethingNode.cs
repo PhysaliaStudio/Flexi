@@ -6,10 +6,10 @@ namespace Physalia.Flexi.PerformanceTests
         public Inport<int> inport;
         public Outport<int> outport;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             outport.SetValue(inport.GetValue());
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

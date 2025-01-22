@@ -44,7 +44,7 @@ namespace Physalia.Flexi
 
             FlowNode node = flow.Current;
 
-            AbilityState state;
+            FlowState state;
             try
             {
                 state = node.Execute();
@@ -52,14 +52,14 @@ namespace Physalia.Flexi
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                state = AbilityState.ABORT;
+                state = FlowState.Abort;
             }
 
-            if (state == AbilityState.ABORT)
+            if (state == FlowState.Abort)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.ABORT);
             }
-            else if (state == AbilityState.PAUSE)
+            else if (state == FlowState.Pause)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_EXECUTION, ResultState.PAUSE);
             }
@@ -79,7 +79,7 @@ namespace Physalia.Flexi
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.FAILED);
             }
 
-            AbilityState state;
+            FlowState state;
             try
             {
                 state = node.Resume(resumeContext);
@@ -87,14 +87,14 @@ namespace Physalia.Flexi
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                state = AbilityState.ABORT;
+                state = FlowState.Abort;
             }
 
-            if (state == AbilityState.ABORT)
+            if (state == FlowState.Abort)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.ABORT);
             }
-            else if (state == AbilityState.PAUSE)
+            else if (state == FlowState.Pause)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_RESUME, ResultState.PAUSE);
             }
@@ -108,7 +108,7 @@ namespace Physalia.Flexi
         {
             FlowNode node = flow.Current;
 
-            AbilityState state;
+            FlowState state;
             try
             {
                 state = node.Tick();
@@ -116,14 +116,14 @@ namespace Physalia.Flexi
             catch (Exception ex)
             {
                 Logger.Fatal(ex);
-                state = AbilityState.ABORT;
+                state = FlowState.Abort;
             }
 
-            if (state == AbilityState.ABORT)
+            if (state == FlowState.Abort)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.ABORT);
             }
-            else if (state == AbilityState.PAUSE)
+            else if (state == FlowState.Pause)
             {
                 return new StepResult(flow, node, ExecutionType.NODE_TICK, ResultState.PAUSE);
             }

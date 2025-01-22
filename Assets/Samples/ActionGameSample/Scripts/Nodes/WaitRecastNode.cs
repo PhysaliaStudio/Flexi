@@ -33,10 +33,10 @@ namespace Physalia.Flexi.Samples.ActionGame
             }
         }
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Container.Unit.AbilitySlot.SetToRecastState();
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         public override bool CanResume(IResumeContext resumeContext)
@@ -44,28 +44,28 @@ namespace Physalia.Flexi.Samples.ActionGame
             return resumeContext is RecastContext;
         }
 
-        protected override AbilityState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is RecastContext)
             {
                 received = true;
                 Container.Unit.AbilitySlot.SetToDisabledState();
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
-        protected override AbilityState Tick()
+        protected override FlowState Tick()
         {
             currentTime += Time.deltaTime;
             if (currentTime * 1000 >= milliseconds.Value)
             {
                 Container.Unit.AbilitySlot.SetToDisabledState();
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         protected override void Reset()

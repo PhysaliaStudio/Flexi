@@ -3,9 +3,9 @@ namespace Physalia.Flexi
     [NodeCategory(BuiltInCategory.Entry)]
     public sealed class StartNode : EntryNode<AbilityContainer>
     {
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

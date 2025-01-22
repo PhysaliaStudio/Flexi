@@ -30,13 +30,13 @@ namespace Physalia.Flexi
 
         public abstract bool CanExecute(TEventContext context);
 
-        private protected sealed override AbilityState ExecuteInternal()
+        private protected sealed override FlowState ExecuteInternal()
         {
             TEventContext context = Flow.EventContext is TEventContext eventContext ? eventContext : default;
             return OnExecute(context);
         }
 
-        protected abstract AbilityState OnExecute(TEventContext context);
+        protected abstract FlowState OnExecute(TEventContext context);
     }
 
     public abstract class EntryNode<TContainer> : EntryNode
@@ -56,12 +56,12 @@ namespace Physalia.Flexi
             return false;
         }
 
-        private protected sealed override AbilityState ExecuteInternal()
+        private protected sealed override FlowState ExecuteInternal()
         {
             return OnExecute();
         }
 
-        protected abstract AbilityState OnExecute();
+        protected abstract FlowState OnExecute();
     }
 
     public abstract class EntryNode : FlowNode

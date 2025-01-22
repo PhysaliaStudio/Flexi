@@ -9,13 +9,13 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<IReadOnlyList<Unit>> targetsPort;
         public Inport<int> valuePort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             var attacker = attackerPort.GetValue();
             var targets = targetsPort.GetValue();
             if (targets.Count == 0)
             {
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
             var value = valuePort.GetValue();
@@ -31,7 +31,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 amount = value,
             });
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

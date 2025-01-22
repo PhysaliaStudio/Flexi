@@ -7,12 +7,12 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Inport<Game> gamePort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Game game = gamePort.GetValue();
             IReadOnlyList<Unit> units = game.RandomGenerateEnemyGroup();
             EnqueueEvent(new UnitSpawnedEvent { units = units });
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

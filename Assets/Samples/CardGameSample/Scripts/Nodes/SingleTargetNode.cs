@@ -16,10 +16,10 @@ namespace Physalia.Flexi.Samples.CardGame
         public Outport<Unit> target;
         public Variable<UnitType> unitType;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Container.Game.StartSingleTargetChoice(Container.Card, unitType.Value);
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         public override bool CanResume(IResumeContext resumeContext)
@@ -37,16 +37,16 @@ namespace Physalia.Flexi.Samples.CardGame
             return false;
         }
 
-        protected override AbilityState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is CancellationContext)
             {
-                return AbilityState.ABORT;
+                return FlowState.Abort;
             }
 
             var answerContext = resumeContext as SingleTargetAnswerContext;
             target.SetValue(answerContext.unit);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

@@ -12,12 +12,12 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Inport<Game> gamePort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Game game = gamePort.GetValue();
             IReadOnlyList<Card> cards = game.DiscardAllCards();
             EnqueueEvent(new DiscardCardEvent { cards = cards });
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

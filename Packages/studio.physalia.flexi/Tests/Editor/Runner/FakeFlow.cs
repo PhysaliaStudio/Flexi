@@ -19,26 +19,26 @@ namespace Physalia.Flexi.Tests
             return true;
         }
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             if (pauseCount > 0)
             {
                 pauseCount--;
-                return AbilityState.PAUSE;
+                return FlowState.Pause;
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
 
-        protected override AbilityState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(IResumeContext resumeContext)
         {
             if (pauseCount > 0)
             {
                 pauseCount--;
-                return AbilityState.PAUSE;
+                return FlowState.Pause;
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 

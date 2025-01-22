@@ -18,7 +18,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<Game> gamePort;
         public Inport<int> countPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Game game = gamePort.GetValue();
             int count = countPort.GetValue();
@@ -36,7 +36,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 EnqueueEvent(new DrawCardEvent { cards = secondDraw });
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

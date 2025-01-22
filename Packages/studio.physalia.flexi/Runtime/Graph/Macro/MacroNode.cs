@@ -35,7 +35,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             // If this node has already finished before, reset for restarting.
             // This may happen when looping.
@@ -91,7 +91,7 @@ namespace Physalia.Flexi
                 }
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
 
         protected internal override void Reset()

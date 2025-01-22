@@ -3,9 +3,9 @@ namespace Physalia.Flexi
     [NodeCategory(BuiltInCategory.Common)]
     public class AbortNode : ProcessNode
     {
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
-            return AbilityState.ABORT;
+            return FlowState.Abort;
         }
     }
 }

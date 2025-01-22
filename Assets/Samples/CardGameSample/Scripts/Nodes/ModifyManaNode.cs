@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<Player> playerPort;
         public Inport<int> amountPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Player player = playerPort.GetValue();
             int amount = amountPort.GetValue();
@@ -18,7 +18,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 newAmount = player.Mana,
             });
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

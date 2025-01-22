@@ -2,6 +2,13 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public enum FlowState
+    {
+        Success,
+        Pause,
+        Abort,
+    }
+
     public abstract class FlowNode : Node
     {
         public abstract FlowNode Next { get; }
@@ -17,7 +24,7 @@ namespace Physalia.Flexi
 
         }
 
-        internal AbilityState Execute()
+        internal FlowState Execute()
         {
             EvaluateInports();
             return ExecuteInternal();
@@ -41,26 +48,26 @@ namespace Physalia.Flexi
             }
         }
 
-        private protected abstract AbilityState ExecuteInternal();
+        private protected abstract FlowState ExecuteInternal();
 
         public virtual bool CanResume(IResumeContext resumeContext)
         {
             return false;
         }
 
-        internal AbilityState Resume(IResumeContext resumeContext)
+        internal FlowState Resume(IResumeContext resumeContext)
         {
             return OnResume(resumeContext);
         }
 
-        protected virtual AbilityState OnResume(IResumeContext resumeContext)
+        protected virtual FlowState OnResume(IResumeContext resumeContext)
         {
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
 
-        protected internal virtual AbilityState Tick()
+        protected internal virtual FlowState Tick()
         {
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         protected void PushSelf()

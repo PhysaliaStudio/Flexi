@@ -10,10 +10,10 @@ namespace Physalia.Flexi.Tests
     {
         public Outport<CustomUnit> targetPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Container.CoreWrapper.TriggerChoice();
-            return AbilityState.PAUSE;
+            return FlowState.Pause;
         }
 
         public override bool CanResume(IResumeContext resumeContext)
@@ -34,16 +34,16 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(IResumeContext resumeContext)
         {
             if (resumeContext is CustomCancellation)
             {
-                return AbilityState.ABORT;
+                return FlowState.Abort;
             }
 
             var answerContext = resumeContext as CustomSingleTargetAnswerContext;
             targetPort.SetValue(answerContext.target);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

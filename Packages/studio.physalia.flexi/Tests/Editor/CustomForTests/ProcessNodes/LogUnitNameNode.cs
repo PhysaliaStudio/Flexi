@@ -7,10 +7,10 @@ namespace Physalia.Flexi.Tests
     {
         public Inport<CustomUnit> character;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             Debug.Log($"My name is {character.GetValue()?.Name}");
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

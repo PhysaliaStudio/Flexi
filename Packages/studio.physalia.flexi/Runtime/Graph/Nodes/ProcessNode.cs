@@ -31,14 +31,14 @@ namespace Physalia.Flexi
 
     public abstract class BaseProcessNode : FlowNode
     {
-        private protected sealed override AbilityState ExecuteInternal()
+        private protected sealed override FlowState ExecuteInternal()
         {
             return OnExecute();
         }
 
-        protected virtual AbilityState OnExecute()
+        protected virtual FlowState OnExecute()
         {
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

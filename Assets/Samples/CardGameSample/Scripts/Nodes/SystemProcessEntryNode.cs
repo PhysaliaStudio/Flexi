@@ -16,11 +16,11 @@ namespace Physalia.Flexi.Samples.CardGame
             return true;
         }
 
-        protected override AbilityState OnExecute(SystemProcessContext context)
+        protected override FlowState OnExecute(SystemProcessContext context)
         {
             gamePort.SetValue(context.game);
             playerPort.SetValue(context.game.Player);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

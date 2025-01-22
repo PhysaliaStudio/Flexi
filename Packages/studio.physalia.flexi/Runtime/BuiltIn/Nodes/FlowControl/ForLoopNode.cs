@@ -39,7 +39,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             if (!hasStarted)
             {
@@ -70,7 +70,7 @@ namespace Physalia.Flexi
             }
 
             indexPort.SetValue(index);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
 
         protected internal override void Reset()

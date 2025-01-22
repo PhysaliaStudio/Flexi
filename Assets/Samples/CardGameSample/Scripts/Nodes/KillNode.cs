@@ -7,12 +7,12 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Inport<IReadOnlyList<Unit>> targetsPort;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             var targets = targetsPort.GetValue();
             if (targets.Count == 0)
             {
-                return AbilityState.RUNNING;
+                return FlowState.Success;
             }
 
             for (var i = 0; i < targets.Count; i++)
@@ -27,7 +27,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 }
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

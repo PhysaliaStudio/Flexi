@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Tests
         public Inport<List<CustomUnit>> targets;
         public Inport<int> baseValue;
 
-        protected override AbilityState OnExecute()
+        protected override FlowState OnExecute()
         {
             List<CustomUnit> list = targets.GetValue();
             int damage = baseValue.GetValue();
@@ -25,7 +25,7 @@ namespace Physalia.Flexi.Tests
                 });
             }
 
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

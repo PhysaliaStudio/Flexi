@@ -20,10 +20,10 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState OnExecute(Context context)
+        protected override FlowState OnExecute(Context context)
         {
             activatorPort.SetValue(context.activator);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }

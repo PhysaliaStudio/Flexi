@@ -18,10 +18,10 @@ namespace Physalia.Flexi.Samples.CardGame
             return false;
         }
 
-        protected override AbilityState OnExecute(DamageContext context)
+        protected override FlowState OnExecute(DamageContext context)
         {
             attackerPort.SetValue(context.attacker);
-            return AbilityState.RUNNING;
+            return FlowState.Success;
         }
     }
 }
