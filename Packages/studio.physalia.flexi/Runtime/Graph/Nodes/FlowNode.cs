@@ -17,7 +17,7 @@ namespace Physalia.Flexi
 
         }
 
-        internal AbilityState Run()
+        internal AbilityState Execute()
         {
             EvaluateInports();
             return DoLogic();

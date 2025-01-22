@@ -47,7 +47,7 @@ namespace Physalia.Flexi
             AbilityState state;
             try
             {
-                state = node.Run();
+                state = node.Execute();
             }
             catch (Exception ex)
             {

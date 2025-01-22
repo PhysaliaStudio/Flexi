@@ -14,7 +14,7 @@ namespace Physalia.Flexi.Tests
             var ifTrueNode = NodeFactory.Create<EmptyProcessNode>();
             ifElseNode.truePort.Connect(ifTrueNode.previous);
 
-            ifElseNode.Run();  // This triggers EvaluateInputs()
+            ifElseNode.Execute();  // This triggers EvaluateInputs()
             Assert.AreEqual(ifTrueNode, ifElseNode.Next);
         }
 
@@ -28,7 +28,7 @@ namespace Physalia.Flexi.Tests
             var ifFalseNode = NodeFactory.Create<EmptyProcessNode>();
             ifElseNode.falsePort.Connect(ifFalseNode.previous);
 
-            ifElseNode.Run();  // This triggers EvaluateInputs()
+            ifElseNode.Execute();  // This triggers EvaluateInputs()
             Assert.AreEqual(ifFalseNode, ifElseNode.Next);
         }
 
@@ -39,7 +39,7 @@ namespace Physalia.Flexi.Tests
             var trueNode = NodeFactory.Create<TrueNode>();
             ifElseNode.conditionPort.Connect(trueNode.value);
 
-            ifElseNode.Run();  // This triggers EvaluateInputs()
+            ifElseNode.Execute();  // This triggers EvaluateInputs()
             Assert.AreEqual(null, ifElseNode.Next);
         }
 
@@ -51,7 +51,7 @@ namespace Physalia.Flexi.Tests
             var falseNode = NodeFactory.Create<FalseNode>();
             ifElseNode.conditionPort.Connect(falseNode.value);
 
-            ifElseNode.Run();  // This triggers EvaluateInputs()
+            ifElseNode.Execute();  // This triggers EvaluateInputs()
             Assert.AreEqual(null, ifElseNode.Next);
         }
     }
