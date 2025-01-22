@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<IReadOnlyList<Unit>> targetsPort;
         public Inport<int> valuePort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             var attacker = attackerPort.GetValue();
             var targets = targetsPort.GetValue();

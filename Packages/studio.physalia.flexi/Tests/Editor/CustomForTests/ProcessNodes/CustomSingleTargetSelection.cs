@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Tests
     {
         public Outport<CustomUnit> targetPort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Container.CoreWrapper.TriggerChoice();
             return AbilityState.PAUSE;

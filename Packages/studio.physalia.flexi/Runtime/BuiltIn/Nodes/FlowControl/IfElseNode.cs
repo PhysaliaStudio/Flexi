@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     [NodeCategory(BuiltInCategory.FlowControl)]
-    public class IfElseNode : FlowNode
+    public class IfElseNode : BaseProcessNode
     {
         internal Inport<FlowNode> previousPort;
         internal Inport<bool> conditionPort;

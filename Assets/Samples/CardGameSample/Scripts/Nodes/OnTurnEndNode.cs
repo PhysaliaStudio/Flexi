@@ -10,9 +10,8 @@ namespace Physalia.Flexi.Samples.CardGame
             return true;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute(TurnEndContext context)
         {
-            var context = GetPayload<TurnEndContext>();
             gamePort.SetValue(context.game);
             return AbilityState.RUNNING;
         }

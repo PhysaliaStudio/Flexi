@@ -16,7 +16,7 @@ namespace Physalia.Flexi
     {
         public TContainer Container => GetContainer<TContainer>();
 
-        public override Type ContextType => typeof(TEventContext);
+        public sealed override Type ContextType => typeof(TEventContext);
 
         protected internal sealed override bool CanExecute(IEventContext contextBase)
         {
@@ -29,6 +29,14 @@ namespace Physalia.Flexi
         }
 
         public abstract bool CanExecute(TEventContext context);
+
+        private protected sealed override AbilityState DoLogic()
+        {
+            TEventContext context = Flow.EventContext is TEventContext eventContext ? eventContext : default;
+            return OnExecute(context);
+        }
+
+        protected abstract AbilityState OnExecute(TEventContext context);
     }
 
     public abstract class EntryNode<TContainer> : EntryNode
@@ -47,6 +55,13 @@ namespace Physalia.Flexi
 
             return false;
         }
+
+        private protected sealed override AbilityState DoLogic()
+        {
+            return OnExecute();
+        }
+
+        protected abstract AbilityState OnExecute();
     }
 
     public abstract class EntryNode : FlowNode

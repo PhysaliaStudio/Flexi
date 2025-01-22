@@ -22,9 +22,8 @@ namespace Physalia.Flexi.Tests
             return false;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute(Context context)
         {
-            var context = GetPayload<Context>();
             instigatorPort.SetValue(context.instigator);
             targetPort.SetValue(context.target);
             return AbilityState.RUNNING;

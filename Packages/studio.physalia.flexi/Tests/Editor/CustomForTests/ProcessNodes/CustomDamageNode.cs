@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Tests
         public Inport<List<CustomUnit>> targets;
         public Inport<int> baseValue;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             List<CustomUnit> list = targets.GetValue();
             int damage = baseValue.GetValue();

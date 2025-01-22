@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Tests
 {
     [HideFromSearchWindow]
-    public class FakeFlowNode : FlowNode
+    public class FakeFlowNode : BaseProcessNode
     {
         private int pauseCount = 0;
 
@@ -19,7 +19,7 @@ namespace Physalia.Flexi.Tests
             return true;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             if (pauseCount > 0)
             {

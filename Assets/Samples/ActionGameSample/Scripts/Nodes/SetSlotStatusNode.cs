@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.ActionGame
         public Variable<AbilitySlot.State> state;
         public Variable<int> cooldownMilliseconds;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             AbilitySlot slot = Container.Unit.AbilitySlot;
             switch (state.Value)

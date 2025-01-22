@@ -12,7 +12,7 @@ namespace Physalia.Flexi
         private readonly Ability ability;
         private readonly AbilityGraph graph;
 
-        private IEventContext payload;
+        private IEventContext eventContext;
 
         internal FlexiCore Core => flexiCore;
         internal Ability Ability => ability;
@@ -21,7 +21,7 @@ namespace Physalia.Flexi
         public IReadOnlyList<Node> EntryNodes => graph.EntryNodes;
         public IReadOnlyList<Node> Nodes => graph.Nodes;
 
-        internal IEventContext Payload => payload;
+        internal IEventContext EventContext => eventContext;
         public FlowNode Current => graph.Current;
 
         internal AbilityFlow(FlexiCore flexiCore, Ability ability, AbilityGraph graph)
@@ -36,9 +36,9 @@ namespace Physalia.Flexi
             }
         }
 
-        public void SetPayload(IEventContext payload)
+        public void SetEventContext(IEventContext eventContext)
         {
-            this.payload = payload;
+            this.eventContext = eventContext;
         }
 
         public bool HasNext()
@@ -69,7 +69,7 @@ namespace Physalia.Flexi
         public void Reset(int entryIndex = 0)
         {
             graph.Reset(entryIndex);
-            SetPayload(null);
+            SetEventContext(null);
         }
     }
 }

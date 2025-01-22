@@ -16,5 +16,10 @@ namespace Physalia.Flexi
         {
             return true;
         }
+
+        protected override AbilityState OnExecute(Context context)
+        {
+            return AbilityState.RUNNING;
+        }
     }
 }

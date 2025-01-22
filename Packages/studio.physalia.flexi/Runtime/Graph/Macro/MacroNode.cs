@@ -3,11 +3,14 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
-    public sealed class MacroNode : ProcessNode
+    public sealed class MacroNode : BaseProcessNode
     {
         private enum State { STANDBY, ENTERED, EXITED }
 
         public string key;
+
+        internal Inport<FlowNode> previous;
+        internal Outport<FlowNode> next;
 
         private AbilityGraph macroGraph;
         private State state;
@@ -32,7 +35,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             // If this node has already finished before, reset for restarting.
             // This may happen when looping.

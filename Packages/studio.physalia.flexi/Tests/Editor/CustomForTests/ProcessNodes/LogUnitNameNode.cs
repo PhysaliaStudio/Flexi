@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Tests
     {
         public Inport<CustomUnit> character;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Debug.Log($"My name is {character.GetValue()?.Name}");
             return AbilityState.RUNNING;

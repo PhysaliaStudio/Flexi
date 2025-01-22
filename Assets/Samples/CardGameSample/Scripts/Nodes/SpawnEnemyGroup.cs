@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Inport<Game> gamePort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Game game = gamePort.GetValue();
             IReadOnlyList<Unit> units = game.RandomGenerateEnemyGroup();

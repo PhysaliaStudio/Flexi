@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.ActionGame
     public class RecastContext : IResumeContext { }
 
     [NodeCategory("Action Game Sample")]
-    public class WaitRecastNode : DefaultFlowNode
+    public class WaitRecastNode : BaseProcessNode<DefaultAbilityContainer>
     {
         public Inport<FlowNode> previous;
         public Outport<FlowNode> successNode;
@@ -33,7 +33,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             }
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Container.Unit.AbilitySlot.SetToRecastState();
             return AbilityState.PAUSE;

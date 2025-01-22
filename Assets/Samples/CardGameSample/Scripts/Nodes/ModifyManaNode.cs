@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Inport<Player> playerPort;
         public Inport<int> amountPort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Player player = playerPort.GetValue();
             int amount = amountPort.GetValue();

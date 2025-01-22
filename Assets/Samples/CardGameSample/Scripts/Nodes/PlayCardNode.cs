@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Physalia.Flexi.Samples.CardGame
@@ -12,7 +11,6 @@ namespace Physalia.Flexi.Samples.CardGame
             public Player player;
             public Unit owner;
             public Card card;
-            public Random random;
         }
 
         private enum State
@@ -60,10 +58,8 @@ namespace Physalia.Flexi.Samples.CardGame
             return true;
         }
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute(Context context)
         {
-            var context = GetPayload<Context>();
-
             if (state == State.INITIAL)
             {
                 if (selectionPort.GetConnections().Count > 0)

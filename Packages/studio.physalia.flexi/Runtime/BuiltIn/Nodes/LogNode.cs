@@ -7,7 +7,7 @@ namespace Physalia.Flexi
     {
         public Inport<string> text;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             Debug.Log(text.GetValue());
             return AbilityState.RUNNING;

@@ -7,7 +7,7 @@ namespace Physalia.Flexi.Tests
     {
         public Inport<List<Actor>> targetsPort;
 
-        protected override AbilityState DoLogic()
+        protected override AbilityState OnExecute()
         {
             List<Actor> targets = targetsPort.GetValue();
             for (var i = 0; i < targets.Count; i++)

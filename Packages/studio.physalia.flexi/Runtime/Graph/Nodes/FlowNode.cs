@@ -2,12 +2,6 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public abstract class FlowNode<TContainer> : FlowNode
-        where TContainer : AbilityContainer
-    {
-        public TContainer Container => GetContainer<TContainer>();
-    }
-
     public abstract class FlowNode : Node
     {
         public abstract FlowNode Next { get; }
@@ -17,7 +11,13 @@ namespace Physalia.Flexi
         /// </summary>
         public virtual bool ShouldTriggerChainEvents => true;
 
-        public AbilityState Run()
+        // Note: FlowNode shouldn't be inherited outside of this assembly
+        internal FlowNode()
+        {
+
+        }
+
+        internal AbilityState Run()
         {
             EvaluateInports();
             return DoLogic();
@@ -41,10 +41,7 @@ namespace Physalia.Flexi
             }
         }
 
-        protected virtual AbilityState DoLogic()
-        {
-            return AbilityState.RUNNING;
-        }
+        private protected abstract AbilityState DoLogic();
 
         public AbilityState Resume(IResumeContext resumeContext)
         {
