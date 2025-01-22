@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: TurnEnd
   m_EditorClassIdentifier: 
   blackboard: []
-  graphJsons: []
   graphGroups:
-  - graphs:
+  - jsons:
     - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":311755,"_position":{"x":42.0,"y":49.0},"_type":"Physalia.Flexi.Samples.CardGame.SystemProcessEntryNode"},{"_id":883350,"_position":{"x":477.0,"y":107.0},"_type":"Physalia.Flexi.Samples.CardGame.DiscardAllCardsNode"},{"_id":71190,"_position":{"x":292.0,"y":26.0},"_type":"Physalia.Flexi.Samples.CardGame.ClearManaNode"},{"_id":760439,"_position":{"x":656.0,"y":208.0},"_type":"Physalia.Flexi.Samples.CardGame.TriggerTurnEndEventNode"}],"edges":[{"id1":311755,"port1":"next","id2":71190,"port2":"previous"},{"id1":311755,"port1":"gamePort","id2":883350,"port2":"gamePort"},{"id1":311755,"port1":"gamePort","id2":760439,"port2":"gamePort"},{"id1":311755,"port1":"playerPort","id2":71190,"port2":"playerPort"},{"id1":71190,"port1":"next","id2":883350,"port2":"previous"},{"id1":883350,"port1":"next","id2":760439,"port2":"previous"}]}'

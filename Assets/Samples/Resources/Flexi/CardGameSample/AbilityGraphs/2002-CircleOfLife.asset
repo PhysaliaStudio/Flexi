@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: []
   graphGroups:
-  - graphs:
+  - jsons:
     - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":190396,"_position":{"x":63.0,"y":68.0},"_type":"Physalia.Flexi.Samples.CardGame.PlayCardNode"},{"_id":369368,"_position":{"x":285.0,"y":317.0},"_type":"Physalia.Flexi.Samples.CardGame.SingleTargetNode","unitType":0},{"_id":367148,"_position":{"x":285.0,"y":66.0},"_type":"Physalia.Flexi.MacroNode","key":"001-DamageProcess"},{"_id":698404,"_position":{"x":487.0,"y":66.0},"_type":"Physalia.Flexi.Samples.CardGame.HealNode"},{"_id":21270,"_position":{"x":100.0,"y":291.0},"_type":"Physalia.Flexi.IntegerNode","value":4}],"edges":[{"id1":190396,"port1":"next","id2":367148,"port2":"previous"},{"id1":190396,"port1":"selectionPort","id2":369368,"port2":"previous"},{"id1":190396,"port1":"unitPort","id2":698404,"port2":"targetsPort"},{"id1":190396,"port1":"unitPort","id2":367148,"port2":"attackerPort"},{"id1":367148,"port1":"next","id2":698404,"port2":"previous"},{"id1":369368,"port1":"target","id2":367148,"port2":"targetsPort"},{"id1":21270,"port1":"output","id2":367148,"port2":"valuePort"},{"id1":21270,"port1":"output","id2":698404,"port2":"valuePort"}]}'
