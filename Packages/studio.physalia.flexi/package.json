@@ -1,7 +1,7 @@
 {
   "name": "studio.physalia.flexi",
   "displayName": "Flexi",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "unity": "2021.3",
   "description": "Flexi is an ability system framework for Unity.\n\nWhile Flexi has done the general low-level logic, programmers can directly jump into creating the gameplay ability system. Programmers can customize their task nodes and dicide how they work with the game, and designers can use the built-in editor to create skill data. The game finally runs abilities with the built-in runner.",
   "documentationUrl": "https://github.com/PhysaliaStudio/Flexi/wiki",
