@@ -4,6 +4,12 @@ namespace Physalia.Flexi.Tests
     {
         public CustomFlexiCoreWrapper CoreWrapper;
         public Actor Actor;
+
+        public DefaultAbilityContainer(AbilityData abilityData, int groupIndex)
+            : base(abilityData, groupIndex)
+        {
+
+        }
     }
 
     public abstract class DefaultEntryNode : EntryNode<DefaultAbilityContainer>

@@ -3,6 +3,12 @@ namespace Physalia.Flexi.Samples.ActionGame
     public class DefaultAbilityContainer : AbilityContainer
     {
         public Unit Unit;
+
+        public DefaultAbilityContainer(AbilityData abilityData, int groupIndex)
+            : base(abilityData, groupIndex)
+        {
+
+        }
     }
 
     public abstract class DefaultEntryNode : EntryNode<DefaultAbilityContainer>
