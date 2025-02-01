@@ -108,13 +108,13 @@ namespace Physalia.Flexi
         {
             if (poolManager.ContainsPool(abilityHandle))
             {
-                Logger.Warn($"LoadAbility '{abilityHandle.Data.name}' but it's already loaded.");
+                Logger.Warn($"[{nameof(FlexiCore)}] LoadAbility '{abilityHandle.Data.name}' but it's already loaded.");
                 return;
             }
 
             if (startSize <= 0)
             {
-                Logger.Warn($"LoadAbility '{abilityHandle.Data.name}' with poolSize={startSize} is invalid. Will load with default({DEFAULT_ABILITY_POOL_SIZE}) instead.");
+                Logger.Warn($"[{nameof(FlexiCore)}] LoadAbility '{abilityHandle.Data.name}' with poolSize={startSize} is invalid. Will load with default({DEFAULT_ABILITY_POOL_SIZE}) instead.");
                 startSize = DEFAULT_ABILITY_POOL_SIZE;
             }
 
@@ -144,7 +144,7 @@ namespace Physalia.Flexi
             AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
             if (!poolManager.ContainsPool(abilityHandle))
             {
-                Logger.Warn($"UnloadAbility '{abilityData.name}' but it's not loaded.");
+                Logger.Warn($"[{nameof(FlexiCore)}] UnloadAbility '{abilityData.name}' but it's not loaded.");
                 return;
             }
 
@@ -161,7 +161,7 @@ namespace Physalia.Flexi
         {
             if (!poolManager.ContainsPool(abilityHandle))
             {
-                Logger.Warn($"UnloadAbility '{abilityHandle.Data.name}' but it's not loaded.");
+                Logger.Warn($"[{nameof(FlexiCore)}] UnloadAbility '{abilityHandle.Data.name}' but it's not loaded.");
                 return;
             }
 
