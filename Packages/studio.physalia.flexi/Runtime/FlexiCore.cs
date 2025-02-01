@@ -112,6 +112,12 @@ namespace Physalia.Flexi
                 return;
             }
 
+            if (startSize <= 0)
+            {
+                Logger.Warn($"LoadAbility '{abilityHandle.Data.name}' with poolSize={startSize} is invalid. Will load with default({DEFAULT_ABILITY_POOL_SIZE}) instead.");
+                startSize = DEFAULT_ABILITY_POOL_SIZE;
+            }
+
             poolManager.CreatePool(abilityHandle, startSize);
 
             // Perf: Cache the event listen handles.
