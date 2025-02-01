@@ -69,25 +69,106 @@ namespace Physalia.Flexi
             return graph;
         }
 
-        public bool HasAbilityPool(AbilityHandle abilityHandle)
+        public bool IsAbilityLoaded(AbilityData abilityData, int groupIndex)
+        {
+            AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+            return poolManager.ContainsPool(abilityHandle);
+        }
+
+        internal bool IsAbilityLoaded(AbilityHandle abilityHandle)
         {
             return poolManager.ContainsPool(abilityHandle);
         }
 
-        public void CreateAbilityPool(AbilityHandle abilityHandle, int startSize)
+        /// <summary>
+        /// Load each group of AbilityData into core.
+        /// </summary>
+        public void LoadAbility(AbilityData abilityData, int startSize = DEFAULT_ABILITY_POOL_SIZE)
         {
+            for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
+            {
+                AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+                LoadAbility(abilityHandle, startSize);
+            }
+        }
+
+        /// <summary>
+        /// Load a group of AbilityData into core.
+        /// </summary>
+        public void LoadAbility(AbilityData abilityData, int groupIndex, int startSize = DEFAULT_ABILITY_POOL_SIZE)
+        {
+            AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+            LoadAbility(abilityHandle, startSize);
+        }
+
+        /// <summary>
+        /// Load a group of AbilityData into core. (As AbilityHandle)
+        /// </summary>
+        internal void LoadAbility(AbilityHandle abilityHandle, int startSize = DEFAULT_ABILITY_POOL_SIZE)
+        {
+            if (poolManager.ContainsPool(abilityHandle))
+            {
+                Logger.Warn($"LoadAbility '{abilityHandle.Data.name}' but it's already loaded.");
+                return;
+            }
+
             poolManager.CreatePool(abilityHandle, startSize);
 
             // Perf: Cache the event listen handles.
             CacheEntryHandles(abilityHandle);
         }
 
-        public void DestroyAbilityPool(AbilityHandle abilityHandle)
+        /// <summary>
+        /// Unload each group of AbilityData from core.
+        /// </summary>
+        public void UnloadAbility(AbilityData abilityData)
         {
+            for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
+            {
+                AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+                UnloadAbility(abilityHandle);
+            }
+        }
+
+        /// <summary>
+        /// Unload a group of AbilityData from core.
+        /// </summary>
+        public void UnloadAbility(AbilityData abilityData, int groupIndex)
+        {
+            AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+            if (!poolManager.ContainsPool(abilityHandle))
+            {
+                Logger.Warn($"UnloadAbility '{abilityData.name}' but it's not loaded.");
+                return;
+            }
+
             poolManager.DestroyPool(abilityHandle);
 
             // Remove cache.
             RemoveEntryHandles(abilityHandle);
+        }
+
+        /// <summary>
+        /// Unload a group of AbilityData from core. (As AbilityHandle)
+        /// </summary>
+        internal void UnloadAbility(AbilityHandle abilityHandle)
+        {
+            if (!poolManager.ContainsPool(abilityHandle))
+            {
+                Logger.Warn($"UnloadAbility '{abilityHandle.Data.name}' but it's not loaded.");
+                return;
+            }
+
+            poolManager.DestroyPool(abilityHandle);
+
+            // Remove cache.
+            RemoveEntryHandles(abilityHandle);
+        }
+
+        internal AbilityPool GetAbilityPool(AbilityData abilityData, int groupIndex)
+        {
+            AbilityHandle abilityHandle = abilityData.CreateHandle(groupIndex);
+            return poolManager.GetPool(abilityHandle);
         }
 
         internal AbilityPool GetAbilityPool(AbilityHandle abilityHandle)
@@ -111,7 +192,7 @@ namespace Physalia.Flexi
             else
             {
                 Logger.Warn($"[{nameof(FlexiCore)}] Create pool with {abilityHandle}. Note that instantiation is <b>VERY</b> expensive!");
-                CreateAbilityPool(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
+                LoadAbility(abilityHandle.Data, abilityHandle.GroupIndex, DEFAULT_ABILITY_POOL_SIZE);
                 ability = poolManager.GetAbility(abilityHandle);
                 return ability;
             }

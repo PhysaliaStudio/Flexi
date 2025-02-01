@@ -18,7 +18,8 @@ namespace Physalia.Flexi
         private AbilityContainer container;
 
         public AbilityData Data => abilityHandle.Data;
-        public AbilityHandle Handle => abilityHandle;
+        public int DataGroupIndex => abilityHandle.GroupIndex;
+        internal AbilityHandle Handle => abilityHandle;
 
         public IReadOnlyList<BlackboardVariable> Blackboard => variableList;
         public IReadOnlyList<AbilityFlow> Flows => abilityFlows;

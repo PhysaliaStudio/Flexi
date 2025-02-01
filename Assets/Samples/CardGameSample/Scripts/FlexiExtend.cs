@@ -11,10 +11,10 @@ namespace Physalia.Flexi.Samples.CardGame
         public Game Game => game;
         public Random Random => game.Random;
 
-        public DefaultAbilityContainer(Game game, AbilityHandle handle)
+        public DefaultAbilityContainer(Game game, AbilityData abilityData, int groupIndex)
+            : base(abilityData, groupIndex)
         {
             this.game = game;
-            Handle = handle;
         }
 
         public void CleanUp()
