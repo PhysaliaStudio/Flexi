@@ -197,8 +197,8 @@ namespace Physalia.Flexi
             }
             else
             {
-                Logger.Warn($"[{nameof(FlexiCore)}] Create pool with {abilityHandle}. Note that instantiation is <b>VERY</b> expensive!");
-                LoadAbility(abilityHandle.Data, abilityHandle.GroupIndex, DEFAULT_ABILITY_POOL_SIZE);
+                Logger.Warn($"[{nameof(FlexiCore)}] Lazy load ability '{abilityHandle}'. Note that this loading is <b>VERY</b> expensive! It's recommend to do preloading.");
+                LoadAbility(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
                 ability = poolManager.GetAbility(abilityHandle);
                 return ability;
             }
@@ -272,6 +272,12 @@ namespace Physalia.Flexi
             {
                 Logger.Error($"[{nameof(FlexiCore)}] TryEnqueueAbility failed! container.Handle is invalid!");
                 return false;
+            }
+
+            if (!IsAbilityLoaded(abilityHandle))
+            {
+                Logger.Warn($"[{nameof(FlexiCore)}] Lazy load ability '{abilityHandle}'. Note that this loading is <b>VERY</b> expensive! It's recommend to do preloading.");
+                LoadAbility(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
             }
 
             eventContext ??= EmptyContext.Instance;
