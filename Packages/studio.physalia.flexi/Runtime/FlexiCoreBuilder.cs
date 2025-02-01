@@ -9,7 +9,7 @@ namespace Physalia.Flexi
         {
             if (wrapper == null)
             {
-                throw new System.ArgumentException($"{nameof(IFlexiCoreWrapper)} is not set.");
+                wrapper = new EmptyFlexiCoreWrapper();
             }
 
             if (runner == null)
