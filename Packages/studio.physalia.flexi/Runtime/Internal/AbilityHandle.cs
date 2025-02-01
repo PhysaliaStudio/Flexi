@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public readonly struct AbilityHandle : IEquatable<AbilityHandle>, IEqualityComparer<AbilityHandle>
+    internal readonly struct AbilityHandle : IEquatable<AbilityHandle>, IEqualityComparer<AbilityHandle>
     {
         private readonly AbilityData abilityData;
         private readonly int groupIndex;

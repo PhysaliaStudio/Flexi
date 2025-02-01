@@ -50,7 +50,7 @@ namespace Physalia.Flexi
             blackboard.Add(new BlackboardVariable { key = key, value = value });
         }
 
-        public AbilityHandle CreateHandle(int groupIndex)
+        internal AbilityHandle CreateHandle(int groupIndex)
         {
             if (groupIndex < 0 || groupIndex >= graphGroups.Count)
             {
