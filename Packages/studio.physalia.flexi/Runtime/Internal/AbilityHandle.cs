@@ -23,10 +23,10 @@ namespace Physalia.Flexi
         {
             if (!IsValid)
             {
-                return $"Handle[{abilityData?.name}][{groupIndex}][Invalid]";
+                return $"[{abilityData?.name}][{groupIndex}](Invalid)";
             }
 
-            return $"Handle[{abilityData.name}][{groupIndex}]";
+            return $"{abilityData.name}[{groupIndex}]";
         }
 
         public override bool Equals(object obj)
