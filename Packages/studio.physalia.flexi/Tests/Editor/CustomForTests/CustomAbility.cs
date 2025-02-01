@@ -4,35 +4,35 @@ namespace Physalia.Flexi.Tests
 {
     public static class CustomAbility
     {
-        public static AbilityHandle THROW_EXCEPTION
+        public static AbilityData THROW_EXCEPTION
         {
             get
             {
-                return LoadAbilityAsset("ThrowException");
+                return LoadAbilityData("ThrowException");
             }
         }
 
-        public static AbilityHandle HELLO_WORLD
+        public static AbilityData HELLO_WORLD
         {
             get
             {
-                return LoadAbilityAsset("HelloWorld");
+                return LoadAbilityData("HelloWorld");
             }
         }
 
-        public static AbilityHandle HELLO_WORLD_MACRO_CALLER
+        public static AbilityData HELLO_WORLD_MACRO_CALLER
         {
             get
             {
-                return LoadAbilityAsset("HelloWorld_MacroCaller");
+                return LoadAbilityData("HelloWorld_MacroCaller");
             }
         }
 
-        public static AbilityHandle HELLO_WORLD_MACRO_CALLER_5_TIMES
+        public static AbilityData HELLO_WORLD_MACRO_CALLER_5_TIMES
         {
             get
             {
-                return LoadAbilityAsset("HelloWorld_MacroCaller5Times");
+                return LoadAbilityData("HelloWorld_MacroCaller5Times");
             }
         }
 
@@ -44,108 +44,106 @@ namespace Physalia.Flexi.Tests
             }
         }
 
-        public static AbilityHandle HELLO_WORLD_MISSING_ELEMENTS
+        public static AbilityData HELLO_WORLD_MISSING_ELEMENTS
         {
             get
             {
-                return LoadAbilityAsset("HelloWorld_MissingElements");
+                return LoadAbilityData("HelloWorld_MissingElements");
             }
         }
 
-        public static AbilityHandle NORAML_ATTACK
+        public static AbilityData NORAML_ATTACK
         {
             get
             {
-                return LoadAbilityAsset("NormalAttack");
+                return LoadAbilityData("NormalAttack");
             }
         }
 
-        public static AbilityHandle NORAML_ATTACK_SELECTION
+        public static AbilityData NORAML_ATTACK_SELECTION
         {
             get
             {
-                return LoadAbilityAsset("NormalAttackSelection");
+                return LoadAbilityData("NormalAttackSelection");
             }
         }
 
-        public static AbilityHandle NORMAL_ATTACK_5_TIMES
+        public static AbilityData NORMAL_ATTACK_5_TIMES
         {
             get
             {
-                return LoadAbilityAsset("NormalAttack5Times");
+                return LoadAbilityData("NormalAttack5Times");
             }
         }
 
-        public static AbilityHandle ATTACK_DECREASE
+        public static AbilityData ATTACK_DECREASE
         {
             get
             {
-                return LoadAbilityAsset("AttackDecrease");
+                return LoadAbilityData("AttackDecrease");
             }
         }
 
-        public static AbilityHandle ATTACK_DOUBLE
+        public static AbilityData ATTACK_DOUBLE
         {
             get
             {
-                return LoadAbilityAsset("AttackDouble");
+                return LoadAbilityData("AttackDouble");
             }
         }
 
-        public static AbilityHandle ATTACK_UP_WHEN_LOW_HEALTH
+        public static AbilityData ATTACK_UP_WHEN_LOW_HEALTH
         {
             get
             {
-                return LoadAbilityAsset("AttackUpWhenLowHealth");
+                return LoadAbilityData("AttackUpWhenLowHealth");
             }
         }
 
-        public static AbilityHandle ATTACK_DOUBLE_WHEN_DAMAGED
+        public static AbilityData ATTACK_DOUBLE_WHEN_DAMAGED
         {
             get
             {
-                return LoadAbilityAsset("AttackDoubleWhenDamaged");
+                return LoadAbilityData("AttackDoubleWhenDamaged");
             }
         }
 
-        public static AbilityHandle ATTACK_DOUBLE_WHEN_GREATER_THAN_5
+        public static AbilityData ATTACK_DOUBLE_WHEN_GREATER_THAN_5
         {
             get
             {
-                return LoadAbilityAsset("AttackDoubleWhenGreaterThan5");
+                return LoadAbilityData("AttackDoubleWhenGreaterThan5");
             }
         }
 
-        public static AbilityHandle LOG_WHEN_ATTACKED
+        public static AbilityData LOG_WHEN_ATTACKED
         {
             get
             {
-                return LoadAbilityAsset("LogWhenAttacked");
+                return LoadAbilityData("LogWhenAttacked");
             }
         }
 
-        public static AbilityHandle COUNTER_ATTACK
+        public static AbilityData COUNTER_ATTACK
         {
             get
             {
-                return LoadAbilityAsset("CounterAttack");
+                return LoadAbilityData("CounterAttack");
             }
         }
 
-        public static AbilityHandle POISON
+        public static AbilityData POISON
         {
             get
             {
-                return LoadAbilityAsset("Poison");
+                return LoadAbilityData("Poison");
             }
         }
 
-        private static AbilityHandle LoadAbilityAsset(string fileName)
+        private static AbilityData LoadAbilityData(string fileName)
         {
             var asset = Resources.Load<AbilityAsset>(fileName);
-            AbilityData data = asset.Data;
-            AbilityHandle handle = data.CreateHandle(0);
-            return handle;
+            return asset.Data;
         }
 
         private static MacroAsset ReadMacroAsset(string fileName)

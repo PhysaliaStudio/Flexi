@@ -10,10 +10,10 @@ namespace Physalia.Flexi.Tests
         private FlexiCore flexiCore;
         private CustomUnitFactory unitFactory;
 
-        private DefaultAbilityContainer CreateAbilityContainer(AbilityHandle handle)
+        private DefaultAbilityContainer CreateAbilityContainer(AbilityData abilityData)
         {
-            flexiCore.CreateAbilityPool(handle, 2);
-            return new DefaultAbilityContainer { CoreWrapper = wrapper, Handle = handle };
+            flexiCore.LoadAbility(abilityData);
+            return new DefaultAbilityContainer(abilityData, 0) { CoreWrapper = wrapper };
         }
 
         private CustomUnit CreateUnit(CustomUnitData data)
@@ -38,7 +38,8 @@ namespace Physalia.Flexi.Tests
         public void InstantiateAbility_WithMissingPort_LogError()
         {
             // Have 1 missing node and 1 missing port
-            var abilityFactory = new AbilityFactory(flexiCore, CustomAbility.HELLO_WORLD_MISSING_ELEMENTS);
+            AbilityData abilityData = CustomAbility.HELLO_WORLD_MISSING_ELEMENTS;
+            var abilityFactory = new AbilityFactory(flexiCore, abilityData.CreateHandle(0));
             _ = abilityFactory.Create();
 
             // Log 1 error from NodeConverter + 2 error from AbilityGraphUtility
@@ -505,14 +506,14 @@ namespace Physalia.Flexi.Tests
         [Test]
         public void ExecuteAbilitiy_AbilityIsPoolized_NormallyFinished_AbilitiesShouldBeReleased()
         {
-            AbilityHandle helloWorld = CustomAbility.HELLO_WORLD;
-            flexiCore.CreateAbilityPool(helloWorld, 4);
+            AbilityData helloWorld = CustomAbility.HELLO_WORLD;
+            flexiCore.LoadAbility(helloWorld, 4);
 
-            var container = new DefaultAbilityContainer { Handle = helloWorld };
+            var container = new DefaultAbilityContainer(helloWorld, 0);
             _ = flexiCore.TryEnqueueAbility(container);
             flexiCore.Run();
 
-            Assert.AreEqual(0, flexiCore.GetAbilityPool(helloWorld).UsingCount);
+            Assert.AreEqual(0, flexiCore.GetAbilityPool(helloWorld, 0).UsingCount);
         }
     }
 }

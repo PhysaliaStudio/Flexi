@@ -19,7 +19,7 @@ namespace Physalia.Flexi.Tests
         public void CreatePoolWithSize10_SizeReturns10()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 10);
+            flexiCore.LoadAbility(abilityHandle, 10);
 
             AbilityPool pool = flexiCore.GetAbilityPool(abilityHandle);
             Assert.AreEqual(10, pool.Size);
@@ -30,7 +30,7 @@ namespace Physalia.Flexi.Tests
         public void GetAbility4Times_PoolSizeIs10_SizeReturns10AndUsingCountReturns4()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 10);
+            flexiCore.LoadAbility(abilityHandle, 10);
 
             for (int i = 0; i < 4; i++)
             {
@@ -46,7 +46,7 @@ namespace Physalia.Flexi.Tests
         public void GetAbility4TimesAndRelease2Times_PoolSizeIs10_SizeReturns10AndUsingCountReturns2()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 10);
+            flexiCore.LoadAbility(abilityHandle, 10);
 
             var list = new List<Ability>();
             for (int i = 0; i < 4; i++)
@@ -69,7 +69,7 @@ namespace Physalia.Flexi.Tests
         public void GetAbility14Times_StartPoolSizeIs10_SizeReturns14AndUsingCountReturns14()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 10);
+            flexiCore.LoadAbility(abilityHandle, 10);
 
             for (int i = 0; i < 14; i++)
             {
@@ -99,7 +99,7 @@ namespace Physalia.Flexi.Tests
             }
 
             // Poolize the ability
-            flexiCore.CreateAbilityPool(abilityHandle, 1);
+            flexiCore.LoadAbility(abilityHandle, 1);
 
             // Get an ability, manually run it and return it
             Ability ability = flexiCore.GetAbility(abilityHandle);
@@ -126,7 +126,7 @@ namespace Physalia.Flexi.Tests
         public void AppendPoolizedAbilityToActor_UsingCountIs1()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 1);
+            flexiCore.LoadAbility(abilityHandle, 1);
 
             _ = flexiCore.GetAbility(abilityHandle);
             Assert.AreEqual(1, flexiCore.GetAbilityPool(abilityHandle).UsingCount);
@@ -136,7 +136,7 @@ namespace Physalia.Flexi.Tests
         public void AppendPoolizedAbilityToActorAndRelease_UsingCountIs0()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 1);
+            flexiCore.LoadAbility(abilityHandle, 1);
 
             Ability ability = flexiCore.GetAbility(abilityHandle);
             flexiCore.ReleaseAbility(ability);
@@ -148,9 +148,9 @@ namespace Physalia.Flexi.Tests
         public void ReleaseAbility_AbilityHasContainer_ContainerShouldBeNull()
         {
             AbilityHandle abilityHandle = AbilityTestHelper.CreateValidHandle();
-            flexiCore.CreateAbilityPool(abilityHandle, 1);
+            flexiCore.LoadAbility(abilityHandle, 1);
 
-            var container = new DefaultAbilityContainer { Handle = abilityHandle };
+            var container = new DefaultAbilityContainer(abilityHandle.Data, abilityHandle.GroupIndex);
             Ability ability = flexiCore.GetAbility(abilityHandle);
             ability.Container = container;
             flexiCore.ReleaseAbility(ability);
