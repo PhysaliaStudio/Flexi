@@ -4,8 +4,7 @@
 ![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
 
 - **This project is still work-in-progress** 
-- Recently work on v0.12 with lots of breaking changes. **Sorry that docs are not updated yet.**
-- **v0.11 and wiki is ready to deprecated, read from main branch instead if you're interested.**
+- Sorry that some docs are not updated yet.
 - Though Flexi is still in development, it's actually in usable state, and already worked on a real project. You can join the [Discord Server](https://discord.gg/U24EsyyGfa) if you like to know more about Flexi.
 - Progress  
     :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square: 90%
@@ -39,13 +38,20 @@ P.S. Flexi is inspired from **[Unreal GAS (Gameplay Ability System)](https://doc
 
 ![Recast Sample](https://user-images.githubusercontent.com/12347255/212114826-effc1d31-de16-4fb2-aa15-6b0dd68c0441.png)![Real-Time Sample 1](https://user-images.githubusercontent.com/12347255/212114905-b9c80f7f-6aed-4ac0-a3af-5cbba58c44a6.gif)
 
-## Resources (Deprecated)
+## Installation
 
-- [Wiki Home](https://github.com/PhysaliaStudio/Flexi/wiki)
-- [Installation](https://github.com/PhysaliaStudio/Flexi/wiki/Installation)
-- Getting Started
-  - [1. Build your environment](https://github.com/PhysaliaStudio/Flexi/wiki/1.-Build-your-environment)
-  - [2. Runtime Usage](https://github.com/PhysaliaStudio/Flexi/wiki/2.-Runtime-Usage)
+**Download repository and Export unitypackage**
+1. Donwload and unzip. Choose the latest tag for stable state.
+2. Open this Unity project. (Dev in 2021.3)
+3. Export the package with `Tools/Export UnityPackage`. This excludes unnecessary assets.
+4. It will show you the result package, then you can import this to your project.
+
+## Resources
+
+- Quickstart
+  - [1. Hello World](https://github.com/PhysaliaStudio/Flexi/wiki/1-Hello-World)
+  - [2. Custom Node](https://github.com/PhysaliaStudio/Flexi/wiki/2-Custom-Node)
+  - [3. Ability Chain](https://github.com/PhysaliaStudio/Flexi/wiki/3-Ability-Chain)
   - [API Summary](https://github.com/PhysaliaStudio/Flexi/wiki/API-Summary)
 - References
   - [tranek/GASDocumentation](https://github.com/tranek/GASDocumentation)
