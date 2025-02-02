@@ -429,9 +429,8 @@ namespace Physalia.Flexi.GraphViewEditor
                 return false;
             }
 
-            // Save as new asset if necessary
             bool isBlankAssets = IsBlankAsset(currentAsset);
-            if (isBlankAssets)
+            if (isBlankAssets)  // Save as new asset
             {
                 string lastSavedFolderPath = PlayerPrefs.GetString(PREFS_KEY_LAST_SAVED_FOLDER_PATH, DEFAULT_FOLDER_PATH);
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
@@ -441,16 +440,7 @@ namespace Physalia.Flexi.GraphViewEditor
                     return false;
                 }
 
-                switch (tempAsset)
-                {
-                    case AbilityAsset abilityAsset:
-                        CopyAbilityAsset(abilityAsset, currentAsset as AbilityAsset);
-                        break;
-                    case MacroAsset macroAsset:
-                        CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
-                        break;
-                }
-
+                CopyTempToCurrentAsset();
                 AssetDatabase.CreateAsset(currentAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
@@ -462,7 +452,20 @@ namespace Physalia.Flexi.GraphViewEditor
                 SetDirty(false);
                 return true;
             }
+            else  // Save to existing asset
+            {
+                CopyTempToCurrentAsset();
+                EditorUtility.SetDirty(currentAsset);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
 
+                SetDirty(false);
+                return true;
+            }
+        }
+
+        private void CopyTempToCurrentAsset()
+        {
             switch (tempAsset)
             {
                 case AbilityAsset abilityAsset:
@@ -472,13 +475,6 @@ namespace Physalia.Flexi.GraphViewEditor
                     CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
                     break;
             }
-
-            EditorUtility.SetDirty(currentAsset);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            SetDirty(false);
-            return true;
         }
 
         private void CopyAbilityAsset(AbilityAsset source, AbilityAsset destination)
