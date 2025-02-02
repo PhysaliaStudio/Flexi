@@ -136,6 +136,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             uiAsset.CloneTree(rootVisualElement);
             rootVisualElement.styleSheets.Add(uiStyleSheet);
+            RegisterKeys();
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
             objectField.objectType = typeof(GraphAsset);
@@ -256,6 +257,24 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return true;
+        }
+
+        private void RegisterKeys()
+        {
+            rootVisualElement.focusable = true;  // Need to be focusable to receive key events
+            rootVisualElement.RegisterCallback<KeyDownEvent>(evt =>
+                {
+#if UNITY_EDITOR_OSX
+                    if (evt.modifiers == EventModifiers.Command && evt.keyCode == KeyCode.S)
+#else
+                    if (evt.modifiers == EventModifiers.Control && evt.keyCode == KeyCode.S)
+#endif
+                    {
+                        SaveFile();
+                        evt.StopPropagation();
+                    }
+                },
+                TrickleDown.TrickleDown);
         }
 
         private void SetUpAbilityFlowMenu()
@@ -410,9 +429,8 @@ namespace Physalia.Flexi.GraphViewEditor
                 return false;
             }
 
-            // Save as new asset if necessary
             bool isBlankAssets = IsBlankAsset(currentAsset);
-            if (isBlankAssets)
+            if (isBlankAssets)  // Save as new asset
             {
                 string lastSavedFolderPath = PlayerPrefs.GetString(PREFS_KEY_LAST_SAVED_FOLDER_PATH, DEFAULT_FOLDER_PATH);
                 string assetPath = EditorUtility.SaveFilePanelInProject("Save ability", "NewGraph", "asset",
@@ -422,7 +440,8 @@ namespace Physalia.Flexi.GraphViewEditor
                     return false;
                 }
 
-                AssetDatabase.CreateAsset(tempAsset, assetPath);
+                CopyTempToCurrentAsset();
+                AssetDatabase.CreateAsset(currentAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
 
@@ -433,7 +452,20 @@ namespace Physalia.Flexi.GraphViewEditor
                 SetDirty(false);
                 return true;
             }
+            else  // Save to existing asset
+            {
+                CopyTempToCurrentAsset();
+                EditorUtility.SetDirty(currentAsset);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
 
+                SetDirty(false);
+                return true;
+            }
+        }
+
+        private void CopyTempToCurrentAsset()
+        {
             switch (tempAsset)
             {
                 case AbilityAsset abilityAsset:
@@ -443,13 +475,6 @@ namespace Physalia.Flexi.GraphViewEditor
                     CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
                     break;
             }
-
-            EditorUtility.SetDirty(currentAsset);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-
-            SetDirty(false);
-            return true;
         }
 
         private void CopyAbilityAsset(AbilityAsset source, AbilityAsset destination)
