@@ -2,10 +2,11 @@
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PhysaliaStudio/Flexi?sort=semver)
 ![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
+![Discord](https://img.shields.io/discord/1334847919441838120?style=flat&link=https%3A%2F%2Fdiscord.gg%2FU24EsyyGfa)
 
 - **This project is still work-in-progress** 
 - Sorry that some docs are not updated yet.
-- Though Flexi is still in development, it's actually in usable state, and already worked on a real project. You can join the [Discord Server](https://discord.gg/U24EsyyGfa) if you like to know more about Flexi.
+- Though Flexi is still in development, it's actually in usable state, and already worked on a real project. You can join the [Discord Server](https://discord.gg/U24EsyyGfa) if you like to discuss about Flexi.
 - Progress  
     :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square: 90%
 
