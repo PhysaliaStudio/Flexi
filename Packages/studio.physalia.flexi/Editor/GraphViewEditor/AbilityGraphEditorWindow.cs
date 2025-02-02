@@ -441,7 +441,17 @@ namespace Physalia.Flexi.GraphViewEditor
                     return false;
                 }
 
-                AssetDatabase.CreateAsset(tempAsset, assetPath);
+                switch (tempAsset)
+                {
+                    case AbilityAsset abilityAsset:
+                        CopyAbilityAsset(abilityAsset, currentAsset as AbilityAsset);
+                        break;
+                    case MacroAsset macroAsset:
+                        CopyMacroAsset(macroAsset, currentAsset as MacroAsset);
+                        break;
+                }
+
+                AssetDatabase.CreateAsset(currentAsset, assetPath);
                 currentAsset = AssetDatabase.LoadAssetAtPath<GraphAsset>(assetPath);
                 objectField.SetValueWithoutNotify(currentAsset);
 
