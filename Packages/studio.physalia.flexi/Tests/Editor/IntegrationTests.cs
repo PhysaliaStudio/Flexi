@@ -12,7 +12,7 @@ namespace Physalia.Flexi.Tests
 
         private DefaultAbilityContainer CreateAbilityContainer(AbilityData abilityData)
         {
-            flexiCore.LoadAbility(abilityData);
+            flexiCore.LoadAbilityAll(abilityData);
             return new DefaultAbilityContainer(abilityData, 0) { CoreWrapper = wrapper };
         }
 
@@ -507,7 +507,7 @@ namespace Physalia.Flexi.Tests
         public void ExecuteAbilitiy_AbilityIsPoolized_NormallyFinished_AbilitiesShouldBeReleased()
         {
             AbilityData helloWorld = CustomAbility.HELLO_WORLD;
-            flexiCore.LoadAbility(helloWorld, 4);
+            flexiCore.LoadAbilityAll(helloWorld, 4);
 
             var container = new DefaultAbilityContainer(helloWorld, 0);
             _ = flexiCore.TryEnqueueAbility(container);

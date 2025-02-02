@@ -83,7 +83,7 @@ namespace Physalia.Flexi
         /// <summary>
         /// Load each group of AbilityData into core.
         /// </summary>
-        public void LoadAbility(AbilityData abilityData, int startSize = DEFAULT_ABILITY_POOL_SIZE)
+        public void LoadAbilityAll(AbilityData abilityData, int startSize = DEFAULT_ABILITY_POOL_SIZE)
         {
             for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
             {
@@ -127,7 +127,7 @@ namespace Physalia.Flexi
         /// <summary>
         /// Unload each group of AbilityData from core.
         /// </summary>
-        public void UnloadAbility(AbilityData abilityData)
+        public void UnloadAbilityAll(AbilityData abilityData)
         {
             for (var groupIndex = 0; groupIndex < abilityData.graphGroups.Count; groupIndex++)
             {

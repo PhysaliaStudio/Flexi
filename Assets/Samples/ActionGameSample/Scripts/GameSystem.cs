@@ -47,7 +47,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
             AbilityAsset abilityAsset = assetManager.Load<AbilityAsset>("AbilityGraphs/Combo");
             AbilityData abilityData = abilityAsset.Data;
-            flexiCore.LoadAbility(abilityData, 2);
+            flexiCore.LoadAbilityAll(abilityData, 2);
             for (var i = 0; i < abilityData.graphGroups.Count; i++)
             {
                 var container = new DefaultAbilityContainer(abilityData, i);
