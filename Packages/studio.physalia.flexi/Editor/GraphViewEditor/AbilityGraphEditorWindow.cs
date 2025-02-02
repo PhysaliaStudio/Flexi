@@ -136,6 +136,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
             uiAsset.CloneTree(rootVisualElement);
             rootVisualElement.styleSheets.Add(uiStyleSheet);
+            RegisterKeys();
 
             objectField = rootVisualElement.Query<ObjectField>(FILE_FIELD_NAME).First();
             objectField.objectType = typeof(GraphAsset);
@@ -256,6 +257,24 @@ namespace Physalia.Flexi.GraphViewEditor
             }
 
             return true;
+        }
+
+        private void RegisterKeys()
+        {
+            rootVisualElement.focusable = true;  // Need to be focusable to receive key events
+            rootVisualElement.RegisterCallback<KeyDownEvent>(evt =>
+                {
+#if UNITY_EDITOR_OSX
+                    if (evt.modifiers == EventModifiers.Command && evt.keyCode == KeyCode.S)
+#else
+                    if (evt.modifiers == EventModifiers.Control && evt.keyCode == KeyCode.S)
+#endif
+                    {
+                        SaveFile();
+                        evt.StopPropagation();
+                    }
+                },
+                TrickleDown.TrickleDown);
         }
 
         private void SetUpAbilityFlowMenu()
