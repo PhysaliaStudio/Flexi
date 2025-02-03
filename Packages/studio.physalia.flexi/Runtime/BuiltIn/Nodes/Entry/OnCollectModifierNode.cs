@@ -12,7 +12,7 @@ namespace Physalia.Flexi
 
         public Variable<int> order;
 
-        public override bool CanExecute(Context context)
+        protected internal override bool CanExecute(Context context)
         {
             return true;
         }

@@ -5,7 +5,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Outport<Unit> attackerPort;
 
-        public override bool CanExecute(DamageContext context)
+        protected override bool CanExecute(DamageContext context)
         {
             for (var i = 0; i < context.targets.Count; i++)
             {

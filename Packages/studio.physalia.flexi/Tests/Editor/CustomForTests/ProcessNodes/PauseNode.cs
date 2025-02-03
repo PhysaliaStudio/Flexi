@@ -8,7 +8,7 @@ namespace Physalia.Flexi.Tests
             return FlowState.Pause;
         }
 
-        public override bool CanResume(IResumeContext resumeContext)
+        protected internal override bool CanResume(IResumeContext resumeContext)
         {
             return true;
         }

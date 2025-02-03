@@ -46,7 +46,7 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        public override bool CanExecute(Context context)
+        protected override bool CanExecute(Context context)
         {
             int mana = context.player.Mana;
             int cost = context.card.GetStat(StatId.COST).CurrentValue;

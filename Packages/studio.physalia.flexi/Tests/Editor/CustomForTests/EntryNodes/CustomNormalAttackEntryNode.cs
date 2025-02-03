@@ -12,7 +12,7 @@ namespace Physalia.Flexi.Tests
         public Outport<CustomUnit> attackerPort;
         public Outport<CustomUnit> targetPort;
 
-        public override bool CanExecute(Context context)
+        protected internal override bool CanExecute(Context context)
         {
             if (context.attacker != null && context.mainTarget != null)
             {
