@@ -53,6 +53,7 @@ P.S. Flexi is inspired from **[Unreal GAS (Gameplay Ability System)](https://doc
   - [1. Hello World](https://github.com/PhysaliaStudio/Flexi/wiki/1.-Hello-World)
   - [2. Custom Node](https://github.com/PhysaliaStudio/Flexi/wiki/2.-Custom-Node)
   - [3. Ability Chain](https://github.com/PhysaliaStudio/Flexi/wiki/3.-Ability-Chain)
+  - [4. Stat and Modifier](https://github.com/PhysaliaStudio/Flexi/wiki/4.-Stat-and-Modifier)
   - [API Summary](https://github.com/PhysaliaStudio/Flexi/wiki/API-Summary)
 - References
   - [tranek/GASDocumentation](https://github.com/tranek/GASDocumentation)
