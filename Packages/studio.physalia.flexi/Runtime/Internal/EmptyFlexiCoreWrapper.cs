@@ -2,11 +2,8 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    internal class EmptyFlexiCoreWrapper : IFlexiCoreWrapper
+    internal class EmptyFlexiEventResolver : IFlexiEventResolver
     {
-        private readonly List<StatOwner> EmptyOwnerList = new();
-        private readonly List<AbilityContainer> EmptyContainers = new();
-
         public void OnEventReceived(IEventContext eventContext)
         {
 
@@ -16,6 +13,12 @@ namespace Physalia.Flexi
         {
 
         }
+    }
+
+    internal class EmptyFlexiStatRefreshResolver : IFlexiStatRefreshResolver
+    {
+        private readonly List<StatOwner> EmptyOwnerList = new();
+        private readonly List<AbilityContainer> EmptyContainers = new();
 
         public IReadOnlyList<StatOwner> CollectStatRefreshOwners()
         {
