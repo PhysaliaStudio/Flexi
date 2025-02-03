@@ -11,7 +11,8 @@ namespace Physalia.Flexi.Tests
         public void SetUp()
         {
             FlexiCoreBuilder builder = new FlexiCoreBuilder();
-            builder.SetWrapper(new FlexiCoreWrapperMock());
+            builder.SetEventResolver(new FlexiCoreWrapperMock());
+            builder.SetStatRefreshResolver(new FlexiCoreWrapperMock());
             flexiCore = builder.Build();
         }
 

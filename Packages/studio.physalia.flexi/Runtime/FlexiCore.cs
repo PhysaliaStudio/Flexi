@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    public interface IFlexiCoreWrapper
+    public interface IFlexiEventResolver
     {
         void OnEventReceived(IEventContext eventContext);
         void ResolveEvent(FlexiCore flexiCore, IEventContext eventContext);
+    }
 
+    public interface IFlexiStatRefreshResolver
+    {
         IReadOnlyList<StatOwner> CollectStatRefreshOwners();
         IReadOnlyList<AbilityContainer> CollectStatRefreshContainers();
-
         void OnBeforeCollectModifiers();
         void ApplyModifiers(StatOwner statOwner);
     }
@@ -19,8 +21,10 @@ namespace Physalia.Flexi
     {
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
-        private readonly IFlexiCoreWrapper wrapper;
         private readonly AbilityFlowRunner runner;
+        private readonly IFlexiEventResolver eventResolver;
+        private readonly IFlexiStatRefreshResolver statRefreshResolver;
+
         private readonly AbilityEventQueue eventQueue = new();
         private readonly StatRefreshRunner statRefreshRunner = new();
 
@@ -35,14 +39,17 @@ namespace Physalia.Flexi
 
         internal MacroLibrary MacroLibrary => macroLibrary;
 
-        internal FlexiCore(IFlexiCoreWrapper wrapper, AbilityFlowRunner runner)
+        internal FlexiCore(AbilityFlowRunner runner,
+            IFlexiEventResolver eventResolver, IFlexiStatRefreshResolver statRefreshResolver)
         {
-            this.wrapper = wrapper;
             this.runner = runner;
             runner.flexiCore = this;
-
-            poolManager = new(this);
             runner.FlowFinished += OnFlowFinished;
+
+            this.eventResolver = eventResolver;
+            this.statRefreshResolver = statRefreshResolver;
+
+            poolManager = new AbilityPoolManager(this);
         }
 
         private void OnFlowFinished(IAbilityFlow flow)
@@ -230,7 +237,7 @@ namespace Physalia.Flexi
         public void EnqueueEvent(IEventContext eventContext)
         {
             eventQueue.Enqueue(eventContext);
-            wrapper.OnEventReceived(eventContext);
+            eventResolver.OnEventReceived(eventContext);
         }
 
         internal void TriggerCachedEvents(AbilityFlowRunner runner)
@@ -244,7 +251,7 @@ namespace Physalia.Flexi
             while (eventQueue.Count > 0)
             {
                 IEventContext eventContext = eventQueue.Dequeue();
-                wrapper.ResolveEvent(this, eventContext);
+                eventResolver.ResolveEvent(this, eventContext);
             }
             runner.AfterTriggerEvents();
         }
@@ -340,7 +347,7 @@ namespace Physalia.Flexi
         public void RefreshStatsAndModifiers()
         {
             // 1. Clear all modifiers and reset all stats.
-            IReadOnlyList<StatOwner> owners = wrapper.CollectStatRefreshOwners();
+            IReadOnlyList<StatOwner> owners = statRefreshResolver.CollectStatRefreshOwners();
             for (var i = 0; i < owners.Count; i++)
             {
                 StatOwner owner = owners[i];
@@ -349,7 +356,7 @@ namespace Physalia.Flexi
             }
 
             // 2. Do user method before collecting modifiers.
-            wrapper.OnBeforeCollectModifiers();
+            statRefreshResolver.OnBeforeCollectModifiers();
 
             // 3. Do apply all modifiers first, to promise it's at least run once.
             for (var i = 0; i < owners.Count; i++)
@@ -358,13 +365,13 @@ namespace Physalia.Flexi
             }
 
             // 4. Iterate all containers, and ApplyStatOwnerModifiers layer by layer.
-            DoStatRefreshLogicForAllOwners(owners, wrapper.CollectStatRefreshContainers());
+            DoStatRefreshLogicForAllOwners(owners, statRefreshResolver.CollectStatRefreshContainers());
         }
 
         internal void ApplyStatOwnerModifiers(StatOwner statOwner)
         {
             statOwner.ResetAllStats();
-            wrapper.ApplyModifiers(statOwner);
+            statRefreshResolver.ApplyModifiers(statOwner);
         }
 
         /// <remarks>

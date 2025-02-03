@@ -9,7 +9,7 @@ namespace Physalia.Flexi.Samples.CardGame
         IReadOnlyList<Unit> Enemies { get; }
     }
 
-    public class Game : IFlexiCoreWrapper, IUnitRepository
+    public class Game : IFlexiEventResolver, IFlexiStatRefreshResolver, IUnitRepository
     {
         public event Action<Unit, PlayArea> GameSetUp;
         public event Action<Card> CardSelected;
@@ -45,7 +45,8 @@ namespace Physalia.Flexi.Samples.CardGame
             this.gameSetting = gameSetting;
 
             var builder = new FlexiCoreBuilder();
-            builder.SetWrapper(this);
+            builder.SetEventResolver(this);
+            builder.SetStatRefreshResolver(this);
             flexiCore = builder.Build();
 
             MacroAsset[] macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");
@@ -103,7 +104,7 @@ namespace Physalia.Flexi.Samples.CardGame
             }
         }
 
-        #region Implement IFlexiCoreWrapper
+        #region Implement IFlexiEventResolver
         public void OnEventReceived(IEventContext eventContext)
         {
             if (eventContext is PlayCardEvent playCardEvent)
@@ -126,7 +127,9 @@ namespace Physalia.Flexi.Samples.CardGame
                 flexiCore.TryEnqueueAbility(enemyUnits[i].AbilityContainers, eventContext);
             }
         }
+        #endregion
 
+        #region Implement IFlexiStatRefreshResolver
         public IReadOnlyList<StatOwner> CollectStatRefreshOwners()
         {
             var result = new List<StatOwner>();
