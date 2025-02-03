@@ -28,7 +28,7 @@ namespace Physalia.Flexi
             return false;
         }
 
-        public abstract bool CanExecute(TEventContext context);
+        protected internal abstract bool CanExecute(TEventContext context);
 
         private protected sealed override FlowState ExecuteInternal()
         {

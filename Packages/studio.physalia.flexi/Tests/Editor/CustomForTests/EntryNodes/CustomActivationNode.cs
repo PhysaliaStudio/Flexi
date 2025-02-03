@@ -10,7 +10,7 @@ namespace Physalia.Flexi.Tests
 
         public Outport<CustomUnit> activatorPort;
 
-        public override bool CanExecute(Context context)
+        protected internal override bool CanExecute(Context context)
         {
             if (context.activator != null)
             {

@@ -11,7 +11,7 @@ namespace Physalia.Flexi.Samples.CardGame
         public Outport<Game> gamePort;
         public Outport<Player> playerPort;
 
-        public override bool CanExecute(SystemProcessContext context)
+        protected override bool CanExecute(SystemProcessContext context)
         {
             return true;
         }

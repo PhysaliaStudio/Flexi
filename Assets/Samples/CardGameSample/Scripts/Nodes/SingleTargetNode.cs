@@ -22,7 +22,7 @@ namespace Physalia.Flexi.Samples.CardGame
             return FlowState.Pause;
         }
 
-        public override bool CanResume(IResumeContext resumeContext)
+        protected override bool CanResume(IResumeContext resumeContext)
         {
             if (resumeContext is CancellationContext)
             {

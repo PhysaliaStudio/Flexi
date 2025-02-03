@@ -5,7 +5,7 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public Outport<Game> gamePort;
 
-        public override bool CanExecute(TurnEndContext context)
+        protected override bool CanExecute(TurnEndContext context)
         {
             return true;
         }

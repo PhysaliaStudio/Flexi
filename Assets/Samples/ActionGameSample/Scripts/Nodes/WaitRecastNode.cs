@@ -39,7 +39,7 @@ namespace Physalia.Flexi.Samples.ActionGame
             return FlowState.Pause;
         }
 
-        public override bool CanResume(IResumeContext resumeContext)
+        protected override bool CanResume(IResumeContext resumeContext)
         {
             return resumeContext is RecastContext;
         }
