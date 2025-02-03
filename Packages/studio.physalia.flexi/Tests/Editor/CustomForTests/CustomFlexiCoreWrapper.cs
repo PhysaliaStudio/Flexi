@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    public class CustomFlexiCoreWrapper : IFlexiCoreWrapper
+    public class CustomFlexiCoreWrapper : IFlexiEventResolver, IFlexiStatRefreshResolver
     {
         public event Action ChoiceTriggered;
 
@@ -20,7 +20,7 @@ namespace Physalia.Flexi.Tests
             ChoiceTriggered?.Invoke();
         }
 
-        #region Implement IFlexiCoreWrapper
+        #region Implement IFlexiEventResolver
         public void OnEventReceived(IEventContext eventContext)
         {
 
@@ -33,7 +33,9 @@ namespace Physalia.Flexi.Tests
                 flexiCore.TryEnqueueAbility(actors[i].AbilityContainers, eventContext);
             }
         }
+        #endregion
 
+        #region Implement IFlexiStatRefreshResolver
         public IReadOnlyList<StatOwner> CollectStatRefreshOwners()
         {
             var result = new List<StatOwner>();

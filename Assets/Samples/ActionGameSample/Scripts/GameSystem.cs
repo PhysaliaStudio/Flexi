@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Physalia.Flexi.Samples.ActionGame
 {
-    public class GameSystem : MonoBehaviour, IFlexiCoreWrapper
+    public class GameSystem : MonoBehaviour, IFlexiEventResolver, IFlexiStatRefreshResolver
     {
         private AssetManager assetManager;
         private FlexiCore flexiCore;
@@ -21,11 +21,12 @@ namespace Physalia.Flexi.Samples.ActionGame
             slotView.SetUnit(playerUnit);
         }
 
-        private static FlexiCore CreateFlexiCore(IFlexiCoreWrapper wrapper, AssetManager assetManager)
+        private static FlexiCore CreateFlexiCore(GameSystem gameSystem, AssetManager assetManager)
         {
             var builder = new FlexiCoreBuilder();
-            builder.SetWrapper(wrapper);
             builder.SetRunner(new RealTimeFlowRunner());
+            builder.SetEventResolver(gameSystem);
+            builder.SetStatRefreshResolver(gameSystem);
             FlexiCore flexiCore = builder.Build();
 
             MacroAsset[] macroAssets = assetManager.LoadAll<MacroAsset>("AbilityGraphs");

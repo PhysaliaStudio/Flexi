@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi.Tests
 {
-    public class FlexiCoreWrapperMock : IFlexiCoreWrapper
+    public class FlexiCoreWrapperMock : IFlexiEventResolver, IFlexiStatRefreshResolver
     {
         public void OnEventReceived(IEventContext eventContext)
         {

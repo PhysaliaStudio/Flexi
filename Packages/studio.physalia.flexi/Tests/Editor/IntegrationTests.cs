@@ -28,7 +28,8 @@ namespace Physalia.Flexi.Tests
         {
             wrapper = new CustomFlexiCoreWrapper();
             FlexiCoreBuilder builder = new FlexiCoreBuilder();
-            builder.SetWrapper(wrapper);
+            builder.SetEventResolver(wrapper);
+            builder.SetStatRefreshResolver(wrapper);
             flexiCore = builder.Build();
 
             unitFactory = new CustomUnitFactory();
