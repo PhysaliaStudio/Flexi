@@ -55,5 +55,20 @@ namespace Physalia.Flexi.Tests
                 }
             }, Is.Not.AllocatingGCMemory());
         }
+
+        [Test]
+        public void CreateStatModifierWithEnum_DoesNotAllocate()
+        {
+            // Note: The first call to CastTo.From allocates static classes.
+            _ = CastTo<int>.From(StatId.HealthMax);
+
+            Assert.That(() =>
+            {
+                for (var i = 0; i < 1000000; i++)
+                {
+                    _ = StatModifier.Create(StatId.HealthMax, 1, StatModifier.Operator.ADD);
+                }
+            }, Is.Not.AllocatingGCMemory());
+        }
     }
 }
