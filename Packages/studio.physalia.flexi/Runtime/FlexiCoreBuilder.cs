@@ -12,7 +12,10 @@ namespace Physalia.Flexi
             eventResolver ??= new EmptyFlexiEventResolver();
             statRefreshResolver ??= new EmptyFlexiStatRefreshResolver();
 
-            Logger.Info($"[{nameof(FlexiCoreBuilder)}] Runner Type: {runner.GetType().Name}");
+            Logger.Info($"[{nameof(FlexiCoreBuilder)}] FlowRunner: {runner.GetType().Name}");
+            Logger.Info($"[{nameof(FlexiCoreBuilder)}] EventResolver: {eventResolver.GetType().Name}");
+            Logger.Info($"[{nameof(FlexiCoreBuilder)}] StatRefreshResolver: {statRefreshResolver.GetType().Name}");
+
             return new FlexiCore(runner, eventResolver, statRefreshResolver);
         }
 
