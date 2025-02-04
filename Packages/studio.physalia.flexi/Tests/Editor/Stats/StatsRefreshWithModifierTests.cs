@@ -64,7 +64,7 @@ namespace Physalia.Flexi.Tests
         {
             var actor = CreateActor();
             actor.RemoveStat(CustomStats.ATTACK);
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.IsNull(actor.GetStat(CustomStats.ATTACK));
@@ -75,7 +75,7 @@ namespace Physalia.Flexi.Tests
         public void SingleModifier_WithInvalidStatId_NoError()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(999, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(999, 50, StatModifier.Operator.MUL));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.Pass();
@@ -85,7 +85,7 @@ namespace Physalia.Flexi.Tests
         public void SingleModifier_100Minus10_CurrentBaseReturns100AndCurrentValueReturns90()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.AreEqual(100, actor.GetStat(CustomStats.MAX_HEALTH).CurrentBase);
@@ -96,7 +96,7 @@ namespace Physalia.Flexi.Tests
         public void SingleModifier_12Mul50Percent_CurrentBaseReturns12AndCurrentValueReturns18()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.AreEqual(12, actor.GetStat(CustomStats.ATTACK).CurrentBase);
@@ -107,8 +107,8 @@ namespace Physalia.Flexi.Tests
         public void MultipleModifier_Base12Add6AndMul50Percent_CurrentBaseReturns12AndCurrentValueReturns27()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.AreEqual(12, actor.GetStat(CustomStats.ATTACK).CurrentBase);
@@ -119,9 +119,9 @@ namespace Physalia.Flexi.Tests
         public void MultipleModifier_WithDifferentStatIds()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
-            actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             flexiCore.ApplyStatOwnerModifiers(actor);
 
             Assert.AreEqual(100, actor.GetStat(CustomStats.MAX_HEALTH).CurrentBase);
@@ -134,9 +134,9 @@ namespace Physalia.Flexi.Tests
         public void RefreshTwice_ReturnsTheSameValues()
         {
             var actor = CreateActor();
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
-            actor.AppendModifier(new StatModifier(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
-            actor.AppendModifier(new StatModifier(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 50, StatModifier.Operator.MUL));
+            actor.AppendModifier(StatModifier.Create(CustomStats.ATTACK, 6, StatModifier.Operator.ADD));
+            actor.AppendModifier(StatModifier.Create(CustomStats.MAX_HEALTH, -10, StatModifier.Operator.ADD));
             flexiCore.ApplyStatOwnerModifiers(actor);
             flexiCore.ApplyStatOwnerModifiers(actor);
 
