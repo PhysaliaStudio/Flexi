@@ -458,6 +458,7 @@ namespace Physalia.Flexi.GraphViewEditor
 
                 AssetDatabase.Refresh();
                 SetDirty(false);
+                notification.Show("Save successful!", 1f, NotificationIcon.Accept);
                 return true;
             }
             else  // Save to existing asset
@@ -468,6 +469,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 AssetDatabase.Refresh();
 
                 SetDirty(false);
+                notification.Show("Save successful!", 1f, NotificationIcon.Accept);
                 return true;
             }
         }
