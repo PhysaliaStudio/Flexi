@@ -131,6 +131,19 @@
   display: none;
 }
 
+.modifier-node #title {
+  background-color: rgba(139, 107, 255, 0.8);
+}
+
+.modifier-node #title-label {
+  color: rgb(8, 10, 5);
+  -unity-font-style: bold;
+}
+
+.modifier-node #title-icon-container {
+  display: none;
+}
+
 .macro-node #title {
   background-color: rgba(170, 233, 103, 0.71);
 }

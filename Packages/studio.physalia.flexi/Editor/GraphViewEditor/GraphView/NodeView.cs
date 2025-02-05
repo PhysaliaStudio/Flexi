@@ -18,6 +18,7 @@ namespace Physalia.Flexi.GraphViewEditor
         private const string USS_CLASS_ENTRY_NODE = "entry-node";
         private const string USS_CLASS_FLOW_CONTROL_NODE = "flow-control-node";
         private const string USS_CLASS_PROCESS_NODE = "process-node";
+        private const string USS_CLASS_MODIFIER_NODE = "modifier-node";
         private const string USS_CLASS_CONSTANT_NODE = "constant-node";
         private const string USS_CLASS_MACRO_NODE = "macro-node";
         private const string USS_CLASS_MISSING_NODE = "missing-node";
@@ -108,6 +109,9 @@ namespace Physalia.Flexi.GraphViewEditor
                     break;
                 case ProcessNode:
                     AddToClassList(USS_CLASS_PROCESS_NODE);
+                    break;
+                case ModifierNode:
+                    AddToClassList(USS_CLASS_MODIFIER_NODE);
                     break;
                 case FlowNode:
                     AddToClassList(USS_CLASS_FLOW_CONTROL_NODE);

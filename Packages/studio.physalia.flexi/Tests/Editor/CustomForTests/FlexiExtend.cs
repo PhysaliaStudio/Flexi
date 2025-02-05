@@ -28,6 +28,11 @@ namespace Physalia.Flexi.Tests
 
     }
 
+    public abstract class DefaultModifierNode : ModifierNode<DefaultAbilityContainer>
+    {
+
+    }
+
     public abstract class DefaultValueNode : ValueNode<DefaultAbilityContainer>
     {
 

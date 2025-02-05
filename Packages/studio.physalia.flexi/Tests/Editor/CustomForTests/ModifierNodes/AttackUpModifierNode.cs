@@ -1,6 +1,6 @@
 namespace Physalia.Flexi.Tests
 {
-    public class AttackUpModifierNode : DefaultProcessNode
+    public class AttackUpModifierNode : DefaultModifierNode
     {
         protected override FlowState OnExecute()
         {

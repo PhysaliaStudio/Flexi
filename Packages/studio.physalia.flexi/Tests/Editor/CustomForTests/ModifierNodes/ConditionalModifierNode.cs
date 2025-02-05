@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Tests
 {
     [NodeCategoryForTests]
-    public class ConditionalModifierNode : DefaultProcessNode
+    public class ConditionalModifierNode : DefaultModifierNode
     {
         public Inport<IReadOnlyList<Actor>> actorsPort;
         public Inport<bool> enabledPort;

@@ -1,6 +1,7 @@
 namespace Physalia.Flexi
 {
     [NodeCategory(BuiltInCategory.Entry)]
+    [NodeColor("#DB7A53")]
     internal class OnCollectModifierNode : EntryNode<AbilityContainer, OnCollectModifierNode.Context>
     {
         public sealed class Context : IEventContext

@@ -27,6 +27,11 @@ namespace Physalia.Flexi.Samples.ActionGame
 
     }
 
+    public abstract class DefaultModifierNode : ModifierNode<DefaultAbilityContainer>
+    {
+
+    }
+
     public abstract class DefaultValueNode : ValueNode<DefaultAbilityContainer>
     {
 
