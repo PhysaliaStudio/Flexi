@@ -1,12 +1,13 @@
-# Flexi - Unity Ability System Framework
+# Flexi - Unity Gameplay Ability System Framework
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PhysaliaStudio/Flexi?sort=semver)
 ![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
 ![Discord](https://img.shields.io/discord/1334847919441838120?style=flat&link=https%3A%2F%2Fdiscord.gg%2FU24EsyyGfa)
 
+**[Discord](https://discord.gg/U24EsyyGfa)**
+
 - **This project is still work-in-progress** 
-- Sorry that some docs are not updated yet.
-- Though Flexi is still in development, it's actually in usable state, and already worked on a real project. You can join the [Discord Server](https://discord.gg/U24EsyyGfa) if you like to discuss about Flexi.
+- Though still in development, it's usable and already worked on a real project. Feel free to pick a tag version and try a small project, and join the [Discord](https://discord.gg/U24EsyyGfa) to discuss if any problem.
 - Progress  
     :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square: 90%
 
@@ -54,6 +55,7 @@ P.S. Flexi is inspired from **[Unreal GAS (Gameplay Ability System)](https://doc
   - [2. Custom Node](https://github.com/PhysaliaStudio/Flexi/wiki/2.-Custom-Node)
   - [3. Ability Chain](https://github.com/PhysaliaStudio/Flexi/wiki/3.-Ability-Chain)
   - [4. Stat and Modifier](https://github.com/PhysaliaStudio/Flexi/wiki/4.-Stat-and-Modifier)
+  - Keep Updating...
   - [API Summary](https://github.com/PhysaliaStudio/Flexi/wiki/API-Summary)
 - References
   - [tranek/GASDocumentation](https://github.com/tranek/GASDocumentation)
