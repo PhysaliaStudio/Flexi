@@ -30,6 +30,8 @@ namespace Physalia.Flexi
                 return;
             }
 
+            runningState = RunningState.RUNNING;
+
             // If there is no flow at start, trigger cached events to see if there's any new flow.
             IAbilityFlow flow = Peek();
             if (flow == null)
@@ -66,6 +68,8 @@ namespace Physalia.Flexi
                 Logger.Error($"[{nameof(TurnBaseRunner)}] Failed to resume! resumeContext is null.");
                 return;
             }
+
+            runningState = RunningState.RUNNING;
 
             IAbilityFlow flow = Peek();
             StepResult result = ResumeStep(flow, resumeContext);
@@ -110,6 +114,8 @@ namespace Physalia.Flexi
                 return;
             }
 
+            runningState = RunningState.RUNNING;
+
             StepResult result = TickStep(flow);
             bool keepRunning = HandleStepResult(result);
             if (!keepRunning)
@@ -145,6 +151,7 @@ namespace Physalia.Flexi
                     if (result.state == ResultState.Fail)
                     {
                         keepRunning = false;
+                        runningState = RunningState.PAUSE;
                     }
                     else if (result.state == ResultState.Abort)
                     {
