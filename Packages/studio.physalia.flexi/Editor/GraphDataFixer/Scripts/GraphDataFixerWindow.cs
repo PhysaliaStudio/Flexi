@@ -104,7 +104,7 @@ namespace Physalia.Flexi.GraphDataFixer
 
             if (graphAssets.Count == 0)
             {
-                notification.NotifyNoneSelected();
+                notification.Show("You need to select some GraphAssets first.");
                 return;
             }
 
@@ -132,7 +132,7 @@ namespace Physalia.Flexi.GraphDataFixer
             {
                 validateButton.SetEnabled(true);
                 fixButton.SetEnabled(false);
-                notification.NotifyPass();
+                notification.Show("All selected GraphAssets passed the validation!", NotificationIcon.Accept);
             }
         }
 
