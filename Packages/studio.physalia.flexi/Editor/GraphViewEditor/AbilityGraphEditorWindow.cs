@@ -80,6 +80,8 @@ namespace Physalia.Flexi.GraphViewEditor
         [SerializeField]
         private int currentGraphIndex = 0;
 
+        private Notification notification;
+
         private ObjectField objectField;
 
         private AbilityGraphView graphView;
@@ -123,6 +125,12 @@ namespace Physalia.Flexi.GraphViewEditor
 
             bool ok = window.AskForOpenAssetIfDirty(asset, groupIndex, graphIndex);
             return ok;
+        }
+
+        private void OnEnable()
+        {
+            notification = new Notification(this);
+            notification.LoadResources();
         }
 
         private void CreateGUI()
@@ -410,7 +418,7 @@ namespace Physalia.Flexi.GraphViewEditor
             bool isBlankAssets = IsBlankAsset(currentAsset);
             if (isBlankAssets)
             {
-                ShowNotification(new GUIContent("You can not reload non-asset!"));
+                notification.Show("You can not reload non-asset!");
                 return;
             }
 
@@ -608,7 +616,7 @@ namespace Physalia.Flexi.GraphViewEditor
             abilityAsset.GraphGroups.RemoveAt(groupIndex);
             SetDirty(true);
 
-            ShowNotification(new GUIContent($"Group {groupIndex} is deleted!"));
+            notification.Show($"Group {groupIndex} is deleted!");
             if (abilityAsset.GraphGroups.Count == 0)
             {
                 currentGroupIndex = -1;
@@ -732,7 +740,7 @@ namespace Physalia.Flexi.GraphViewEditor
                 SetDirty(true);
                 RefreshFlowMenu();
 
-                ShowNotification(new GUIContent($"Flow {groupIndex}-{graphIndex} is deleted!"));
+                notification.Show($"Flow {groupIndex}-{graphIndex} is deleted!");
 
                 if (group.jsons.Count == 0)
                 {
@@ -785,7 +793,7 @@ namespace Physalia.Flexi.GraphViewEditor
             AbilityGraph abilityGraph = graphView.GetAbilityGraph();
             if (abilityGraph.HasMissingElement())
             {
-                ShowNotification(new GUIContent("You must fix all the missing elements before saving!"));
+                notification.Show("You must fix all the missing elements before saving!");
                 return false;
             }
 
