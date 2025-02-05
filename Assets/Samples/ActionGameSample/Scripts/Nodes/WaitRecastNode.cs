@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Samples.ActionGame
     public class RecastContext : IResumeContext { }
 
     [NodeCategory("Action Game Sample")]
-    public class WaitRecastNode : BaseProcessNode<DefaultAbilityContainer>
+    public class WaitRecastNode : BranchNode<DefaultAbilityContainer, RecastContext>
     {
         public Inport<FlowNode> previous;
         public Outport<FlowNode> successNode;
@@ -39,21 +39,16 @@ namespace Physalia.Flexi.Samples.ActionGame
             return FlowState.Pause;
         }
 
-        protected override bool CanResume(IResumeContext resumeContext)
+        protected override bool CanResume(RecastContext context)
         {
-            return resumeContext is RecastContext;
+            return true;
         }
 
-        protected override FlowState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(RecastContext context)
         {
-            if (resumeContext is RecastContext)
-            {
-                received = true;
-                Container.Unit.AbilitySlot.SetToDisabledState();
-                return FlowState.Success;
-            }
-
-            return FlowState.Pause;
+            received = true;
+            Container.Unit.AbilitySlot.SetToDisabledState();
+            return FlowState.Success;
         }
 
         protected override FlowState Tick()

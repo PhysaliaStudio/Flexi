@@ -1,7 +1,7 @@
 namespace Physalia.Flexi
 {
     [HideFromSearchWindow]
-    internal class GraphOutputNode : BaseProcessNode
+    internal class GraphOutputNode : BranchNode
     {
         private static readonly int NODE_ID = -2;
 

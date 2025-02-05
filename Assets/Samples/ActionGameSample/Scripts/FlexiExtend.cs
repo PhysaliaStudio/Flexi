@@ -11,11 +11,6 @@ namespace Physalia.Flexi.Samples.ActionGame
         }
     }
 
-    public abstract class DefaultEntryNode : EntryNode<DefaultAbilityContainer>
-    {
-
-    }
-
     public abstract class DefaultEntryNode<TEventContext> : EntryNode<DefaultAbilityContainer, TEventContext>
         where TEventContext : IEventContext
     {

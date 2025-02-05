@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi.Tests
 {
     [HideFromSearchWindow]
-    public class FakeFlowNode : BaseProcessNode
+    public class FakeFlowNode : BranchNode<DefaultAbilityContainer, EmptyResumeContext>
     {
         private int pauseCount = 0;
 
@@ -14,7 +14,7 @@ namespace Physalia.Flexi.Tests
             this.pauseCount = pauseCount;
         }
 
-        protected internal override bool CanResume(IResumeContext resumeContext)
+        protected override bool CanResume(EmptyResumeContext context)
         {
             return true;
         }
@@ -30,7 +30,7 @@ namespace Physalia.Flexi.Tests
             return FlowState.Success;
         }
 
-        protected override FlowState OnResume(IResumeContext resumeContext)
+        protected override FlowState OnResume(EmptyResumeContext context)
         {
             if (pauseCount > 0)
             {
