@@ -256,7 +256,7 @@ namespace Physalia.Flexi
             runner.AfterTriggerEvents();
         }
 
-        public bool TryEnqueueAbility(IReadOnlyList<AbilityContainer> containers, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(IReadOnlyList<AbilityContainer> containers, IEventContext eventContext)
         {
             bool hasAnyEnqueued = false;
 
@@ -272,8 +272,14 @@ namespace Physalia.Flexi
             return hasAnyEnqueued;
         }
 
-        public bool TryEnqueueAbility(AbilityContainer container, IEventContext eventContext = null)
+        public bool TryEnqueueAbility(AbilityContainer container, IEventContext eventContext)
         {
+            if (eventContext == null)
+            {
+                Logger.Error($"[{nameof(FlexiCore)}] TryEnqueueAbility failed! eventContext is null!");
+                return false;
+            }
+
             AbilityHandle abilityHandle = container.Handle;
             if (!abilityHandle.IsValid)
             {
@@ -287,7 +293,6 @@ namespace Physalia.Flexi
                 LoadAbility(abilityHandle, DEFAULT_ABILITY_POOL_SIZE);
             }
 
-            eventContext ??= EmptyContext.Instance;
             Type eventContextType = eventContext.GetType();
             bool success = entryLookupTable.TryGetValue(eventContextType, out EntryHandleTable handleTable);
             if (!success)

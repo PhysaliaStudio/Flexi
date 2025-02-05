@@ -3,13 +3,6 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
-    internal class EmptyContext : IEventContext
-    {
-        public static EmptyContext Instance { get; } = new EmptyContext();
-
-        // Empty Content
-    }
-
     public abstract class EntryNode<TContainer, TEventContext> : EntryNode
         where TContainer : AbilityContainer
         where TEventContext : IEventContext
@@ -39,29 +32,29 @@ namespace Physalia.Flexi
         protected abstract FlowState OnExecute(TEventContext context);
     }
 
-    public abstract class EntryNode<TContainer> : EntryNode
+    public abstract class EntryNode<TContainer, TEventContext, TResumeContext> : EntryNode<TContainer, TEventContext>
         where TContainer : AbilityContainer
+        where TEventContext : IEventContext
+        where TResumeContext : IResumeContext
     {
-        public TContainer Container => GetContainer<TContainer>();
-
-        public sealed override Type ContextType => typeof(EmptyContext);
-
-        protected internal sealed override bool CanExecute(IEventContext contextBase)
+        internal sealed override bool CheckCanResume(IResumeContext resumeContext)
         {
-            if (contextBase != null && contextBase is EmptyContext)
+            if (resumeContext != null && resumeContext is TResumeContext context)
             {
-                return true;
+                return CanResume(context);
             }
-
             return false;
         }
 
-        private protected sealed override FlowState ExecuteInternal()
+        protected abstract bool CanResume(TResumeContext resumeContext);
+
+        internal sealed override FlowState ResumeInternal(IResumeContext resumeContext)
         {
-            return OnExecute();
+            TResumeContext context = resumeContext is TResumeContext resumeContextTyped ? resumeContextTyped : default;
+            return OnResume(context);
         }
 
-        protected abstract FlowState OnExecute();
+        protected abstract FlowState OnResume(TResumeContext resumeContext);
     }
 
     public abstract class EntryNode : FlowNode

@@ -61,6 +61,12 @@ namespace Physalia.Flexi
                 return;
             }
 
+            if (resumeContext == null)
+            {
+                Logger.Error($"[{nameof(TurnBaseRunner)}] Failed to resume! resumeContext is null.");
+                return;
+            }
+
             IAbilityFlow flow = Peek();
             StepResult result = ResumeStep(flow, resumeContext);
             if (result.state == ResultState.Fail)
