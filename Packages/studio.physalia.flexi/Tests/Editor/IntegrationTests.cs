@@ -56,13 +56,13 @@ namespace Physalia.Flexi.Tests
             DefaultAbilityContainer container = CreateAbilityContainer(CustomAbility.ATTACK_DOUBLE);
             unit.AppendAbilityContainer(container);
 
-            bool success1 = flexiCore.TryEnqueueAbility(container);
+            bool success1 = flexiCore.TryEnqueueAbility(container, EmptyEventContext.Instance);
             flexiCore.Run();
 
             Assert.AreEqual(true, success1);
             Assert.AreEqual(4, unit.GetStat(CustomStats.ATTACK).CurrentValue);
 
-            bool success2 = flexiCore.TryEnqueueAbility(container);
+            bool success2 = flexiCore.TryEnqueueAbility(container, EmptyEventContext.Instance);
             flexiCore.Run();
 
             Assert.AreEqual(true, success2);
@@ -73,7 +73,7 @@ namespace Physalia.Flexi.Tests
         public void RunAbilityInstance_InstanceCanDoTheSameThingAsOriginal()
         {
             DefaultAbilityContainer container = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
-            _ = flexiCore.TryEnqueueAbility(container);
+            _ = flexiCore.TryEnqueueAbility(container, EmptyEventContext.Instance);
             flexiCore.Run();
 
             // Check if the instance can do the same thing
@@ -464,7 +464,7 @@ namespace Physalia.Flexi.Tests
             flexiCore.LoadMacroGraph(macro.name, macro);
 
             DefaultAbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER);
-            _ = flexiCore.TryEnqueueAbility(source);
+            _ = flexiCore.TryEnqueueAbility(source, EmptyEventContext.Instance);
             flexiCore.Run();
 
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -478,7 +478,7 @@ namespace Physalia.Flexi.Tests
             flexiCore.LoadMacroGraph(macro.name, macro);
 
             DefaultAbilityContainer source = CreateAbilityContainer(CustomAbility.HELLO_WORLD_MACRO_CALLER_5_TIMES);
-            _ = flexiCore.TryEnqueueAbility(source);
+            _ = flexiCore.TryEnqueueAbility(source, EmptyEventContext.Instance);
             flexiCore.Run();
 
             LogAssert.Expect(LogType.Log, "Hello World!");
@@ -495,8 +495,8 @@ namespace Physalia.Flexi.Tests
             DefaultAbilityContainer throwException = CreateAbilityContainer(CustomAbility.THROW_EXCEPTION);
             DefaultAbilityContainer helloWorld = CreateAbilityContainer(CustomAbility.HELLO_WORLD);
 
-            _ = flexiCore.TryEnqueueAbility(throwException);
-            _ = flexiCore.TryEnqueueAbility(helloWorld);
+            _ = flexiCore.TryEnqueueAbility(throwException, EmptyEventContext.Instance);
+            _ = flexiCore.TryEnqueueAbility(helloWorld, EmptyEventContext.Instance);
             flexiCore.Run();
 
             LogAssert.Expect(LogType.Exception, "Exception: This is for testing");
@@ -511,7 +511,7 @@ namespace Physalia.Flexi.Tests
             flexiCore.LoadAbilityAll(helloWorld, 4);
 
             var container = new DefaultAbilityContainer(helloWorld, 0);
-            _ = flexiCore.TryEnqueueAbility(container);
+            _ = flexiCore.TryEnqueueAbility(container, EmptyEventContext.Instance);
             flexiCore.Run();
 
             Assert.AreEqual(0, flexiCore.GetAbilityPool(helloWorld, 0).UsingCount);

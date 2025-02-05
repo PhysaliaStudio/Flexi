@@ -50,17 +50,12 @@ namespace Physalia.Flexi
 
         private protected abstract FlowState ExecuteInternal();
 
-        protected internal virtual bool CanResume(IResumeContext resumeContext)
+        internal virtual bool CheckCanResume(IResumeContext resumeContext)
         {
             return false;
         }
 
-        internal FlowState Resume(IResumeContext resumeContext)
-        {
-            return OnResume(resumeContext);
-        }
-
-        protected virtual FlowState OnResume(IResumeContext resumeContext)
+        internal virtual FlowState ResumeInternal(IResumeContext resumeContext)
         {
             return FlowState.Success;
         }

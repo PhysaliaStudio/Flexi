@@ -12,18 +12,29 @@ namespace Physalia.Flexi.Tests
         }
     }
 
-    public abstract class DefaultEntryNode : EntryNode<DefaultAbilityContainer>
-    {
-
-    }
-
-    public abstract class DefaultEntryNode<TEventContext> : EntryNode<DefaultAbilityContainer, TEventContext>
+    public abstract class DefaultEntryNode<TEventContext>
+        : EntryNode<DefaultAbilityContainer, TEventContext>
         where TEventContext : IEventContext
     {
 
     }
 
+    public abstract class DefaultEntryNode<TEventContext, TResumeContext>
+        : EntryNode<DefaultAbilityContainer, TEventContext, TResumeContext>
+        where TEventContext : IEventContext
+        where TResumeContext : IResumeContext
+    {
+
+    }
+
     public abstract class DefaultProcessNode : ProcessNode<DefaultAbilityContainer>
+    {
+
+    }
+
+    public abstract class DefaultProcessNode<TResumeContext>
+        : ProcessNode<DefaultAbilityContainer, TResumeContext>
+        where TResumeContext : IResumeContext
     {
 
     }

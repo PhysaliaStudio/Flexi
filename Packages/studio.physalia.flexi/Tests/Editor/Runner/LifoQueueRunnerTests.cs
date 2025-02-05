@@ -245,7 +245,7 @@ namespace Physalia.Flexi.Tests
             runner.StepExecuted += x => record.Add(x);
 
             runner.Start();
-            runner.Resume(null);
+            runner.Resume(EmptyResumeContext.Instance);
 
             var expected = new List<StepResult> {
                 new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),
@@ -271,8 +271,8 @@ namespace Physalia.Flexi.Tests
             runner.StepExecuted += x => record.Add(x);
 
             runner.Start();
-            runner.Resume(null);
-            runner.Resume(null);
+            runner.Resume(EmptyResumeContext.Instance);
+            runner.Resume(EmptyResumeContext.Instance);
 
             var expected = new List<StepResult> {
                 new StepResult(flowA, flowA[0], ExecutionType.NodeExecution, ResultState.Success),

@@ -6,7 +6,7 @@ namespace Physalia.Flexi.Tests
     }
 
     [NodeCategoryForTests]
-    public class CustomSingleTargetSelection : DefaultProcessNode
+    public class CustomSingleTargetSelection : DefaultProcessNode<IResumeContext>
     {
         public Outport<CustomUnit> targetPort;
 
@@ -16,7 +16,7 @@ namespace Physalia.Flexi.Tests
             return FlowState.Pause;
         }
 
-        protected internal override bool CanResume(IResumeContext resumeContext)
+        protected override bool CanResume(IResumeContext resumeContext)
         {
             if (resumeContext is CustomCancellation)
             {

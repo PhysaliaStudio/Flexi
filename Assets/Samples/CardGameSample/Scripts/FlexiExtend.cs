@@ -24,18 +24,21 @@ namespace Physalia.Flexi.Samples.CardGame
         }
     }
 
-    public abstract class DefaultEntryNode : EntryNode<DefaultAbilityContainer>
-    {
-
-    }
-
-    public abstract class DefaultEntryNode<TEventContext> : EntryNode<DefaultAbilityContainer, TEventContext>
+    public abstract class DefaultEntryNode<TEventContext>
+        : EntryNode<DefaultAbilityContainer, TEventContext>
         where TEventContext : IEventContext
     {
 
     }
 
     public abstract class DefaultProcessNode : ProcessNode<DefaultAbilityContainer>
+    {
+
+    }
+
+    public abstract class DefaultProcessNode<TResumeContext>
+        : ProcessNode<DefaultAbilityContainer, TResumeContext>
+        where TResumeContext : IResumeContext
     {
 
     }

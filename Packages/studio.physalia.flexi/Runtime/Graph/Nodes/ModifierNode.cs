@@ -34,14 +34,9 @@ namespace Physalia.Flexi
             return FlowState.Success;
         }
 
-        protected internal sealed override bool CanResume(IResumeContext resumeContext)
+        internal sealed override bool CheckCanResume(IResumeContext resumeContext)
         {
             return false;
-        }
-
-        protected sealed override FlowState OnResume(IResumeContext resumeContext)
-        {
-            return FlowState.Success;
         }
 
         protected internal sealed override FlowState Tick()

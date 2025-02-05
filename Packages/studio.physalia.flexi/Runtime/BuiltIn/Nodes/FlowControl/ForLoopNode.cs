@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace Physalia.Flexi
 {
     [NodeCategory(BuiltInCategory.FlowControl)]
-    public class ForLoopNode : BaseProcessNode
+    public class ForLoopNode : BranchNode
     {
         internal Inport<FlowNode> previousPort;
         internal Inport<int> startIndexPort;
