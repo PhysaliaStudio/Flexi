@@ -31,6 +31,12 @@ namespace Physalia.Flexi
             window.ShowNotification(new GUIContent(" " + text, GetIconTexture(icon)));
         }
 
+        public void Show(string text, float fadeoutWait, NotificationIcon icon = NotificationIcon.None)
+        {
+            // Intentionally left a space before the text.
+            window.ShowNotification(new GUIContent(" " + text, GetIconTexture(icon)), fadeoutWait);
+        }
+
         private Texture GetIconTexture(NotificationIcon icon)
         {
             return icon switch
