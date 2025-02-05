@@ -24,7 +24,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private void LoadAllGameData()
         {
-            assetManager = new AssetManager("Flexi/CardGameSample");
+            assetManager = new AssetManager("CardGameSample");
             gameDataManager = new GameDataManager(assetManager);
 
             gameDataManager.LoadAllData<CardData>("GameData/Cards");

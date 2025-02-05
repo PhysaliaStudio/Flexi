@@ -13,7 +13,7 @@ namespace Physalia.Flexi.Samples.ActionGame
 
         private void Awake()
         {
-            assetManager = new AssetManager("Flexi/ActionGameSample");
+            assetManager = new AssetManager("ActionGameSample");
             flexiCore = CreateFlexiCore(this, assetManager);
             playerUnit = BuildPlayer(assetManager, flexiCore);
 
