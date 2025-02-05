@@ -40,6 +40,11 @@ namespace Physalia.Flexi.Samples.CardGame
 
     }
 
+    public abstract class DefaultModifierNode : ModifierNode<DefaultAbilityContainer>
+    {
+
+    }
+
     public abstract class DefaultValueNode : ValueNode<DefaultAbilityContainer>
     {
 
