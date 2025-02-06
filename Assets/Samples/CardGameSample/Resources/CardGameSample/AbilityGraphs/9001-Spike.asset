@@ -15,4 +15,4 @@ MonoBehaviour:
   blackboard: []
   graphGroups:
   - jsons:
-    - '{"_type":"Physalia.Flexi.AbilityGraph","variables":[],"nodes":[{"_id":823470,"_position":{"x":31.0,"y":40.0},"_type":"Physalia.Flexi.Samples.CardGame.OnDamagedEventNode"},{"_id":568485,"_position":{"x":298.0,"y":40.0},"_type":"Physalia.Flexi.MacroNode","key":"001-DamageProcess"},{"_id":302517,"_position":{"x":126.0,"y":167.0},"_type":"Physalia.Flexi.IntegerNode","value":1}],"edges":[{"id1":823470,"port1":"next","id2":568485,"port2":"previous"},{"id1":823470,"port1":"attackerPort","id2":568485,"port2":"targetsPort"},{"id1":302517,"port1":"output","id2":568485,"port2":"valuePort"}]}'
+    - '{"_type":"Physalia.Flexi.AbilityGraph","nodes":[{"_id":823470,"_position":{"x":31.0,"y":40.0},"_type":"Physalia.Flexi.Samples.CardGame.OnDamagedEventNode"},{"_id":351586,"_position":{"x":323.0,"y":40.0},"_type":"Physalia.Flexi.Samples.CardGame.DamageNode","valuePort":1}],"edges":[{"id1":823470,"port1":"next","id2":351586,"port2":"previous"},{"id1":823470,"port1":"attackerPort","id2":351586,"port2":"targetsPort"}]}'
