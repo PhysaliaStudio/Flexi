@@ -3,12 +3,11 @@ namespace Physalia.Flexi.Samples.CardGame
     [NodeCategory("Card Game Sample")]
     public class ModifyManaNode : DefaultProcessNode
     {
-        public Inport<Player> playerPort;
         public Inport<int> amountPort;
 
         protected override FlowState OnExecute()
         {
-            Player player = playerPort.GetValue();
+            Player player = Container.Game.Player;
             int amount = amountPort.GetValue();
             player.Mana += amount;
 

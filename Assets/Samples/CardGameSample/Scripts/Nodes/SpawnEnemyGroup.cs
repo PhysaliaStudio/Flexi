@@ -5,11 +5,9 @@ namespace Physalia.Flexi.Samples.CardGame
     [NodeCategory("Card Game Sample")]
     public class SpawnEnemyGroup : DefaultProcessNode
     {
-        public Inport<Game> gamePort;
-
         protected override FlowState OnExecute()
         {
-            Game game = gamePort.GetValue();
+            Game game = Container.Game;
             IReadOnlyList<Unit> units = game.RandomGenerateEnemyGroup();
             EnqueueEvent(new UnitSpawnedEvent { units = units });
             return FlowState.Success;

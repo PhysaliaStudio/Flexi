@@ -266,7 +266,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void Start()
         {
-            _ = flexiCore.TryEnqueueAbility(gameStartProcess, new SystemProcessContext { game = this });
+            _ = flexiCore.TryEnqueueAbility(gameStartProcess, new SystemProcessContext());
             flexiCore.Run();
         }
 
@@ -305,8 +305,6 @@ namespace Physalia.Flexi.Samples.CardGame
         {
             var context = new PlayCardNode.Context
             {
-                game = this,
-                player = player,
                 owner = heroUnit,
                 card = card,
             };
@@ -336,6 +334,43 @@ namespace Physalia.Flexi.Samples.CardGame
         public void CancelSelection()
         {
             flexiCore.Resume(new CancellationContext());
+        }
+
+        public void Damage(Unit attacker, IReadOnlyList<Unit> targets, int amount)
+        {
+            if (targets.Count == 0)
+            {
+                return;
+            }
+
+            // Damage
+            for (var i = 0; i < targets.Count; i++)
+            {
+                targets[i].Health -= amount;
+                if (targets[i].Health < 0)
+                {
+                    targets[i].Health = 0;
+                }
+            }
+
+            flexiCore.EnqueueEvent(new DamageContext
+            {
+                attacker = attacker,
+                targets = new List<Unit>(targets),
+                amount = amount,
+            });
+
+            // Check Death
+            for (var i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].Health <= 0)
+                {
+                    flexiCore.EnqueueEvent(new DeathEvent
+                    {
+                        target = targets[i],
+                    });
+                }
+            }
         }
 
         public int GetUnitStatusStack(Unit unit, int statusId)
@@ -384,7 +419,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         public void EndTurn()
         {
-            _ = flexiCore.TryEnqueueAbility(turnEndProcess, new SystemProcessContext { game = this });
+            _ = flexiCore.TryEnqueueAbility(turnEndProcess, new SystemProcessContext());
             flexiCore.Run();
         }
     }

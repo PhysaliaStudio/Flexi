@@ -15,12 +15,11 @@ namespace Physalia.Flexi.Samples.CardGame
     [NodeCategory("Card Game Sample")]
     public class DrawCardNode : DefaultProcessNode
     {
-        public Inport<Game> gamePort;
         public Inport<int> countPort;
 
         protected override FlowState OnExecute()
         {
-            Game game = gamePort.GetValue();
+            Game game = Container.Game;
             int count = countPort.GetValue();
 
             IReadOnlyList<Card> firstDraw = game.DrawCard(count);

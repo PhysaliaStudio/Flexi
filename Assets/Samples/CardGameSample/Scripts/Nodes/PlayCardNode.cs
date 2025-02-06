@@ -7,8 +7,6 @@ namespace Physalia.Flexi.Samples.CardGame
     {
         public class Context : IEventContext
         {
-            public Game game;
-            public Player player;
             public Unit owner;
             public Card card;
         }
@@ -19,8 +17,6 @@ namespace Physalia.Flexi.Samples.CardGame
         }
 
         public Outport<FlowNode> selectionPort;
-        public Outport<Game> gamePort;
-        public Outport<Player> playerPort;
         public Outport<Unit> unitPort;
         public Outport<Card> cardPort;
 
@@ -48,7 +44,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override bool CanExecute(Context context)
         {
-            int mana = context.player.Mana;
+            int mana = Container.Game.Player.Mana;
             int cost = context.card.GetStat(StatId.COST).CurrentValue;
             if (mana < cost)
             {
@@ -79,8 +75,6 @@ namespace Physalia.Flexi.Samples.CardGame
                 PayCosts(context);
             }
 
-            gamePort.SetValue(context.game);
-            playerPort.SetValue(context.player);
             unitPort.SetValue(context.owner);
             cardPort.SetValue(context.card);
             return FlowState.Success;
@@ -88,13 +82,14 @@ namespace Physalia.Flexi.Samples.CardGame
 
         private void PayCosts(Context context)
         {
+            Player player = Container.Game.Player;
             int cost = context.card.GetStat(StatId.COST).CurrentValue;
-            context.player.Mana -= cost;
+            player.Mana -= cost;
 
             EnqueueEvent(new ManaChangeEvent
             {
                 modifyValue = -cost,
-                newAmount = context.player.Mana,
+                newAmount = player.Mana,
             });
 
             EnqueueEvent(new PlayCardEvent
