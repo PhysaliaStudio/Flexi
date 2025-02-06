@@ -166,7 +166,7 @@ namespace Physalia.Flexi.Samples.CardGame
 
                 PopUpNumber popUpNumber = popUpNumberPool.Get();
 
-                Vector3 followWorldPoint = unitAvatar.transform.position + new Vector3(0f, 1.5f, 0f);
+                Vector3 followWorldPoint = unitAvatar.PopupHook.position;
                 Vector2 localPoint = mainCamera.WorldToLocalPointInRectangle(canvas.GetRectTransform(), followWorldPoint);
                 popUpNumber.GetRectTransform().anchoredPosition = localPoint;
 
