@@ -293,7 +293,7 @@ MonoBehaviour:
   mana: {fileID: 1041979727}
   endTurnButton: {fileID: 1732241738}
   popUpNumberPrefab: {fileID: 5217696232480581027, guid: 584acf0aae8da7245a88cf12b2401214, type: 3}
-  popUpNumberFadeTime: 1
+  popUpNumberFadeTime: 0.8
 --- !u!4 &52983678
 Transform:
   m_ObjectHideFlags: 0

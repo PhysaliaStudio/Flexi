@@ -176,7 +176,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 popUpNumber.Play(popUpNumberPool, popUpNumberFadeTime);
             }
 
-            await UniTask.Delay((int)(popUpNumberFadeTime * 500));
+            await UniTask.Delay(500);
         }
 
         private async UniTask HandleDamageEvent(DamageContext context)
@@ -198,7 +198,7 @@ namespace Physalia.Flexi.Samples.CardGame
                 popUpNumber.Play(popUpNumberPool, popUpNumberFadeTime);
             }
 
-            await UniTask.Delay((int)(popUpNumberFadeTime * 500));
+            await UniTask.Delay(500);
         }
 
         private async UniTask HandleUnitSpawnedEvent(UnitSpawnedEvent unitSpawnedEvent)
