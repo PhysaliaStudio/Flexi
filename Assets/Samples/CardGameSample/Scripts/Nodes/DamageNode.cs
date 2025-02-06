@@ -11,26 +11,13 @@ namespace Physalia.Flexi.Samples.CardGame
 
         protected override FlowState OnExecute()
         {
-            var attacker = attackerPort.GetValue();
             var targets = targetsPort.GetValue();
             if (targets.Count == 0)
             {
                 return FlowState.Success;
             }
 
-            var value = valuePort.GetValue();
-            for (var i = 0; i < targets.Count; i++)
-            {
-                targets[i].Health -= value;
-            }
-
-            EnqueueEvent(new DamageContext
-            {
-                attacker = attacker,
-                targets = new List<Unit>(targets),
-                amount = value,
-            });
-
+            Container.Game.Damage(attackerPort, targets, valuePort);
             return FlowState.Success;
         }
     }

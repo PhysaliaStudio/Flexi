@@ -5,7 +5,6 @@ namespace Physalia.Flexi.Samples.CardGame
     [NodeCategory("Card Game Sample")]
     public class AllEnemiesNode : DefaultValueNode
     {
-        public Inport<Game> gamePort;
         public Outport<List<Unit>> resultPort;
 
         private readonly List<Unit> resultCache = new();
@@ -13,7 +12,7 @@ namespace Physalia.Flexi.Samples.CardGame
         protected override void EvaluateSelf()
         {
             resultCache.Clear();
-            Game game = gamePort.GetValue();
+            Game game = Container.Game;
             resultCache.AddRange(game.Enemies);
             resultPort.SetValue(resultCache);
         }
