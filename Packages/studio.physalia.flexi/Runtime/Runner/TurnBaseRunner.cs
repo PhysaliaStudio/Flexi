@@ -9,6 +9,8 @@ namespace Physalia.Flexi
 
         private RunningState runningState = RunningState.IDLE;
 
+        public override RunningState State => runningState;
+
         public abstract IAbilityFlow Peek();
         internal abstract IAbilityFlow DequeueFlow();
 

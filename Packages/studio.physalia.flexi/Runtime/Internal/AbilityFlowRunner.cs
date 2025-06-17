@@ -25,6 +25,7 @@ namespace Physalia.Flexi
 
         protected EventTriggerMode eventTriggerMode = EventTriggerMode.EACH_NODE;
 
+        public abstract RunningState State { get; }
 
         internal void SetEventTriggerMode(EventTriggerMode eventTriggerMode)
         {

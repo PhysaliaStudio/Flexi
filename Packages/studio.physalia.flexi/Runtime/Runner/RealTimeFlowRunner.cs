@@ -15,6 +15,9 @@ namespace Physalia.Flexi
         private readonly HashSet<IAbilityFlow> runningFlows = new();
         private readonly List<int> indiceForRemoved = new();
 
+        // Real-time runner never stop.
+        public override RunningState State => RunningState.RUNNING;
+
         public override void AddFlow(IAbilityFlow flow)
         {
             flows.Add(flow);

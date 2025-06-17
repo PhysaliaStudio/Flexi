@@ -56,6 +56,12 @@ namespace Physalia.Flexi
 
         internal MacroLibrary MacroLibrary => macroLibrary;
 
+        /// <remarks>
+        /// This property only works with TurnBasedRunner.
+        /// For RealTimeRunner, this property is always true. Since it should always be running.
+        /// </remarks>
+        public bool IsRunning => runner.State != AbilityFlowRunner.RunningState.IDLE;
+
         internal FlexiCore(AbilityFlowRunner runner, IFlexiRunnerResolver runnerResolver,
             IFlexiEventResolver eventResolver, IFlexiStatRefreshResolver statRefreshResolver)
         {
