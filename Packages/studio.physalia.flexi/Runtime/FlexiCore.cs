@@ -3,6 +3,22 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    public interface IFlexiRunnerResolver
+    {
+        /// <summary>
+        /// Called when the runner runs and make it empty.
+        /// </summary>
+        /// <remarks>
+        /// This method only works with TurnBasedRunner, since it's nonsensed in RealTimeRunner.
+        /// </remarks>
+        void OnRunnerEmptied();
+
+        /// <summary>
+        /// Called when the a flow finished.
+        /// </summary>
+        void OnFlowFinished(AbilityContainer container);
+    }
+
     public interface IFlexiEventResolver
     {
         void OnEventReceived(IEventContext eventContext);
@@ -22,6 +38,7 @@ namespace Physalia.Flexi
         private const int DEFAULT_ABILITY_POOL_SIZE = 2;
 
         private readonly AbilityFlowRunner runner;
+        private readonly IFlexiRunnerResolver runnerResolver;
         private readonly IFlexiEventResolver eventResolver;
         private readonly IFlexiStatRefreshResolver statRefreshResolver;
 
@@ -39,23 +56,47 @@ namespace Physalia.Flexi
 
         internal MacroLibrary MacroLibrary => macroLibrary;
 
-        internal FlexiCore(AbilityFlowRunner runner,
+        internal FlexiCore(AbilityFlowRunner runner, IFlexiRunnerResolver runnerResolver,
             IFlexiEventResolver eventResolver, IFlexiStatRefreshResolver statRefreshResolver)
         {
             this.runner = runner;
             runner.flexiCore = this;
+            runner.Emptied += OnRunnerEmptied;
             runner.FlowFinished += OnFlowFinished;
 
+            this.runnerResolver = runnerResolver;
             this.eventResolver = eventResolver;
             this.statRefreshResolver = statRefreshResolver;
 
             poolManager = new AbilityPoolManager(this);
         }
 
+        private void OnRunnerEmptied()
+        {
+            try
+            {
+                runnerResolver.OnRunnerEmptied();
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
+        }
+
         private void OnFlowFinished(IAbilityFlow flow)
         {
             AbilityFlow abilityFlow = flow as AbilityFlow;
+            AbilityContainer container = abilityFlow.Ability.Container;  // Cache before release
             ReleaseAbility(abilityFlow.Ability);
+
+            try
+            {
+                runnerResolver.OnFlowFinished(container);
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal(e);
+            }
         }
 
         public void LoadMacroGraph(string key, MacroAsset macroAsset)

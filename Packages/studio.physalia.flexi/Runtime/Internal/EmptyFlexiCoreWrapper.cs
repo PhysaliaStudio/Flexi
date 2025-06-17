@@ -2,6 +2,19 @@ using System.Collections.Generic;
 
 namespace Physalia.Flexi
 {
+    internal class EmptyFlexiRunnerResolver : IFlexiRunnerResolver
+    {
+        public void OnRunnerEmptied()
+        {
+
+        }
+
+        public void OnFlowFinished(AbilityContainer container)
+        {
+
+        }
+    }
+
     internal class EmptyFlexiEventResolver : IFlexiEventResolver
     {
         public void OnEventReceived(IEventContext eventContext)

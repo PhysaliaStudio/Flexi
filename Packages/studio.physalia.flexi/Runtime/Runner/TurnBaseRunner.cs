@@ -53,6 +53,7 @@ namespace Physalia.Flexi
             }
 
             runningState = RunningState.IDLE;
+            NotifyEmptied();
         }
 
         public override void Resume(IResumeContext resumeContext)
@@ -98,6 +99,7 @@ namespace Physalia.Flexi
             }
 
             runningState = RunningState.IDLE;
+            NotifyEmptied();
         }
 
         public override void Tick()
@@ -137,6 +139,7 @@ namespace Physalia.Flexi
             }
 
             runningState = RunningState.IDLE;
+            NotifyEmptied();
         }
 
         private bool HandleStepResult(StepResult result)

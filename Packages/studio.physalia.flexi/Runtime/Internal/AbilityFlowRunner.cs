@@ -17,6 +17,7 @@ namespace Physalia.Flexi
             NEVER,
         }
 
+        internal event Action Emptied;
         internal event Action<IAbilityFlow> FlowFinished;
         internal event Action<StepResult> StepExecuted;
 
@@ -52,16 +53,14 @@ namespace Physalia.Flexi
 
         }
 
+        protected void NotifyEmptied()
+        {
+            Emptied?.Invoke();
+        }
+
         protected void NotifyFlowFinished(IAbilityFlow flow)
         {
-            try
-            {
-                FlowFinished?.Invoke(flow);
-            }
-            catch (Exception e)
-            {
-                Logger.Fatal(e);
-            }
+            FlowFinished?.Invoke(flow);
         }
 
         protected void NotifyStepResult(StepResult result)
