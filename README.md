@@ -1,13 +1,10 @@
 # Flexi - Unity Gameplay Ability System Framework
 
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/PhysaliaStudio/Flexi?sort=semver)
-![GitHub](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
-![Discord](https://img.shields.io/discord/1334847919441838120?style=flat&link=https%3A%2F%2Fdiscord.gg%2FU24EsyyGfa)
-
-**[Discord](https://discord.gg/U24EsyyGfa)**
+![GitHub License](https://img.shields.io/github/license/PhysaliaStudio/Flexi)
 
 - **This project is still work-in-progress** 
-- Though still in development, it's usable and already worked on a real project. Feel free to pick a tag version and try a small project, and join the [Discord](https://discord.gg/U24EsyyGfa) to discuss if any problem.
+- Though still in development, it's usable and already worked on a real project. Download the released version, and post in discussion if any problem.
 - Progress  
     :green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::green_square::white_large_square: 90%
 
@@ -42,11 +39,7 @@ P.S. Flexi is inspired from **[Unreal GAS (Gameplay Ability System)](https://doc
 
 ## Installation
 
-**Download repository and Export unitypackage**
-1. Donwload and unzip. Choose the latest tag for stable state.
-2. Open this Unity project. (Dev in 2021.3)
-3. Export the package with `Tools/Export UnityPackage`. This excludes unnecessary assets.
-4. It will show you the result package, then you can import this to your project.
+Download from the latest release. It's a unitypackage. Just import it.
 
 ## Resources
 
