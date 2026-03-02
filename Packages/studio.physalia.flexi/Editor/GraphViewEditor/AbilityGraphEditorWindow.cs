@@ -102,9 +102,19 @@ namespace Physalia.Flexi.GraphViewEditor
         }
 
         [OnOpenAsset()]
-        private static bool OpenWithAsset(int instanceID, int line)
+#if UNITY_6000_3_OR_NEWER
+        private static bool OpenWithAsset(EntityId entityId)
+        {
+            UnityEngine.Object obj = EditorUtility.EntityIdToObject(entityId);
+#elif UNITY_6000_0_OR_NEWER
+        private static bool OpenWithAsset(int instanceId)
         {
             UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
+#else
+        private static bool OpenWithAsset(int instanceId, int line)
+        {
+            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
+#endif
             GraphAsset asset = obj as GraphAsset;
             if (asset == null)
             {

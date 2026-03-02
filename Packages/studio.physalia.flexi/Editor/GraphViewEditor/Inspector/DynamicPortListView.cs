@@ -5,9 +5,16 @@ using UnityEngine.UIElements;
 
 namespace Physalia.Flexi.GraphViewEditor
 {
+#if UNITY_6000_0_OR_NEWER
+    [UxmlElement]
+    public partial class DynamicPortListView : VisualElement
+#else
     public class DynamicPortListView : VisualElement
+#endif
     {
+#if !UNITY_6000_0_OR_NEWER
         public new class UxmlFactory : UxmlFactory<DynamicPortListView, UxmlTraits> { }
+#endif
 
         private class PortData
         {
