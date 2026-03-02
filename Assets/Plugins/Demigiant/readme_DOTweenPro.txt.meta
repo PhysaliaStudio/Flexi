@@ -17,3 +17,10 @@ labels:
 - Punch
 TextScriptImporter:
   userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 32416
+  packageName: DOTween Pro
+  packageVersion: 1.0.410
+  assetPath: Assets/Plugins/Demigiant/readme_DOTweenPro.txt
+  uploadId: 862446

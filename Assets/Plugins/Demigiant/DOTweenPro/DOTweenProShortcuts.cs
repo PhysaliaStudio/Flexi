@@ -52,7 +52,7 @@ namespace DG.Tweening
 
         #endregion
 
-#if true // PHYSICS_MARKER
+#if !DOTWEEN_NOPHYSICS // PHYSICS_MARKER
         #region Rigidbody
 
         /// <summary>Tweens a Rigidbody's position in a spiral shape.
