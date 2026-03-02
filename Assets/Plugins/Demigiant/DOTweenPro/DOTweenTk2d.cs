@@ -4,7 +4,7 @@
 // License Copyright (c) Daniele Giardini.
 // This work is subject to the terms at http://dotween.demigiant.com/license.php
 
-#if false // MODULE_MARKER
+#if DOTWEEN_TK2D // MODULE_MARKER
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using UnityEngine;

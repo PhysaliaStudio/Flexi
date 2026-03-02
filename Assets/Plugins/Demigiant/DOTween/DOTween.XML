@@ -123,7 +123,14 @@
         </member>
         <member name="M:DG.Tweening.Core.Easing.EaseManager.Evaluate(DG.Tweening.Tween,System.Single,System.Single,System.Single,System.Single)">
             <summary>
-            Returns a value between 0 and 1 (inclusive) based on the elapsed time and ease selected
+            Returns a value between 0 and 1 (inclusive) based on the elapsed time and ease selected.
+            Use this method if you don't care about <see cref="F:DG.Tweening.LoopType.Incremental"/>, otherwise use <see cref="M:DG.Tweening.Core.Easing.EaseManager.EvaluateUnclamped(DG.Tweening.Tween,System.Single,System.Single,System.Single,System.Single)"/>
+            </summary>
+        </member>
+        <member name="M:DG.Tweening.Core.Easing.EaseManager.EvaluateUnclamped(DG.Tweening.Tween,System.Single,System.Single,System.Single,System.Single)">
+            <summary>
+            USE THIS FOR CUSTOM PLUGINS when you want to be able to use <see cref="F:DG.Tweening.LoopType.Incremental"/>.
+            Returns a value that is from 0 to 1 if <see cref="T:DG.Tweening.LoopType"/> is not incremental, otherwise from 0 to (1 * completed loops)
             </summary>
         </member>
         <member name="M:DG.Tweening.Core.Easing.EaseManager.Evaluate(DG.Tweening.Ease,DG.Tweening.EaseFunction,System.Single,System.Single,System.Single,System.Single)">
@@ -225,6 +232,11 @@
         <member name="T:DG.Tweening.Core.DOTweenExternalCommand">
             <summary>
             Used to dispatch commands that need to be captured externally, usually by Modules
+            </summary>
+        </member>
+        <member name="T:DG.Tweening.Core.DOTweenUtils">
+            <summary>
+            Various utils
             </summary>
         </member>
         <member name="M:DG.Tweening.Core.DOTweenUtils.Vector3FromAngle(System.Single,System.Single)">
@@ -444,6 +456,14 @@
         <member name="F:DG.Tweening.DOTween.drawGizmos">
             <summary>If TRUE draws path gizmos in Unity Editor (if the gizmos button is active).
             Deactivate this if you want to avoid gizmos overhead while in Unity Editor</summary>
+        </member>
+        <member name="P:DG.Tweening.DOTween.tweenersCapacity">
+            <summary>Gets/sets the max Tweeners capacity (automatically increased by DOTween when necessary).
+            You can also set both Tweeners and Sequences capacity via the <see cref="M:DG.Tweening.DOTween.SetTweensCapacity(System.Int32,System.Int32)"/> static method</summary>
+        </member>
+        <member name="P:DG.Tweening.DOTween.sequencesCapacity">
+            <summary>Gets/sets the max Sequences capacity (automatically increased by DOTween when necessary).
+            You can also set both Tweeners and Sequences capacity via the <see cref="M:DG.Tweening.DOTween.SetTweensCapacity(System.Int32,System.Int32)"/> static method</summary>
         </member>
         <member name="F:DG.Tweening.DOTween.debugMode">
             <summary>If TRUE activates various debug options</summary>
@@ -1000,7 +1020,7 @@
             <summary>
             Tweens a virtual float.
             You can add regular settings to the generated tween,
-            but do not use <code>SetUpdate</code> or you will overwrite the onVirtualUpdate parameter
+            but do not use <code>OnUpdate</code> or you will overwrite the onVirtualUpdate parameter
             </summary>
             <param name="from">The value to start from</param>
             <param name="to">The value to tween to</param>
@@ -1011,18 +1031,29 @@
             <summary>
             Tweens a virtual int.
             You can add regular settings to the generated tween,
-            but do not use <code>SetUpdate</code> or you will overwrite the onVirtualUpdate parameter
+            but do not use <code>OnUpdate</code> or you will overwrite the onVirtualUpdate parameter
             </summary>
             <param name="from">The value to start from</param>
             <param name="to">The value to tween to</param>
             <param name="duration">The duration of the tween</param>
             <param name="onVirtualUpdate">A callback which must accept a parameter of type int, called at each update</param>
         </member>
+        <member name="M:DG.Tweening.DOVirtual.Vector2(UnityEngine.Vector2,UnityEngine.Vector2,System.Single,DG.Tweening.TweenCallback{UnityEngine.Vector2})">
+            <summary>
+            Tweens a virtual Vector2.
+            You can add regular settings to the generated tween,
+            but do not use <code>OnUpdate</code> or you will overwrite the onVirtualUpdate parameter
+            </summary>
+            <param name="from">The value to start from</param>
+            <param name="to">The value to tween to</param>
+            <param name="duration">The duration of the tween</param>
+            <param name="onVirtualUpdate">A callback which must accept a parameter of type Vector3, called at each update</param>
+        </member>
         <member name="M:DG.Tweening.DOVirtual.Vector3(UnityEngine.Vector3,UnityEngine.Vector3,System.Single,DG.Tweening.TweenCallback{UnityEngine.Vector3})">
             <summary>
             Tweens a virtual Vector3.
             You can add regular settings to the generated tween,
-            but do not use <code>SetUpdate</code> or you will overwrite the onVirtualUpdate parameter
+            but do not use <code>OnUpdate</code> or you will overwrite the onVirtualUpdate parameter
             </summary>
             <param name="from">The value to start from</param>
             <param name="to">The value to tween to</param>
@@ -1033,7 +1064,7 @@
             <summary>
             Tweens a virtual Color.
             You can add regular settings to the generated tween,
-            but do not use <code>SetUpdate</code> or you will overwrite the onVirtualUpdate parameter
+            but do not use <code>OnUpdate</code> or you will overwrite the onVirtualUpdate parameter
             </summary>
             <param name="from">The value to start from</param>
             <param name="to">The value to tween to</param>
@@ -1368,6 +1399,12 @@
             <param name="withCallbacks">For Sequences only: if TRUE also internal Sequence callbacks will be fired,
             otherwise they will be ignored</param>
         </member>
+        <member name="M:DG.Tweening.TweenExtensions.Done``1(``0)">
+            <summary>Optional: indicates that the tween creation has ended, to be used (optionally) as the last element of tween chaining creation.<br/>
+            This method won't do anything except in case of 0-duration tweens,
+            where it will complete them immediately instead of waiting for the next internal update routine
+            (unless they're nested in a Sequence, in which case the Sequence will still be the one in control and this method will be ignored)</summary>
+        </member>
         <member name="M:DG.Tweening.TweenExtensions.Flip(DG.Tweening.Tween)">
             <summary>Flips the direction of this tween (backwards if it was going forward or viceversa)</summary>
         </member>
@@ -1525,9 +1562,22 @@
         <member name="M:DG.Tweening.TweenExtensions.IsBackwards(DG.Tweening.Tween)">
             <summary>Returns TRUE if this tween was reversed and is set to go backwards</summary>
         </member>
+        <member name="M:DG.Tweening.TweenExtensions.IsLoopingOrExecutingBackwards(DG.Tweening.Tween)">
+            <summary>NOTE: To check if a tween was simply set to go backwards see <see cref="M:DG.Tweening.TweenExtensions.IsBackwards(DG.Tweening.Tween)"/>.<para/>
+            Returns TRUE if this tween is going backwards for any of these reasons:<para/>
+            - The tween was reversed and is going backwards on a straight loop<para/>
+            - The tween was reversed and is going backwards on an odd Yoyo loop<para/>
+            - The tween is going forward but on an even Yoyo loop<para/>
+            IMPORTANT: if used inside a tween's callback, this will return a result concerning the exact frame when it's asked,
+            so for example in a callback at the end of a Yoyo loop step this method will never return FALSE
+            because the frame will never end exactly there and the tween will already be going backwards when the callback is fired</summary>
+        </member>
         <member name="M:DG.Tweening.TweenExtensions.IsComplete(DG.Tweening.Tween)">
             <summary>Returns TRUE if the tween is complete
             (silently fails and returns FALSE if the tween has been killed)</summary>
+        </member>
+        <member name="M:DG.Tweening.TweenExtensions.IsTimeScaleIndependent(DG.Tweening.Tween)">
+            <summary>Returns TRUE if this tween was set to be timeScale independent via the <code>tween.SetUpdate</code> method</summary>
         </member>
         <member name="M:DG.Tweening.TweenExtensions.IsInitialized(DG.Tweening.Tween)">
             <summary>Returns TRUE if this tween has been initialized</summary>
@@ -2655,7 +2705,7 @@
             <param name="t">The tween to prepend</param>
         </member>
         <member name="M:DG.Tweening.TweenSettingsExtensions.Join(DG.Tweening.Sequence,DG.Tweening.Tween)">
-            <summary>Inserts the given tween at the same time position of the last tween, callback or intervale added to the Sequence.
+            <summary>Inserts the given tween at the same time position of the last tween, callback or interval added to the Sequence.
             Note that, in case of a Join after an interval, the insertion time will be the time where the interval starts, not where it finishes.
             Has no effect if the Sequence has already started</summary>
         </member>
@@ -2685,6 +2735,12 @@
             <summary>Adds the given callback to the beginning of the Sequence, pushing forward the other nested content. 
             Has no effect if the Sequence has already started</summary>
             <param name="callback">The callback to prepend</param>
+        </member>
+        <member name="M:DG.Tweening.TweenSettingsExtensions.JoinCallback(DG.Tweening.Sequence,DG.Tweening.TweenCallback)">
+            <summary>Inserts the given callback at the same time position of the last tween, callback or interval added to the Sequence.
+            Note that, in case of a Join after an interval, the insertion time will be the time where the interval starts, not where it finishes.
+            Has no effect if the Sequence has already started</summary>
+            /// &lt;param name="callback"&gt;The callback to prepend&lt;/param&gt;
         </member>
         <member name="M:DG.Tweening.TweenSettingsExtensions.InsertCallback(DG.Tweening.Sequence,System.Single,DG.Tweening.TweenCallback)">
             <summary>Inserts the given callback at the given time position in the Sequence,

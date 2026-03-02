@@ -45,3 +45,10 @@ TextureImporter:
     sprites: []
   spritePackingTag: 
   userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 32416
+  packageName: DOTween Pro
+  packageVersion: 1.0.410
+  assetPath: Assets/Plugins/Demigiant/DemiLib/Core/Editor/Imgs/whiteSquare_fadeOut_bt.png
+  uploadId: 862446

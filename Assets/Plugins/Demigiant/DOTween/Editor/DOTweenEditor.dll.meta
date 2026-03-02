@@ -20,3 +20,10 @@ PluginImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 32416
+  packageName: DOTween Pro
+  packageVersion: 1.0.410
+  assetPath: Assets/Plugins/Demigiant/DOTween/Editor/DOTweenEditor.dll
+  uploadId: 862446

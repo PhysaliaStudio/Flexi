@@ -2,3 +2,10 @@ fileFormatVersion: 2
 guid: db7d7ef84c388bc4fbc3835d31a15306
 TextScriptImporter:
   userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 32416
+  packageName: DOTween Pro
+  packageVersion: 1.0.410
+  assetPath: Assets/Plugins/Demigiant/DOTweenPro/DOTweenPro.XML
+  uploadId: 862446
