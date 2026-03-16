@@ -109,11 +109,11 @@ namespace Physalia.Flexi.GraphViewEditor
 #elif UNITY_6000_0_OR_NEWER
         private static bool OpenWithAsset(int instanceId)
         {
-            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
+            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceId);
 #else
         private static bool OpenWithAsset(int instanceId, int line)
         {
-            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceID);
+            UnityEngine.Object obj = EditorUtility.InstanceIDToObject(instanceId);
 #endif
             GraphAsset asset = obj as GraphAsset;
             if (asset == null)
